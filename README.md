@@ -32,7 +32,6 @@ A curated map of where recent recommender-systems research is evaluated. Papers 
 | | |
 |---|---|
 | 🗂️ **Unique papers** | 1,141 |
-| 🧮 **Dataset usages** | 1,875 (papers × datasets) |
 | 📊 **Evaluation datasets** | 30 |
 | 🛒 **Amazon-2023 papers** | 132 |
 | 🧩 **Distinct baselines (Amazon-2023)** | 517 |
@@ -87,17 +86,17 @@ The 132 Amazon-2023 papers compare against **517 distinct baselines**. Here they
 
 “Papers” = distinct papers using **≥ 1** baseline from that family (so columns sum to more than 132).
 
-| Method family | Papers | Share | Distinct baselines | Total usages | |
-|---|---:|---:|---:|---:|:--|
-| **Sequential / session-based** | 64 | 50% | 52 | 232 | `██████████████` |
-| **Generative retrieval / semantic-ID** | 43 | 33% | 53 | 128 | `█████████·····` |
-| **LLM-based recommenders** | 41 | 32% | 66 | 119 | `█████████·····` |
-| **Classical CF · MF, neighborhood, neural CF** | 34 | 26% | 37 | 67 | `███████·······` |
-| **Text- & multimodal-enhanced** | 34 | 26% | 66 | 95 | `███████·······` |
-| **Graph-based CF** | 19 | 15% | 17 | 35 | `████··········` |
-| **General-purpose LLMs · zero-shot / prompted** | 18 | 14% | 62 | 71 | `████··········` |
-| **CTR / feature-interaction** | 6 | 5% | 5 | 8 | `█·············` |
-| **Other / specialized** | 65 | 50% | 159 | 176 | `██████████████` |
+| Method family | Papers | Share | |
+|---|---:|---:|:--|
+| **Sequential / session-based** | 64 | 50% | `████████████████` |
+| **Generative retrieval / semantic-ID** | 43 | 33% | `███████████·····` |
+| **LLM-based recommenders** | 41 | 32% | `██████████······` |
+| **Classical CF · MF, neighborhood, neural CF** | 34 | 26% | `████████········` |
+| **Text- & multimodal-enhanced** | 34 | 26% | `████████········` |
+| **Graph-based CF** | 19 | 15% | `█████···········` |
+| **General-purpose LLMs · zero-shot / prompted** | 18 | 14% | `████············` |
+| **CTR / feature-interaction** | 6 | 5% | `█···············` |
+| **Other / specialized** | 65 | 50% | `████████████████` |
 
 _Based on 129/132 papers that report baselines._
 
