@@ -1,12 +1,12 @@
 # 💻 Amazon Reviews 2023 — Code Availability
 
-Which of the **132** Amazon-2023 papers ship public code. **77 / 132** release a public code repository; the other 55 are omitted here (no code, or only data/model/demo artifacts, or code promised upon acceptance). Back to the [overview »](README.md)
+Which of the **132** Amazon-2023 papers ship public code. **72 / 132** release a working public code repository; the other 60 are omitted (no code, only data/model/demo artifacts, code promised upon acceptance, or a link that is currently broken/empty/expired). Back to the [overview »](README.md)
 
 ---
 
 ## Per-paper code
 
-Sorted A–Z by title · **77** papers with public code. 🔒 = anonymized review repo.
+Sorted A–Z by title · **72** papers with public code. 🔒 = anonymized review repo.
 
 | Paper | arXiv | Code |
 |---|---|---|
@@ -22,7 +22,6 @@ Sorted A–Z by title · **77** papers with public code. 🔒 = anonymized revie
 | **Bridging Textual-Collaborative Gap through Semantic Codes for Sequential Recommendation** <br/><sub>Academy · 20250315</sub> | [2503.12183v2](https://arxiv.org/abs/2503.12183v2) | [RUCAIBox/CCFRec](https://github.com/RUCAIBox/CCFRec) |
 | **Bridging the Gap Self-Optimized Fine-Tuning for LLM-based Recommender Systems** <br/><sub>Academy · 20250527</sub> | [2505.20771v1](https://arxiv.org/abs/2505.20771v1) | [Self-Optimized-Fine-Tuning-264E 🔒](https://anonymous.4open.science/r/Self-Optimized-Fine-Tuning-264E) |
 | **Can Large Language Models Understand Preferences in Personalized Recommendation** <br/><sub>Academy · 20250123</sub> | [2501.13391v1](https://arxiv.org/abs/2501.13391v1) | [TamSiuhin/PerRecBench](https://github.com/TamSiuhin/PerRecBench) |
-| **Cold-Starts in Generative Recommendation A Reproducibility Study** <br/><sub>Baidu · 20260331</sub> | [2603.29845v2](https://arxiv.org/abs/2603.29845v2) | [zhangzhen-research/ColdGenrec](https://github.com/zhangzhen-research/ColdGenrec) |
 | **Continual Low-Rank Adapters for LLM-based Generative Recommender Systems** <br/><sub>Amazon · 20251029</sub> | [2510.25093v3](https://arxiv.org/abs/2510.25093v3) | [hsyoo32/peso](https://github.com/hsyoo32/peso) |
 | **DeepRec Towards a Deep Dive Into the Item Space with Large Language Model Based Recommendation** <br/><sub>Tencent · 20250522</sub> | [2505.16810v2](https://arxiv.org/abs/2505.16810v2) | [RUCAIBox/DeepRec](https://github.com/RUCAIBox/DeepRec) |
 | **Don't Let Bandit Feedback Pull Continual LLM-Recommender Updates Off Target** <br/><sub>Academy · 20260517</sub> | [2605.18899v1](https://arxiv.org/abs/2605.18899v1) | [ABPO-5CD8 🔒](https://anonymous.4open.science/r/ABPO-5CD8)<br/>[G2RPO-FDB9 🔒](https://anonymous.4open.science/r/G2RPO-FDB9) |
@@ -44,10 +43,8 @@ Sorted A–Z by title · **77** papers with public code. 🔒 = anonymized revie
 | **Intent Representation Learning with Large Language Model for Recommendation** <br/><sub>Academy · 20250205</sub> | [2502.03307v4](https://arxiv.org/abs/2502.03307v4) | [wangyu0627/IRLLRec](https://github.com/wangyu0627/IRLLRec) |
 | **ITDR An Instruction Tuning Dataset for Enhancing Large Language Models in Recommendations** <br/><sub>Academy · 20250801</sub> | [2508.05667v2](https://arxiv.org/abs/2508.05667v2) | [hellolzk/ITDR](https://github.com/hellolzk/ITDR) |
 | **ItemRAG Item-Based Retrieval-Augmented Generation for LLM-Based Recommendation** <br/><sub>Academy · 20251119</sub> | [2511.15141v2](https://arxiv.org/abs/2511.15141v2) | [kswoo97/ItemRAG](https://github.com/kswoo97/ItemRAG) |
-| **LARES Latent Reasoning for Sequential Recommendation** <br/><sub>Meituan · 20250522</sub> | [2505.16865v2](https://arxiv.org/abs/2505.16865v2) | [LARES-E458 🔒](https://anonymous.4open.science/r/LARES-E458) |
 | **LaViC Adapting Large Vision-Language Models to Visually-Aware Conversational Recommendation** <br/><sub>Academy · 20250330</sub> | [2503.23312v1](https://arxiv.org/abs/2503.23312v1) | [jeon185/LaViC](https://github.com/jeon185/LaViC) |
 | **Learning Decomposed Contextual Token Representations from Pretrained and Collaborative Signals for Generative Recommendation** <br/><sub>Academy · 20250822</sub> | [2509.10468v2](https://arxiv.org/abs/2509.10468v2) | [yliuaa/DECOR](https://github.com/yliuaa/DECOR) |
-| **Leveraging Multimodal Data and Side Users for Diffusion Cross-Domain Recommendation** <br/><sub>Academy · 20250705</sub> | [2507.04000v1](https://arxiv.org/abs/2507.04000v1) | [MuSiC-310A 🔒](https://anonymous.4open.science/r/MuSiC-310A) |
 | **LLaDA-Rec Discrete Diffusion for Parallel Semantic ID Generation in Generative Recommendation** <br/><sub>Academy · 20251109</sub> | [2511.06254v1](https://arxiv.org/abs/2511.06254v1) | [TengShi-RUC/LLaDA-Rec](https://github.com/TengShi-RUC/LLaDA-Rec) |
 | **LLM-Enhanced Linear Autoencoders for Recommendation** <br/><sub>Academy · 20250819</sub> | [2508.13500v2](https://arxiv.org/abs/2508.13500v2) | [jaewan7599/L3AE_CIKM2025](https://github.com/jaewan7599/L3AE_CIKM2025) |
 | **LLM-RecG A Semantic Bias-Aware Framework for Zero-Shot Sequential Recommendation** <br/><sub>Academy · 20250131</sub> | [2501.19232v2](https://arxiv.org/abs/2501.19232v2) | [yunzhel2/LLM-RecG](https://github.com/yunzhel2/LLM-RecG) |
@@ -59,21 +56,19 @@ Sorted A–Z by title · **77** papers with public code. 🔒 = anonymized revie
 | **MMGRid Navigating Temporal-aware and Cross-domain Generative Recommendation via Model Merging** <br/><sub>Academy · 20260122</sub> | [2601.15930v2](https://arxiv.org/abs/2601.15930v2) | [Joinn99/MMGRid](https://github.com/Joinn99/MMGRid) |
 | **Multi-TAP Multi-criteria Target Adaptive Persona Modeling for Cross-Domain Recommendation** <br/><sub>Academy · 20260307</sub> | [2603.07086v2](https://arxiv.org/abs/2603.07086v2) | [archivehee/Multi-TAP](https://github.com/archivehee/Multi-TAP) |
 | **Multimodal-enhanced Federated Recommendation A Group-wise Fusion Approach** <br/><sub>Academy · 20250924</sub> | [2509.19955v2](https://arxiv.org/abs/2509.19955v2) | [Zhangwp2420/GFMFR](https://github.com/Zhangwp2420/GFMFR) |
-| **Multistakeholder Impacts of Profile Portability in a Recommender Ecosystem** <br/><sub>Academy · 20260423</sub> | [2604.21750v1](https://arxiv.org/abs/2604.21750v1) | [that-recsys-lab/smores_umap_2026](https://github.com/that-recsys-lab/smores_umap_2026) |
+| **Multistakeholder Impacts of Profile Portability in a Recommender Ecosystem** <br/><sub>Academy · 20260423</sub> | [2604.21750v1](https://arxiv.org/abs/2604.21750v1) | [that-recsys-lab/smores](https://github.com/that-recsys-lab/smores) |
 | **Not Just What, But When Integrating Irregular Intervals to LLM for Sequential Recommendation** <br/><sub>Academy · 20250731</sub> | [2507.23209v1](https://arxiv.org/abs/2507.23209v1) | [sony/ds-research-code](https://github.com/sony/ds-research-code/tree/master/recsys25-IntervalLLM) |
 | **Offline Reasoning for Efficient Recommendation LLM-Empowered Persona-Profiled Item Indexing** <br/><sub>Naver · 20260225</sub> | [2602.21756v1](https://arxiv.org/abs/2602.21756v1) | [legenduck/PERSONA4REC](https://github.com/legenduck/PERSONA4REC) |
 | **One Pass, Any Order Position-Invariant Listwise Reranking for LLM-Based Recommendation** <br/><sub>Academy · 20260430</sub> | [2604.27599v1](https://arxiv.org/abs/2604.27599v1) | [ejbito/InvariRank](https://github.com/ejbito/InvariRank) |
 | **Pctx Tokenizing Personalized Context for Generative Recommendation** <br/><sub>Academy · 20251024</sub> | [2510.21276v1](https://arxiv.org/abs/2510.21276v1) | [YoungZ365/Pctx](https://github.com/YoungZ365/Pctx) |
 | **Personalized Parameter-Efficient Fine-Tuning of Foundation Models for Multimodal Recommendation** <br/><sub>Academy · 20260210</sub> | [2602.09445v1](https://arxiv.org/abs/2602.09445v1) | [kswoo97/PerPEFT](https://github.com/kswoo97/PerPEFT) |
 | **Pre-training Generative Recommender with Multi-Identifier Item Tokenization** <br/><sub>Huawei · 20250406</sub> | [2504.04400v3](https://arxiv.org/abs/2504.04400v3) | [RUCAIBox/MTGRec](https://github.com/RUCAIBox/MTGRec) |
-| **PUB An LLM-Enhanced Personality-Driven User Behaviour Simulator for Recommender System Evaluation** <br/><sub>Academy · 20250605</sub> | [2506.04551v1](https://arxiv.org/abs/2506.04551v1) | [ChenglongMa/PUB](https://github.com/ChenglongMa/PUB) |
 | **R$^2$ec Towards Large Recommender Models with Reasoning** <br/><sub>Academy · 20250522</sub> | [2505.16994v3](https://arxiv.org/abs/2505.16994v3) | [YRYangang/RRec](https://github.com/YRYangang/RRec) |
 | **Reason-to-Recommend Using Interaction-of-Thought Reasoning to Enhance LLM Recommendation** <br/><sub>Academy · 20250605</sub> | [2506.05069v2](https://arxiv.org/abs/2506.05069v2) | [R2Rec-7C5D 🔒](https://anonymous.4open.science/r/R2Rec-7C5D) |
 | **Reasoning over Semantic IDs Enhances Generative Recommendation** <br/><sub>Tencent · 20260324</sub> | [2603.23183v2](https://arxiv.org/abs/2603.23183v2) | [HappyPointer/SIDReasoner](https://github.com/HappyPointer/SIDReasoner) |
 | **RecCocktail A Generalizable and Efficient Framework for LLM-Based Recommendation** <br/><sub>Kuaishou · 20250212</sub> | [2502.08271v2](https://arxiv.org/abs/2502.08271v2) | [RecCocktail 🔒](https://anonymous.4open.science/r/RecCocktail) |
 | **RecCoT Enhancing Recommendation via Chain-of-Thought** <br/><sub>Kuaishou · 20250626</sub> | [2506.21032v2](https://arxiv.org/abs/2506.21032v2) | [shuoyang2/RecCoT](https://github.com/shuoyang2/RecCoT) |
 | **RecGPT A Foundation Model for Sequential Recommendation** <br/><sub>Tencent · 20250606</sub> | [2506.06270v2](https://arxiv.org/abs/2506.06270v2) | [HKUDS/RecGPT](https://github.com/HKUDS/RecGPT) |
-| **RecoAtlas From Semantic Plausibility to Set-Level Utility in LLM Recommendation Agents** <br/><sub>Criteo · 20260511</sub> | [2605.18805v1](https://arxiv.org/abs/2605.18805v1) | [imadaouali/reco-atlas](https://github.com/imadaouali/reco-atlas) |
 | **Rethinking Generative Recommender Tokenizer Recsys-Native Encoding and Semantic Quantization Beyond LLMs** <br/><sub>Academy · 20260202</sub> | [2602.02338v1](https://arxiv.org/abs/2602.02338v1) | [FuCongResearchSquad/ReSID](https://github.com/FuCongResearchSquad/ReSID) |
 | **Self-EvolveRec Self-Evolving Recommender Systems with LLM-based Directional Feedback** <br/><sub>Academy · 20260213</sub> | [2602.12612v1](https://arxiv.org/abs/2602.12612v1) | [Sein-Kim/self_evolverec](https://github.com/Sein-Kim/self_evolverec) |
 | **Semantic IDs for Recommender Systems at Snapchat Use Cases, Technical Challenges, and Design Choices** <br/><sub>Snap · 20260405</sub> | [2604.03949v1](https://arxiv.org/abs/2604.03949v1) | [snap-research/GRID](https://github.com/snap-research/GRID) |

@@ -4,7 +4,7 @@
 
 ### A survey of **2025–2026** recommender-systems papers, mapped to the **top-30** most-used evaluation datasets
 
-![Papers](https://img.shields.io/badge/papers-2041-1f6feb?style=flat-square) ![Years](https://img.shields.io/badge/2025--2026-corpus-8957e5?style=flat-square) ![Top datasets](https://img.shields.io/badge/top__eval__datasets-30-fb8500?style=flat-square) ![Amazon-2023](https://img.shields.io/badge/Amazon_2023-132_papers-ff9f1c?style=flat-square) ![With code](https://img.shields.io/badge/with__code-77%2F132-2ea043?style=flat-square) ![Data](https://img.shields.io/badge/full_set-Hugging_Face-ffce00?style=flat-square)
+![Papers](https://img.shields.io/badge/papers-2041-1f6feb?style=flat-square) ![Years](https://img.shields.io/badge/2025--2026-corpus-8957e5?style=flat-square) ![Top datasets](https://img.shields.io/badge/top__eval__datasets-30-fb8500?style=flat-square) ![Amazon-2023](https://img.shields.io/badge/Amazon_2023-132_papers-ff9f1c?style=flat-square) ![With code](https://img.shields.io/badge/with__code-72%2F132-2ea043?style=flat-square) ![Data](https://img.shields.io/badge/full_set-Hugging_Face-ffce00?style=flat-square)
 
 </div>
 
@@ -39,7 +39,7 @@ A curated map of where recent recommender-systems research is evaluated. Startin
 | 🛒 **Amazon-2023 papers** | 132 |
 | 🧩 **Distinct baselines (Amazon-2023)** | 517 |
 | 🏷️ **Amazon categories used** | 29 |
-| 💻 **Amazon-2023 papers with public code** | 77 / 132 |
+| 💻 **Amazon-2023 papers with public code** | 72 / 132 |
 
 ---
 
@@ -252,12 +252,12 @@ _**A100** is the workhorse — one card for fine-tuning, 4–8× for pre-trainin
 
 ## 6 · Amazon-2023 · code availability
 
-**77 / 132** Amazon-2023 papers release a public code repository — a GitHub/GitLab repo or an anonymized review repo (`anonymous.4open.science`). The remaining 55 ship no code, only release data/model/demo artifacts, or promise code upon acceptance.
+**72 / 132** Amazon-2023 papers release a *working* public code repository — a GitHub/GitLab repo or an anonymized review repo (`anonymous.4open.science`). The remaining 60 ship no code, only release data/model/demo artifacts, promise code upon acceptance, or list a link that is currently broken/empty/expired.
 
 | | Papers | |
 |---|---:|:--|
-| **Public code** | 77 | `████████████████` |
-| **No public code** | 55 | `███████████·····` |
+| **Public code** | 72 | `████████████████` |
+| **No public code** | 60 | `█████████████···` |
 
 > Per-paper links — **paper · arXiv · code** for all 77 — are in **[`Amazon-2023_Code.md`](Amazon-2023_Code.md)**.
 
