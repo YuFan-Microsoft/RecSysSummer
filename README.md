@@ -111,42 +111,42 @@ Baselines used by **≥ 2 papers** (paper count in parentheses); a long tail of 
 <details open>
 <summary><b>Sequential / session-based</b> — 64 papers</summary>
 
-`SASRec` (55) · `GRU4Rec` (29) · `BERT4Rec` (27) · `Caser` (15) · `FMLP-Rec` (11) · `S3-Rec` (10) · `DuoRec` (8) · `FDSA` (8) · `HGN` (4) · `CL4SRec` (3) · `NextItNet` (3) · `MAERec` (3) · `SASRec Base` (2) · `BERT4Rec Base` (2) · `FEARec` (2) · `DiffuRec` (2) · `CoST` (2) · `LRURec` (2) · `CORE` (2) · `BSARec` (2) · `ReaRec` (2)
+[`SASRec`](https://arxiv.org/abs/1808.09781) (55) · [`GRU4Rec`](https://arxiv.org/abs/1511.06939) (29) · [`BERT4Rec`](https://arxiv.org/abs/1904.06690) (27) · [`Caser`](https://arxiv.org/abs/1809.07426) (15) · [`FMLP-Rec`](https://arxiv.org/abs/2202.13556) (11) · [`S3-Rec`](https://arxiv.org/abs/2008.07873) (10) · [`DuoRec`](https://arxiv.org/abs/2110.05730) (8) · `FDSA` (8) · [`HGN`](https://arxiv.org/abs/1906.09217) (4) · [`CL4SRec`](https://arxiv.org/abs/2010.14395) (3) · [`NextItNet`](https://arxiv.org/abs/1808.05163) (3) · [`MAERec`](https://arxiv.org/abs/2305.04619) (3) · [`SASRec Base`](https://arxiv.org/abs/1808.09781) (2) · [`BERT4Rec Base`](https://arxiv.org/abs/1904.06690) (2) · [`FEARec`](https://arxiv.org/abs/2304.09184) (2) · [`DiffuRec`](https://arxiv.org/abs/2304.00686) (2) · [`CoST`](https://arxiv.org/abs/2404.14774) (2) · [`LRURec`](https://arxiv.org/abs/2310.02367) (2) · [`CORE`](https://arxiv.org/abs/2204.11067) (2) · [`BSARec`](https://arxiv.org/abs/2312.10325) (2) · [`ReaRec`](https://arxiv.org/abs/2503.22675) (2)
 
 </details>
 
 <details open>
 <summary><b>Generative retrieval / semantic-ID</b> — 43 papers</summary>
 
-`TIGER` (23) · `HSTU` (13) · `LETTER` (11) · `LCRec` (8) · `VQ-Rec` (7) · `P5` (4) · `MiniOneRec` (3) · `ETEGRec` (3) · `ActionPiece` (3) · `P5-CID` (2) · `RK-Means` (2) · `GenRec` (2)
+[`TIGER`](https://arxiv.org/abs/2305.05065) (23) · [`HSTU`](https://arxiv.org/abs/2402.17152) (13) · [`LETTER`](https://arxiv.org/abs/2405.07314) (11) · [`LCRec`](https://arxiv.org/abs/2311.09049) (8) · [`VQ-Rec`](https://arxiv.org/abs/2210.12316) (7) · [`P5`](https://arxiv.org/abs/2203.13366) (4) · [`MiniOneRec`](https://arxiv.org/abs/2510.24431) (3) · [`ETEGRec`](https://arxiv.org/abs/2409.05546) (3) · [`ActionPiece`](https://arxiv.org/abs/2502.13581) (3) · [`P5-CID`](https://arxiv.org/abs/2305.06569) (2) · `RK-Means` (2) · [`GenRec`](https://arxiv.org/abs/2307.00457) (2)
 
 </details>
 
 <details open>
 <summary><b>LLM-based recommenders</b> — 41 papers</summary>
 
-`S-DPO` (7) · `TALLRec` (7) · `BIGRec` (6) · `LLaRA` (6) · `D3` (5) · `RLMRec` (4) · `AlphaRec` (4) · `LLMRank` (3) · `AgentCF` (3) · `KAR` (3) · `RLMRec-Con` (3) · `RLMRec-Gen` (3) · `InteRecAgent` (3) · `R2ec` (3) · `LLMInit` (2) · `LLM-ESR` (2) · `Chat-Rec` (2) · `Rec-R1` (2) · `LLM-Rec` (2) · `LlamaRec` (2)
+[`S-DPO`](https://arxiv.org/abs/2406.09215) (7) · [`TALLRec`](https://arxiv.org/abs/2305.00447) (7) · [`BIGRec`](https://arxiv.org/abs/2308.08434) (6) · [`LLaRA`](https://arxiv.org/abs/2312.02445) (6) · [`D3`](https://arxiv.org/abs/2406.14900) (5) · [`RLMRec`](https://arxiv.org/abs/2310.15950) (4) · [`AlphaRec`](https://arxiv.org/abs/2407.05441) (4) · [`LLMRank`](https://arxiv.org/abs/2305.08845) (3) · [`AgentCF`](https://arxiv.org/abs/2310.09233) (3) · [`KAR`](https://arxiv.org/abs/2306.10933) (3) · [`RLMRec-Con`](https://arxiv.org/abs/2310.15950) (3) · [`RLMRec-Gen`](https://arxiv.org/abs/2310.15950) (3) · [`InteRecAgent`](https://arxiv.org/abs/2308.16505) (3) · [`R2ec`](https://arxiv.org/abs/2505.16994) (3) · [`LLMInit`](https://arxiv.org/abs/2503.01814) (2) · [`LLM-ESR`](https://arxiv.org/abs/2405.20646) (2) · [`Chat-Rec`](https://arxiv.org/abs/2303.14524) (2) · [`Rec-R1`](https://arxiv.org/abs/2503.24289) (2) · [`LLM-Rec`](https://arxiv.org/abs/2307.15780) (2) · [`LlamaRec`](https://arxiv.org/abs/2311.02089) (2)
 
 </details>
 
 <details open>
 <summary><b>Classical CF · MF, neighborhood, neural CF</b> — 34 papers</summary>
 
-`Popularity` (9) · `MF` (7) · `NCF` (5) · `BPR-MF` (5) · `BPR` (4) · `DMF` (2) · `SVD` (2) · `ALS` (2) · `ItemKNN` (2) · `NeuMF` (2)
+`Popularity` (9) · `MF` (7) · [`NCF`](https://arxiv.org/abs/1708.05031) (5) · [`BPR-MF`](https://arxiv.org/abs/1205.2618) (5) · [`BPR`](https://arxiv.org/abs/1205.2618) (4) · `DMF` (2) · `SVD` (2) · `ALS` (2) · `ItemKNN` (2) · [`NeuMF`](https://arxiv.org/abs/1708.05031) (2)
 
 </details>
 
 <details open>
 <summary><b>Text- & multimodal-enhanced</b> — 34 papers</summary>
 
-`UniSRec` (11) · `RecFormer` (6) · `MoRec` (4) · `BM25` (4) · `VBPR` (3) · `BLAIR-BASE` (3) · `TedRec` (3) · `QARM` (2) · `BLAIR-LARGE` (2)
+[`UniSRec`](https://arxiv.org/abs/2206.05941) (11) · [`RecFormer`](https://arxiv.org/abs/2305.13731) (6) · [`MoRec`](https://arxiv.org/abs/2303.13835) (4) · `BM25` (4) · [`VBPR`](https://arxiv.org/abs/1510.01784) (3) · [`BLAIR-BASE`](https://arxiv.org/abs/2403.03952) (3) · [`TedRec`](https://arxiv.org/abs/2402.18166) (3) · [`QARM`](https://arxiv.org/abs/2411.11739) (2) · [`BLAIR-LARGE`](https://arxiv.org/abs/2403.03952) (2)
 
 </details>
 
 <details open>
 <summary><b>Graph-based CF</b> — 19 papers</summary>
 
-`LightGCN` (15) · `NGCF` (3) · `SimGCL` (2)
+[`LightGCN`](https://arxiv.org/abs/2002.02126) (15) · [`NGCF`](https://arxiv.org/abs/1905.08108) (3) · [`SimGCL`](https://arxiv.org/abs/2112.08679) (2)
 
 </details>
 
@@ -160,14 +160,14 @@ Baselines used by **≥ 2 papers** (paper count in parentheses); a long tail of 
 <details open>
 <summary><b>CTR / feature-interaction</b> — 6 papers</summary>
 
-`DIN` (3) · `CTRL` (2)
+[`DIN`](https://arxiv.org/abs/1706.06978) (3) · [`CTRL`](https://arxiv.org/abs/2306.02841) (2)
 
 </details>
 
 <details>
 <summary><b>Other / specialized</b> — 65 papers</summary>
 
-`Centric` (3) · `Temp-Fusion` (3) · `Random` (3) · `Retrain` (3) · `FairRec` (2) · `UniCDR` (2) · `Zero-shot` (2) · `ERL` (2) · `PRL` (2) · `ReRe` (2) · `LatentR3` (2)
+`Centric` (3) · `Temp-Fusion` (3) · `Random` (3) · `Retrain` (3) · [`FairRec`](https://arxiv.org/abs/2002.10764) (2) · `UniCDR` (2) · `Zero-shot` (2) · [`ERL`](https://arxiv.org/abs/2503.22675) (2) · [`PRL`](https://arxiv.org/abs/2503.22675) (2) · [`ReRe`](https://arxiv.org/abs/2510.12211) (2) · [`LatentR3`](https://arxiv.org/abs/2505.19092) (2)
 
 </details>
 
