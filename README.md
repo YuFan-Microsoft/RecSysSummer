@@ -23,7 +23,8 @@ A curated map of where recent recommender-systems research is evaluated. Startin
 3. [Amazon-2023 · baselines by family](#2--amazon-2023--baselines-by-method-family)
 4. [Amazon-2023 · product categories](#3--amazon-2023--product-categories)
 5. [Amazon-2023 · data processing](#4--amazon-2023--data-processing)
-6. [Methodology](#methodology)
+6. [Amazon-2023 · GPU setups](#5--amazon-2023--gpu-setups)
+7. [Methodology](#methodology)
 
 ---
 
@@ -228,6 +229,22 @@ Of the **131/132** papers that describe their pipeline, the recurring recipe is:
 | Min interactions / threshold | 10 (7%) | `███·············` |
 
 > Per-paper recipes (all 132, with arXiv links) are in **[`Amazon-2023_Data_Processing.md`](Amazon-2023_Data_Processing.md)**.
+
+---
+
+## 5 · Amazon-2023 · GPU setups
+
+Hardware is reported by **73/132** papers. Top-5 setups (cards × model):
+
+| GPU setup | Papers | |
+|---|---:|:--|
+| **1× A100** | 7 | `████████████████` |
+| **1× RTX A6000** | 6 | `██████████████··` |
+| **4× A100** | 5 | `███████████·····` |
+| **8× A100** | 4 | `█████████·······` |
+| **4× A800** | 3 | `███████·········` |
+
+_**A100** is the workhorse — one card for fine-tuning, 4–8× for pre-training; **RTX A6000 / 3090** cover smaller setups._
 
 ---
 
