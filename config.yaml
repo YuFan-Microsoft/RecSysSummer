@@ -1,0 +1,31 @@
+# TODO: add papers by configuration file
+base_url: "https://arxiv.paperswithcode.com/api/v0/papers/"
+user_name: "Lyz103"
+repo_name: "Recommendation-paper-daily"
+show_authors: True
+show_links: True
+show_badge: True
+max_results: 100
+
+# Default output path. Used for any topic that does not define its own `output`.
+json_output_path: './papers/papers.json'
+
+# keywords to search
+# Each topic may define an optional `output` path so its papers are saved to a
+# dedicated JSON file (falls back to `json_output_path` when omitted).
+keywords:
+    "Recommendation":
+        # Dedicated output file for recommendation papers.
+        output: './papers/2025-2026_recsys_papers.json'
+        # Terms sent to the arXiv query (matched across all metadata fields).
+        filters: ["Recommendation", "Recommender", "Collaborative Filtering", "RecSys"]
+        # Substring terms a paper TITLE must contain to be kept.
+        # "recommend" stem covers recommendation(s)/recommender(s)/recommending/recommended.
+        title_filters: ["recommend", "collaborative filtering", "recsys"]
+    "Multimodal":
+        # Dedicated output file for vision-language / multimodal papers.
+        output: './papers/2025-2026_vlm_papers.json'
+        # Terms sent to the arXiv query (matched across all metadata fields).
+        filters: ["Vision-Language Model", "Multimodal Large Language Model", "Multimodal", "VLM", "MLLM", "Vision Language"]
+        # Substring terms a paper TITLE must contain to be kept.
+        title_filters: ["vision-language", "vision language", "multimodal", "vlm", "mllm"]
