@@ -2,15 +2,15 @@
 
 # 📚 RecSys Summer
 
-### A survey of 2025–2026 recommender-systems papers, organized by evaluation dataset
+### A survey of **2025–2026** recommender-systems papers, mapped to the **top-30** most-used evaluation datasets
 
-![Unique papers](https://img.shields.io/badge/unique_papers-1141-1f6feb?style=flat-square) ![Datasets](https://img.shields.io/badge/eval_datasets-30-8957e5?style=flat-square) ![Amazon-2023](https://img.shields.io/badge/Amazon_2023_papers-132-fb8500?style=flat-square) ![Data](https://img.shields.io/badge/full_dataset-Hugging_Face-ffce00?style=flat-square)
+![Papers](https://img.shields.io/badge/papers-2041-1f6feb?style=flat-square) ![Years](https://img.shields.io/badge/2025--2026-corpus-8957e5?style=flat-square) ![Top datasets](https://img.shields.io/badge/top__eval__datasets-30-fb8500?style=flat-square) ![Amazon-2023](https://img.shields.io/badge/Amazon_2023-132_papers-ff9f1c?style=flat-square) ![Data](https://img.shields.io/badge/full_set-Hugging_Face-ffce00?style=flat-square)
 
 </div>
 
 ---
 
-A curated map of where recent recommender-systems research is evaluated. Papers are grouped by the datasets they use in **experiments**, with a deep dive into the **Amazon Reviews 2023** subset — its baselines, product categories, and data-processing recipes.
+A curated map of where recent recommender-systems research is evaluated. Starting from the full **2025–2026 corpus of 2,041 papers**, we keep the **top-30 most-used evaluation datasets** and group papers by the datasets they use in **experiments** — **1,141** of the 2,041 papers use at least one top-30 dataset (the rest evaluate only on rarer sets). A deep dive then covers the **Amazon Reviews 2023** subset — its baselines, product categories, and data-processing recipes.
 
 > **📦 Want every paper?** All 2025–2026 papers — PDFs + metadata — live on Hugging Face: **[`yufan/recsys-papers-2025-2026`](https://huggingface.co/datasets/yufan/recsys-papers-2025-2026)**.
 
@@ -31,8 +31,9 @@ A curated map of where recent recommender-systems research is evaluated. Papers 
 
 | | |
 |---|---|
-| 🗂️ **Unique papers** | 1,141 |
-| 📊 **Evaluation datasets** | 30 |
+| 📚 **Papers · 2025–2026 corpus** | 2,041 |
+| 🗂️ **Papers using a top-30 dataset** | 1,141 |
+| 📊 **Top-30 evaluation datasets** | 30 |
 | 🛒 **Amazon-2023 papers** | 132 |
 | 🧩 **Distinct baselines (Amazon-2023)** | 517 |
 | 🏷️ **Amazon categories used** | 29 |
@@ -41,7 +42,7 @@ A curated map of where recent recommender-systems research is evaluated. Papers 
 
 ## 1 · Top 30 evaluation datasets
 
-Papers that use each dataset in their experiments. A paper may appear under several datasets.
+The **30 most-used** evaluation datasets across the 2,041-paper 2025–2026 corpus, ranked by the number of papers that use each in experiments (a paper may appear under several).
 
 | # | Dataset | Papers | |
 |---:|---|---:|:--|
