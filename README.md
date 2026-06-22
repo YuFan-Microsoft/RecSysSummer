@@ -4,7 +4,7 @@
 
 ### A survey of **2025–2026** recommender-systems papers, mapped to the **top-30** most-used evaluation datasets
 
-![Papers](https://img.shields.io/badge/papers-2041-1f6feb?style=flat-square) ![Years](https://img.shields.io/badge/2025--2026-corpus-8957e5?style=flat-square) ![Top datasets](https://img.shields.io/badge/top__eval__datasets-30-fb8500?style=flat-square) ![Amazon-2023](https://img.shields.io/badge/Amazon_2023-132_papers-ff9f1c?style=flat-square) ![Data](https://img.shields.io/badge/full_set-Hugging_Face-ffce00?style=flat-square)
+![Papers](https://img.shields.io/badge/papers-2041-1f6feb?style=flat-square) ![Years](https://img.shields.io/badge/2025--2026-corpus-8957e5?style=flat-square) ![Top datasets](https://img.shields.io/badge/top__eval__datasets-30-fb8500?style=flat-square) ![Amazon-2023](https://img.shields.io/badge/Amazon_2023-132_papers-ff9f1c?style=flat-square) ![With code](https://img.shields.io/badge/with__code-77%2F132-2ea043?style=flat-square) ![Data](https://img.shields.io/badge/full_set-Hugging_Face-ffce00?style=flat-square)
 
 </div>
 
@@ -24,7 +24,8 @@ A curated map of where recent recommender-systems research is evaluated. Startin
 4. [Amazon-2023 · product categories](#3--amazon-2023--product-categories)
 5. [Amazon-2023 · data processing](#4--amazon-2023--data-processing)
 6. [Amazon-2023 · GPU setups](#5--amazon-2023--gpu-setups)
-7. [Methodology](#methodology)
+7. [Amazon-2023 · code availability](#6--amazon-2023--code-availability)
+8. [Methodology](#methodology)
 
 ---
 
@@ -38,6 +39,7 @@ A curated map of where recent recommender-systems research is evaluated. Startin
 | 🛒 **Amazon-2023 papers** | 132 |
 | 🧩 **Distinct baselines (Amazon-2023)** | 517 |
 | 🏷️ **Amazon categories used** | 29 |
+| 💻 **Amazon-2023 papers with public code** | 77 / 132 |
 
 ---
 
@@ -248,12 +250,26 @@ _**A100** is the workhorse — one card for fine-tuning, 4–8× for pre-trainin
 
 ---
 
+## 6 · Amazon-2023 · code availability
+
+**77 / 132** Amazon-2023 papers release a public code repository — a GitHub/GitLab repo or an anonymized review repo (`anonymous.4open.science`). The remaining 55 ship no code, only release data/model/demo artifacts, or promise code upon acceptance.
+
+| | Papers | |
+|---|---:|:--|
+| **Public code** | 77 | `████████████████` |
+| **No public code** | 55 | `███████████·····` |
+
+> Per-paper links — **paper · arXiv · code** for all 77 — are in **[`Amazon-2023_Code.md`](Amazon-2023_Code.md)**.
+
+---
+
 ## Methodology
 
 - **Dataset frequencies** — PDF counts under each `Freq_<count>_<dataset>` folder; a paper appears under every dataset it uses.
 - **Baselines & categories** — aggregated from per-paper analyses of the 132 Amazon-2023 papers; each paper counted once per distinct baseline/category. Spelling/abbreviation variants were consolidated.
 - **Method-family grouping** — each baseline labelled by method type; best-effort, and a few methods span families.
 - **Data processing** — condensed from each paper’s reported preprocessing; “described” excludes papers that omit a pipeline.
+- **Code availability** — detected from PDF hyperlinks and “code/implementation available” statements; a paper counts only when it links its **own** public repo (GitHub/GitLab or an anonymized review repo). Baseline/library/model links and data-, model- or demo-only artifacts are excluded.
 
 
 <div align="center"><sub>Full corpus · <a href="https://huggingface.co/datasets/yufan/recsys-papers-2025-2026">Hugging Face: yufan/recsys-papers-2025-2026</a></sub></div>
