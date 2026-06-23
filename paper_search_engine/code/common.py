@@ -27,6 +27,17 @@ import yaml
 _ARXIV_RE = re.compile(r"https?://arxiv\.org/abs/[^\s\)\]]+")
 # first markdown H1 used as the title
 _TITLE_RE = re.compile(r"^\s*#\s+(.*\S)\s*$", re.MULTILINE)
+# filename layout: {Company}_{venue}_{YYYYMMDD}_{Title}.md
+_FNAME_RE = re.compile(r"^(?P<company>[^_]+)_(?P<venue>[^_]+)_(?P<date>\d{8})_")
+
+# pretty display names for the venue token in the filename
+_VENUE_NAMES = {
+    "arxiv": "arXiv", "sigir": "SIGIR", "kdd": "KDD", "www": "WWW",
+    "recsys": "RecSys", "aaai": "AAAI", "cikm": "CIKM", "wsdm": "WSDM",
+    "neurips": "NeurIPS", "iclr": "ICLR", "umap": "UMAP", "icml": "ICML",
+    "acmmm": "ACM MM", "tors": "TORS", "tois": "TOIS", "tmlr": "TMLR",
+    "tkde": "TKDE", "sigmod": "SIGMOD", "ijcai": "IJCAI", "acl": "ACL",
+}
 
 
 def load_config(path: str | Path = None) -> dict[str, Any]:
@@ -47,6 +58,10 @@ class Paper:
     arxiv_url: str
     path: str              # absolute path to the .md file
     content: str           # full markdown body
+    venue: str = ""        # display venue from filename (e.g. "SIGIR", "arXiv")
+    is_preprint: bool = False  # True when the venue is arXiv (not yet accepted)
+    pub_date: str = ""     # ISO date from filename, e.g. "2025-04-06"
+    pub_year: str = ""     # year only, e.g. "2025"
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -54,6 +69,23 @@ class Paper:
     def embed_text(self) -> str:
         """Text fed to the embedding model (title helps disambiguate)."""
         return f"{self.title}\n\n{self.content}".strip()
+
+
+def _parse_filename_meta(stem: str) -> tuple[str, bool, str, str]:
+    """Extract (venue, is_preprint, pub_date, pub_year) from the file stem.
+
+    Returns empty strings when the filename does not match the expected
+    ``Company_venue_YYYYMMDD_Title`` layout.
+    """
+    m = _FNAME_RE.match(stem)
+    if not m:
+        return "", False, "", ""
+    token = m.group("venue").lower()
+    venue = _VENUE_NAMES.get(token, m.group("venue").upper())
+    is_preprint = token == "arxiv"
+    d = m.group("date")
+    pub_date = f"{d[0:4]}-{d[4:6]}-{d[6:8]}"
+    return venue, is_preprint, pub_date, d[0:4]
 
 
 def _derive_company(md_path: Path, data_root: Path) -> str:
@@ -83,6 +115,8 @@ def parse_paper(md_path: Path, data_root: Path) -> Paper | None:
     rel = md_path.relative_to(data_root) if _is_relative(md_path, data_root) else md_path
     paper_id = str(rel.with_suffix(""))
 
+    venue, is_preprint, pub_date, pub_year = _parse_filename_meta(md_path.stem)
+
     return Paper(
         paper_id=paper_id,
         title=title,
@@ -90,6 +124,10 @@ def parse_paper(md_path: Path, data_root: Path) -> Paper | None:
         arxiv_url=arxiv_url,
         path=str(md_path),
         content=text.strip(),
+        venue=venue,
+        is_preprint=is_preprint,
+        pub_date=pub_date,
+        pub_year=pub_year,
     )
 
 

@@ -78,11 +78,27 @@ def load_config(config_file: Path) -> dict:
     title_filters = {}
     output_paths = {}
     for key, value in config.get('keywords', {}).items():
-        # Join filters with " OR ", quoting multi-word phrases
-        query_parts = [f'"{f}"' if ' ' in f else f for f in value['filters']]
-        keyword_queries[key] = " OR ".join(query_parts)
-        # Title filters default to the search filters if not explicitly provided.
-        title_filters[key] = [t.lower() for t in value.get('title_filters', value['filters'])]
+        # Keyword terms (optional). Join with " OR ", quoting multi-word phrases.
+        filters = value.get('filters', [])
+        query_parts = [f'"{f}"' if ' ' in f else f for f in filters]
+        kw_query = " OR ".join(query_parts)
+        # arXiv subject categories (optional), e.g. cs.CL -> "cat:cs.CL".
+        cat_query = " OR ".join(f"cat:{c}" for c in value.get('categories', []))
+        # Combine: AND them when both present; otherwise use whichever exists.
+        if kw_query and cat_query:
+            keyword_queries[key] = f"({kw_query}) AND ({cat_query})"
+        elif cat_query:
+            keyword_queries[key] = cat_query
+        else:
+            keyword_queries[key] = kw_query
+        # Title filters: explicit list wins; else fall back to keyword filters;
+        # else None (no title filtering, e.g. category-only topics).
+        if 'title_filters' in value:
+            title_filters[key] = [t.lower() for t in value['title_filters']]
+        elif filters:
+            title_filters[key] = [t.lower() for t in filters]
+        else:
+            title_filters[key] = None
         # Optional per-topic output file; falls back to the global path in main().
         if value.get('output'):
             output_paths[key] = value['output']

@@ -13,6 +13,12 @@ json_output_path: './papers/papers.json'
 # keywords to search
 # Each topic may define an optional `output` path so its papers are saved to a
 # dedicated JSON file (falls back to `json_output_path` when omitted).
+#
+# A topic can filter by any combination of:
+#   - `categories`: arXiv subject categories (e.g. cs.CL). Used alone, or ANDed
+#                   with `filters` when both are present.
+#   - `filters`:    keyword terms sent to the arXiv query (matched across metadata).
+#   - `title_filters`: substring terms a paper TITLE must contain to be kept.
 keywords:
     "Recommendation":
         # Dedicated output file for recommendation papers.
@@ -29,3 +35,11 @@ keywords:
         filters: ["Vision-Language Model", "Multimodal Large Language Model", "Multimodal", "VLM", "MLLM", "Vision Language"]
         # Substring terms a paper TITLE must contain to be kept.
         title_filters: ["vision-language", "vision language", "multimodal", "vlm", "mllm"]
+    "all":
+        # Category-only filter covering my interests:
+        # multimodal retrieval, multimodal generation, NLP, LLM, reasoning,
+        # embedding models, and AI. No keyword/title filtering — category only.
+        output: './papers/all_papers.json'
+        # cs.CL=NLP/LLM, cs.CV=vision/multimodal, cs.AI=AI/reasoning,
+        # cs.LG=ML/embedding, cs.IR=retrieval.
+        categories: ["cs.CL", "cs.CV", "cs.AI", "cs.LG", "cs.IR"]

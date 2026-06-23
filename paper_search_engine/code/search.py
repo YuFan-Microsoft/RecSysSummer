@@ -30,6 +30,10 @@ class SearchResult:
     content: str
     recall_score: float
     rerank_score: float
+    venue: str = ""
+    is_preprint: bool = False
+    pub_date: str = ""
+    pub_year: str = ""
 
 
 class SearchEngine:
@@ -119,6 +123,10 @@ class SearchEngine:
                     content=c["content"],
                     recall_score=recall_scores[j],
                     rerank_score=float(rerank_scores[j]),
+                    venue=c.get("venue", ""),
+                    is_preprint=c.get("is_preprint", False),
+                    pub_date=c.get("pub_date", ""),
+                    pub_year=c.get("pub_year", ""),
                 )
             )
         return results

@@ -77,6 +77,8 @@ button.primary:hover, #go-btn:hover { background: var(--accent-press) !important
     font-weight: 500 !important; }
 #result-list input { accent-color: var(--accent); margin-top: 2px; }
 
+.meta-venue { background: rgba(52,199,89,0.14) !important; color: #1d8a3f !important; }
+
 #paper-card { background: var(--card); border: 1px solid var(--line);
     border-radius: 22px; padding: 30px 38px; margin-top: 4px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.06); min-height: 70vh; }
@@ -106,10 +108,13 @@ def _short_title(title: str, limit: int = 52) -> str:
 
 def _list_choices(results: list[dict]):
     """Build (label, index) choices for the left-hand results list."""
-    return [
-        (f"#{r['rank']}  {r['company']} · {_short_title(r['title'])}", i)
-        for i, r in enumerate(results)
-    ]
+    choices = []
+    for i, r in enumerate(results):
+        tag = r.get("venue") or r.get("company", "")
+        if r.get("pub_year"):
+            tag = f"{tag} {r['pub_year']}"
+        choices.append((f"#{r['rank']}  {tag} · {_short_title(r['title'])}", i))
+    return choices
 
 
 def _render(results: list[dict], idx: int) -> str:
@@ -123,11 +128,21 @@ def _render(results: list[dict], idx: int) -> str:
         return ("_No results yet. Type an idea above and press Search._")
     idx = max(0, min(idx, len(results) - 1))
     r = results[idx]
-    badges = (
+    badges = [
         f"<span class='meta-badge meta-accent'>#{r['rank']} · {r['company']}</span>"
-        f"<span class='meta-badge'>rerank {r['rerank_score']:.3f}</span>"
-        f"<span class='meta-badge'>recall {r['recall_score']:.3f}</span>"
-    )
+    ]
+    venue = r.get("venue")
+    if venue:
+        label = venue if r.get("is_preprint") else f"Accepted · {venue}"
+        if r.get("pub_year") and not r.get("is_preprint"):
+            label = f"{label} {r['pub_year']}"
+        cls = "meta-badge" if r.get("is_preprint") else "meta-badge meta-venue"
+        badges.append(f"<span class='{cls}'>{label}</span>")
+    if r.get("pub_date"):
+        badges.append(f"<span class='meta-badge'>{r['pub_date']}</span>")
+    badges.append(f"<span class='meta-badge'>rerank {r['rerank_score']:.3f}</span>")
+    badges.append(f"<span class='meta-badge'>recall {r['recall_score']:.3f}</span>")
+    badges = "".join(badges)
     link = (f"\n\n[Open on arXiv]({r['arxiv_url']})" if r["arxiv_url"] else "")
     # The stored content already starts with the "# Title" and arxiv line.
     return f"{badges}\n\n{r['content']}{link}"

@@ -30,6 +30,12 @@ def main() -> None:
     parser.add_argument("--config", default=None, help="Path to config.yaml")
     parser.add_argument("--data-dir", default=None, help="Override data_dir from config")
     parser.add_argument("--index-dir", default=None, help="Override index_dir from config")
+    parser.add_argument(
+        "--metadata-only",
+        action="store_true",
+        help="Only rewrite metadata.json (no re-embedding). The paper set must "
+        "match the existing embeddings.npy.",
+    )
     args = parser.parse_args()
 
     cfg = load_config(args.config)
@@ -42,6 +48,28 @@ def main() -> None:
     if not papers:
         raise SystemExit(f"No .md papers found under {data_dir!r}. Check data_dir.")
     print(f"[index] found {len(papers)} papers")
+
+    emb_path = index_dir / "embeddings.npy"
+    meta_path = index_dir / "metadata.json"
+
+    if args.metadata_only:
+        # Fast path: refresh metadata without touching the GPU / embeddings.
+        if not emb_path.exists():
+            raise SystemExit(
+                f"{emb_path} not found. Run a full build first (without --metadata-only)."
+            )
+        n_emb = np.load(emb_path, mmap_mode="r").shape[0]
+        if n_emb != len(papers):
+            raise SystemExit(
+                f"Paper count ({len(papers)}) != existing embeddings ({n_emb}). "
+                "The paper set changed; run a full rebuild instead."
+            )
+        metadata = [p.to_dict() for p in papers]
+        with open(meta_path, "w", encoding="utf-8") as f:
+            json.dump(metadata, f, ensure_ascii=False)
+        print(f"[index] metadata-only: rewrote {meta_path} ({len(metadata)} papers)")
+        print("[index] done.")
+        return
 
     print(f"[index] loading embedding model: {cfg['embedding_model_path']}")
     embedder = Qwen3Embedder(
@@ -60,8 +88,6 @@ def main() -> None:
         show_progress=True,
     ).numpy().astype(np.float32)
 
-    emb_path = index_dir / "embeddings.npy"
-    meta_path = index_dir / "metadata.json"
     np.save(emb_path, embeddings)
 
     metadata = [p.to_dict() for p in papers]
