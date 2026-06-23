@@ -1,0 +1,48 @@
+# ============================================================================
+# Paper Search Engine configuration
+# Edit the paths below to match your (remote 8xA100) machine.
+# ============================================================================
+
+# --- Data ---------------------------------------------------------------
+# Root folder that contains the markdown papers (.md). May be flat or use
+# per-company sub-folders. Each .md file is one paper (see README for format).
+data_dir: "/yufan/projects/recsys_summer/paper_search_engine/data"
+
+# Where the built index (embeddings + metadata) is written / read from.
+index_dir: "/yufan/projects/recsys_summer/paper_search_engine/index"
+
+# --- Models -------------------------------------------------------------
+embedding_model_path: "/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-8B"
+reranker_model_path: "/yufan/open_source_models/Ranker_Model/Qwen3-Reranker-8B"
+
+# Devices. With 8xA100 we keep the two models on separate GPUs so they can be
+# loaded at the same time by the web app. Use "cuda" to let it pick cuda:0.
+embedding_device: "cuda:0"
+reranker_device: "cuda:1"
+
+# torch dtype for inference. "bfloat16" is recommended on A100.
+dtype: "bfloat16"
+
+# Set to true if flash-attn is installed (faster, less memory).
+use_flash_attention: false
+
+# --- Tokenisation -------------------------------------------------------
+embedding_max_length: 8192   # max tokens per document when embedding
+reranker_max_length: 8192    # max tokens per (query, doc) pair when reranking
+
+# --- Retrieval ----------------------------------------------------------
+# rerank_k is the default top-K returned (also the UI slider default).
+# The recall pool is computed automatically as min(2 * rerank_k, recall_cap).
+rerank_k: 15                 # final results returned after reranking (top-K)
+recall_cap: 100              # hard upper bound on the embedding recall pool
+
+# One-sentence task instructions (English is recommended by Qwen).
+query_instruction: "Given a research idea, retrieve the most relevant academic papers on recommender systems and machine learning."
+reranker_instruction: "Given a research idea, judge whether the paper is relevant and would help develop the idea."
+
+# --- Indexing -----------------------------------------------------------
+embedding_batch_size: 8      # documents embedded per forward pass
+
+# --- Web UI -------------------------------------------------------------
+share: true                  # Gradio share=True -> public URL
+server_port: 7860
