@@ -10,7 +10,7 @@
 
 ---
 
-A curated map of where recent recommender-systems research is evaluated. Starting from the full **2025–2026 corpus of 2,041 papers**, we keep the **top-30 most-used evaluation datasets** and group papers by the datasets they use in **experiments** — **1,141** of the 2,041 papers use at least one top-30 dataset (the rest evaluate only on rarer sets). A deep dive then covers the **Amazon Reviews 2023** subset — its baselines, product categories, and data-processing recipes.
+A curated map of where recent recommender-systems research is evaluated. Starting from the full **2025–2026 corpus of 2,041 papers**, we keep the **top-30 most-used evaluation datasets** and group papers by the datasets they use in **experiments** — **1,141** of the 2,041 papers use at least one top-30 dataset (the rest evaluate only on rarer sets). A deep dive then covers the **Amazon Reviews 2023** subset — its baselines, product categories, GPU setups, and code availability.
 
 > **📦 Want every paper?** All 2025–2026 papers — PDFs + metadata — live on Hugging Face: **[`yufan/recsys-papers-2025-2026`](https://huggingface.co/datasets/yufan/recsys-papers-2025-2026)**.
 
@@ -22,10 +22,9 @@ A curated map of where recent recommender-systems research is evaluated. Startin
 2. [Top 30 evaluation datasets](#1--top-30-evaluation-datasets)
 3. [Amazon-2023 · baselines by family](#2--amazon-2023--baselines-by-method-family)
 4. [Amazon-2023 · product categories](#3--amazon-2023--product-categories)
-5. [Amazon-2023 · data processing](#4--amazon-2023--data-processing)
-6. [Amazon-2023 · GPU setups](#5--amazon-2023--gpu-setups)
-7. [Amazon-2023 · code availability](#6--amazon-2023--code-availability)
-8. [Methodology](#methodology)
+5. [Amazon-2023 · GPU setups](#4--amazon-2023--gpu-setups)
+6. [Amazon-2023 · code availability](#5--amazon-2023--code-availability)
+7. [Methodology](#methodology)
 
 ---
 
@@ -211,30 +210,7 @@ Amazon product categories used as evaluation domains across the 132 papers.
 
 ---
 
-## 4 · Amazon-2023 · data processing
-
-### Overall — how the field processes Amazon-2023
-
-Of the **131/132** papers that describe their pipeline, the recurring recipe is: take a handful of product categories, apply **k-core filtering** (most often **5-core**) to drop sparse users/items, order each user’s interactions **chronologically**, and hold out the **last interaction for testing** (leave-one-out) — capping sequences at a fixed length and pairing IDs with **item text** (title, description, brand) for modern text/LLM models. Common ingredients:
-
-| Processing step | Papers (of described) | |
-|---|---:|:--|
-| Chronological / temporal split | 60 (45%) | `████████████████` |
-| Leave-one-out split | 44 (33%) | `████████████····` |
-| Text / title / metadata features | 40 (30%) | `███████████·····` |
-| 5-core filtering | 33 (25%) | `█████████·······` |
-| Max sequence-length cap | 27 (20%) | `███████·········` |
-| Negative sampling | 17 (12%) | `█████···········` |
-| Ratio split (e.g. 8:1:1) | 15 (11%) | `████············` |
-| Rating binarization / implicit | 13 (9%) | `███·············` |
-| Image / visual features | 13 (9%) | `███·············` |
-| Min interactions / threshold | 10 (7%) | `███·············` |
-
-> Per-paper recipes (all 132, with arXiv links) are in **[`Amazon-2023_Data_Processing.md`](Amazon-2023_Data_Processing.md)**.
-
----
-
-## 5 · Amazon-2023 · GPU setups
+## 4 · Amazon-2023 · GPU setups
 
 Hardware is reported by **73/132** papers. Top-5 setups (cards × model):
 
@@ -250,7 +226,7 @@ _**A100** is the workhorse — one card for fine-tuning, 4–8× for pre-trainin
 
 ---
 
-## 6 · Amazon-2023 · code availability
+## 5 · Amazon-2023 · code availability
 
 **72 / 132** Amazon-2023 papers release a *working* public code repository — a GitHub/GitLab repo or an anonymized review repo (`anonymous.4open.science`). The remaining 60 ship no code, only release data/model/demo artifacts, promise code upon acceptance, or list a link that is currently broken/empty/expired.
 
@@ -268,7 +244,6 @@ _**A100** is the workhorse — one card for fine-tuning, 4–8× for pre-trainin
 - **Dataset frequencies** — PDF counts under each `Freq_<count>_<dataset>` folder; a paper appears under every dataset it uses.
 - **Baselines & categories** — aggregated from per-paper analyses of the 132 Amazon-2023 papers; each paper counted once per distinct baseline/category. Spelling/abbreviation variants were consolidated.
 - **Method-family grouping** — each baseline labelled by method type; best-effort, and a few methods span families.
-- **Data processing** — condensed from each paper’s reported preprocessing; “described” excludes papers that omit a pipeline.
 - **Code availability** — detected from PDF hyperlinks and “code/implementation available” statements; a paper counts only when it links its **own** public repo (GitHub/GitLab or an anonymized review repo). Baseline/library/model links and data-, model- or demo-only artifacts are excluded.
 
 
