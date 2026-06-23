@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# arxiv_bulk transient files (logs / harvest state)
+_arxiv_bulk.log
+_arxiv_bulk.run.log
+_arxiv_fill*.log
+_harvest_state.json
