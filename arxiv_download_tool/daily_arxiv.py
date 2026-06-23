@@ -17,6 +17,18 @@ logging.basicConfig(
 )
 ARXIV_URL_PREFIX = "http://arxiv.org/abs/"
 
+# A single shared arXiv client so its rate limiting (delay_seconds) is enforced
+# across ALL queries, including separate per-month backfill windows. Creating a
+# fresh client per window resets the timer and bursts requests, which arXiv
+# throttles with HTTP 429.
+_ARXIV_CLIENT = None
+
+def get_arxiv_client() -> arxiv.Client:
+    global _ARXIV_CLIENT
+    if _ARXIV_CLIENT is None:
+        _ARXIV_CLIENT = arxiv.Client(page_size=100, delay_seconds=15, num_retries=8)
+    return _ARXIV_CLIENT
+
 # --- Helper Functions ---
 
 def get_authors(authors: list[arxiv.Result.Author], first_author: bool = False) -> str:
@@ -40,6 +52,70 @@ def extract_venue(comment: Optional[str], journal_ref: Optional[str]) -> str:
     if comment and re.search(r'accept|to appear|camera[\s-]?ready|proceedings', comment, re.IGNORECASE):
         return comment.strip()
     return "null"
+
+# Known name variants for each conference. A `venues` entry in the config expands
+# to all of its aliases so that, e.g., "NeurIPS" also matches "NIPS" and the full
+# "Neural Information Processing Systems" spelling found in comments/journal_ref.
+VENUE_ALIASES = {
+    "ICLR": ["ICLR", "International Conference on Learning Representations"],
+    "NeurIPS": ["NeurIPS", "NIPS", "Neural Information Processing Systems"],
+    "ICML": ["ICML", "International Conference on Machine Learning"],
+    "ACL": ["ACL", "Association for Computational Linguistics"],
+}
+
+def build_venue_pattern(aliases: list[str]) -> 're.Pattern':
+    """Compile a case-insensitive regex matching any of the given venue aliases.
+
+    Uses letter-only boundaries so a year/apostrophe suffix still matches
+    (e.g. "ICML2024", "NeurIPS'23") while avoiding false hits inside other
+    acronyms (e.g. "ACL" must not match NAACL / EACL / TACL).
+    """
+    # Longer aliases first so the full name is preferred over its acronym.
+    parts = sorted({re.escape(a) for a in aliases}, key=len, reverse=True)
+    return re.compile(r'(?<![A-Za-z])(' + '|'.join(parts) + r')(?![A-Za-z])', re.IGNORECASE)
+
+# Map every known alias (lowercased) to a canonical short venue name. Used to
+# label each paper with a compact "<Venue><Year>" tag, e.g. "ICML2026".
+VENUE_CANON = {
+    "iclr": "ICLR",
+    "international conference on learning representations": "ICLR",
+    "neurips": "NeurIPS",
+    "nips": "NeurIPS",
+    "neural information processing systems": "NeurIPS",
+    "icml": "ICML",
+    "international conference on machine learning": "ICML",
+    "acl": "ACL",
+    "association for computational linguistics": "ACL",
+}
+_VENUE_FIND_RE = build_venue_pattern(list(VENUE_CANON.keys()))
+
+def _normalize_year(yy: str) -> str:
+    """Turn a 2-digit year into 4 digits (all target venues are 20xx)."""
+    return str(2000 + int(yy)) if len(yy) == 2 else yy
+
+def canonical_venue(comment: Optional[str], journal_ref: Optional[str]) -> str:
+    """Return a compact "<Venue><Year>" tag (e.g. "ICML2026", "ACL2025").
+
+    Scans the free-text comment/journal_ref for any known venue alias and the
+    year next to it. Prefers a match that has an adjacent year; falls back to the
+    bare venue name, or "null" when no known venue is mentioned.
+    """
+    text = " ".join(x for x in (comment, journal_ref) if x)
+    if not text:
+        return "null"
+    fallback = None
+    for m in _VENUE_FIND_RE.finditer(text):
+        canon = VENUE_CANON[m.group(0).lower()]
+        tail = text[m.end():m.end() + 8]
+        apos = re.match(r"\s*'(\d{2})\b", tail)            # ICML'26
+        full = re.match(r"[\s:\-/]*((?:19|20)\d{2})\b", tail)  # ICML 2026 / ICML2026
+        if apos:
+            return f"{canon}{_normalize_year(apos.group(1))}"
+        if full:
+            return f"{canon}{full.group(1)}"
+        if fallback is None:
+            fallback = canon
+    return fallback or "null"
 
 def iter_month_windows(since: datetime.date, until: datetime.date):
     """Yield (start_date, end_date_inclusive) for each calendar month in [since, until].
@@ -77,6 +153,7 @@ def load_config(config_file: Path) -> dict:
     keyword_queries = {}
     title_filters = {}
     output_paths = {}
+    venue_filters = {}
     for key, value in config.get('keywords', {}).items():
         # Keyword terms (optional). Join with " OR ", quoting multi-word phrases.
         filters = value.get('filters', [])
@@ -84,13 +161,17 @@ def load_config(config_file: Path) -> dict:
         kw_query = " OR ".join(query_parts)
         # arXiv subject categories (optional), e.g. cs.CL -> "cat:cs.CL".
         cat_query = " OR ".join(f"cat:{c}" for c in value.get('categories', []))
-        # Combine: AND them when both present; otherwise use whichever exists.
-        if kw_query and cat_query:
-            keyword_queries[key] = f"({kw_query}) AND ({cat_query})"
-        elif cat_query:
-            keyword_queries[key] = cat_query
-        else:
-            keyword_queries[key] = kw_query
+        # Accepted venues (optional). arXiv has no venue field, so we (a) narrow
+        # server-side by searching every venue name variant across all fields and
+        # (b) post-filter on comment/journal_ref via a regex (see get_daily_papers).
+        aliases = []
+        for v in value.get('venues', []):
+            aliases.extend(VENUE_ALIASES.get(v, [v]))
+        venue_query = " OR ".join(f'all:"{a}"' if ' ' in a else f'all:{a}' for a in aliases)
+        venue_filters[key] = build_venue_pattern(aliases) if aliases else None
+        # Combine all present query components with AND.
+        components = [f"({c})" for c in (kw_query, cat_query, venue_query) if c]
+        keyword_queries[key] = " AND ".join(components)
         # Title filters: explicit list wins; else fall back to keyword filters;
         # else None (no title filtering, e.g. category-only topics).
         if 'title_filters' in value:
@@ -106,10 +187,11 @@ def load_config(config_file: Path) -> dict:
     config['keyword_queries'] = keyword_queries
     config['title_filters'] = title_filters
     config['output_paths'] = output_paths
+    config['venue_filters'] = venue_filters
     logging.info(f"Configuration loaded: {config}")
     return config
 
-def get_daily_papers(topic: str, query: str, max_results: int, title_filters: Optional[list[str]] = None, days: Optional[int] = None, since: Optional[datetime.date] = None, date_range: Optional[tuple] = None) -> dict:
+def get_daily_papers(topic: str, query: str, max_results: int, title_filters: Optional[list[str]] = None, days: Optional[int] = None, since: Optional[datetime.date] = None, date_range: Optional[tuple] = None, venue_filters: Optional['re.Pattern'] = None) -> dict:
     """
     Searches arXiv for papers based on a query and returns a dictionary of found papers.
 
@@ -145,7 +227,7 @@ def get_daily_papers(topic: str, query: str, max_results: int, title_filters: Op
         sort_by=arxiv.SortCriterion.SubmittedDate
     )
 
-    client = arxiv.Client(page_size=100, delay_seconds=5, num_retries=5)
+    client = get_arxiv_client()
     for result in client.results(search):
         # Results are sorted by submitted date (newest first); stop once we pass the cutoff.
         if cutoff_date is not None and result.published.date() < cutoff_date:
@@ -155,6 +237,12 @@ def get_daily_papers(topic: str, query: str, max_results: int, title_filters: Op
         title_lower = result.title.lower()
         if normalized_title_filters and not any(term in title_lower for term in normalized_title_filters):
             continue
+
+        # Venue filter: keep only papers whose comment/journal_ref names a target venue.
+        if venue_filters is not None:
+            venue_text = " ".join(filter(None, [result.comment, result.journal_ref]))
+            if not venue_text or not venue_filters.search(venue_text):
+                continue
 
         paper_id = result.get_short_id()
         # The arxiv library already strips the version, but this is safe
@@ -173,6 +261,7 @@ def get_daily_papers(topic: str, query: str, max_results: int, title_filters: Op
             "abstract": result.summary.replace("\n", " "),
             "primary_category": result.primary_category,
             "venue": extract_venue(result.comment, result.journal_ref),
+            "venue_short": canonical_venue(result.comment, result.journal_ref),
             "comment": result.comment or "null",
             "journal_ref": result.journal_ref or "null",
         }
@@ -213,6 +302,7 @@ def main(**config):
         output_path = Path(output_paths.get(topic, default_output))
         output_path.parent.mkdir(parents=True, exist_ok=True)
         title_filters = config.get('title_filters', {}).get(topic)
+        venue_filters = config.get('venue_filters', {}).get(topic)
 
         if since is not None:
             # Backfill mode: chunk the range into monthly windows so each arXiv
@@ -229,6 +319,7 @@ def main(**config):
                         max_results=config.get('max_results', 2),
                         title_filters=title_filters,
                         date_range=(window_start, window_end),
+                        venue_filters=venue_filters,
                     )
                 except Exception as exc:  # Keep going so one bad window doesn't abort the backfill.
                     logging.error(f"Window {window_start}->{window_end} failed: {exc}")
@@ -249,7 +340,8 @@ def main(**config):
             max_results=config.get('max_results', 2),
             title_filters=title_filters,
             days=config.get('days'),
-            since=since
+            since=since,
+            venue_filters=venue_filters
         )
         papers = papers_data.get(topic)
         if not papers: # Skip topics with no new papers

@@ -5,7 +5,10 @@ repo_name: "Recommendation-paper-daily"
 show_authors: True
 show_links: True
 show_badge: True
-max_results: 100
+# Max results per query/window. Must be large enough that a single backfill
+# window (e.g. one month of a busy venue) is never truncated. arXiv caps paging
+# at ~10k per query, and our per-month windows stay well under that.
+max_results: 50000
 
 # Default output path. Used for any topic that does not define its own `output`.
 json_output_path: './papers/papers.json'
@@ -43,3 +46,17 @@ keywords:
         # cs.CL=NLP/LLM, cs.CV=vision/multimodal, cs.AI=AI/reasoning,
         # cs.LG=ML/embedding, cs.IR=retrieval.
         categories: ["cs.CL", "cs.CV", "cs.AI", "cs.LG", "cs.IR"]
+
+    "TopVenues":
+        # Papers accepted at top ML/NLP venues. arXiv has no venue field, so this
+        # narrows server-side by searching every venue name variant across all
+        # fields, then post-filters on the comment/journal_ref text.
+        # Backfill the last 3 years with:
+        #   python3 daily_arxiv.py --topic TopVenues --since 2023-06-22
+        output: './papers/top_venues_papers.json'
+        # Each name expands to all known variants (see VENUE_ALIASES in code):
+        #   ICLR    -> ICLR / International Conference on Learning Representations
+        #   NeurIPS -> NeurIPS / NIPS / Neural Information Processing Systems
+        #   ICML    -> ICML / International Conference on Machine Learning
+        #   ACL     -> ACL / Association for Computational Linguistics
+        venues: ["ICLR", "NeurIPS", "ICML", "ACL"]

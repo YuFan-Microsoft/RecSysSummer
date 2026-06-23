@@ -1,0 +1,1754 @@
+{
+    "WSDM2024": {
+        "conf/wsdm/0001H0VO24": {
+            "title": "Unbiased Learning to Rank: On Recent Advances and Practical Applications.",
+            "authors": "Shashank Gupta, Philipp Hager, Jin Huang, Ali Vardasbi, Harrie Oosterhuis",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1118-1121",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/0001H0VO24",
+            "doi": "10.1145/3616855.3636451",
+            "ee": "https://doi.org/10.1145/3616855.3636451"
+        },
+        "conf/wsdm/0001T0ZLCFJZ24": {
+            "title": "Domain Level Interpretability: Interpreting Black-box Model with Domain-specific Embedding.",
+            "authors": "Ya-Lin Zhang, Caizhi Tang, Lu Yu, Jun Zhou, Longfei Li, Qing Cui, Fangfang Fan, Linbo Jiang, Xiaosong Zhao",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1102-1105",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/0001T0ZLCFJZ24",
+            "doi": "10.1145/3616855.3635688",
+            "ee": "https://doi.org/10.1145/3616855.3635688"
+        },
+        "conf/wsdm/0001WZH24": {
+            "title": "TTC-QuAli: A Text-Table-Chart Dataset for Multimodal Quantity Alignment.",
+            "authors": "Haoyu Dong, Haochen Wang, Anda Zhou, Yue Hu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "181-189",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/0001WZH24",
+            "doi": "10.1145/3616855.3635777",
+            "ee": "https://doi.org/10.1145/3616855.3635777"
+        },
+        "conf/wsdm/000324": {
+            "title": "Unlocking Human Curiosity.",
+            "authors": "Elizabeth Reid",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "5",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/000324",
+            "doi": "10.1145/3616855.3637631",
+            "ee": "https://doi.org/10.1145/3616855.3637631"
+        },
+        "conf/wsdm/0003YZRCMR24": {
+            "title": "On the Effectiveness of Unlearning in Session-Based Recommendation.",
+            "authors": "Xin Xin, Liu Yang, Ziqi Zhao, Pengjie Ren, Zhumin Chen, Jun Ma, Zhaochun Ren",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "855-863",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/0003YZRCMR24",
+            "doi": "10.1145/3616855.3635823",
+            "ee": "https://doi.org/10.1145/3616855.3635823"
+        },
+        "conf/wsdm/0004W0Y24": {
+            "title": "DeSCo: Towards Generalizable and Scalable Deep Subgraph Counting.",
+            "authors": "Tianyu Fu, Chiyue Wei, Yu Wang, Rex Ying",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "218-227",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/0004W0Y24",
+            "doi": "10.1145/3616855.3635788",
+            "ee": "https://doi.org/10.1145/3616855.3635788"
+        },
+        "conf/wsdm/0007RGZLHL24": {
+            "title": "Real-time E-bike Route Planning with Battery Range Prediction.",
+            "authors": "Zhao Li, Guoqi Ren, Yongchun Gu, Siwei Zhou, Xuanwu Liu, Jiaming Huang, Ming Li",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1070-1073",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/0007RGZLHL24",
+            "doi": "10.1145/3616855.3635696",
+            "ee": "https://doi.org/10.1145/3616855.3635696"
+        },
+        "conf/wsdm/Abbasiantaeb0KA24": {
+            "title": "Let the LLMs Talk: Simulating Human-to-Human Conversational QA via Zero-Shot LLM-to-LLM Interactions.",
+            "authors": "Zahra Abbasiantaeb, Yifei Yuan, Evangelos Kanoulas, Mohammad Aliannejadi",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "8-17",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Abbasiantaeb0KA24",
+            "doi": "10.1145/3616855.3635856",
+            "ee": "https://doi.org/10.1145/3616855.3635856"
+        },
+        "conf/wsdm/AkkerJL0NP24": {
+            "title": "Practical Bandits: An Industry Perspective.",
+            "authors": "Bram van den Akker, Olivier Jeunen, Ying Li, Ben London, Zahra Nazari, Devesh Parekh",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1132-1135",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/AkkerJL0NP24",
+            "doi": "10.1145/3616855.3636449",
+            "ee": "https://doi.org/10.1145/3616855.3636449"
+        },
+        "conf/wsdm/Alonso024": {
+            "title": "Some Useful Things to Know When Combining IR and NLP: The Easy, the Hard and the Ugly.",
+            "authors": "Omar Alonso, Kenneth Church",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1110-1113",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Alonso024",
+            "doi": "10.1145/3616855.3636452",
+            "ee": "https://doi.org/10.1145/3616855.3636452"
+        },
+        "conf/wsdm/AlsuhaibaniZRJX24": {
+            "title": "IDoFew: Intermediate Training Using Dual-Clustering in Language Models for Few Labels Text Classification.",
+            "authors": "Abdullah Alsuhaibani, Hamad Zogan, Imran Razzak, Shoaib Jameel, Guandong Xu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "18-27",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/AlsuhaibaniZRJX24",
+            "doi": "10.1145/3616855.3635849",
+            "ee": "https://doi.org/10.1145/3616855.3635849"
+        },
+        "conf/wsdm/Baeza-Yates24": {
+            "title": "Introduction to Responsible AI.",
+            "authors": "Ricardo Baeza-Yates",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1114-1117",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Baeza-Yates24",
+            "doi": "10.1145/3616855.3636455",
+            "ee": "https://doi.org/10.1145/3616855.3636455"
+        },
+        "conf/wsdm/BaiZLCZNSF24": {
+            "title": "LabelCraft: Empowering Short Video Recommendations with Automated Label Crafting.",
+            "authors": "Yimeng Bai, Yang Zhang, Jing Lu, Jianxin Chang, Xiaoxue Zang, Yanan Niu, Yang Song, Fuli Feng",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "28-37",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/BaiZLCZNSF24",
+            "doi": "10.1145/3616855.3635816",
+            "ee": "https://doi.org/10.1145/3616855.3635816"
+        },
+        "conf/wsdm/BautistaBBS24": {
+            "title": "MAD: Multi-Scale Anomaly Detection in Link Streams.",
+            "authors": "Esteban Bautista, Laurent Brisson, Cécile Bothorel, Grégory Smits",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "38-46",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/BautistaBBS24",
+            "doi": "10.1145/3616855.3635834",
+            "ee": "https://doi.org/10.1145/3616855.3635834"
+        },
+        "conf/wsdm/Bendersky0M00WZ24": {
+            "title": "WSDM 2024 Workshop on Large Language Models for Individuals, Groups, and Society.",
+            "authors": "Michael Bendersky, Cheng Li, Qiaozhu Mei, Vanessa Murdock, Jie Tang, Hongning Wang, Hamed Zamani, Mingyang Zhang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1206-1207",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Bendersky0M00WZ24",
+            "doi": "10.1145/3616855.3635726",
+            "ee": "https://doi.org/10.1145/3616855.3635726"
+        },
+        "conf/wsdm/Bernard24": {
+            "title": "Leveraging User Simulation to Develop and Evaluate Conversational Information Access Agents.",
+            "authors": "Nolwenn Bernard",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1136-1138",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Bernard24",
+            "doi": "10.1145/3616855.3635730",
+            "ee": "https://doi.org/10.1145/3616855.3635730"
+        },
+        "conf/wsdm/BernardKB24": {
+            "title": "IAI MovieBot 2.0: An Enhanced Research Platform with Trainable Neural Components and Transparent User Modeling.",
+            "authors": "Nolwenn Bernard, Ivica Kostric, Krisztian Balog",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1042-1045",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/BernardKB24",
+            "doi": "10.1145/3616855.3635699",
+            "ee": "https://doi.org/10.1145/3616855.3635699"
+        },
+        "conf/wsdm/BrantleyFDJ24": {
+            "title": "Ranking with Long-Term Constraints.",
+            "authors": "Kianté Brantley, Zhichong Fang, Sarah Dean, Thorsten Joachims",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "47-56",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/BrantleyFDJ24",
+            "doi": "10.1145/3616855.3635819",
+            "ee": "https://doi.org/10.1145/3616855.3635819"
+        },
+        "conf/wsdm/Broder24": {
+            "title": "Delphic Costs and Benefits in Web Search: A Utilitarian and Historical Analysis.",
+            "authors": "Andrei Z. Broder",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Broder24",
+            "doi": "10.1145/3616855.3638208",
+            "ee": "https://doi.org/10.1145/3616855.3638208"
+        },
+        "conf/wsdm/CMR24": {
+            "title": "Augmenting Keyword-based Search in Mobile Applications Using LLMs.",
+            "authors": "Harikrishnan C, Giridhar Sreenivasa Murthy, Kumar Rangarajan",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1161-1162",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/CMR24",
+            "doi": "10.1145/3616855.3635745",
+            "ee": "https://doi.org/10.1145/3616855.3635745"
+        },
+        "conf/wsdm/CaiT0ZWZL24": {
+            "title": "LMBot: Distilling Graph Knowledge into Language Model for Graph-less Deployment in Twitter Bot Detection.",
+            "authors": "Zijian Cai, Zhaoxuan Tan, Zhenyu Lei, Zifeng Zhu, Hongrui Wang, Qinghua Zheng, Minnan Luo",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "57-66",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/CaiT0ZWZL24",
+            "doi": "10.1145/3616855.3635843",
+            "ee": "https://doi.org/10.1145/3616855.3635843"
+        },
+        "conf/wsdm/ChangAM24": {
+            "title": "To Copy, or not to Copy; That is a Critical Issue of the Output Softmax Layer in Neural Sequential Recommenders.",
+            "authors": "Haw-Shiuan Chang, Nikhil Agarwal, Andrew McCallum",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "67-76",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ChangAM24",
+            "doi": "10.1145/3616855.3635755",
+            "ee": "https://doi.org/10.1145/3616855.3635755"
+        },
+        "conf/wsdm/ChangJZATHYV24": {
+            "title": "PEFA: Parameter-Free Adapters for Large-scale Embedding-based Retrieval Models.",
+            "authors": "Wei-Cheng Chang, Jyun-Yu Jiang, Jiong Zhang, Mutasem Al-Darabsah, Choon Hui Teo, Cho-Jui Hsieh, Hsiang-Fu Yu, S. V. N. Vishwanathan",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "77-86",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ChangJZATHYV24",
+            "doi": "10.1145/3616855.3635791",
+            "ee": "https://doi.org/10.1145/3616855.3635791"
+        },
+        "conf/wsdm/ChenD0FCHKLL24": {
+            "title": "Professional Network Matters: Connections Empower Person-Job Fit.",
+            "authors": "Hao Chen, Lun Du, Yuxuan Lu, Qiang Fu, Xu Chen, Shi Han, Yanbin Kang, Guangming Lu, Zi Li",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "96-105",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ChenD0FCHKLL24",
+            "doi": "10.1145/3616855.3635852",
+            "ee": "https://doi.org/10.1145/3616855.3635852"
+        },
+        "conf/wsdm/ChenLJJDH24": {
+            "title": "Towards Mitigating Dimensional Collapse of Representations in Collaborative Filtering.",
+            "authors": "Huiyuan Chen, Vivian Lai, Hongye Jin, Zhimeng Jiang, Mahashweta Das, Xia Hu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "106-115",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ChenLJJDH24",
+            "doi": "10.1145/3616855.3635832",
+            "ee": "https://doi.org/10.1145/3616855.3635832"
+        },
+        "conf/wsdm/ChenLWCW024": {
+            "title": "Empathetic Response Generation with Relation-aware Commonsense Knowledge.",
+            "authors": "Changyu Chen, Yanran Li, Chen Wei, Jianwei Cui, Bin Wang, Rui Yan",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "87-95",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ChenLWCW024",
+            "doi": "10.1145/3616855.3635836",
+            "ee": "https://doi.org/10.1145/3616855.3635836"
+        },
+        "conf/wsdm/ChenLYXXWXX24": {
+            "title": "Exploiting Duality in Open Information Extraction with Predicate Prompt.",
+            "authors": "Zhen Chen, Jingping Liu, Deqing Yang, Yanghua Xiao, Huimin Xu, Zongyu Wang, Rui Xie, Yunsen Xian",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "125-133",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ChenLYXXWXX24",
+            "doi": "10.1145/3616855.3635799",
+            "ee": "https://doi.org/10.1145/3616855.3635799"
+        },
+        "conf/wsdm/ChenZWLX24": {
+            "title": "TemporalMed: Advancing Medical Dialogues with Time-Aware Responses in Large Language Models.",
+            "authors": "Yuyan Chen, Jin Zhao, Zhihao Wen, Zhixu Li, Yanghua Xiao",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "116-124",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ChenZWLX24",
+            "doi": "10.1145/3616855.3635860",
+            "ee": "https://doi.org/10.1145/3616855.3635860"
+        },
+        "conf/wsdm/ChienS24": {
+            "title": "Customized and Robust Deep Neural Network Watermarking.",
+            "authors": "Tzu-Yun Chien, Chih-Ya Shen",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "134-142",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ChienS24",
+            "doi": "10.1145/3616855.3635812",
+            "ee": "https://doi.org/10.1145/3616855.3635812"
+        },
+        "conf/wsdm/Christin24": {
+            "title": "What I Learned from Spending a Dozen Years in the Dark Web.",
+            "authors": "Nicolas Christin",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "2-3",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Christin24",
+            "doi": "10.1145/3616855.3637632",
+            "ee": "https://doi.org/10.1145/3616855.3637632"
+        },
+        "conf/wsdm/CraneLSV24": {
+            "title": "Overlapping and Robust Edge-Colored Clustering in Hypergraphs.",
+            "authors": "Alex Crane, Brian Lavallee, Blair D. Sullivan, Nate Veldt",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "143-151",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/CraneLSV24",
+            "doi": "10.1145/3616855.3635792",
+            "ee": "https://doi.org/10.1145/3616855.3635792"
+        },
+        "conf/wsdm/Cruz-PerezM24": {
+            "title": "Automated Topic Generation for the Mexican Platform for Access to Government Public Information During the Period 2003-2020.",
+            "authors": "Hermelando Cruz-Pérez, Alejandro Molina-Villegas",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1192-1193",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Cruz-PerezM24",
+            "doi": "10.1145/3616855.3636502",
+            "ee": "https://doi.org/10.1145/3616855.3636502"
+        },
+        "conf/wsdm/DasSVWX24": {
+            "title": "Applications of LLMs in E-Commerce Search and Product Knowledge Graph: The DoorDash Case Study.",
+            "authors": "Sudeep Das, Raghav Saboo, Chaitanya S. K. Vadrevu, Bruce Wang, Steven Xu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1163-1164",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/DasSVWX24",
+            "doi": "10.1145/3616855.3635738",
+            "ee": "https://doi.org/10.1145/3616855.3635738"
+        },
+        "conf/wsdm/DavePCLZWK24": {
+            "title": "The 3rd International Workshop on Interactive and Scalable Information Retrieval Methods for eCommerce (ISIR-eCom 2024).",
+            "authors": "Vachik S. Dave, Linsey Pang, Xiquan Cui, Chen Luo, Hamed Zamani, Lingfei Wu, George Karypis",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1208-1209",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/DavePCLZWK24",
+            "doi": "10.1145/3616855.3635724",
+            "ee": "https://doi.org/10.1145/3616855.3635724"
+        },
+        "conf/wsdm/DeldariSMKSM24": {
+            "title": "CroSSL: Cross-modal Self-Supervised Learning for Time-series through Latent Masking.",
+            "authors": "Shohreh Deldari, Dimitris Spathis, Mohammad Malekzadeh, Fahim Kawsar, Flora D. Salim, Akhil Mathur",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "152-160",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/DeldariSMKSM24",
+            "doi": "10.1145/3616855.3635795",
+            "ee": "https://doi.org/10.1145/3616855.3635795"
+        },
+        "conf/wsdm/DengD0W24": {
+            "title": "CL4DIV: A Contrastive Learning Framework for Search Result Diversification.",
+            "authors": "Zhirui Deng, Zhicheng Dou, Yutao Zhu, Ji-Rong Wen",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "171-180",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/DengD0W24",
+            "doi": "10.1145/3616855.3635851",
+            "ee": "https://doi.org/10.1145/3616855.3635851"
+        },
+        "conf/wsdm/DengZHCSXF0WZLH24": {
+            "title": "K2: A Foundation Language Model for Geoscience Knowledge Understanding and Utilization.",
+            "authors": "Cheng Deng, Tianhang Zhang, Zhongmou He, Qiyuan Chen, Yuanyuan Shi, Yi Xu, Luoyi Fu, Weinan Zhang, Xinbing Wang, Chenghu Zhou, Zhouhan Lin, Junxian He",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "161-170",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/DengZHCSXF0WZLH24",
+            "doi": "10.1145/3616855.3635772",
+            "ee": "https://doi.org/10.1145/3616855.3635772"
+        },
+        "conf/wsdm/Derr0DZA24": {
+            "title": "The 5th International Workshop on Machine Learning on Graphs (MLoG).",
+            "authors": "Tyler Derr, Yao Ma, Kaize Ding, Tong Zhao, Nesreen K. Ahmed",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1210-1211",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Derr0DZA24",
+            "doi": "10.1145/3616855.3635725",
+            "ee": "https://doi.org/10.1145/3616855.3635725"
+        },
+        "conf/wsdm/Dong24": {
+            "title": "The Journey to A Knowledgeable Assistant with Retrieval-Augmented Generation (RAG).",
+            "authors": "Xin Luna Dong",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "4",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Dong24",
+            "doi": "10.1145/3616855.3638207",
+            "ee": "https://doi.org/10.1145/3616855.3638207"
+        },
+        "conf/wsdm/Escobar-Turriza24": {
+            "title": "Genomic-World Fungi Data: Synteny Part.",
+            "authors": "Pedro Escobar-Turriza, Luis Muñoz-Miranda, Alejandro Pereira-Santana",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1194-1195",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Escobar-Turriza24",
+            "doi": "10.1145/3616855.3636505",
+            "ee": "https://doi.org/10.1145/3616855.3636505"
+        },
+        "conf/wsdm/FanLC0QZ24": {
+            "title": "Guardian: Guarding against Gradient Leakage with Provable Defense for Federated Learning.",
+            "authors": "Mingyuan Fan, Yang Liu, Cen Chen, Chengyu Wang, Minghui Qiu, Wenmeng Zhou",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "190-198",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/FanLC0QZ24",
+            "doi": "10.1145/3616855.3635758",
+            "ee": "https://doi.org/10.1145/3616855.3635758"
+        },
+        "conf/wsdm/FarfadeVCM24": {
+            "title": "Scaling Use-case Based Shopping using LLMs.",
+            "authors": "Sachin Farfade, Sachin Vernekar, Vineet Chaoji, Rajdeep Mukherjee",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1165-1166",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/FarfadeVCM24",
+            "doi": "10.1145/3616855.3635748",
+            "ee": "https://doi.org/10.1145/3616855.3635748"
+        },
+        "conf/wsdm/FengWLLW24": {
+            "title": "Contextual MAB Oriented Embedding Denoising for Sequential Recommendation.",
+            "authors": "Zhichao Feng, Pengfei Wang, Kaiyuan Li, Chenliang Li, Shangguang Wang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "199-207",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/FengWLLW24",
+            "doi": "10.1145/3616855.3635798",
+            "ee": "https://doi.org/10.1145/3616855.3635798"
+        },
+        "conf/wsdm/FerdjaouiAN24": {
+            "title": "WordGraph: A Python Package for Reconstructing Interactive Causal Graphical Models from Text Data.",
+            "authors": "Amine Ferdjaoui, Séverine Affeldt, Mohamed Nadif",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1046-1049",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/FerdjaouiAN24",
+            "doi": "10.1145/3616855.3635698",
+            "ee": "https://doi.org/10.1145/3616855.3635698"
+        },
+        "conf/wsdm/FuY0YCCZWP24": {
+            "title": "Exploring Adapter-based Transfer Learning for Recommender Systems: Empirical Studies and Practical Insights.",
+            "authors": "Junchen Fu, Fajie Yuan, Yu Song, Zheng Yuan, Mingyue Cheng, Shenghui Cheng, Jiaqi Zhang, Jie Wang, Yunzhu Pan",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "208-217",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/FuY0YCCZWP24",
+            "doi": "10.1145/3616855.3635805",
+            "ee": "https://doi.org/10.1145/3616855.3635805"
+        },
+        "conf/wsdm/GanHHMZZZZ24": {
+            "title": "PEACE: Prototype lEarning Augmented transferable framework for Cross-domain rEcommendation.",
+            "authors": "Chunjing Gan, Bo Huang, Binbin Hu, Jian Ma, Zhiqiang Zhang, Jun Zhou, Guannan Zhang, Wenliang Zhong",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "228-237",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/GanHHMZZZZ24",
+            "doi": "10.1145/3616855.3635781",
+            "ee": "https://doi.org/10.1145/3616855.3635781"
+        },
+        "conf/wsdm/GomezC24": {
+            "title": "Framework for Bias Detection in Machine Learning Models: A Fairness Approach.",
+            "authors": "Alveiro Alonso Rosado Gomez, Maritza Liliana Calderón-Benavides",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1152-1154",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/GomezC24",
+            "doi": "10.1145/3616855.3635731",
+            "ee": "https://doi.org/10.1145/3616855.3635731"
+        },
+        "conf/wsdm/Gong0ZCLSB24": {
+            "title": "CausalMMM: Learning Causal Structure for Marketing Mix Modeling.",
+            "authors": "Chang Gong, Di Yao, Lei Zhang, Sheng Chen, Wenbin Li, Yueyang Su, Jingping Bi",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "238-246",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Gong0ZCLSB24",
+            "doi": "10.1145/3616855.3635766",
+            "ee": "https://doi.org/10.1145/3616855.3635766"
+        },
+        "conf/wsdm/GoyalRRYZCNW24": {
+            "title": "HealAI: A Healthcare LLM for Effective Medical Documentation.",
+            "authors": "Sagar Goyal, Eti Rastogi, Sree Prasanna Rajagopal, Dong Yuan, Fen Zhao, Jai Chintagunta, Gautam Naik, Jeff Ward",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1167-1168",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/GoyalRRYZCNW24",
+            "doi": "10.1145/3616855.3635739",
+            "ee": "https://doi.org/10.1145/3616855.3635739"
+        },
+        "conf/wsdm/GuiCSZYHJXZ24": {
+            "title": "Calibration-compatible Listwise Distillation of Privileged Features for CTR Prediction.",
+            "authors": "Xiaoqiang Gui, Yueyao Cheng, Xiang-Rong Sheng, Yunfeng Zhao, Guoxian Yu, Shuguang Han, Yuning Jiang, Jian Xu, Bo Zheng",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "247-256",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/GuiCSZYHJXZ24",
+            "doi": "10.1145/3616855.3635810",
+            "ee": "https://doi.org/10.1145/3616855.3635810"
+        },
+        "conf/wsdm/Guo0W24": {
+            "title": "GEMRec: Towards Generative Model Recommendation.",
+            "authors": "Yuanhe Guo, Haoming Liu, Hongyi Wen",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1054-1057",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Guo0W24",
+            "doi": "10.1145/3616855.3635700",
+            "ee": "https://doi.org/10.1145/3616855.3635700"
+        },
+        "conf/wsdm/HanifBZWBF24": {
+            "title": "EvidenceQuest: An Interactive Evidence Discovery System for Explainable Artificial Intelligence.",
+            "authors": "Ambreen Hanif, Amin Beheshti, Xuyun Zhang, Steven Wood, Boualem Benatallah, EuJin Foo",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1058-1061",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/HanifBZWBF24",
+            "doi": "10.1145/3616855.3635697",
+            "ee": "https://doi.org/10.1145/3616855.3635697"
+        },
+        "conf/wsdm/HaoY0YY24": {
+            "title": "Motif-based Prompt Learning for Universal Cross-domain Recommendation.",
+            "authors": "Bowen Hao, Chaoqun Yang, Lei Guo, Junliang Yu, Hongzhi Yin",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "257-265",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/HaoY0YY24",
+            "doi": "10.1145/3616855.3635754",
+            "ee": "https://doi.org/10.1145/3616855.3635754"
+        },
+        "conf/wsdm/HillLT24": {
+            "title": "Ginkgo-P: General Illustrations of Knowledge Graphs for Openness as a Platform.",
+            "authors": "Blaine Hill, Lihui Liu, Hanghang Tong",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1066-1069",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/HillLT24",
+            "doi": "10.1145/3616855.3635701",
+            "ee": "https://doi.org/10.1145/3616855.3635701"
+        },
+        "conf/wsdm/HuCYGYWLX24": {
+            "title": "SCAD: Subspace Clustering based Adversarial Detector.",
+            "authors": "Xinrong Hu, Wushuan Chen, Jie Yang, Yi Guo, Xun Yao, Bangchao Wang, Junping Liu, Ce Xu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "286-294",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/HuCYGYWLX24",
+            "doi": "10.1145/3616855.3635835",
+            "ee": "https://doi.org/10.1145/3616855.3635835"
+        },
+        "conf/wsdm/HuGLLTZK24": {
+            "title": "User Behavior Enriched Temporal Knowledge Graphs for Sequential Recommendation.",
+            "authors": "Hengchang Hu, Wei Guo, Xu Liu, Yong Liu, Ruiming Tang, Rui Zhang, Min-Yen Kan",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "266-275",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/HuGLLTZK24",
+            "doi": "10.1145/3616855.3635762",
+            "ee": "https://doi.org/10.1145/3616855.3635762"
+        },
+        "conf/wsdm/HuS24": {
+            "title": "User Consented Federated Recommender System Against Personalized Attribute Inference Attack.",
+            "authors": "Qi Hu, Yangqiu Song",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "276-285",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/HuS24",
+            "doi": "10.1145/3616855.3635830",
+            "ee": "https://doi.org/10.1145/3616855.3635830"
+        },
+        "conf/wsdm/HuangZKW24": {
+            "title": "From Second to First: Mixed Censored Multi-Task Learning for Winning Price Prediction.",
+            "authors": "Jiani Huang, Zhenzhe Zheng, Yanrong Kang, Zixiao Wang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "295-303",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/HuangZKW24",
+            "doi": "10.1145/3616855.3635838",
+            "ee": "https://doi.org/10.1145/3616855.3635838"
+        },
+        "conf/wsdm/HuertasS24": {
+            "title": "Profiling Urban Mobility Patterns with High Spatial and Temporal Resolution: A Deep Dive into Cellphone Geo-position Data.",
+            "authors": "José Ignacio Huertas, Luisa Fernanda Chaparro Sierra",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1196-1197",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/HuertasS24",
+            "doi": "10.1145/3616855.3636504",
+            "ee": "https://doi.org/10.1145/3616855.3636504"
+        },
+        "conf/wsdm/ISVGV24": {
+            "title": "Mitigating Factual Inconsistency and Hallucination in Large Language Models.",
+            "authors": "Muneeswaran I, Advaith Shankar, Varun V, Saisubramaniam Gopalakrishnan, Vishal Vaddina",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1169-1170",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ISVGV24",
+            "doi": "10.1145/3616855.3635744",
+            "ee": "https://doi.org/10.1145/3616855.3635744"
+        },
+        "conf/wsdm/JagatapF24": {
+            "title": "Recent Advances in Refinement Recommendations.",
+            "authors": "Akshay Jagatap, Sachin Farfade",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1171-1172",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/JagatapF24",
+            "doi": "10.1145/3616855.3635747",
+            "ee": "https://doi.org/10.1145/3616855.3635747"
+        },
+        "conf/wsdm/JiangQX024": {
+            "title": "Incomplete Graph Learning via Attribute-Structure Decoupled Variational Auto-Encoder.",
+            "authors": "Xinke Jiang, Zidi Qin, Jiarong Xu, Xiang Ao",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "304-312",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/JiangQX024",
+            "doi": "10.1145/3616855.3635769",
+            "ee": "https://doi.org/10.1145/3616855.3635769"
+        },
+        "conf/wsdm/JiangYXH24": {
+            "title": "DiffKG: Knowledge Graph Diffusion Model for Recommendation.",
+            "authors": "Yangqin Jiang, Yuhao Yang, Lianghao Xia, Chao Huang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "313-321",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/JiangYXH24",
+            "doi": "10.1145/3616855.3635850",
+            "ee": "https://doi.org/10.1145/3616855.3635850"
+        },
+        "conf/wsdm/Jin0L024": {
+            "title": "Bridging Text Data and Graph Data: Towards Semantics and Structure-aware Knowledge Discovery.",
+            "authors": "Bowen Jin, Yu Zhang, Sha Li, Jiawei Han",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1122-1125",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Jin0L024",
+            "doi": "10.1145/3616855.3636450",
+            "ee": "https://doi.org/10.1145/3616855.3636450"
+        },
+        "conf/wsdm/KaiserRW24": {
+            "title": "Robust Training for Conversational Question Answering Models with Reinforced Reformulation Generation.",
+            "authors": "Magdalena Kaiser, Rishiraj Saha Roy, Gerhard Weikum",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "322-331",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/KaiserRW24",
+            "doi": "10.1145/3616855.3635822",
+            "ee": "https://doi.org/10.1145/3616855.3635822"
+        },
+        "conf/wsdm/Kapoor24": {
+            "title": "Foundation Models for Aerial Robotics.",
+            "authors": "Ashish Kapoor",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1173",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Kapoor24",
+            "doi": "10.1145/3616855.3638206",
+            "ee": "https://doi.org/10.1145/3616855.3638206"
+        },
+        "conf/wsdm/KimKSK24": {
+            "title": "MONET: Modality-Embracing Graph Convolutional Network and Target-Aware Attention for Multimedia Recommendation.",
+            "authors": "Yungi Kim, Taeri Kim, Won-Yong Shin, Sang-Wook Kim",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "332-340",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/KimKSK24",
+            "doi": "10.1145/3616855.3635817",
+            "ee": "https://doi.org/10.1145/3616855.3635817"
+        },
+        "conf/wsdm/KongWPZH24": {
+            "title": "C²DR: Robust Cross-Domain Recommendation based on Causal Disentanglement.",
+            "authors": "Menglin Kong, Jia Wang, Yushan Pan, Haiyang Zhang, Muzhou Hou",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "341-349",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/KongWPZH24",
+            "doi": "10.1145/3616855.3635809",
+            "ee": "https://doi.org/10.1145/3616855.3635809"
+        },
+        "conf/wsdm/KoyejoL24": {
+            "title": "Towards Trustworthy Large Language Models.",
+            "authors": "Sanmi Koyejo, Bo Li",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1126-1127",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/KoyejoL24",
+            "doi": "10.1145/3616855.3636454",
+            "ee": "https://doi.org/10.1145/3616855.3636454"
+        },
+        "conf/wsdm/LabiodNS24": {
+            "title": "WSDM 2024 Workshop on Representation Learning &amp; Clustering.",
+            "authors": "Lazhar Labiod, Mohamed Nadif, Aghiles Salah",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1214-1215",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LabiodNS24",
+            "doi": "10.1145/3616855.3635723",
+            "ee": "https://doi.org/10.1145/3616855.3635723"
+        },
+        "conf/wsdm/Lajewska24": {
+            "title": "Grounded and Transparent Response Generation for Conversational Information-Seeking Systems.",
+            "authors": "Weronika Lajewska",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1142-1144",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Lajewska24",
+            "doi": "10.1145/3616855.3635727",
+            "ee": "https://doi.org/10.1145/3616855.3635727"
+        },
+        "conf/wsdm/Lenti24": {
+            "title": "Learning Opinion Dynamics from Data.",
+            "authors": "Jacopo Lenti",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1145-1147",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Lenti24",
+            "doi": "10.1145/3616855.3635729",
+            "ee": "https://doi.org/10.1145/3616855.3635729"
+        },
+        "conf/wsdm/LentiMM24": {
+            "title": "Likelihood-Based Methods Improve Parameter Estimation in Opinion Dynamics Models.",
+            "authors": "Jacopo Lenti, Corrado Monti, Gianmarco De Francisci Morales",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "350-359",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LentiMM24",
+            "doi": "10.1145/3616855.3635785",
+            "ee": "https://doi.org/10.1145/3616855.3635785"
+        },
+        "conf/wsdm/Leon-Martinez24": {
+            "title": "Understanding User Behavior in Carousel Recommendation Systems for Click Modeling and Learning to Rank.",
+            "authors": "Santiago de Leon-Martinez",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1139-1141",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Leon-Martinez24",
+            "doi": "10.1145/3616855.3635734",
+            "ee": "https://doi.org/10.1145/3616855.3635734"
+        },
+        "conf/wsdm/LiCXZMDCLZ24": {
+            "title": "Multi-Intent Attribute-Aware Text Matching in Searching.",
+            "authors": "Mingzhe Li, Xiuying Chen, Jing Xiang, Qishen Zhang, Changsheng Ma, Chenchen Dai, Jinxiong Chang, Zhongyi Liu, Guannan Zhang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "360-368",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LiCXZMDCLZ24",
+            "doi": "10.1145/3616855.3635813",
+            "ee": "https://doi.org/10.1145/3616855.3635813"
+        },
+        "conf/wsdm/LiCYZX0Y24": {
+            "title": "Global Heterogeneous Graph and Target Interest Denoising for Multi-behavior Sequential Recommendation.",
+            "authors": "Xuewei Li, Hongwei Chen, Jian Yu, Mankun Zhao, Tianyi Xu, Wenbin Zhang, Mei Yu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "387-395",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LiCYZX0Y24",
+            "doi": "10.1145/3616855.3635857",
+            "ee": "https://doi.org/10.1145/3616855.3635857"
+        },
+        "conf/wsdm/LiSCZLL24": {
+            "title": "CDRNP: Cross-Domain Recommendation to Cold-Start Users via Neural Process.",
+            "authors": "Xiaodong Li, Jiawei Sheng, Jiangxia Cao, Wenyuan Zhang, Quangang Li, Tingwen Liu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "378-386",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LiSCZLL24",
+            "doi": "10.1145/3616855.3635794",
+            "ee": "https://doi.org/10.1145/3616855.3635794"
+        },
+        "conf/wsdm/LiSZXCCTWY24": {
+            "title": "Text-Video Retrieval via Multi-Modal Hypergraph Networks.",
+            "authors": "Qian Li, Lixin Su, Jiashu Zhao, Long Xia, Hengyi Cai, Suqi Cheng, Hengzhu Tang, Junfeng Wang, Dawei Yin",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "369-377",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LiSZXCCTWY24",
+            "doi": "10.1145/3616855.3635757",
+            "ee": "https://doi.org/10.1145/3616855.3635757"
+        },
+        "conf/wsdm/Lin0HKDW24": {
+            "title": "Pre-trained Recommender Systems: A Causal Debiasing Perspective.",
+            "authors": "Ziqian Lin, Hao Ding, Trong Nghia Hoang, Branislav Kveton, Anoop Deoras, Hao Wang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "424-433",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Lin0HKDW24",
+            "doi": "10.1145/3616855.3635779",
+            "ee": "https://doi.org/10.1145/3616855.3635779"
+        },
+        "conf/wsdm/LinGZCNSGLJLW24": {
+            "title": "Mixed Attention Network for Cross-domain Sequential Recommendation.",
+            "authors": "Guanyu Lin, Chen Gao, Yu Zheng, Jianxin Chang, Yanan Niu, Yang Song, Kun Gai, Zhiheng Li, Depeng Jin, Yong Li, Meng Wang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "405-413",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LinGZCNSGLJLW24",
+            "doi": "10.1145/3616855.3635801",
+            "ee": "https://doi.org/10.1145/3616855.3635801"
+        },
+        "conf/wsdm/LinGZLCNSG0JL24": {
+            "title": "Inverse Learning with Extremely Sparse Feedback for Recommendation.",
+            "authors": "Guanyu Lin, Chen Gao, Yu Zheng, Yinfeng Li, Jianxin Chang, Yanan Niu, Yang Song, Kun Gai, Zhiheng Li, Depeng Jin, Yong Li",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "396-404",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LinGZLCNSG0JL24",
+            "doi": "10.1145/3616855.3635797",
+            "ee": "https://doi.org/10.1145/3616855.3635797"
+        },
+        "conf/wsdm/LinLPP0LH024": {
+            "title": "Multi-Sequence Attentive User Representation Learning for Side-information Integrated Sequential Recommendation.",
+            "authors": "Xiaolin Lin, Jinwei Luo, Junwei Pan, Weike Pan, Zhong Ming, Xun Liu, Shudong Huang, Jie Jiang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "414-423",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LinLPP0LH024",
+            "doi": "10.1145/3616855.3635815",
+            "ee": "https://doi.org/10.1145/3616855.3635815"
+        },
+        "conf/wsdm/LiuCS024": {
+            "title": "ONCE: Boosting Content-based Recommendation with Both Open- and Closed-source Large Language Models.",
+            "authors": "Qijiong Liu, Nuo Chen, Tetsuya Sakai, Xiao-Ming Wu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "452-461",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LiuCS024",
+            "doi": "10.1145/3616855.3635845",
+            "ee": "https://doi.org/10.1145/3616855.3635845"
+        },
+        "conf/wsdm/LiuCWWB24": {
+            "title": "Generative Models for Complex Logical Reasoning over Knowledge Graphs.",
+            "authors": "Yu Liu, Yanan Cao, Shi Wang, Qingyue Wang, Guanqun Bi",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "492-500",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LiuCWWB24",
+            "doi": "10.1145/3616855.3635804",
+            "ee": "https://doi.org/10.1145/3616855.3635804"
+        },
+        "conf/wsdm/LiuW0YLZ24": {
+            "title": "Capturing Temporal Node Evolution via Self-supervised Learning: A New Perspective on Dynamic Graph Learning.",
+            "authors": "Lingwen Liu, Guangqi Wen, Peng Cao, Jinzhu Yang, Weiping Li, Osmar R. Zaïane",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "443-451",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LiuW0YLZ24",
+            "doi": "10.1145/3616855.3635765",
+            "ee": "https://doi.org/10.1145/3616855.3635765"
+        },
+        "conf/wsdm/LiuY0WLL00024": {
+            "title": "MultiFS: Automated Multi-Scenario Feature Selection in Deep Recommender Systems.",
+            "authors": "Dugang Liu, Chaohua Yang, Xing Tang, Yejing Wang, Fuyuan Lyu, Weihong Luo, Xiuqiang He, Zhong Ming, Xiangyu Zhao",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "434-442",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LiuY0WLL00024",
+            "doi": "10.1145/3616855.3635859",
+            "ee": "https://doi.org/10.1145/3616855.3635859"
+        },
+        "conf/wsdm/LiuYLYWPY24": {
+            "title": "Knowledge Graph Context-Enhanced Diversified Recommendation.",
+            "authors": "Xiaolong Liu, Liangwei Yang, Zhiwei Liu, Mingdai Yang, Chen Wang, Hao Peng, Philip S. Yu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "462-471",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LiuYLYWPY24",
+            "doi": "10.1145/3616855.3635803",
+            "ee": "https://doi.org/10.1145/3616855.3635803"
+        },
+        "conf/wsdm/LiuYXWL24": {
+            "title": "Interact with the Explanations: Causal Debiased Explainable Recommendation System.",
+            "authors": "Xu Liu, Tong Yu, Kaige Xie, Junda Wu, Shuai Li",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "472-481",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LiuYXWL24",
+            "doi": "10.1145/3616855.3635855",
+            "ee": "https://doi.org/10.1145/3616855.3635855"
+        },
+        "conf/wsdm/LiuZZ024": {
+            "title": "Attribute Simulation for Item Embedding Enhancement in Multi-interest Recommendation.",
+            "authors": "Yaokun Liu, Xiaowang Zhang, Minghui Zou, Zhiyong Feng",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "482-491",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LiuZZ024",
+            "doi": "10.1145/3616855.3635841",
+            "ee": "https://doi.org/10.1145/3616855.3635841"
+        },
+        "conf/wsdm/LuoDWBYX24": {
+            "title": "An Interpretable Brain Graph Contrastive Learning Framework for Brain Disorder Analysis.",
+            "authors": "Xuexiong Luo, Guangwei Dong, Jia Wu, Amin Beheshti, Jian Yang, Shan Xue",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1074-1077",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/LuoDWBYX24",
+            "doi": "10.1145/3616855.3635695",
+            "ee": "https://doi.org/10.1145/3616855.3635695"
+        },
+        "conf/wsdm/MaLWT0C24": {
+            "title": "Leveraging Multimodal Features and Item-level User Feedback for Bundle Construction.",
+            "authors": "Yunshan Ma, Xiaohao Liu, Yinwei Wei, Zhulin Tao, Xiang Wang, Tat-Seng Chua",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "510-519",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/MaLWT0C24",
+            "doi": "10.1145/3616855.3635854",
+            "ee": "https://doi.org/10.1145/3616855.3635854"
+        },
+        "conf/wsdm/MaWZWJZYT24": {
+            "title": "MADM: A Model-agnostic Denoising Module for Graph-based Social Recommendation.",
+            "authors": "Wenze Ma, Yuexian Wang, Yanmin Zhu, Zhaobo Wang, Mengyuan Jing, Xuhao Zhao, Jiadi Yu, Feilong Tang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "501-509",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/MaWZWJZYT24",
+            "doi": "10.1145/3616855.3635784",
+            "ee": "https://doi.org/10.1145/3616855.3635784"
+        },
+        "conf/wsdm/MaoDZFLCH024": {
+            "title": "Source Free Graph Unsupervised Domain Adaptation.",
+            "authors": "Haitao Mao, Lun Du, Yujia Zheng, Qiang Fu, Zelin Li, Xu Chen, Shi Han, Dongmei Zhang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "520-528",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/MaoDZFLCH024",
+            "doi": "10.1145/3616855.3635802",
+            "ee": "https://doi.org/10.1145/3616855.3635802"
+        },
+        "conf/wsdm/NarvaezM24": {
+            "title": "Integrating Knowledge Graph Data with Large Language Models for Explainable Inference.",
+            "authors": "Carlos Efrain Quintero Narvaez, Raúl Monroy",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1198-1199",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/NarvaezM24",
+            "doi": "10.1145/3616855.3636507",
+            "ee": "https://doi.org/10.1145/3616855.3636507"
+        },
+        "conf/wsdm/NaseemKKD24": {
+            "title": "A Linguistic Grounding-Infused Contrastive Learning Approach for Health Mention Classification on Social Media.",
+            "authors": "Usman Naseem, Jinman Kim, Matloob Khushi, Adam G. Dunn",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "529-537",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/NaseemKKD24",
+            "doi": "10.1145/3616855.3635763",
+            "ee": "https://doi.org/10.1145/3616855.3635763"
+        },
+        "conf/wsdm/Obata24": {
+            "title": "Gaussian Graphical Model-Based Clustering of Time Series Data.",
+            "authors": "Kohei Obata",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1148-1149",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Obata24",
+            "doi": "10.1145/3616855.3635728",
+            "ee": "https://doi.org/10.1145/3616855.3635728"
+        },
+        "conf/wsdm/Petrov24": {
+            "title": "Effective and Efficient Transformer Models for Sequential Recommendation.",
+            "authors": "Aleksandr V. Petrov",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1150-1151",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Petrov24",
+            "doi": "10.1145/3616855.3635733",
+            "ee": "https://doi.org/10.1145/3616855.3635733"
+        },
+        "conf/wsdm/PetrovM24": {
+            "title": "RecJPQ: Training Large-Catalogue Sequential Recommenders.",
+            "authors": "Aleksandr V. Petrov, Craig Macdonald",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "538-547",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/PetrovM24",
+            "doi": "10.1145/3616855.3635821",
+            "ee": "https://doi.org/10.1145/3616855.3635821"
+        },
+        "conf/wsdm/PrakashPVRVGPV24": {
+            "title": "Accelerating Pharmacovigilance using Large Language Models.",
+            "authors": "Mukkamala Venkata Sai Prakash, Ganesh Parab, Meghana Veeramalla, Siddartha Reddy, Varun V, Saisubramaniam Gopalakrishnan, Vishal Pagidipally, Vishal Vaddina",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1182-1183",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/PrakashPVRVGPV24",
+            "doi": "10.1145/3616855.3635741",
+            "ee": "https://doi.org/10.1145/3616855.3635741"
+        },
+        "conf/wsdm/PueyoPKGTV0ACSM24": {
+            "title": "Integrity 2024: Integrity in Social Networks and Media.",
+            "authors": "Lluís Garcia Pueyo, Symeon Papadopoulos, Prathyusha Senthil Kumar, Aristides Gionis, Panayiotis Tsaparas, Vasilis Verroios, Giuseppe Manco, Anton Andryeyev, Stefano Cresci, Timos Sellis, Anthony McCosker",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1212-1213",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/PueyoPKGTV0ACSM24",
+            "doi": "10.1145/3616855.3635721",
+            "ee": "https://doi.org/10.1145/3616855.3635721"
+        },
+        "conf/wsdm/QiaoDSLFKLLWCFW24": {
+            "title": "Scaling Up LLM Reviews for Google Ads Content Moderation.",
+            "authors": "Wei Qiao, Tushar Dogra, Otilia Stretcu, Yu-Han Lyu, Tiantian Fang, Dongjin Kwon, Chun-Ta Lu, Enming Luo, Yuan Wang, Chih-Chun Chia, Ariel Fuxman, Fangzhou Wang, Ranjay Krishna, Mehmet Tek",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1174-1175",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/QiaoDSLFKLLWCFW24",
+            "doi": "10.1145/3616855.3635736",
+            "ee": "https://doi.org/10.1145/3616855.3635736"
+        },
+        "conf/wsdm/QinYZ0ZS24": {
+            "title": "Intent Contrastive Learning with Cross Subsequences for Sequential Recommendation.",
+            "authors": "Xiuyuan Qin, Huanhuan Yuan, Pengpeng Zhao, Guanfeng Liu, Fuzhen Zhuang, Victor S. Sheng",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "548-556",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/QinYZ0ZS24",
+            "doi": "10.1145/3616855.3635773",
+            "ee": "https://doi.org/10.1145/3616855.3635773"
+        },
+        "conf/wsdm/Qu0NY24": {
+            "title": "Budgeted Embedding Table For Recommender Systems.",
+            "authors": "Yunke Qu, Tong Chen, Quoc Viet Hung Nguyen, Hongzhi Yin",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "557-566",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Qu0NY24",
+            "doi": "10.1145/3616855.3635778",
+            "ee": "https://doi.org/10.1145/3616855.3635778"
+        },
+        "conf/wsdm/Rahdari0FMCDK24": {
+            "title": "Logic-Scaffolding: Personalized Aspect-Instructed Recommendation Explanation Generation using LLMs.",
+            "authors": "Behnam Rahdari, Hao Ding, Ziwei Fan, Yifei Ma, Zhuotong Chen, Anoop Deoras, Branislav Kveton",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1078-1081",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Rahdari0FMCDK24",
+            "doi": "10.1145/3616855.3635689",
+            "ee": "https://doi.org/10.1145/3616855.3635689"
+        },
+        "conf/wsdm/RahmanH24": {
+            "title": "Customer Understanding for Recommender Systems.",
+            "authors": "Md. Mostafizur Rahman, Yu Hirate",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1176-1177",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/RahmanH24",
+            "doi": "10.1145/3616855.3635742",
+            "ee": "https://doi.org/10.1145/3616855.3635742"
+        },
+        "conf/wsdm/RajGDSSV24": {
+            "title": "&quot;Maya&quot;- A Conversational Shopping Assistant for Fashion at Myntra.",
+            "authors": "Akhil Raj, Hrishikesh Ganu, Saikat Kumar Das, R. Sandeep, Satyajeet Singh, Sreekanth Vempati",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1178-1179",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/RajGDSSV24",
+            "doi": "10.1145/3616855.3635740",
+            "ee": "https://doi.org/10.1145/3616855.3635740"
+        },
+        "conf/wsdm/ReddySBYSASZ24": {
+            "title": "CharmBana: Progressive Responses with Real-Time Internet Search for Knowledge-Powered Conversations.",
+            "authors": "Revanth Gangi Reddy, Sharath Chandra Etagi Suresh, Hao Bai, Wentao Yao, Mankeerat Sidhu, Karan Aggarwal, Prathamesh Sonawane, ChengXiang Zhai",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1050-1053",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ReddySBYSASZ24",
+            "doi": "10.1145/3616855.3635702",
+            "ee": "https://doi.org/10.1145/3616855.3635702"
+        },
+        "conf/wsdm/RegevJ024": {
+            "title": "Future Timelines: Extraction and Visualization of Future-related Content From News Articles.",
+            "authors": "Juwal Regev, Adam Jatowt, Michael Färber",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1082-1085",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/RegevJ024",
+            "doi": "10.1145/3616855.3635693",
+            "ee": "https://doi.org/10.1145/3616855.3635693"
+        },
+        "conf/wsdm/RenXY00CH24": {
+            "title": "SSLRec: A Self-Supervised Learning Framework for Recommendation.",
+            "authors": "Xubin Ren, Lianghao Xia, Yuhao Yang, Wei Wei, Tianle Wang, Xuheng Cai, Chao Huang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "567-575",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/RenXY00CH24",
+            "doi": "10.1145/3616855.3635814",
+            "ee": "https://doi.org/10.1145/3616855.3635814"
+        },
+        "conf/wsdm/RoblesMPPM24": {
+            "title": "Preserving Heritage: Developing a Translation Tool for Indigenous Dialects.",
+            "authors": "Melissa Robles, Cristian A. Martínez, Juan Camilo Prieto, Sara Palacios, Rubén Manrique",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1200-1203",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/RoblesMPPM24",
+            "doi": "10.1145/3616855.3637828",
+            "ee": "https://doi.org/10.1145/3616855.3637828"
+        },
+        "conf/wsdm/Rosenfeld24": {
+            "title": "Strategic ML: How to Learn With Data That &apos;Behaves&apos;.",
+            "authors": "Nir Rosenfeld",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1128-1131",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Rosenfeld24",
+            "doi": "10.1145/3616855.3636453",
+            "ee": "https://doi.org/10.1145/3616855.3636453"
+        },
+        "conf/wsdm/RoySLYES024": {
+            "title": "GAD-NR: Graph Anomaly Detection via Neighborhood Reconstruction.",
+            "authors": "Amit Roy, Juan Shu, Jia Li, Carl Yang, Olivier Elshocht, Jeroen Smeets, Pan Li",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "576-585",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/RoySLYES024",
+            "doi": "10.1145/3616855.3635767",
+            "ee": "https://doi.org/10.1145/3616855.3635767"
+        },
+        "conf/wsdm/Roychowdhury24": {
+            "title": "Journey of Hallucination-minimized Generative AI Solutions for Financial Decision Makers.",
+            "authors": "Sohini Roychowdhury",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1180-1181",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Roychowdhury24",
+            "doi": "10.1145/3616855.3635737",
+            "ee": "https://doi.org/10.1145/3616855.3635737"
+        },
+        "conf/wsdm/SagtaniJMJ24": {
+            "title": "Ad-load Balancing via Off-policy Learning in a Content Marketplace.",
+            "authors": "Hitesh Sagtani, Madan Gopal Jhawar, Rishabh Mehrotra, Olivier Jeunen",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "586-595",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/SagtaniJMJ24",
+            "doi": "10.1145/3616855.3635846",
+            "ee": "https://doi.org/10.1145/3616855.3635846"
+        },
+        "conf/wsdm/SajadmaneshG24": {
+            "title": "ProGAP: Progressive Graph Neural Networks with Differential Privacy Guarantees.",
+            "authors": "Sina Sajadmanesh, Daniel Gatica-Perez",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "596-605",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/SajadmaneshG24",
+            "doi": "10.1145/3616855.3635761",
+            "ee": "https://doi.org/10.1145/3616855.3635761"
+        },
+        "conf/wsdm/SakotaP024": {
+            "title": "Fly-Swat or Cannon? Cost-Effective Language Model Choice via Meta-Modeling.",
+            "authors": "Marija Sakota, Maxime Peyrard, Robert West",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "606-615",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/SakotaP024",
+            "doi": "10.1145/3616855.3635825",
+            "ee": "https://doi.org/10.1145/3616855.3635825"
+        },
+        "conf/wsdm/Savage24": {
+            "title": "Unveiling AI-Driven Collective Action for a Worker-Centric Future.",
+            "authors": "Saiph Savage",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "6-7",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Savage24",
+            "doi": "10.1145/3616855.3637633",
+            "ee": "https://doi.org/10.1145/3616855.3637633"
+        },
+        "conf/wsdm/SaxenaPISVGV24": {
+            "title": "Automated Tailoring of Large Language Models for Industry-Specific Downstream Tasks.",
+            "authors": "Shreya Saxena, Siva Prasad, Muneeswaran I, Advaith Shankar, Varun V, Saisubramaniam Gopalakrishnan, Vishal Vaddina",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1184-1185",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/SaxenaPISVGV24",
+            "doi": "10.1145/3616855.3635743",
+            "ee": "https://doi.org/10.1145/3616855.3635743"
+        },
+        "conf/wsdm/SchedlMSHL24": {
+            "title": "Psychology-informed Information Access Systems Workshop.",
+            "authors": "Markus Schedl, Marta Moscati, Bruno Sguerra, Romain Hennequin, Elisabeth Lex",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1216-1217",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/SchedlMSHL24",
+            "doi": "10.1145/3616855.3635722",
+            "ee": "https://doi.org/10.1145/3616855.3635722"
+        },
+        "conf/wsdm/SeolGLP24": {
+            "title": "Proxy-based Item Representation for Attribute and Context-aware Recommendation.",
+            "authors": "Jinseok Seol, Minseok Gang, Sang-goo Lee, Jaehui Park",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "616-625",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/SeolGLP24",
+            "doi": "10.1145/3616855.3635824",
+            "ee": "https://doi.org/10.1145/3616855.3635824"
+        },
+        "conf/wsdm/ShethMKC024": {
+            "title": "Causality Guided Disentanglement for Cross-Platform Hate Speech Detection.",
+            "authors": "Paras Sheth, Raha Moraffah, Tharindu S. Kumarage, Aman Chadha, Huan Liu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "626-635",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ShethMKC024",
+            "doi": "10.1145/3616855.3635771",
+            "ee": "https://doi.org/10.1145/3616855.3635771"
+        },
+        "conf/wsdm/ShirzadkhaniHKR24": {
+            "title": "Temporal Graph Analysis with TGX.",
+            "authors": "Razieh Shirzadkhani, Shenyang Huang, Elahe Kooshafar, Reihaneh Rabbany, Farimah Poursafaei",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1086-1089",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ShirzadkhaniHKR24",
+            "doi": "10.1145/3616855.3635694",
+            "ee": "https://doi.org/10.1145/3616855.3635694"
+        },
+        "conf/wsdm/ShuangP24": {
+            "title": "Using Causal Inference to Solve Uncertainty Issues in Dataset Shift.",
+            "authors": "Song Shuang, Muhammad Syafiq Bin Mohd Pozi",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1155-1157",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ShuangP24",
+            "doi": "10.1145/3616855.3635732",
+            "ee": "https://doi.org/10.1145/3616855.3635732"
+        },
+        "conf/wsdm/SuWLLLLLBHBCGWB24": {
+            "title": "Long-Term Value of Exploration: Measurements, Findings and Algorithms.",
+            "authors": "Yi Su, Xiangyu Wang, Elaine Ya Le, Liang Liu, Yuening Li, Haokai Lu, Benjamin Lipshitz, Sriraj Badam, Lukasz Heldt, Shuchao Bi, Ed H. Chi, Cristos Goodrow, Su-Lin Wu, Lexi Baugher, Minmin Chen",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "636-644",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/SuWLLLLLBHBCGWB24",
+            "doi": "10.1145/3616855.3635833",
+            "ee": "https://doi.org/10.1145/3616855.3635833"
+        },
+        "conf/wsdm/SuiZZH024": {
+            "title": "Table Meets LLM: Can Large Language Models Understand Structured Table Data? A Benchmark and Empirical Study.",
+            "authors": "Yuan Sui, Mengyu Zhou, Mingjie Zhou, Shi Han, Dongmei Zhang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "645-654",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/SuiZZH024",
+            "doi": "10.1145/3616855.3635752",
+            "ee": "https://doi.org/10.1145/3616855.3635752"
+        },
+        "conf/wsdm/SunBGYZLZC24": {
+            "title": "A Multi-Granularity-Aware Aspect Learning Model for Multi-Aspect Dense Retrieval.",
+            "authors": "Xiaojie Sun, Keping Bi, Jiafeng Guo, Sihui Yang, Qishen Zhang, Zhongyi Liu, Guannan Zhang, Xueqi Cheng",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "674-682",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/SunBGYZLZC24",
+            "doi": "10.1145/3616855.3635770",
+            "ee": "https://doi.org/10.1145/3616855.3635770"
+        },
+        "conf/wsdm/SunLCWBZ24": {
+            "title": "Rethinking and Simplifying Bootstrapped Graph Latents.",
+            "authors": "Wangbin Sun, Jintang Li, Liang Chen, Bingzhe Wu, Yatao Bian, Zibin Zheng",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "665-673",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/SunLCWBZ24",
+            "doi": "10.1145/3616855.3635842",
+            "ee": "https://doi.org/10.1145/3616855.3635842"
+        },
+        "conf/wsdm/SunLGDLZYMD24": {
+            "title": "LEAD: Liberal Feature-based Distillation for Dense Retrieval.",
+            "authors": "Hao Sun, Xiao Liu, Yeyun Gong, Anlei Dong, Jingwen Lu, Yan Zhang, Linjun Yang, Rangan Majumder, Nan Duan",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "655-664",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/SunLGDLZYMD24",
+            "doi": "10.1145/3616855.3635774",
+            "ee": "https://doi.org/10.1145/3616855.3635774"
+        },
+        "conf/wsdm/TorbatiTW24": {
+            "title": "SIRUP: Search-based Book Recommendation Playground.",
+            "authors": "Ghazaleh Haratinezhad Torbati, Anna Tigunova, Gerhard Weikum",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1062-1065",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/TorbatiTW24",
+            "doi": "10.1145/3616855.3635692",
+            "ee": "https://doi.org/10.1145/3616855.3635692"
+        },
+        "conf/wsdm/WallatJA24": {
+            "title": "Temporal Blind Spots in Large Language Models.",
+            "authors": "Jonas Wallat, Adam Jatowt, Avishek Anand",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "683-692",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WallatJA24",
+            "doi": "10.1145/3616855.3635818",
+            "ee": "https://doi.org/10.1145/3616855.3635818"
+        },
+        "conf/wsdm/Wang24": {
+            "title": "NeuralReconciler for Hierarchical Time Series Forecasting.",
+            "authors": "Shiyu Wang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "731-739",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Wang24",
+            "doi": "10.1145/3616855.3635806",
+            "ee": "https://doi.org/10.1145/3616855.3635806"
+        },
+        "conf/wsdm/WangGTYHX0024": {
+            "title": "Follow the LIBRA: Guiding Fair Policy for Unified Impression Allocation via Adversarial Rewarding.",
+            "authors": "Xiaoyu Wang, Yonghui Guo, Bin Tan, Tao Yang, Dongbo Huang, Lan Xu, Hao Zhou, Xiangyang Li",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "750-759",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WangGTYHX0024",
+            "doi": "10.1145/3616855.3635756",
+            "ee": "https://doi.org/10.1145/3616855.3635756"
+        },
+        "conf/wsdm/WangHYZZZZYH24": {
+            "title": "Not All Negatives Are Worth Attending to: Meta-Bootstrapping Negative Sampling Framework for Link Prediction.",
+            "authors": "Yakun Wang, Binbin Hu, Shuo Yang, Meiqi Zhu, Zhiqiang Zhang, Qiyang Zhang, Jun Zhou, Guo Ye, Huimei He",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "760-768",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WangHYZZZZYH24",
+            "doi": "10.1145/3616855.3635840",
+            "ee": "https://doi.org/10.1145/3616855.3635840"
+        },
+        "conf/wsdm/WangL0Z0GT24": {
+            "title": "Diff-MSR: A Diffusion Model Enhanced Paradigm for Cold-Start Multi-Scenario Recommendation.",
+            "authors": "Yuhao Wang, Ziru Liu, Yichao Wang, Xiangyu Zhao, Bo Chen, Huifeng Guo, Ruiming Tang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "779-787",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WangL0Z0GT24",
+            "doi": "10.1145/3616855.3635807",
+            "ee": "https://doi.org/10.1145/3616855.3635807"
+        },
+        "conf/wsdm/WangLC24": {
+            "title": "Fresh Content Recommendation at Scale: A Multi-funnel Solution and the Potential of LLMs.",
+            "authors": "Jianling Wang, Haokai Lu, Minmin Chen",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1186-1187",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WangLC24",
+            "doi": "10.1145/3616855.3635749",
+            "ee": "https://doi.org/10.1145/3616855.3635749"
+        },
+        "conf/wsdm/WangLT24": {
+            "title": "CityCAN: Causal Attention Network for Citywide Spatio-Temporal Forecasting.",
+            "authors": "Chengxin Wang, Yuxuan Liang, Gary Tan",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "702-711",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WangLT24",
+            "doi": "10.1145/3616855.3635764",
+            "ee": "https://doi.org/10.1145/3616855.3635764"
+        },
+        "conf/wsdm/WangLZZ0PL024": {
+            "title": "Efficient, Direct, and Restricted Black-Box Graph Evasion Attacks to Any-Layer Graph Neural Networks via Influence Function.",
+            "authors": "Binghui Wang, Minhua Lin, Tianxiang Zhou, Pan Zhou, Ang Li, Meng Pang, Hai Helen Li, Yiran Chen",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "693-701",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WangLZZ0PL024",
+            "doi": "10.1145/3616855.3635826",
+            "ee": "https://doi.org/10.1145/3616855.3635826"
+        },
+        "conf/wsdm/WangSWZ024": {
+            "title": "Dynamic Sparse Learning: A Novel Paradigm for Efficient Recommendation.",
+            "authors": "Shuyao Wang, Yongduo Sui, Jiancan Wu, Zhi Zheng, Hui Xiong",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "740-749",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WangSWZ024",
+            "doi": "10.1145/3616855.3635780",
+            "ee": "https://doi.org/10.1145/3616855.3635780"
+        },
+        "conf/wsdm/WangWH24": {
+            "title": "FairIF: Boosting Fairness in Deep Learning via Influence Functions with Validation Set Sensitive Attributes.",
+            "authors": "Haonan Wang, Ziwei Wu, Jingrui He",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "721-730",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WangWH24",
+            "doi": "10.1145/3616855.3635844",
+            "ee": "https://doi.org/10.1145/3616855.3635844"
+        },
+        "conf/wsdm/WangZKH24": {
+            "title": "Cost-Effective Active Learning for Bid Exploration in Online Advertising.",
+            "authors": "Zixiao Wang, Zhenzhe Zheng, Yanrong Kang, Jiani Huang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "788-796",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WangZKH24",
+            "doi": "10.1145/3616855.3635839",
+            "ee": "https://doi.org/10.1145/3616855.3635839"
+        },
+        "conf/wsdm/WangZTLLCCZL024": {
+            "title": "Towards Better Chinese Spelling Check for Search Engines: A New Dataset and Strong Baseline.",
+            "authors": "Yue Wang, Zilong Zheng, Zecheng Tang, Juntao Li, Zhihui Liu, Kunlong Chen, Jinxiong Chang, Qishen Zhang, Zhongyi Liu, Min Zhang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "769-778",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WangZTLLCCZL024",
+            "doi": "10.1145/3616855.3635847",
+            "ee": "https://doi.org/10.1145/3616855.3635847"
+        },
+        "conf/wsdm/WangZW24": {
+            "title": "Distribution Consistency based Self-Training for Graph Neural Networks with Sparse Labels.",
+            "authors": "Fali Wang, Tianxiang Zhao, Suhang Wang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "712-720",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WangZW24",
+            "doi": "10.1145/3616855.3635793",
+            "ee": "https://doi.org/10.1145/3616855.3635793"
+        },
+        "conf/wsdm/WeiRTWSCWYH24": {
+            "title": "LLMRec: Large Language Models with Graph Augmentation for Recommendation.",
+            "authors": "Wei Wei, Xubin Ren, Jiabin Tang, Qinyong Wang, Lixin Su, Suqi Cheng, Junfeng Wang, Dawei Yin, Chao Huang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "806-815",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WeiRTWSCWYH24",
+            "doi": "10.1145/3616855.3635853",
+            "ee": "https://doi.org/10.1145/3616855.3635853"
+        },
+        "conf/wsdm/WeiYMWTLZ24": {
+            "title": "AutoPooling: Automated Pooling Search for Multi-valued Features in Recommendations.",
+            "authors": "He Wei, Yuekui Yang, Shaoping Ma, Haiyang Wu, Yangyang Tang, Meixi Liu, Yang Zhang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "797-805",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WeiYMWTLZ24",
+            "doi": "10.1145/3616855.3635808",
+            "ee": "https://doi.org/10.1145/3616855.3635808"
+        },
+        "conf/wsdm/WenCTGWDXZLZL24": {
+            "title": "Unified Visual Preference Learning for User Intent Understanding.",
+            "authors": "Yihua Wen, Si Chen, Yu Tian, Wanxian Guan, Pengjie Wang, Hongbo Deng, Jian Xu, Bo Zheng, Zihao Li, Lixin Zou, Chenliang Li",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "816-825",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WenCTGWDXZLZL24",
+            "doi": "10.1145/3616855.3635858",
+            "ee": "https://doi.org/10.1145/3616855.3635858"
+        },
+        "conf/wsdm/WiSP24": {
+            "title": "Continuous-time Autoencoders for Regular and Irregular Time Series Imputation.",
+            "authors": "Hyowon Wi, Yehjin Shin, Noseong Park",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "826-835",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/WiSP24",
+            "doi": "10.1145/3616855.3635831",
+            "ee": "https://doi.org/10.1145/3616855.3635831"
+        },
+        "conf/wsdm/XiaLGLZSG24": {
+            "title": "Neural Kalman Filtering for Robust Temporal Recommendation.",
+            "authors": "Jiafeng Xia, Dongsheng Li, Hansu Gu, Tun Lu, Peng Zhang, Li Shang, Ning Gu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "836-845",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/XiaLGLZSG24",
+            "doi": "10.1145/3616855.3635837",
+            "ee": "https://doi.org/10.1145/3616855.3635837"
+        },
+        "conf/wsdm/XianTPL24": {
+            "title": "Vector Search with OpenAI Embeddings: Lucene Is All You Need.",
+            "authors": "Jasper Xian, Tommaso Teofili, Ronak Pradeep, Jimmy Lin",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1090-1093",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/XianTPL24",
+            "doi": "10.1145/3616855.3635691",
+            "ee": "https://doi.org/10.1145/3616855.3635691"
+        },
+        "conf/wsdm/XiaoYZJNY24": {
+            "title": "Deep Evolutional Instant Interest Network for CTR Prediction in Trigger-Induced Recommendation.",
+            "authors": "Zhibo Xiao, Luwei Yang, Tao Zhang, Wen Jiang, Wei Ning, Yujiu Yang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "846-854",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/XiaoYZJNY24",
+            "doi": "10.1145/3616855.3635829",
+            "ee": "https://doi.org/10.1145/3616855.3635829"
+        },
+        "conf/wsdm/Xie0YZDH24": {
+            "title": "Making Small Language Models Better Multi-task Learners with Mixture-of-Task-Adapters.",
+            "authors": "Yukang Xie, Chengyu Wang, Junbing Yan, Jiyong Zhou, Feiqi Deng, Jun Huang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1094-1097",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Xie0YZDH24",
+            "doi": "10.1145/3616855.3635690",
+            "ee": "https://doi.org/10.1145/3616855.3635690"
+        },
+        "conf/wsdm/XuCZMCZ024": {
+            "title": "Hierarchical Multimodal Pre-training for Visually Rich Webpage Understanding.",
+            "authors": "Hongshen Xu, Lu Chen, Zihan Zhao, Da Ma, Ruisheng Cao, Zichen Zhu, Kai Yu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "864-872",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/XuCZMCZ024",
+            "doi": "10.1145/3616855.3635753",
+            "ee": "https://doi.org/10.1145/3616855.3635753"
+        },
+        "conf/wsdm/YanBZLL24": {
+            "title": "Towards Alignment-Uniformity Aware Representation in Graph Contrastive Learning.",
+            "authors": "Rong Yan, Peng Bao, Xiao Zhang, Zhongyi Liu, Hui Liu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "873-881",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/YanBZLL24",
+            "doi": "10.1145/3616855.3635789",
+            "ee": "https://doi.org/10.1145/3616855.3635789"
+        },
+        "conf/wsdm/YangDWRCCMZR024": {
+            "title": "Debiasing Sequential Recommenders through Distributionally Robust Optimization over System Exposure.",
+            "authors": "Jiyuan Yang, Yue Ding, Yidan Wang, Pengjie Ren, Zhumin Chen, Fei Cai, Jun Ma, Rui Zhang, Zhaochun Ren, Xin Xin",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "882-890",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/YangDWRCCMZR024",
+            "doi": "10.1145/3616855.3635848",
+            "ee": "https://doi.org/10.1145/3616855.3635848"
+        },
+        "conf/wsdm/YangLYLWPY24": {
+            "title": "Unified Pretraining for Recommendation via Task Hypergraphs.",
+            "authors": "Mingdai Yang, Zhiwei Liu, Liangwei Yang, Xiaolong Liu, Chen Wang, Hao Peng, Philip S. Yu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "891-900",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/YangLYLWPY24",
+            "doi": "10.1145/3616855.3635811",
+            "ee": "https://doi.org/10.1145/3616855.3635811"
+        },
+        "conf/wsdm/YangLZTC24": {
+            "title": "GAP: A Grammar and Position-Aware Framework for Efficient Recognition of Multi-Line Mathematical Formulas.",
+            "authors": "Zhe Yang, Qi Liu, Kai Zhang, Shiwei Tong, Enhong Chen",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "901-910",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/YangLZTC24",
+            "doi": "10.1145/3616855.3635776",
+            "ee": "https://doi.org/10.1145/3616855.3635776"
+        },
+        "conf/wsdm/YaoZHYGZ24": {
+            "title": "COTER: Conditional Optimal Transport meets Table Retrieval.",
+            "authors": "Xun Yao, Zhixin Zhang, Xinrong Hu, Jie (Jack) Yang, Yi Guo, Daniel (Dianliang) Zhu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "911-919",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/YaoZHYGZ24",
+            "doi": "10.1145/3616855.3635796",
+            "ee": "https://doi.org/10.1145/3616855.3635796"
+        },
+        "conf/wsdm/Yu24": {
+            "title": "Lessons Learnt from Building Friend Recommendation Systems.",
+            "authors": "Jun Yu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1188-1189",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Yu24",
+            "doi": "10.1145/3616855.3635750",
+            "ee": "https://doi.org/10.1145/3616855.3635750"
+        },
+        "conf/wsdm/YuanZC024": {
+            "title": "PhoGAD: Graph-based Anomaly Behavior Detection with Persistent Homology Optimization.",
+            "authors": "Ziqi Yuan, Haoyi Zhou, Tianyu Chen, Jianxin Li",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "920-929",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/YuanZC024",
+            "doi": "10.1145/3616855.3635783",
+            "ee": "https://doi.org/10.1145/3616855.3635783"
+        },
+        "conf/wsdm/YueWHZMW24": {
+            "title": "Linear Recurrent Units for Sequential Recommendation.",
+            "authors": "Zhenrui Yue, Yueqi Wang, Zhankui He, Huimin Zeng, Julian J. McAuley, Dong Wang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "930-938",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/YueWHZMW24",
+            "doi": "10.1145/3616855.3635760",
+            "ee": "https://doi.org/10.1145/3616855.3635760"
+        },
+        "conf/wsdm/Zarate-CartasM24": {
+            "title": "Automatic Extraction of Patterns in Digital News Articles of Femicides occurred in Mexico by Text Mining Techniques.",
+            "authors": "Jonathan Zárate-Cartas, Alejandro Molina-Villegas",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1204-1205",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Zarate-CartasM24",
+            "doi": "10.1145/3616855.3636503",
+            "ee": "https://doi.org/10.1145/3616855.3636503"
+        },
+        "conf/wsdm/Zhang24": {
+            "title": "Multi-Granular Text Classification with Minimal Supervision.",
+            "authors": "Yunyi Zhang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1158-1160",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/Zhang24",
+            "doi": "10.1145/3616855.3635735",
+            "ee": "https://doi.org/10.1145/3616855.3635735"
+        },
+        "conf/wsdm/ZhangBP24": {
+            "title": "Maximizing Malicious Influence in Node Injection Attack.",
+            "authors": "Xiao Zhang, Peng Bao, Shirui Pan",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "958-966",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ZhangBP24",
+            "doi": "10.1145/3616855.3635790",
+            "ee": "https://doi.org/10.1145/3616855.3635790"
+        },
+        "conf/wsdm/ZhangLDHZ24": {
+            "title": "A Scalable Open-Source System for Segmenting Urban Areas with Road Networks.",
+            "authors": "Ming Zhang, Yanyan Li, Jianguo Duan, Jizhou Huang, Jingbo Zhou",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1098-1101",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ZhangLDHZ24",
+            "doi": "10.1145/3616855.3635703",
+            "ee": "https://doi.org/10.1145/3616855.3635703"
+        },
+        "conf/wsdm/ZhangWLTZ24": {
+            "title": "IncMSR: An Incremental Learning Approach for Multi-Scenario Recommendation.",
+            "authors": "Kexin Zhang, Yichao Wang, Xiu Li, Ruiming Tang, Rui Zhang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "939-948",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ZhangWLTZ24",
+            "doi": "10.1145/3616855.3635828",
+            "ee": "https://doi.org/10.1145/3616855.3635828"
+        },
+        "conf/wsdm/ZhangY0L24": {
+            "title": "Defense Against Model Extraction Attacks on Recommender Systems.",
+            "authors": "Sixiao Zhang, Hongzhi Yin, Hongxu Chen, Cheng Long",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "949-957",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ZhangY0L24",
+            "doi": "10.1145/3616855.3635751",
+            "ee": "https://doi.org/10.1145/3616855.3635751"
+        },
+        "conf/wsdm/ZhangYS24": {
+            "title": "AAGenRec: A Novel Approach for Mitigating Inter-task Interference in Multi-task Optimization of Sequential Behavior Modeling.",
+            "authors": "Jiawei Zhang, Shimin Yang, Liang Shen",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1190-1191",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ZhangYS24",
+            "doi": "10.1145/3616855.3635746",
+            "ee": "https://doi.org/10.1145/3616855.3635746"
+        },
+        "conf/wsdm/ZhangZZPCH024": {
+            "title": "Wildfire: A Twitter Social Sensing Platform for Layperson.",
+            "authors": "Zeyu Zhang, Zhengyuan Zhu, Haiqi Zhang, Foram Patel, Josue Caraballo, Patrick Hennecke, Chengkai Li",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1106-1109",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ZhangZZPCH024",
+            "doi": "10.1145/3616855.3635704",
+            "ee": "https://doi.org/10.1145/3616855.3635704"
+        },
+        "conf/wsdm/ZhaoPDBPLGY24": {
+            "title": "RDGCN: Reinforced Dependency Graph Convolutional Network for Aspect-based Sentiment Analysis.",
+            "authors": "Xusheng Zhao, Hao Peng, Qiong Dai, Xu Bai, Huailiang Peng, Yanbing Liu, Qinglang Guo, Philip S. Yu",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "976-984",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ZhaoPDBPLGY24",
+            "doi": "10.1145/3616855.3635775",
+            "ee": "https://doi.org/10.1145/3616855.3635775"
+        },
+        "conf/wsdm/ZhaoYWWZCLCC24": {
+            "title": "Interpretable Imitation Learning with Dynamic Causal Relations.",
+            "authors": "Tianxiang Zhao, Wenchao Yu, Suhang Wang, Lu Wang, Xiang Zhang, Yuncong Chen, Yanchi Liu, Wei Cheng, Haifeng Chen",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "967-975",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ZhaoYWWZCLCC24",
+            "doi": "10.1145/3616855.3635827",
+            "ee": "https://doi.org/10.1145/3616855.3635827"
+        },
+        "conf/wsdm/ZhouSZCWCW24": {
+            "title": "CreST: A Credible Spatiotemporal Learning Framework for Uncertainty-aware Traffic Forecasting.",
+            "authors": "Zhengyang Zhou, Jiahao Shi, Hongbo Zhang, Qiongyu Chen, Xu Wang, Hongyang Chen, Yang Wang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "985-993",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ZhouSZCWCW24",
+            "doi": "10.1145/3616855.3635759",
+            "ee": "https://doi.org/10.1145/3616855.3635759"
+        },
+        "conf/wsdm/ZhuCLLZ24": {
+            "title": "Dance with Labels: Dual-Heterogeneous Label Graph Interaction for Multi-intent Spoken Language Understanding.",
+            "authors": "Zhihong Zhu, Xuxin Cheng, Hongxiang Li, Yaowei Li, Yuexian Zou",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1022-1031",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ZhuCLLZ24",
+            "doi": "10.1145/3616855.3635782",
+            "ee": "https://doi.org/10.1145/3616855.3635782"
+        },
+        "conf/wsdm/ZhuLCZ24": {
+            "title": "The Devil is in the Data: Learning Fair Graph Neural Networks via Partial Knowledge Distillation.",
+            "authors": "Yuchang Zhu, Jintang Li, Liang Chen, Zibin Zheng",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1012-1021",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ZhuLCZ24",
+            "doi": "10.1145/3616855.3635768",
+            "ee": "https://doi.org/10.1145/3616855.3635768"
+        },
+        "conf/wsdm/ZhuSZWMN24": {
+            "title": "Collaboration and Transition: Distilling Item Transitions into Multi-Query Self-Attention for Sequential Recommendation.",
+            "authors": "Tianyu Zhu, Yansong Shi, Yuan Zhang, Yihong Wu, Fengran Mo, Jian-Yun Nie",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1003-1011",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ZhuSZWMN24",
+            "doi": "10.1145/3616855.3635787",
+            "ee": "https://doi.org/10.1145/3616855.3635787"
+        },
+        "conf/wsdm/ZhuZI000K24": {
+            "title": "Pitfalls in Link Prediction with Graph Neural Networks: Understanding the Impact of Target-link Inclusion &amp; Better Practices.",
+            "authors": "Jing Zhu, Yuhang Zhou, Vassilis N. Ioannidis, Shengyi Qian, Wei Ai, Xiang Song, Danai Koutra",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "994-1002",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ZhuZI000K24",
+            "doi": "10.1145/3616855.3635786",
+            "ee": "https://doi.org/10.1145/3616855.3635786"
+        },
+        "conf/wsdm/ZouWLPWLSZ24": {
+            "title": "MultiSPANS: A Multi-range Spatial-Temporal Transformer Network for Traffic Forecast via Structural Entropy Optimization.",
+            "authors": "Dongcheng Zou, Senzhang Wang, Xuefeng Li, Hao Peng, Yuandong Wang, Chunyang Liu, Kehua Sheng, Bo Zhang",
+            "venue": "WSDM 2024",
+            "venue_short": "WSDM2024",
+            "pages": "1032-1041",
+            "dblp_url": "https://dblp.org/rec/conf/wsdm/ZouWLPWLSZ24",
+            "doi": "10.1145/3616855.3635820",
+            "ee": "https://doi.org/10.1145/3616855.3635820"
+        }
+    }
+}

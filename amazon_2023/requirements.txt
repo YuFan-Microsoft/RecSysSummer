@@ -1,0 +1,6 @@
+# Required to run process_amazon2023.py
+huggingface_hub>=0.23
+# Also needs the system tool `curl` (resumable metadata download).
+
+# Optional — only to load/inspect the produced JSONL splits:
+# datasets>=2.14

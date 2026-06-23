@@ -1,0 +1,15 @@
+# Generated data (published on the Hugging Face Hub instead)
+processed/
+hf_cache/
+
+# Python virtual environment
+.venv/
+venv/
+
+# Python caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# OS / editor
+.DS_Store

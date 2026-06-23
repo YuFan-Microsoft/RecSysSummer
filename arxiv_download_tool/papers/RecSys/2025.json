@@ -1,0 +1,2394 @@
+{
+    "RecSys2025": {
+        "conf/recsys/0001SS0T00Y25": {
+            "title": "Hierarchical Graph Information Bottleneck for Multi-Behavior Recommendation.",
+            "authors": "Hengyu Zhang, Chunxu Shen, Xiangguo Sun, Jie Tan, Yanchao Tan, Yu Rong, Hong Cheng, Lingling Yi",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "155-164",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/0001SS0T00Y25",
+            "doi": "10.1145/3705328.3748073",
+            "ee": "https://doi.org/10.1145/3705328.3748073"
+        },
+        "conf/recsys/0002LASMMF25": {
+            "title": "Normative Alignment of Recommender Systems via Internal Label Shift.",
+            "authors": "Johannes Kruse, Kasper Lindskow, Michael Riis Andersen, Ryotaro Shimizu, Julian J. McAuley, Pierre-Alexandre Mattei, Jes Frellsen",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1240-1245",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/0002LASMMF25",
+            "doi": "10.1145/3705328.3759309",
+            "ee": "https://doi.org/10.1145/3705328.3759309"
+        },
+        "conf/recsys/000300000HN25": {
+            "title": "NLGCL: Naturally Existing Neighbor Layers Graph Contrastive Learning for Recommendation.",
+            "authors": "Jinfeng Xu, Zheyu Chen, Shuo Yang, Jinze Li, Hewei Wang, Wei Wang, Xiping Hu, Edith C. H. Ngai",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "319-329",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/000300000HN25",
+            "doi": "10.1145/3705328.3748059",
+            "ee": "https://doi.org/10.1145/3705328.3748059"
+        },
+        "conf/recsys/0003GC25": {
+            "title": "RecPS: Privacy Risk Scoring for Recommender Systems.",
+            "authors": "Jiajie He, Yuechun Gu, Keke Chen",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "432-440",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/0003GC25",
+            "doi": "10.1145/3705328.3748052",
+            "ee": "https://doi.org/10.1145/3705328.3748052"
+        },
+        "conf/recsys/0004JSSJBPP025": {
+            "title": "RecSys Challenge 2025: Universal Behavioral Profiles for Recommender Systems.",
+            "authors": "Jacek Dabrowski, Maria Janicka, Lukasz Sienkiewicz, Gergely Stomfai, Dietmar Jannach, Francesco Barile, Marco Polignano, Claudio Pomo, Abhishek Srivastava",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1389-1393",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/0004JSSJBPP025",
+            "doi": "10.1145/3705328.3748172",
+            "ee": "https://doi.org/10.1145/3705328.3748172"
+        },
+        "conf/recsys/0005L0YBLLZW25": {
+            "title": "Enhancing Sequential Recommender with Large Language Models for Joint Video and Comment Recommendation.",
+            "authors": "Bowen Zheng, Zihan Lin, Enze Liu, Chen Yang, Enyang Bai, Cheng Ling, Han Li, Wayne Xin Zhao, Ji-Rong Wen",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "93-103",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/0005L0YBLLZW25",
+            "doi": "10.1145/3705328.3748075",
+            "ee": "https://doi.org/10.1145/3705328.3748075"
+        },
+        "conf/recsys/0015GCHLZ25": {
+            "title": "USD: A User-Intent-Driven Sampling and Dual-Debiasing Framework for Large-Scale Homepage Recommendations.",
+            "authors": "Jiaqi Zheng, Cheng Guo, Yi Cao, Chaoqun Hou, Tong Liu, Bo Zheng",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1108-1111",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/0015GCHLZ25",
+            "doi": "10.1145/3705328.3748096",
+            "ee": "https://doi.org/10.1145/3705328.3748096"
+        },
+        "conf/recsys/AbboudHJRW25": {
+            "title": "Agentic Personalisation of Cross-Channel Marketing Experiences.",
+            "authors": "Sami Abboud, Eleanor Hanna, Olivier Jeunen, Vineesha Raheja, Schaun Wheeler",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "907-910",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/AbboudHJRW25",
+            "doi": "10.1145/3705328.3748125",
+            "ee": "https://doi.org/10.1145/3705328.3748125"
+        },
+        "conf/recsys/AdomaviciusBMTU25": {
+            "title": "Workshop on Context-Aware Recommender Systems.",
+            "authors": "Gediminas Adomavicius, Konstantin Bauman, Bamshad Mobasher, Alexander Tuzhilin, Moshe Unger",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1409-1411",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/AdomaviciusBMTU25",
+            "doi": "10.1145/3705328.3747978",
+            "ee": "https://doi.org/10.1145/3705328.3747978"
+        },
+        "conf/recsys/AgahSPSMH25": {
+            "title": "Pareto-Optimal Solution: Optimizing Engagement and Revenue.",
+            "authors": "Shaghayegh Agah, Shaun Schaeffer, Maria Peifer, Neeraj Sharma, Ankit Maheshwari, Sardar Hamidian",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1034-1037",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/AgahSPSMH25",
+            "doi": "10.1145/3705328.3748142",
+            "ee": "https://doi.org/10.1145/3705328.3748142"
+        },
+        "conf/recsys/AhmadovM25": {
+            "title": "Opening the Black Box: Interpretable Remedies for Popularity Bias in Recommender Systems.",
+            "authors": "Parviz Ahmadov, Masoud Mansoury",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1246-1250",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/AhmadovM25",
+            "doi": "10.1145/3705328.3759310",
+            "ee": "https://doi.org/10.1145/3705328.3759310"
+        },
+        "conf/recsys/Aird25": {
+            "title": "Addressing Multi-stakeholder Fairness Concerns in Recommender Systems Through Social Choice.",
+            "authors": "Amanda Aird",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1439-1444",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Aird25",
+            "doi": "10.1145/3705328.3748756",
+            "ee": "https://doi.org/10.1145/3705328.3748756"
+        },
+        "conf/recsys/AirdSBAHMB25": {
+            "title": "Integrating Individual and Group Fairness for Recommender Systems through Social Choice.",
+            "authors": "Amanda Aird, Elena Stefancova, Anas Buhayh, Cassidy All, Martin Homola, Nicholas Mattei, Robin Burke",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "177-186",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/AirdSBAHMB25",
+            "doi": "10.1145/3705328.3748087",
+            "ee": "https://doi.org/10.1145/3705328.3748087"
+        },
+        "conf/recsys/AlvesJSM25": {
+            "title": "Towards Personality-Aware Explanations for Music Recommendations Using Generative AI.",
+            "authors": "Gabrielle Alves, Dietmar Jannach, Luan Soares de Souza, Marcelo Garcia Manzato",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "684-689",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/AlvesJSM25",
+            "doi": "10.1145/3705328.3748032",
+            "ee": "https://doi.org/10.1145/3705328.3748032"
+        },
+        "conf/recsys/AlvesNL0CM25": {
+            "title": "Travel Together, Play Together: Gamifying a Group Recommender System for Tourism.",
+            "authors": "Patrícia Alves, Joana Neto, Jorge Lima, José Silva, Luís Conceição, Goreti Marreiros",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1349-1352",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/AlvesNL0CM25",
+            "doi": "10.1145/3705328.3759344",
+            "ee": "https://doi.org/10.1145/3705328.3759344"
+        },
+        "conf/recsys/AnwarDS25": {
+            "title": "Recommendation and Temptation.",
+            "authors": "Md Sanzeed Anwar, Paramveer S. Dhillon, Grant Schoenebeck",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "422-431",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/AnwarDS25",
+            "doi": "10.1145/3705328.3748063",
+            "ee": "https://doi.org/10.1145/3705328.3748063"
+        },
+        "conf/recsys/AttimonelliBPJS25": {
+            "title": "Do We Really Need Specialization? Evaluating Generalist Text Embeddings for Zero-Shot Recommendation and Search.",
+            "authors": "Matteo Attimonelli, Alessandro De Bellis, Claudio Pomo, Dietmar Jannach, Eugenio Di Sciascio, Tommaso Di Noia",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "575-580",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/AttimonelliBPJS25",
+            "doi": "10.1145/3705328.3748040",
+            "ee": "https://doi.org/10.1145/3705328.3748040"
+        },
+        "conf/recsys/Atzenhofer-Baumgartner25": {
+            "title": "A Multistakeholder Approach to Value-Driven Co-Design of Recommender Systems Evaluation Metrics in Digital Archives.",
+            "authors": "Florian Atzenhofer-Baumgartner, Georg Vogeler, Dominik Kowald",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "503-508",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Atzenhofer-Baumgartner25",
+            "doi": "10.1145/3705328.3748026",
+            "ee": "https://doi.org/10.1145/3705328.3748026"
+        },
+        "conf/recsys/Atzenhofer-Baumgartner25a": {
+            "title": "Recommender Systems for Digital Humanities and Archives: Multistakeholder Evaluation, Scholarly Information Needs, and Multimodal Similarity.",
+            "authors": "Florian Atzenhofer-Baumgartner",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1499-1505",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Atzenhofer-Baumgartner25a",
+            "doi": "10.1145/3705328.3748761",
+            "ee": "https://doi.org/10.1145/3705328.3748761"
+        },
+        "conf/recsys/BalloccuBFMMM25": {
+            "title": "GreenFoodLens: Sustainability Labels for Food Recommendation.",
+            "authors": "Giacomo Balloccu, Ludovico Boratto, Gianni Fenu, Mirko Marras, Giacomo Medda, Giovanni Murgia",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "764-773",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/BalloccuBFMMM25",
+            "doi": "10.1145/3705328.3748165",
+            "ee": "https://doi.org/10.1145/3705328.3748165"
+        },
+        "conf/recsys/Bao0LZSFC25": {
+            "title": "Heterogeneous User Modeling for LLM-based Recommendation.",
+            "authors": "Honghui Bao, Wenjie Wang, Xinyu Lin, Fengbin Zhu, Teng Sun, Fuli Feng, Tat-Seng Chua",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "145-154",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Bao0LZSFC25",
+            "doi": "10.1145/3705328.3748085",
+            "ee": "https://doi.org/10.1145/3705328.3748085"
+        },
+        "conf/recsys/BarrowcloughASD25": {
+            "title": "Kamae: Bridging Spark and Keras for Seamless ML Preprocessing.",
+            "authors": "George Barrowclough, Marian Andrecki, James Shinner, Daniele Donghi",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "991-994",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/BarrowcloughASD25",
+            "doi": "10.1145/3705328.3748126",
+            "ee": "https://doi.org/10.1145/3705328.3748126"
+        },
+        "conf/recsys/BeerakaCLMLBAWR25": {
+            "title": "Closing the Online-Offline Gap: A Scalable Framework for Composed Model Evaluation.",
+            "authors": "Mahanth Kumar Beeraka, Chen Chen, Yining Lu, Briac Marcatte, Weikun Lyu, Brooke Bian, Enriko Aryanto, Ellie Wen, Mohamed A. Radwan, Tianshan Cui, Wenjing Lu, Mohsen Malmir, Yang Li",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "923-926",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/BeerakaCLMLBAWR25",
+            "doi": "10.1145/3705328.3748117",
+            "ee": "https://doi.org/10.1145/3705328.3748117"
+        },
+        "conf/recsys/Benigni25": {
+            "title": "Bayesian Perspectives on Offline Evaluation for Recommender Systems.",
+            "authors": "Michael Benigni",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1458-1462",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Benigni25",
+            "doi": "10.1145/3705328.3748762",
+            "ee": "https://doi.org/10.1145/3705328.3748762"
+        },
+        "conf/recsys/BerlingSS25": {
+            "title": "The Hidden Cost of Defaults in Recommender System Evaluation.",
+            "authors": "Hannah Berling, Robin Svahn, Alan Said",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1311-1316",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/BerlingSS25",
+            "doi": "10.1145/3705328.3759321",
+            "ee": "https://doi.org/10.1145/3705328.3759321"
+        },
+        "conf/recsys/BogersKD0B25": {
+            "title": "Fifth Workshop on Recommender Systems for Human Resources (RecSys in HR 2025).",
+            "authors": "Toine Bogers, Mesut Kaya, Jens-Joris Decorte, Chris Johnson, Guillaume Bied",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1373-1377",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/BogersKD0B25",
+            "doi": "10.1145/3705328.3748499",
+            "ee": "https://doi.org/10.1145/3705328.3748499"
+        },
+        "conf/recsys/BorattoFLMM025": {
+            "title": "Second International Workshop on Recommender Systems for Sustainability and Social Good (RecSoGood 2025).",
+            "authors": "Ludovico Boratto, Allegra De Filippo, Elisabeth Lex, Francesca Maridina Malloci, Noemi Mauro, Francesco Ricci",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1394-1398",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/BorattoFLMM025",
+            "doi": "10.1145/3705328.3748497",
+            "ee": "https://doi.org/10.1145/3705328.3748497"
+        },
+        "conf/recsys/BrusilovskyFLPS25": {
+            "title": "12th Joint Workshop on Interfaces and Human Decision Making for Recommender Systems (IntRS&apos;25).",
+            "authors": "Peter Brusilovsky, Alexander Felfernig, Pasquale Lops, Marco Polignano, Giovanni Semeraro, Martijn C. Willemsen",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1357-1359",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/BrusilovskyFLPS25",
+            "doi": "10.1145/3705328.3747994",
+            "ee": "https://doi.org/10.1145/3705328.3747994"
+        },
+        "conf/recsys/CarraroSP25": {
+            "title": "Large Language Model-based Recommendation System Agents.",
+            "authors": "Tommaso Carraro, Brijraj Singh, Niranjan Pedanekar",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1340-1342",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/CarraroSP25",
+            "doi": "10.1145/3705328.3759334",
+            "ee": "https://doi.org/10.1145/3705328.3759334"
+        },
+        "conf/recsys/ChaiRXYHZCLZYXR25": {
+            "title": "LONGER: Scaling Up Long Sequence Modeling in Industrial Recommenders.",
+            "authors": "Zheng Chai, Qin Ren, Xijun Xiao, Huizhi Yang, Bo Han, Sijun Zhang, Di Chen, Hui Lu, Wenlin Zhao, Lele Yu, Xionghang Xie, Shiru Ren, Xiang Sun, Yaocheng Tan, Peng Xu, Yuchao Zheng, Di Wu",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "247-256",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ChaiRXYHZCLZYXR25",
+            "doi": "10.1145/3705328.3748065",
+            "ee": "https://doi.org/10.1145/3705328.3748065"
+        },
+        "conf/recsys/Charolois-Pasqua25": {
+            "title": "A Language Model-Based Playlist Generation Recommender System.",
+            "authors": "Enzo Charolois-Pasqua, Eléa Vellard, Youssra Rebboud, Pasquale Lisena, Raphaël Troncy",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1-11",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Charolois-Pasqua25",
+            "doi": "10.1145/3705328.3748053",
+            "ee": "https://doi.org/10.1145/3705328.3748053"
+        },
+        "conf/recsys/Chen00P25": {
+            "title": "Leave No One Behind: Fairness-Aware Cross-Domain Recommender Systems for Non-Overlapping Users.",
+            "authors": "Weixin Chen, Yuhan Zhao, Li Chen, Weike Pan",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "226-236",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Chen00P25",
+            "doi": "10.1145/3705328.3748082",
+            "ee": "https://doi.org/10.1145/3705328.3748082"
+        },
+        "conf/recsys/Chen0JWFWL25": {
+            "title": "Privacy-Preserving Social Recommendation: Privacy Leakage and Countermeasure.",
+            "authors": "Yuyue Chen, Peng Yang, Zoe Lin Jiang, Wenhao Wu, Junbin Fang, Xuan Wang, Chuanyi Liu",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "391-400",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Chen0JWFWL25",
+            "doi": "10.1145/3705328.3748051",
+            "ee": "https://doi.org/10.1145/3705328.3748051"
+        },
+        "conf/recsys/ChenRLWLLJEYHX025": {
+            "title": "PinFM: Foundation Model for User Activity Sequences at a Billion-scale Visual Discovery Platform.",
+            "authors": "Xiangyi Chen, Kousik Rajesh, Matthew Lawhon, Zelun Wang, Hanyu Li, Haomiao Li, Saurabh Vishwas Joshi, Pong Eksombatchai, Jaewon Yang, Yi-Ping Hsu, Jiajing Xu, Charles Rosenberg",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "381-390",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ChenRLWLLJEYHX025",
+            "doi": "10.1145/3705328.3748050",
+            "ee": "https://doi.org/10.1145/3705328.3748050"
+        },
+        "conf/recsys/ChenYZWCLL25": {
+            "title": "Lasso: Large Language Model-based User Simulator for Cross-Domain Recommendation.",
+            "authors": "Yue Chen, Susen Yang, Tong Zhang, Chao Wang, Mingyue Cheng, Chenyi Lei, Han Li",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "207-216",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ChenYZWCLL25",
+            "doi": "10.1145/3705328.3748048",
+            "ee": "https://doi.org/10.1145/3705328.3748048"
+        },
+        "conf/recsys/ChengHJ25": {
+            "title": "Collaborative Interest Modeling in Recommender Systems.",
+            "authors": "Yu-Ting Cheng, Yu-Yen Ho, Jyun-Yu Jiang",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "533-538",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ChengHJ25",
+            "doi": "10.1145/3705328.3748023",
+            "ee": "https://doi.org/10.1145/3705328.3748023"
+        },
+        "conf/recsys/DacremaC25": {
+            "title": "A Hands-on Dive Into Quantum Computing for Recommender Systems.",
+            "authors": "Maurizio Ferrari Dacrema, Paolo Cremonesi",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1414-1416",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/DacremaC25",
+            "doi": "10.1145/3705328.3748006",
+            "ee": "https://doi.org/10.1145/3705328.3748006"
+        },
+        "conf/recsys/DamYO25": {
+            "title": "RecViz: Intuitive Graph-based Visual Analytics for Dataset Exploration and Recommender System Evaluation.",
+            "authors": "Jackson Dam, Zixuan Yi, Iadh Ounis",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1346-1348",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/DamYO25",
+            "doi": "10.1145/3705328.3759335",
+            "ee": "https://doi.org/10.1145/3705328.3759335"
+        },
+        "conf/recsys/DibenedettoLPT25": {
+            "title": "Lift It Up Right: A Recommender System for Safer Lifting Postures.",
+            "authors": "Gaetano Dibenedetto, Pasquale Lops, Marco Polignano, Helma Torkamaan",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1222-1227",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/DibenedettoLPT25",
+            "doi": "10.1145/3705328.3759314",
+            "ee": "https://doi.org/10.1145/3705328.3759314"
+        },
+        "conf/recsys/DishiFKSS25": {
+            "title": "Practical Multi-Task Learning for Rare Conversions in Ad Tech.",
+            "authors": "Yuval Dishi, Ophir Friedler, Yonatan Karni, Natalia Silberstein, Yulia Stolin",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1042-1045",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/DishiFKSS25",
+            "doi": "10.1145/3705328.3748110",
+            "ee": "https://doi.org/10.1145/3705328.3748110"
+        },
+        "conf/recsys/DokoupilBP25": {
+            "title": "How Do Users Perceive Recommender Systems&apos; Objectives?",
+            "authors": "Patrik Dokoupil, Ludovico Boratto, Ladislav Peska",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "165-176",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/DokoupilBP25",
+            "doi": "10.1145/3705328.3748066",
+            "ee": "https://doi.org/10.1145/3705328.3748066"
+        },
+        "conf/recsys/DongLLPLWZ25": {
+            "title": "Scaling Generative Recommendations with Context Parallelism on Hierarchical Sequential Transducers.",
+            "authors": "Yue Dong, Han Li, Shen Li, Nikhil Patel, Xing Liu, Xiaodong Wang, Chuanhao Zhuge",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1058-1061",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/DongLLPLWZ25",
+            "doi": "10.1145/3705328.3748143",
+            "ee": "https://doi.org/10.1145/3705328.3748143"
+        },
+        "conf/recsys/DouLX25": {
+            "title": "Measuring Interaction-Level Unlearning Difficulty for Collaborative Filtering.",
+            "authors": "Haocheng Dou, Tao Lian, Xin Xin",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "279-288",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/DouLX25",
+            "doi": "10.1145/3705328.3748092",
+            "ee": "https://doi.org/10.1145/3705328.3748092"
+        },
+        "conf/recsys/DuUT25": {
+            "title": "Not Just What, But When: Integrating Irregular Intervals to LLM for Sequential Recommendation.",
+            "authors": "Wei-Wei Du, Takuma Udagawa, Kei Tateno",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "637-642",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/DuUT25",
+            "doi": "10.1145/3705328.3748013",
+            "ee": "https://doi.org/10.1145/3705328.3748013"
+        },
+        "conf/recsys/EkstrandKRD25": {
+            "title": "FAccTRec 2025: The 8th Workshop on Responsible Recommendation.",
+            "authors": "Michael D. Ekstrand, Toshihiro Kamishima, Amifa Raj, Karlijn Dinnissen",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1371-1372",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/EkstrandKRD25",
+            "doi": "10.1145/3705328.3748502",
+            "ee": "https://doi.org/10.1145/3705328.3748502"
+        },
+        "conf/recsys/EscobedoPS25": {
+            "title": "Debiasing Implicit Feedback Recommenders via Sliced Wasserstein Distance-based Regularization.",
+            "authors": "Gustavo Escobedo, David Penz, Markus Schedl",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1153-1158",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/EscobedoPS25",
+            "doi": "10.1145/3705328.3759320",
+            "ee": "https://doi.org/10.1145/3705328.3759320"
+        },
+        "conf/recsys/FabbriB25": {
+            "title": "Auditing Recommender Systems for User Empowerment in Very Large Online Platforms under the Digital Services Act.",
+            "authors": "Matteo Fabbri, Ludovico Boratto",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "51-61",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/FabbriB25",
+            "doi": "10.1145/3705328.3748074",
+            "ee": "https://doi.org/10.1145/3705328.3748074"
+        },
+        "conf/recsys/FabbriPDWNDGDSL25": {
+            "title": "Evaluating Podcast Recommendations with Profile-Aware LLM-as-a-Judge.",
+            "authors": "Francesco Fabbri, Gustavo Penha, Edoardo D&apos;Amico, Alice Wang, Marco De Nadai, Jackie Doremus, Paul Gigioli, Andreas Damianou, Oskar Stål, Mounia Lalmas",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1181-1186",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/FabbriPDWNDGDSL25",
+            "doi": "10.1145/3705328.3759305",
+            "ee": "https://doi.org/10.1145/3705328.3759305"
+        },
+        "conf/recsys/FainmanSM25": {
+            "title": "PAIRSAT: Integrating Preference-Based Signals for User Satisfaction Estimation in Dialogue Systems.",
+            "authors": "Eran Fainman, Adir Solomon, Osnat Mokryn",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1251-1255",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/FainmanSM25",
+            "doi": "10.1145/3705328.3759325",
+            "ee": "https://doi.org/10.1145/3705328.3759325"
+        },
+        "conf/recsys/Falk25": {
+            "title": "Multi-Armed Bandits in the Wild.",
+            "authors": "Kim Falk",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1430-1431",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Falk25",
+            "doi": "10.1145/3705328.3748005",
+            "ee": "https://doi.org/10.1145/3705328.3748005"
+        },
+        "conf/recsys/FazelniaGKKHHXS25": {
+            "title": "Generalized User Representations for Large-Scale Recommendations and Downstream Tasks.",
+            "authors": "Ghazal Fazelnia, Sanket Gupta, Claire Keum, Mark Koh, Timothy Christopher Heath, Guillermo Carrasco Hernández, Stephen Xie, Nandini Singh, Ian Anderson, Maya Hristakeva, Petter Pehrson Skidén, Mounia Lalmas",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "962-966",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/FazelniaGKKHHXS25",
+            "doi": "10.1145/3705328.3748132",
+            "ee": "https://doi.org/10.1145/3705328.3748132"
+        },
+        "conf/recsys/FerraroP025": {
+            "title": "MuRS: 3rd Music Recommender Systems Workshop.",
+            "authors": "Andres Ferraro, Lorenzo Porcaro, Christine Bauer",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1383-1385",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/FerraroP025",
+            "doi": "10.1145/3705328.3748000",
+            "ee": "https://doi.org/10.1145/3705328.3748000"
+        },
+        "conf/recsys/Ferrero25": {
+            "title": "Narrative-Driven Itinerary Recommendation: LLM Integration for Immersive Urban Walking.",
+            "authors": "Fabio Ferrero",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1485-1491",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Ferrero25",
+            "doi": "10.1145/3705328.3748751",
+            "ee": "https://doi.org/10.1145/3705328.3748751"
+        },
+        "conf/recsys/FiorettiLPMPNN25": {
+            "title": "How Powerful are LLMs to Support Multimodal Recommendation? A Reproducibility Study of LLMRec.",
+            "authors": "Maria Lucia Fioretti, Nicola Laterza, Alessia Preziosa, Daniele Malitesta, Claudio Pomo, Fedelucio Narducci, Tommaso Di Noia",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "774-782",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/FiorettiLPMPNN25",
+            "doi": "10.1145/3705328.3748154",
+            "ee": "https://doi.org/10.1145/3705328.3748154"
+        },
+        "conf/recsys/ForsterKHTK25": {
+            "title": "Exploring the Effect of Context-Awareness and Popularity Calibration on Popularity Bias in POI Recommendations.",
+            "authors": "Andrea Forster, Simone Kopeinik, Denis Helic, Stefan Thalmann, Dominik Kowald",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "593-598",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ForsterKHTK25",
+            "doi": "10.1145/3705328.3748017",
+            "ee": "https://doi.org/10.1145/3705328.3748017"
+        },
+        "conf/recsys/FukumotoSSTSMX25": {
+            "title": "Contrastive Conditional Embeddings for Item-based Recommendation at E-commerce Scale.",
+            "authors": "Akira Fukumoto, Aghiles Salah, Sarthak Shrivastava, Alexandru Tatar, Yannick Schwartz, Vincent Michel, Lee Xiong",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "931-934",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/FukumotoSSTSMX25",
+            "doi": "10.1145/3705328.3748095",
+            "ee": "https://doi.org/10.1145/3705328.3748095"
+        },
+        "conf/recsys/GiahiYKZMXBKA25": {
+            "title": "VL-CLIP: Enhancing Multimodal Recommendations via Visual Grounding and LLM-Augmented CLIP Embeddings.",
+            "authors": "Ramin Giahi, Kehui Yao, Sriram Kollipara, Kai Zhao, Vahid Mirjalili, Jianpeng Xu, Topojoy Biswas, Evren Körpeoglu, Kannan Achan",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "482-491",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/GiahiYKZMXBKA25",
+            "doi": "10.1145/3705328.3748064",
+            "ee": "https://doi.org/10.1145/3705328.3748064"
+        },
+        "conf/recsys/GolubovikjT25": {
+            "title": "Rethinking Subjective Features in Recommender Systems: Personal Views Over Aggregated Values.",
+            "authors": "Arsen Matej Golubovikj, Marko Tkalcic",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1279-1283",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/GolubovikjT25",
+            "doi": "10.1145/3705328.3759316",
+            "ee": "https://doi.org/10.1145/3705328.3759316"
+        },
+        "conf/recsys/GuZX0L0G25": {
+            "title": "R4ec: A Reasoning, Reflection, and Refinement Framework for Recommendation Systems.",
+            "authors": "Hao Gu, Rui Zhong, Yu Xia, Wei Yang, Chi Lu, Peng Jiang, Kun Gai",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "411-421",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/GuZX0L0G25",
+            "doi": "10.1145/3705328.3748068",
+            "ee": "https://doi.org/10.1145/3705328.3748068"
+        },
+        "conf/recsys/GuZZWWZPCFGZB25": {
+            "title": "Streaming Trends: A Low-Latency Platform for Dynamic Video Grouping and Trending Corpora Building.",
+            "authors": "Yang Gu, Caroline Zhou, Qiao Zhang, Scott Wang, Yongzhe Wang, Li Zhang, Nikos Parotsidis, CJ Carey, Ashkan Fard, Mingyan Gao, Yaping Zhang, Sourabh Bansod",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1091-1094",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/GuZZWWZPCFGZB25",
+            "doi": "10.1145/3705328.3748120",
+            "ee": "https://doi.org/10.1145/3705328.3748120"
+        },
+        "conf/recsys/GusakSF25": {
+            "title": "Recommendation Is a Dish Better Served Warm.",
+            "authors": "Danil Gusak, Nikita Sukhorukov, Evgeny Frolov",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1267-1272",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/GusakSF25",
+            "doi": "10.1145/3705328.3759331",
+            "ee": "https://doi.org/10.1145/3705328.3759331"
+        },
+        "conf/recsys/GusakVKVF25": {
+            "title": "Time to Split: Exploring Data Splitting Strategies for Offline Evaluation of Sequential Recommenders.",
+            "authors": "Danil Gusak, Anna Volodkevich, Anton Klenitskiy, Alexey Vasilev, Evgeny Frolov",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "874-883",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/GusakVKVF25",
+            "doi": "10.1145/3705328.3748164",
+            "ee": "https://doi.org/10.1145/3705328.3748164"
+        },
+        "conf/recsys/HadarEFSHF25": {
+            "title": "Large Scale E-Commerce Model for Learning and Analyzing Long-Term User Preferences.",
+            "authors": "Yonatan Hadar, Yotam Eshel, Tal Franji, Bracha Shapira, Michelle Hwang, Guy Feigenblat",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "621-625",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/HadarEFSHF25",
+            "doi": "10.1145/3705328.3748027",
+            "ee": "https://doi.org/10.1145/3705328.3748027"
+        },
+        "conf/recsys/HagioYOOF25": {
+            "title": "A Media Content Recommendation Method for Playlist Curators using LLM-Based Query Expansion.",
+            "authors": "Yuta Hagio, Chigusa Yamamura, Hiromu Ogawa, Hisayuki Ohmata, Arisa Fujii",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "902-906",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/HagioYOOF25",
+            "doi": "10.1145/3705328.3748129",
+            "ee": "https://doi.org/10.1145/3705328.3748129"
+        },
+        "conf/recsys/HandeSEH25": {
+            "title": "Simulating Discoverability for Upcoming Content in TV Entertainment Platforms.",
+            "authors": "Adeep Hande, Kishorekumar Sundararajan, Yidnekachew Endale, Sardar Hamidian",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1078-1081",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/HandeSEH25",
+            "doi": "10.1145/3705328.3748137",
+            "ee": "https://doi.org/10.1145/3705328.3748137"
+        },
+        "conf/recsys/HartsteinGT25": {
+            "title": "An Analysis of Learned Product Embeddings in an E-Commerce Context.",
+            "authors": "Mate Hartstein, Eva Giannatou, Martin Tegner",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "911-914",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/HartsteinGT25",
+            "doi": "10.1145/3705328.3748131",
+            "ee": "https://doi.org/10.1145/3705328.3748131"
+        },
+        "conf/recsys/HasamiM25": {
+            "title": "Mitigating Popularity Bias in Counterfactual Explanations using Large Language Models.",
+            "authors": "Arjan Hasami, Masoud Mansoury",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1234-1239",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/HasamiM25",
+            "doi": "10.1145/3705328.3759330",
+            "ee": "https://doi.org/10.1145/3705328.3759330"
+        },
+        "conf/recsys/HauckHDWJ25": {
+            "title": "Balanced Public Service Media Recommendation Trade-offs with a Light Carbon Footprint.",
+            "authors": "Marcel Hauck, Michael Huber, Juri Diels, David Wittenberg, Dietmar Jannach",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "915-918",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/HauckHDWJ25",
+            "doi": "10.1145/3705328.3748106",
+            "ee": "https://doi.org/10.1145/3705328.3748106"
+        },
+        "conf/recsys/HayashiGS25": {
+            "title": "Off-Policy Evaluation and Learning for Matching Markets.",
+            "authors": "Yudai Hayashi, Shuhei Goda, Yuta Saito",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "340-349",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/HayashiGS25",
+            "doi": "10.1145/3705328.3748047",
+            "ee": "https://doi.org/10.1145/3705328.3748047"
+        },
+        "conf/recsys/HazwaniAIBB25": {
+            "title": "PRISM: From Individual Preferences to Group Consensus through Conversational AI-Mediated and Visual Explanations.",
+            "authors": "Ibrahim Al Hazwani, Oliver Robin Aschwanden, Oana Inel, Jürgen Bernard, Ludovico Boratto",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1343-1345",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/HazwaniAIBB25",
+            "doi": "10.1145/3705328.3759340",
+            "ee": "https://doi.org/10.1145/3705328.3759340"
+        },
+        "conf/recsys/HazwaniLKHABB25": {
+            "title": "Blooming Beats: An Interactive Music Recommender System Grounded in TRACE Principles and Data Humanism.",
+            "authors": "Ibrahim Al Hazwani, Daniel Lutziger, Carlos Kirchdorfer, Luca Huber, Oliver Robin Aschwanden, Jürgen Bernard, Ludovico Boratto",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1331-1333",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/HazwaniLKHABB25",
+            "doi": "10.1145/3705328.3759337",
+            "ee": "https://doi.org/10.1145/3705328.3759337"
+        },
+        "conf/recsys/HeitzLIB25": {
+            "title": "Informfully Recommenders - Reproducibility Framework for Diversity-aware Intra-session Recommendations.",
+            "authors": "Lucien Heitz, Runze Li, Oana Inel, Abraham Bernstein",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "792-801",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/HeitzLIB25",
+            "doi": "10.1145/3705328.3748148",
+            "ee": "https://doi.org/10.1145/3705328.3748148"
+        },
+        "conf/recsys/HendrawanBLY25": {
+            "title": "ArtEx: A User-Controllable Web Interface for Visual Art Recommendations.",
+            "authors": "Rully Agus Hendrawan, Peter Brusilovsky, Luis A. Leiva, Bereket Abera Yilma",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1328-1330",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/HendrawanBLY25",
+            "doi": "10.1145/3705328.3759343",
+            "ee": "https://doi.org/10.1145/3705328.3759343"
+        },
+        "conf/recsys/HillNS25": {
+            "title": "Emotion Vector-Based Fine-Tuning of Large Language Models for Age-Aware Teenage Book Recommendations.",
+            "authors": "Kate Hill, Yiu-Kai Ng, Joey Sherrill",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "581-586",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/HillNS25",
+            "doi": "10.1145/3705328.3748037",
+            "ee": "https://doi.org/10.1145/3705328.3748037"
+        },
+        "conf/recsys/HuTGOCKKS25": {
+            "title": "Cold Starting a New Content Type: A Case Study with Netflix Live.",
+            "authors": "Yunan Hu, Mark Thornburg, Mario García-Armas, Vito Ostuni, Anne Cocos, Kriti Kohli, Christoph Kofler, Rob Saltiel",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "927-930",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/HuTGOCKKS25",
+            "doi": "10.1145/3705328.3748112",
+            "ee": "https://doi.org/10.1145/3705328.3748112"
+        },
+        "conf/recsys/HuangW0M025": {
+            "title": "A Tutorial on Agentic LLM for Recommender Systems.",
+            "authors": "Chengkai Huang, Junda Wu, Tong Yu, Julian J. McAuley, Lina Yao",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1417-1419",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/HuangW0M025",
+            "doi": "10.1145/3705328.3748007",
+            "ee": "https://doi.org/10.1145/3705328.3748007"
+        },
+        "conf/recsys/IanaTYKLO25": {
+            "title": "The 13th International Workshop on News Recommendation and Analytics (INRA 2025).",
+            "authors": "Andreea Iana, Célina Treuillier, Vandana Yadav, Benjamin Kille, Andreas Lommatzsch, Özlem Özgöbek",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1399-1403",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/IanaTYKLO25",
+            "doi": "10.1145/3705328.3747997",
+            "ee": "https://doi.org/10.1145/3705328.3747997"
+        },
+        "conf/recsys/IsufajTS25": {
+            "title": "The XITE Million Sessions Dataset.",
+            "authors": "Ralvi Isufaj, Ruslan Tsygankov, Zoltán Szlávik",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "857-864",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/IsufajTS25",
+            "doi": "10.1145/3705328.3748168",
+            "ee": "https://doi.org/10.1145/3705328.3748168"
+        },
+        "conf/recsys/IvanovaFV25": {
+            "title": "Benefiting from Negative yet Informative Feedback by Contrasting Opposing Sequential Patterns.",
+            "authors": "Veronika Ivanova, Evgeny Frolov, Alexey Vasilev",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1142-1147",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/IvanovaFV25",
+            "doi": "10.1145/3705328.3759333",
+            "ee": "https://doi.org/10.1145/3705328.3759333"
+        },
+        "conf/recsys/Jafari25": {
+            "title": "Beyond Persuasion: Adaptive Warnings and Balanced Explanations for Informed Decision-Making in Recommender Systems.",
+            "authors": "Elaheh Jafari",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1463-1468",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Jafari25",
+            "doi": "10.1145/3705328.3748758",
+            "ee": "https://doi.org/10.1145/3705328.3748758"
+        },
+        "conf/recsys/JaspalDR25": {
+            "title": "RADAR: Recall Augmentation through Deferred Asynchronous Retrieval.",
+            "authors": "Amit Jaspal, Qian Dang, Ajantha Ramineni",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1046-1049",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/JaspalDR25",
+            "doi": "10.1145/3705328.3748146",
+            "ee": "https://doi.org/10.1145/3705328.3748146"
+        },
+        "conf/recsys/JaspalDR25a": {
+            "title": "SocRipple: A Two-Stage Framework for Cold-Start Video Recommendations.",
+            "authors": "Amit Jaspal, Kapil Dalwani, Ajantha Ramineni",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1082-1085",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/JaspalDR25a",
+            "doi": "10.1145/3705328.3748124",
+            "ee": "https://doi.org/10.1145/3705328.3748124"
+        },
+        "conf/recsys/Jeunen25": {
+            "title": "Counterfactual Inference under Thompson Sampling.",
+            "authors": "Olivier Jeunen",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "551-557",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Jeunen25",
+            "doi": "10.1145/3705328.3748011",
+            "ee": "https://doi.org/10.1145/3705328.3748011"
+        },
+        "conf/recsys/Jeunen25a": {
+            "title": "Meta Off-Policy Estimation.",
+            "authors": "Olivier Jeunen",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1228-1233",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Jeunen25a",
+            "doi": "10.1145/3705328.3759308",
+            "ee": "https://doi.org/10.1145/3705328.3759308"
+        },
+        "conf/recsys/Jeunen25b": {
+            "title": "t-Testing the Waters: Empirically Validating Assumptions for Reliable A/B-Testing.",
+            "authors": "Olivier Jeunen",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1307-1310",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Jeunen25b",
+            "doi": "10.1145/3705328.3759307",
+            "ee": "https://doi.org/10.1145/3705328.3759307"
+        },
+        "conf/recsys/JhaTP25": {
+            "title": "HiDePCC: A Novel Dual-Pronged Untargeted Attack on Federated Recommendation via Gradient Perturbation and Cluster Crafting.",
+            "authors": "Yamini Jha, Krishna Tewari, Sukomal Pal",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "610-614",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/JhaTP25",
+            "doi": "10.1145/3705328.3748041",
+            "ee": "https://doi.org/10.1145/3705328.3748041"
+        },
+        "conf/recsys/JiangAA25": {
+            "title": "LEAF: Lightweight, Efficient, Adaptive and Flexible Embedding for Large-Scale Recommendation Models.",
+            "authors": "Chaoyi Jiang, Abdulla Alshabanah, Murali Annavaram",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "217-225",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/JiangAA25",
+            "doi": "10.1145/3705328.3748078",
+            "ee": "https://doi.org/10.1145/3705328.3748078"
+        },
+        "conf/recsys/JiangPZC25": {
+            "title": "Beyond Immediate Click: Engagement-Aware and MoE-Enhanced Transformers for Sequential Movie Recommendation.",
+            "authors": "Haotian Jiang, Sibendu Paul, Haiyang Zhang, Caren Chen",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "62-71",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/JiangPZC25",
+            "doi": "10.1145/3705328.3748076",
+            "ee": "https://doi.org/10.1145/3705328.3748076"
+        },
+        "conf/recsys/JinP25": {
+            "title": "Scaling Image Variant Optimization Through Customer Bucketing and Response Caching: A Large-Scale Implementation at Amazon Prime Video.",
+            "authors": "Haiyun Jin, Bobby Patel",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1062-1065",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/JinP25",
+            "doi": "10.1145/3705328.3748134",
+            "ee": "https://doi.org/10.1145/3705328.3748134"
+        },
+        "conf/recsys/JuanSZSJSHZ25": {
+            "title": "Scaling Retrieval for Web-Scale Recommenders: Lessons from Inverted Indexes to Embedding Search.",
+            "authors": "Yuchin Juan, Jianqiang Shen, Shaobo Zhang, Qianqi Shen, Caleb Johnson, Luke Simon, Liangjie Hong, Wenjing Zhang",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1066-1069",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/JuanSZSJSHZ25",
+            "doi": "10.1145/3705328.3748116",
+            "ee": "https://doi.org/10.1145/3705328.3748116"
+        },
+        "conf/recsys/KangZC25": {
+            "title": "Exploring the Potential of LLMs for Serendipity Evaluation in Recommender Systems.",
+            "authors": "Li Kang, Yuhan Zhao, Li Chen",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "746-754",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KangZC25",
+            "doi": "10.1145/3705328.3748167",
+            "ee": "https://doi.org/10.1145/3705328.3748167"
+        },
+        "conf/recsys/KasalickySVBAK25": {
+            "title": "The Future is Sparse: Embedding Compression for Scalable Retrieval in Recommender Systems.",
+            "authors": "Petr Kasalický, Martin Spisák, Vojtech Vancura, Daniel Bohunek, Rodrigo Alves, Pavel Kordík",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1099-1103",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KasalickySVBAK25",
+            "doi": "10.1145/3705328.3748147",
+            "ee": "https://doi.org/10.1145/3705328.3748147"
+        },
+        "conf/recsys/KayaB25": {
+            "title": "Mapping Stakeholder Needs to Multi-Sided Fairness in Candidate Recommendation for Algorithmic Hiring.",
+            "authors": "Mesut Kaya, Toine Bogers",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "257-267",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KayaB25",
+            "doi": "10.1145/3705328.3748079",
+            "ee": "https://doi.org/10.1145/3705328.3748079"
+        },
+        "conf/recsys/KersbergenSKRS25": {
+            "title": "Scalable Data Debugging for Neighborhood-based Recommendation with Data Shapley Values.",
+            "authors": "Barrie Kersbergen, Olivier Sprangers, Bojan Karlas, Maarten de Rijke, Sebastian Schelter",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "441-450",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KersbergenSKRS25",
+            "doi": "10.1145/3705328.3748049",
+            "ee": "https://doi.org/10.1145/3705328.3748049"
+        },
+        "conf/recsys/KhaertdinovPT25": {
+            "title": "VisualReF: Interactive Image Search Prototype with Visual Relevance Feedback.",
+            "authors": "Bulat Khaertdinov, Mirela Popa, Nava Tintarev",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1353-1356",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KhaertdinovPT25",
+            "doi": "10.1145/3705328.3759341",
+            "ee": "https://doi.org/10.1145/3705328.3759341"
+        },
+        "conf/recsys/KhetanMYP25": {
+            "title": "Flights Pricelock Fee Recommendation on Online Travel Agent Platform.",
+            "authors": "Akash Khetan, Narasimha Medeme, Deepak Yadav, Anmol Porwal",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1334-1336",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KhetanMYP25",
+            "doi": "10.1145/3705328.3759339",
+            "ee": "https://doi.org/10.1145/3705328.3759339"
+        },
+        "conf/recsys/KhrylchenkoBMML25": {
+            "title": "Correcting the LogQ Correction: Revisiting Sampled Softmax for Large-Scale Retrieval.",
+            "authors": "Kirill Khrylchenko, Vladimir Baikalov, Sergei S. Makeev, Artem Matveev, Sergei Liamaev",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "545-550",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KhrylchenkoBMML25",
+            "doi": "10.1145/3705328.3748033",
+            "ee": "https://doi.org/10.1145/3705328.3748033"
+        },
+        "conf/recsys/KimKKSLC25": {
+            "title": "A Dual-Key Attention Framework for Sequential Recommendation with Side Information.",
+            "authors": "Minje Kim, Wooseung Kang, Gun-Woo Kim, Chie Hoon Song, Suwon Lee, Sang-Min Choi",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1126-1131",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KimKKSLC25",
+            "doi": "10.1145/3705328.3759326",
+            "ee": "https://doi.org/10.1145/3705328.3759326"
+        },
+        "conf/recsys/KimKKSLC25a": {
+            "title": "End-to-End Time Interval-wise Segmentation for Sequential Recommendation.",
+            "authors": "Minje Kim, Wooseung Kang, Gun-Woo Kim, Chie Hoon Song, Suwon Lee, Sang-Min Choi",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1169-1174",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KimKKSLC25a",
+            "doi": "10.1145/3705328.3759327",
+            "ee": "https://doi.org/10.1145/3705328.3759327"
+        },
+        "conf/recsys/Kislinger25": {
+            "title": "Full-Page Recommender: A Modular Framework for Multi-Carousel Recommendations.",
+            "authors": "Jan Kislinger",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1479-1484",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Kislinger25",
+            "doi": "10.1145/3705328.3748753",
+            "ee": "https://doi.org/10.1145/3705328.3748753"
+        },
+        "conf/recsys/KiyoharaCSJ25": {
+            "title": "An Off-Policy Learning Approach for Steering Sentence Generation towards Personalization.",
+            "authors": "Haruka Kiyohara, Daniel Yiming Cao, Yuta Saito, Thorsten Joachims",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "41-50",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KiyoharaCSJ25",
+            "doi": "10.1145/3705328.3748088",
+            "ee": "https://doi.org/10.1145/3705328.3748088"
+        },
+        "conf/recsys/Kloppers25": {
+            "title": "Adding Value to Low-Resource Industrial Recommender Systems.",
+            "authors": "Cornelia M. Kloppers",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1435-1438",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Kloppers25",
+            "doi": "10.1145/3705328.3748760",
+            "ee": "https://doi.org/10.1145/3705328.3748760"
+        },
+        "conf/recsys/KolbWBNNDN25": {
+            "title": "A Tutorial on Recent Advances in Generative Conversational Recommender Systems.",
+            "authors": "Thomas Elmar Kolb, Ahmadou Wagne, Ashmi Banerjee, Fatemeh Nazary, Julia Neidhardt, Yashar Deldjoo, Tommaso Di Noia",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1420-1422",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KolbWBNNDN25",
+            "doi": "10.1145/3705328.3748010",
+            "ee": "https://doi.org/10.1145/3705328.3748010"
+        },
+        "conf/recsys/KoneruNLG25": {
+            "title": "SASRec in Action: Real-World Adaptations for ZDF Streaming Service.",
+            "authors": "Venkata Harshit Koneru, Xenija Neufeld, Sebastian Loth, Andreas Grün",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1054-1057",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KoneruNLG25",
+            "doi": "10.1145/3705328.3748097",
+            "ee": "https://doi.org/10.1145/3705328.3748097"
+        },
+        "conf/recsys/KostejnPS25": {
+            "title": "SAGEA: Sparse Autoencoder-based Group Embeddings Aggregation for Fairness-Preserving Group Recommendations.",
+            "authors": "Vit Kostejn, Ladislav Peska, Martin Spisák",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1290-1295",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KostejnPS25",
+            "doi": "10.1145/3705328.3759322",
+            "ee": "https://doi.org/10.1145/3705328.3759322"
+        },
+        "conf/recsys/KoutroumpasMIBJ25": {
+            "title": "Beyond Clicks: Eye-Tracking Insights into User Responses to Different Recommendation Types.",
+            "authors": "Georgios Koutroumpas, Matteo Mazzini, Sebastian Idesis, Mireia Masias Bruns, Joemon M. Jose, Sergi Abadal, Ioannis Arapakis",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1148-1152",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KoutroumpasMIBJ25",
+            "doi": "10.1145/3705328.3759304",
+            "ee": "https://doi.org/10.1145/3705328.3759304"
+        },
+        "conf/recsys/KrauseO25": {
+            "title": "A Non-Parametric Choice Model That Learns How Users Choose Between Recommended Options.",
+            "authors": "Thorsten Krause, Harrie Oosterhuis",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "21-30",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KrauseO25",
+            "doi": "10.1145/3705328.3748090",
+            "ee": "https://doi.org/10.1145/3705328.3748090"
+        },
+        "conf/recsys/KumthekarWBSPM25": {
+            "title": "Never Miss an Episode: How LLMs are Powering Serial Content Discovery on YouTube.",
+            "authors": "Aditee Kumthekar, Li Wei, Andrea Bettale, Mahesh Sathiamoorthy, Zrinka Puljiz, Aditya Mahajan",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1017-1021",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KumthekarWBSPM25",
+            "doi": "10.1145/3705328.3748104",
+            "ee": "https://doi.org/10.1145/3705328.3748104"
+        },
+        "conf/recsys/KusanoAT25": {
+            "title": "Revisiting Prompt Engineering: A Comprehensive Evaluation for LLM-based Personalized Recommendation.",
+            "authors": "Genki Kusano, Kosuke Akimoto, Kunihiro Takeoka",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "832-841",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/KusanoAT25",
+            "doi": "10.1145/3705328.3748159",
+            "ee": "https://doi.org/10.1145/3705328.3748159"
+        },
+        "conf/recsys/LaiJZZDCLW25": {
+            "title": "Exploring Scaling Laws of CTR Model for Online Performance Improvement.",
+            "authors": "Weijiang Lai, Beihong Jin, Jiongyan Zhang, Yiyuan Zheng, Jian Dong, Jia Cheng, Jun Lei, Xingxing Wang",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "114-123",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/LaiJZZDCLW25",
+            "doi": "10.1145/3705328.3748046",
+            "ee": "https://doi.org/10.1145/3705328.3748046"
+        },
+        "conf/recsys/LaiJZZZDLW25": {
+            "title": "Modeling Long-term User Behaviors with Diffusion-driven Multi-interest Network for CTR Prediction.",
+            "authors": "Weijiang Lai, Beihong Jin, Yapeng Zhang, Yiyuan Zheng, Rui Zhao, Jian Dong, Jun Lei, Xingxing Wang",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "289-298",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/LaiJZZZDLW25",
+            "doi": "10.1145/3705328.3748045",
+            "ee": "https://doi.org/10.1145/3705328.3748045"
+        },
+        "conf/recsys/LeLMG25": {
+            "title": "Don&apos;t Get Ahead of Yourself: A Critical Study on Data Leakage in Offline Evaluation of Sequential Recommenders.",
+            "authors": "Huy Hoang Le, Yang Liu, Alan Medlar, Dorota Glowacka",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1164-1168",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/LeLMG25",
+            "doi": "10.1145/3705328.3759329",
+            "ee": "https://doi.org/10.1145/3705328.3759329"
+        },
+        "conf/recsys/LesotaBWWTS25": {
+            "title": "Fine-tuning for Inference-efficient Calibrated Recommendations.",
+            "authors": "Oleg Lesota, Adrian Bajko, Max Walder, Matthias Wenzel, Antonela Tommasel, Markus Schedl",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1187-1192",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/LesotaBWWTS25",
+            "doi": "10.1145/3705328.3759319",
+            "ee": "https://doi.org/10.1145/3705328.3759319"
+        },
+        "conf/recsys/Li0S025": {
+            "title": "LLM-RecG: A Semantic Bias-Aware Framework for Zero-Shot Sequential Recommendation.",
+            "authors": "Yunzhe Li, Junting Wang, Hari Sundaram, Zhining Liu",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "237-246",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Li0S025",
+            "doi": "10.1145/3705328.3748077",
+            "ee": "https://doi.org/10.1145/3705328.3748077"
+        },
+        "conf/recsys/LiDSLLL25": {
+            "title": "EARL: The 2nd Workshop on Evaluating and Applying Recommender Systems with Large Language Models.",
+            "authors": "Irene Li, Ruihai Dong, Guillaume Salha-Galvan, Aonghus Lawlor, Dairui Liu, Lei Li",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1366-1370",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/LiDSLLL25",
+            "doi": "10.1145/3705328.3747995",
+            "ee": "https://doi.org/10.1145/3705328.3747995"
+        },
+        "conf/recsys/LiHIB25": {
+            "title": "D-RDW: Diversity-Driven Random Walks for News Recommender Systems.",
+            "authors": "Runze Li, Lucien Heitz, Oana Inel, Abraham Bernstein",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "558-563",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/LiHIB25",
+            "doi": "10.1145/3705328.3748016",
+            "ee": "https://doi.org/10.1145/3705328.3748016"
+        },
+        "conf/recsys/LiZ25": {
+            "title": "MDSBR: Multimodal Denoising for Session-based Recommendation.",
+            "authors": "Yutong Li, Xinyi Zhang",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "268-278",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/LiZ25",
+            "doi": "10.1145/3705328.3748061",
+            "ee": "https://doi.org/10.1145/3705328.3748061"
+        },
+        "conf/recsys/LiZLC0B25": {
+            "title": "Breaking Knowledge Boundaries: Cognitive Distillation-enhanced Cross-Behavior Course Recommendation Model.",
+            "authors": "Ruoyu Li, Yangtao Zhou, Chenzhang Li, Hua Chu, Jianan Li, Yuhan Bian",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "72-81",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/LiZLC0B25",
+            "doi": "10.1145/3705328.3748083",
+            "ee": "https://doi.org/10.1145/3705328.3748083"
+        },
+        "conf/recsys/LiangNLAM25": {
+            "title": "In-context Learning for Addressing User Cold-start in Sequential Movie Recommenders.",
+            "authors": "Xurong Liang, Vu Nguyen, Vuong Le, Paul Albert, Julien Monteil",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "979-982",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/LiangNLAM25",
+            "doi": "10.1145/3705328.3748109",
+            "ee": "https://doi.org/10.1145/3705328.3748109"
+        },
+        "conf/recsys/Liu0MG25": {
+            "title": "Disentangling User and Item Sequence Patterns in Sequential Recommendation Data Sets.",
+            "authors": "Kaiyue Liu, Yang Liu, Alan Medlar, Dorota Glowacka",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "570-574",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Liu0MG25",
+            "doi": "10.1145/3705328.3748042",
+            "ee": "https://doi.org/10.1145/3705328.3748042"
+        },
+        "conf/recsys/Liu0YYT025": {
+            "title": "A Multi-Factor Collaborative Prediction for Review-based Recommendation.",
+            "authors": "Junrui Liu, Tong Li, Mingliang Yu, Shiqiu Yang, Zifang Tang, Zhen Yang",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "12-20",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Liu0YYT025",
+            "doi": "10.1145/3705328.3748062",
+            "ee": "https://doi.org/10.1145/3705328.3748062"
+        },
+        "conf/recsys/LiuLSLSWWGSLLLJ25": {
+            "title": "Decoupled Entity Representation Learning for Pinterest Ads Ranking.",
+            "authors": "Jie Liu, Yinrui Li, Jiankai Sun, Kungang Li, Han Sun, Sihan Wang, Huasen Wu, Siyuan Gao, Paulo Soares, Nan Li, Zhifang Liu, Haoyang Li, Siping Ji, Ling Leng, Prathibha Deshikachar",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "940-944",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/LiuLSLSWWGSLLLJ25",
+            "doi": "10.1145/3705328.3748098",
+            "ee": "https://doi.org/10.1145/3705328.3748098"
+        },
+        "conf/recsys/LiuYCF25": {
+            "title": "TreatRAG: A Framework for Personalized Treatment Recommendation.",
+            "authors": "Chao-Chin Liu, Hao-Ren Yao, Der-Chen Chang, Ophir Frieder",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "690-695",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/LiuYCF25",
+            "doi": "10.1145/3705328.3748022",
+            "ee": "https://doi.org/10.1145/3705328.3748022"
+        },
+        "conf/recsys/LongWMZPMJPHWGD25": {
+            "title": "LLM-Powered Nuanced Video Attribute Annotation for Enhanced Recommendations.",
+            "authors": "Boyuan Long, Yueqi Wang, Hiloni Mehta, Mick Zomnir, Omkar Pathak, Changping Meng, Ruolin Jia, Yajun Peng, Dapeng Hong, Xia Wu, Mingyan Gao, Onkar Dalal, Ningren Han",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1002-1005",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/LongWMZPMJPHWGD25",
+            "doi": "10.1145/3705328.3748103",
+            "ee": "https://doi.org/10.1145/3705328.3748103"
+        },
+        "conf/recsys/Lutan25": {
+            "title": "Challenges in Perfume Recommender Systems: Navigating Subjectivity, Context and Sensory Data.",
+            "authors": "Elena-Ruxandra Lutan",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1469-1472",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Lutan25",
+            "doi": "10.1145/3705328.3748754",
+            "ee": "https://doi.org/10.1145/3705328.3748754"
+        },
+        "conf/recsys/LutzWD25": {
+            "title": "Industry Insights from Comparing Deep Learning and GBDT Models for E-Commerce Learning-to-Rank.",
+            "authors": "Yunus Lutz, Timo Wilm, Philipp Duwe",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "983-986",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/LutzWD25",
+            "doi": "10.1145/3705328.3748130",
+            "ee": "https://doi.org/10.1145/3705328.3748130"
+        },
+        "conf/recsys/LvHGBLSR25": {
+            "title": "Improve the Personalization of Large-Scale Ranking Systems by Integrating User Survey Feedback.",
+            "authors": "Mengxi Lv, Drew Hogg, Thomas Grubb, Shashank Bassi, Min Li, Cayman Simpson, Senthil Rajagopalan",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "971-974",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/LvHGBLSR25",
+            "doi": "10.1145/3705328.3748119",
+            "ee": "https://doi.org/10.1145/3705328.3748119"
+        },
+        "conf/recsys/MaZZKMGRPXCKNDM25": {
+            "title": "GRACE: Generative Recommendation via Journey-Aware Sparse Attention on Chain-of-Thought Tokenization.",
+            "authors": "Luyi Ma, Wanjia Zhang, Kai Zhao, Abhishek Kulkarni, Lalitesh Morishetti, Anjana Ganesh, Ashish Ranjan, Aashika Padmanabhan, Jianpeng Xu, Jason H. D. Cho, Praveenkumar Kanumala, Kaushiki Nag, Sumit Dutta, Kamiya Motwani, Malay Patel, Evren Körpeoglu, Sushant Kumar, Kannan Achan",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "135-144",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MaZZKMGRPXCKNDM25",
+            "doi": "10.1145/3705328.3748056",
+            "ee": "https://doi.org/10.1145/3705328.3748056"
+        },
+        "conf/recsys/MalaniZ025": {
+            "title": "Minimize Negative Experiences in Video Recommendation Systems with Multimodal Large Language Models.",
+            "authors": "Suman Malani, Youwei Zhang, Liang Liu",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1014-1016",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MalaniZ025",
+            "doi": "10.1145/3705328.3748102",
+            "ee": "https://doi.org/10.1145/3705328.3748102"
+        },
+        "conf/recsys/MalitestaMPMMB25": {
+            "title": "How Fair is Your Diffusion Recommender Model?",
+            "authors": "Daniele Malitesta, Giacomo Medda, Erasmo Purificato, Mirko Marras, Fragkiskos D. Malliaros, Ludovico Boratto",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1199-1205",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MalitestaMPMMB25",
+            "doi": "10.1145/3705328.3759318",
+            "ee": "https://doi.org/10.1145/3705328.3759318"
+        },
+        "conf/recsys/MallamaciPMANM25": {
+            "title": "Balancing Accuracy and Novelty with Sub-Item Popularity.",
+            "authors": "Chiara Mallamaci, Aleksandr V. Petrov, Alberto Carlo Maria Mancino, Vito Walter Anelli, Tommaso Di Noia, Craig Macdonald",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1137-1141",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MallamaciPMANM25",
+            "doi": "10.1145/3705328.3759311",
+            "ee": "https://doi.org/10.1145/3705328.3759311"
+        },
+        "conf/recsys/MancinoAFMN25": {
+            "title": "Standard Practices for Data Processing and Multimodal Feature Extraction in Recommendation with DataRec and Ducho (D&amp;D4Rec).",
+            "authors": "Alberto Carlo Maria Mancino, Matteo Attimonelli, Angela Di Fazio, Daniele Malitesta, Tommaso Di Noia",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1432-1434",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MancinoAFMN25",
+            "doi": "10.1145/3705328.3748009",
+            "ee": "https://doi.org/10.1145/3705328.3748009"
+        },
+        "conf/recsys/ManeGWBKSZM25": {
+            "title": "The Second Workshop on Generative AI for E-commerce.",
+            "authors": "Mansi Ranjit Mane, Djordje Gligorijevic, Dingxian Wang, Topojoy Biswas, Evren Körpeoglu, Marios Savvides, Yongfeng Zhang, Julian J. McAuley",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1404-1408",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ManeGWBKSZM25",
+            "doi": "10.1145/3705328.3748501",
+            "ee": "https://doi.org/10.1145/3705328.3748501"
+        },
+        "conf/recsys/MaraghehDWCC25": {
+            "title": "Multi-Agentic Recommender Systems: Foundations, Design Patterns, and E-Commerce Applications - An Industrial Tutorial.",
+            "authors": "Reza Yousefi Maragheh, Yashar Deldjoo, Chi Wang, Jason Cho, Derek Cheng",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1427-1429",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MaraghehDWCC25",
+            "doi": "10.1145/3705328.3748008",
+            "ee": "https://doi.org/10.1145/3705328.3748008"
+        },
+        "conf/recsys/MartinaPMGLS25": {
+            "title": "DistillRecDial: A Knowledge-Distilled Dataset Capturing User Diversity in Conversational Recommendation.",
+            "authors": "Alessandro Francesco Maria Martina, Alessandro Petruzzelli, Cataldo Musto, Marco de Gemmis, Pasquale Lops, Giovanni Semeraro",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "726-735",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MartinaPMGLS25",
+            "doi": "10.1145/3705328.3748161",
+            "ee": "https://doi.org/10.1145/3705328.3748161"
+        },
+        "conf/recsys/MeehanP25": {
+            "title": "On Inherited Popularity Bias in Cold-Start Item Recommendation.",
+            "authors": "Gregor Meehan, Johan Pauwels",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "649-654",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MeehanP25",
+            "doi": "10.1145/3705328.3748035",
+            "ee": "https://doi.org/10.1145/3705328.3748035"
+        },
+        "conf/recsys/MeiHSBE25": {
+            "title": "Semantic IDs for Music Recommendation.",
+            "authors": "M. Jeffrey Mei, Florian Henkel, Samuel E. Sandberg, Oliver Bembom, Andreas F. Ehmann",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1070-1073",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MeiHSBE25",
+            "doi": "10.1145/3705328.3748139",
+            "ee": "https://doi.org/10.1145/3705328.3748139"
+        },
+        "conf/recsys/MelchiorreEMEHM25": {
+            "title": "Just Ask for Music (JAM): Multimodal and Personalized Natural Language Music Recommendation.",
+            "authors": "Alessandro B. Melchiorre, Elena V. Epure, Shahed Masoudian, Gustavo Escobedo, Anna Hausberger, Manuel Moussallam, Markus Schedl",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "615-620",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MelchiorreEMEHM25",
+            "doi": "10.1145/3705328.3748020",
+            "ee": "https://doi.org/10.1145/3705328.3748020"
+        },
+        "conf/recsys/MengGHDCLZ25": {
+            "title": "User Long-Term Multi-Interest Retrieval Model for Recommendation.",
+            "authors": "Yue Meng, Cheng Guo, Xiaohui Hu, Honghu Deng, Yi Cao, Tong Liu, Bo Zheng",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1112-1116",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MengGHDCLZ25",
+            "doi": "10.1145/3705328.3748107",
+            "ee": "https://doi.org/10.1145/3705328.3748107"
+        },
+        "conf/recsys/MengLWLZHGDCHLH25": {
+            "title": "Balancing Fine-tuning and RAG: A Hybrid Strategy for Dynamic LLM Recommendation Updates.",
+            "authors": "Changping Meng, Hongyi Ling, Jianling Wang, Yifan Liu, Shuzhou Zhang, Dapeng Hong, Mingyan Gao, Onkar Dalal, Ed H. Chi, Lichan Hong, Haokai Lu, Ningren Han",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "919-922",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MengLWLZHGDCHLH25",
+            "doi": "10.1145/3705328.3748105",
+            "ee": "https://doi.org/10.1145/3705328.3748105"
+        },
+        "conf/recsys/MengZW0FH00G25": {
+            "title": "Enhancing Online Video Recommendation via a Coarse-to-fine Dynamic Uplift Modeling Framework.",
+            "authors": "Chang Meng, Chenhao Zhai, Xueliang Wang, Shuchang Liu, Xiaoqiang Feng, Lantao Hu, Xiu Li, Han Li, Kun Gai",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "82-92",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MengZW0FH00G25",
+            "doi": "10.1145/3705328.3748070",
+            "ee": "https://doi.org/10.1145/3705328.3748070"
+        },
+        "conf/recsys/MichielsVS0D25": {
+            "title": "NORMalize 2025: The Third Workshop on Normative Design and Evaluation of Recommender Systems.",
+            "authors": "Lien Michiels, Sanne Vrijenhoek, Alain D. Starke, Johannes Kruse, Savvina Daniil",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1386-1388",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MichielsVS0D25",
+            "doi": "10.1145/3705328.3748002",
+            "ee": "https://doi.org/10.1145/3705328.3748002"
+        },
+        "conf/recsys/MohammadiPMZ25": {
+            "title": "Beyond Top-1: Addressing Inconsistencies in Evaluating Counterfactual Explanations for Recommender Systems.",
+            "authors": "Amir Reza Mohammadi, Andreas Peintner, Michael Müller, Eva Zangerle",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "515-520",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MohammadiPMZ25",
+            "doi": "10.1145/3705328.3748028",
+            "ee": "https://doi.org/10.1145/3705328.3748028"
+        },
+        "conf/recsys/MoscatiNS25": {
+            "title": "Parameter-Efficient Single Collaborative Branch for Recommendation.",
+            "authors": "Marta Moscati, Shah Nawaz, Markus Schedl",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1256-1260",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/MoscatiNS25",
+            "doi": "10.1145/3705328.3759302",
+            "ee": "https://doi.org/10.1145/3705328.3759302"
+        },
+        "conf/recsys/Muller25": {
+            "title": "Advancing User-Centric Evaluation and Design of Conversational Recommender Systems.",
+            "authors": "Michael Müller",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1445-1450",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Muller25",
+            "doi": "10.1145/3705328.3748759",
+            "ee": "https://doi.org/10.1145/3705328.3748759"
+        },
+        "conf/recsys/NadaiDL25": {
+            "title": "Describe What You See with Multimodal Large Language Models to Enhance Video Recommendations.",
+            "authors": "Marco De Nadai, Andreas Damianou, Mounia Lalmas",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1159-1163",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/NadaiDL25",
+            "doi": "10.1145/3705328.3759303",
+            "ee": "https://doi.org/10.1145/3705328.3759303"
+        },
+        "conf/recsys/NeidhardtKLZW25": {
+            "title": "Workshop on Recommenders in Tourism (RecTour) 2025.",
+            "authors": "Julia Neidhardt, Tsvi Kuflik, Amit Livne, Markus Zanker, Wolfgang Wörndl",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1412-1413",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/NeidhardtKLZW25",
+            "doi": "10.1145/3705328.3748500",
+            "ee": "https://doi.org/10.1145/3705328.3748500"
+        },
+        "conf/recsys/NguyenLMAHR25": {
+            "title": "A Reproducibility Study of Product-side Fairness in Bundle Recommendation.",
+            "authors": "Huy-Son Nguyen, Yuanna Liu, Masoud Mansoury, Mohammad Aliannejadi, Alan Hanjalic, Maarten de Rijke",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "696-705",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/NguyenLMAHR25",
+            "doi": "10.1145/3705328.3748169",
+            "ee": "https://doi.org/10.1145/3705328.3748169"
+        },
+        "conf/recsys/NikolakakiMCA25": {
+            "title": "SEMORec: A Scalarized Efficient Multi-Objective Recommendation Framework.",
+            "authors": "Sofia Maria Nikolakaki, Siyong Ma, Srivas Chennu, Humeyra Topcu Altintas",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1074-1077",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/NikolakakiMCA25",
+            "doi": "10.1145/3705328.3748140",
+            "ee": "https://doi.org/10.1145/3705328.3748140"
+        },
+        "conf/recsys/NinomiyaSMSNMSO25": {
+            "title": "Determinants of Users&apos; Chance-Seeking Behavior in Search-Based Recommendation.",
+            "authors": "Yuki Ninomiya, Yutaro Sone, Kazuhisa Miwa, Yuichiro Sumi, Ryosuke Nakanishi, Eiji Mitsuda, Koji Sato, Tadashi Odashima",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "564-569",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/NinomiyaSMSNMSO25",
+            "doi": "10.1145/3705328.3748019",
+            "ee": "https://doi.org/10.1145/3705328.3748019"
+        },
+        "conf/recsys/NiuZ0DSR25": {
+            "title": "Estimating Quantum Execution Requirements for Feature Selection in Recommender Systems Using Extreme Value Theory.",
+            "authors": "Jiayang Niu, Qihan Zou, Jie Li, Ke Deng, Mark Sanderson, Yongli Ren",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "587-592",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/NiuZ0DSR25",
+            "doi": "10.1145/3705328.3748029",
+            "ee": "https://doi.org/10.1145/3705328.3748029"
+        },
+        "conf/recsys/NonnemakerISL25": {
+            "title": "Feedback-Driven Gradual Discovery for Expanding Musical Preferences.",
+            "authors": "Alec Nonnemaker, Ralvi Isufaj, Zoltán Szlávik, Cynthia C. S. Liem",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "605-609",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/NonnemakerISL25",
+            "doi": "10.1145/3705328.3748025",
+            "ee": "https://doi.org/10.1145/3705328.3748025"
+        },
+        "conf/recsys/NoughabiBZK25": {
+            "title": "Personalized Persuasion-Aware Explanations in Recommender Systems.",
+            "authors": "Havva Alizadeh Noughabi, Behshid Behkamal, Fattane Zarrinkalam, Mohsen Kahani",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "655-659",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/NoughabiBZK25",
+            "doi": "10.1145/3705328.3748021",
+            "ee": "https://doi.org/10.1145/3705328.3748021"
+        },
+        "conf/recsys/OosterhuisJS0VJ25": {
+            "title": "CONSEQUENCES 2025 - The 4th Workshop on Causality, Counterfactuals and Sequential Decision-Making for Recommender Systems.",
+            "authors": "Harrie Oosterhuis, Olivier Jeunen, Yuta Saito, Yixin Wang, Flavian Vasile, Thorsten Joachims",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1362-1365",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/OosterhuisJS0VJ25",
+            "doi": "10.1145/3705328.3748498",
+            "ee": "https://doi.org/10.1145/3705328.3748498"
+        },
+        "conf/recsys/Osowska-Kurczab25": {
+            "title": "Suggest, Complement, Inspire: Story of Two-Tower Recommendations at Allegro.com.",
+            "authors": "Aleksandra Maria Osowska-Kurczab, Klaudia Nazarko, Mateusz Marzec, Lidia Wojciechowska, Eliska Kremenová",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1095-1098",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Osowska-Kurczab25",
+            "doi": "10.1145/3705328.3748135",
+            "ee": "https://doi.org/10.1145/3705328.3748135"
+        },
+        "conf/recsys/Ottoborgo25": {
+            "title": "LADDER: LLM-Annotated Data for Dogfooded Evaluation of Rankings.",
+            "authors": "Mattia Ottoborgo",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "995-998",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Ottoborgo25",
+            "doi": "10.1145/3705328.3748094",
+            "ee": "https://doi.org/10.1145/3705328.3748094"
+        },
+        "conf/recsys/OuyangJV025": {
+            "title": "Non-parametric Graph Convolution for Re-ranking in Recommendation Systems.",
+            "authors": "Zhongyu Ouyang, Mingxuan Ju, Soroush Vosoughi, Yanfang Ye",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "330-339",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/OuyangJV025",
+            "doi": "10.1145/3705328.3748058",
+            "ee": "https://doi.org/10.1145/3705328.3748058"
+        },
+        "conf/recsys/PalumboITMDVNGN25": {
+            "title": "You Say Search, I Say Recs: A Scalable Agentic Approach to Query Understanding and Exploratory Search at Spotify.",
+            "authors": "Enrico Palumbo, Marcus Isaksson, Alexandre Tamborrino, Maria Movin, Catalin Dincu, Ali Vardasbi, Lev Nikeshkin, Oksana Gorobets, Anders Nyman, Poppy Newdick, Hugues Bouchard, Paul N. Bennett, Mounia Lalmas, Dani Doro, Christine Doig Cardet, Ziad Sultan",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1117-1121",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/PalumboITMDVNGN25",
+            "doi": "10.1145/3705328.3748127",
+            "ee": "https://doi.org/10.1145/3705328.3748127"
+        },
+        "conf/recsys/PanMAMZCC25": {
+            "title": "Tag-augmented Dual-target Cross-domain Recommendation.",
+            "authors": "Mingfan Pan, Qingyang Mao, Xu An, Jianhui Ma, Gang Zhou, Mingyue Cheng, Enhong Chen",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "451-460",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/PanMAMZCC25",
+            "doi": "10.1145/3705328.3748067",
+            "ee": "https://doi.org/10.1145/3705328.3748067"
+        },
+        "conf/recsys/Patron25": {
+            "title": "Personalized Image Generation for Recommendations Beyond Catalogs.",
+            "authors": "Gabriel Alfonso Patron",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1492-1498",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Patron25",
+            "doi": "10.1145/3705328.3748757",
+            "ee": "https://doi.org/10.1145/3705328.3748757"
+        },
+        "conf/recsys/PembekFKV25": {
+            "title": "Let It Go? Not Quite: Addressing Item Cold Start in Sequential Recommendations with Content-Based Initialization.",
+            "authors": "Anton Pembek, Artem Fatkulin, Anton Klenitskiy, Alexey Vasilev",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "626-631",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/PembekFKV25",
+            "doi": "10.1145/3705328.3748038",
+            "ee": "https://doi.org/10.1145/3705328.3748038"
+        },
+        "conf/recsys/PenhaDNPTVLLHFB25": {
+            "title": "Semantic IDs for Joint Generative Search and Recommendation.",
+            "authors": "Gustavo Penha, Edoardo D&apos;Amico, Marco De Nadai, Enrico Palumbo, Alexandre Tamborrino, Ali Vardasbi, Max Lefarov, Shawn Lin, Timothy Christopher Heath, Francesco Fabbri, Hugues Bouchard",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1296-1301",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/PenhaDNPTVLLHFB25",
+            "doi": "10.1145/3705328.3759300",
+            "ee": "https://doi.org/10.1145/3705328.3759300"
+        },
+        "conf/recsys/PenzTS25": {
+            "title": "Mitigating Latent User Biases in Pre-trained VAE Recommendation Models via On-demand Input Space Transformation.",
+            "authors": "David Penz, Gustavo Junior Escobedo Ticona, Markus Schedl",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "632-636",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/PenzTS25",
+            "doi": "10.1145/3705328.3748012",
+            "ee": "https://doi.org/10.1145/3705328.3748012"
+        },
+        "conf/recsys/PereiraSS25": {
+            "title": "On the Reliability of Sampling Strategies in Offline Recommender Evaluation.",
+            "authors": "Bruno L. Pereira, Alan Said, Rodrygo L. T. Santos",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "360-369",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/PereiraSS25",
+            "doi": "10.1145/3705328.3748086",
+            "ee": "https://doi.org/10.1145/3705328.3748086"
+        },
+        "conf/recsys/PiresACS025": {
+            "title": "Exploitation Over Exploration: Unmasking the Bias in Linear Bandit Recommender Offline Evaluation.",
+            "authors": "Pedro R. Pires, Gregório F. Azevedo, Pietro Lo Presti Campos, Rafael T. Sereicikas, Tiago A. Almeida",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "736-745",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/PiresACS025",
+            "doi": "10.1145/3705328.3748166",
+            "ee": "https://doi.org/10.1145/3705328.3748166"
+        },
+        "conf/recsys/PloshkinTPBTPBK25": {
+            "title": "Yambda-5B - A Large-Scale Multi-Modal Dataset for Ranking and Retrieval.",
+            "authors": "Alexander Ploshkin, Vladislav Tytskiy, Alexey Pismenny, Vladimir Baikalov, Evgeny Taychinov, Artem Permiakov, Daniil Burlakov, Eugene Krofto",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "894-901",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/PloshkinTPBTPBK25",
+            "doi": "10.1145/3705328.3748163",
+            "ee": "https://doi.org/10.1145/3705328.3748163"
+        },
+        "conf/recsys/PoernomoTAL25": {
+            "title": "Probabilistic Modeling, Learnability and Uncertainty Estimation for Interaction Prediction in Movie Rating Datasets.",
+            "authors": "Jennifer Poernomo, Nicole Gabrielle Lee Tan, Rodrigo Alves, Antoine Ledent",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1261-1266",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/PoernomoTAL25",
+            "doi": "10.1145/3705328.3759332",
+            "ee": "https://doi.org/10.1145/3705328.3759332"
+        },
+        "conf/recsys/PomoJ0MMMMN25": {
+            "title": "First International Workshop on Data Quality-Aware Multimodal Recommendation (DaQuaMRec).",
+            "authors": "Claudio Pomo, Dietmar Jannach, Yubin Kim, Daniele Malitesta, Alberto Carlo Maria Mancino, Julian J. McAuley, Alessandro B. Melchiorre, Shah Nawaz",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1378-1382",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/PomoJ0MMMMN25",
+            "doi": "10.1145/3705328.3748001",
+            "ee": "https://doi.org/10.1145/3705328.3748001"
+        },
+        "conf/recsys/Qin00SZH0025": {
+            "title": "MoRE: A Mixture of Reflectors Framework for Large Language Model-Based Sequential Recommendation.",
+            "authors": "Weicong Qin, Yi Xu, Weijie Yu, Chenglei Shen, Xiao Zhang, Ming He, Jianping Fan, Jun Xu",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "299-308",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Qin00SZH0025",
+            "doi": "10.1145/3705328.3748055",
+            "ee": "https://doi.org/10.1145/3705328.3748055"
+        },
+        "conf/recsys/RajuSXDN25": {
+            "title": "Leveraging Explicit Negative Feedback in Large-Scale Recommendation Systems: A Case Study.",
+            "authors": "Madhura Raju, Manisha Sharma, Hongyu Xiong, Bingfeng Deng, Meng Na",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "999-1001",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/RajuSXDN25",
+            "doi": "10.1145/3705328.3748145",
+            "ee": "https://doi.org/10.1145/3705328.3748145"
+        },
+        "conf/recsys/RampiselaMRSL25": {
+            "title": "Stairway to Fairness: Connecting Group and Individual Fairness.",
+            "authors": "Theresia Veronika Rampisela, Maria Maistro, Tuukka Ruotsalo, Falk Scholer, Christina Lioma",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "677-683",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/RampiselaMRSL25",
+            "doi": "10.1145/3705328.3748031",
+            "ee": "https://doi.org/10.1145/3705328.3748031"
+        },
+        "conf/recsys/RanganathanLCKW25": {
+            "title": "Zero-shot Cross-domain Knowledge Distillation: A Case study on YouTube Music.",
+            "authors": "Srivaths Ranganathan, Chieh Lo, Bernardo Cunha, Nikhil Khani, Li Wei, Aniruddh Nath, Shawn Andrews, Gergo Varady, Yanwei Song, Jochen Klingenhoefer, Tim Steele",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1122-1125",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/RanganathanLCKW25",
+            "doi": "10.1145/3705328.3748138",
+            "ee": "https://doi.org/10.1145/3705328.3748138"
+        },
+        "conf/recsys/RoyTLH25": {
+            "title": "SlateLLM: Distilling LLM Semantics into Session-Aware Slate Recommendation without Inference Overhead.",
+            "authors": "Aayush Singha Roy, Elias Z. Tragos, Aonghus Lawlor, Neil Hurley",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1302-1306",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/RoyTLH25",
+            "doi": "10.1145/3705328.3759306",
+            "ee": "https://doi.org/10.1145/3705328.3759306"
+        },
+        "conf/recsys/SanchezBJ25": {
+            "title": "Context Trails: A Dataset to Study Contextual and Route Recommendation.",
+            "authors": "Pablo Sánchez, Alejandro Bellogín, Jose L. Jorro-Aragoneses",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "716-725",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/SanchezBJ25",
+            "doi": "10.1145/3705328.3748151",
+            "ee": "https://doi.org/10.1145/3705328.3748151"
+        },
+        "conf/recsys/SangLCFJPLLS25": {
+            "title": "Stream Normalization for CTR Prediction.",
+            "authors": "Yizhou Sang, Congcong Liu, Yuying Chen, Zhiwei Fang, Xue Jiang, Changping Peng, Zhangang Lin, Ching Law, Jingping Shao",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1086-1090",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/SangLCFJPLLS25",
+            "doi": "10.1145/3705328.3748093",
+            "ee": "https://doi.org/10.1145/3705328.3748093"
+        },
+        "conf/recsys/Sato25": {
+            "title": "Unobserved Negative Items in Recommender Systems: Challenges and Solutions for Evaluation and Learning.",
+            "authors": "Masahiro Sato",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1317-1321",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Sato25",
+            "doi": "10.1145/3705328.3759315",
+            "ee": "https://doi.org/10.1145/3705328.3759315"
+        },
+        "conf/recsys/SbandiSS25": {
+            "title": "TIM-Rec: Explicit Sparse Feedback on Multi-Item Upselling Recommendations in an Industrial Dataset of Telco Calls.",
+            "authors": "Alessandro Sbandi, Federico Siciliano, Fabrizio Silvestri",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "865-873",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/SbandiSS25",
+            "doi": "10.1145/3705328.3748150",
+            "ee": "https://doi.org/10.1145/3705328.3748150"
+        },
+        "conf/recsys/SchodlLTS25": {
+            "title": "Investigating Carbon Footprint of Recommender Systems Beyond Training Time.",
+            "authors": "Josef Schodl, Oleg Lesota, Antonela Tommasel, Markus Schedl",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1206-1211",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/SchodlLTS25",
+            "doi": "10.1145/3705328.3759324",
+            "ee": "https://doi.org/10.1145/3705328.3759324"
+        },
+        "conf/recsys/SeputisLLM25": {
+            "title": "Rethinking the Privacy of Text Embeddings: A Reproducibility Study of &quot;Text Embeddings Reveal (Almost) As Much As Text&quot;.",
+            "authors": "Dominykas Seputis, Yongkang Li, Karsten Langerak, Serghei Mihailov",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "822-831",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/SeputisLLM25",
+            "doi": "10.1145/3705328.3748155",
+            "ee": "https://doi.org/10.1145/3705328.3748155"
+        },
+        "conf/recsys/SguerraELM25": {
+            "title": "Biases in LLM-Generated Musical Taste Profiles for Recommendation.",
+            "authors": "Bruno Sguerra, Elena V. Epure, Harin Lee, Manuel Moussallam",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "527-532",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/SguerraELM25",
+            "doi": "10.1145/3705328.3748030",
+            "ee": "https://doi.org/10.1145/3705328.3748030"
+        },
+        "conf/recsys/ShalomD25": {
+            "title": "Addressing Multiple Hypothesis Bias in CTR Prediction for Ad Selection.",
+            "authors": "Oren Sar Shalom, Neil Daftary",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1132-1136",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ShalomD25",
+            "doi": "10.1145/3705328.3759299",
+            "ee": "https://doi.org/10.1145/3705328.3759299"
+        },
+        "conf/recsys/Shehzad0MJ25": {
+            "title": "&quot;We Share Our Code Online&quot;: Why This Is Not Enough to Ensure Reproducibility and Progress in Recommender Systems Research.",
+            "authors": "Faisal Shehzad, Timo Breuer, Maria Maistro, Dietmar Jannach",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "884-893",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Shehzad0MJ25",
+            "doi": "10.1145/3705328.3748157",
+            "ee": "https://doi.org/10.1145/3705328.3748157"
+        },
+        "conf/recsys/ShehzadJ25": {
+            "title": "Revisiting the Performance of Graph Neural Networks for Session-based Recommendation.",
+            "authors": "Faisal Shehzad, Dietmar Jannach",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "842-846",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ShehzadJ25",
+            "doi": "10.1145/3705328.3748156",
+            "ee": "https://doi.org/10.1145/3705328.3748156"
+        },
+        "conf/recsys/ShenZZ0H025": {
+            "title": "Paragon: Parameter Generation for Controllable Multi-Task Recommendation.",
+            "authors": "Chenglei Shen, Jiahao Zhao, Xiao Zhang, Weijie Yu, Ming He, Jianping Fan",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "370-380",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ShenZZ0H025",
+            "doi": "10.1145/3705328.3748069",
+            "ee": "https://doi.org/10.1145/3705328.3748069"
+        },
+        "conf/recsys/ShiX0Z00Y25": {
+            "title": "GenSAR: Unifying Balanced Search and Recommendation with Generative Retrieval.",
+            "authors": "Teng Shi, Jun Xu, Xiao Zhang, Xiaoxue Zang, Kai Zheng, Yang Song, Enyun Yu",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "124-134",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ShiX0Z00Y25",
+            "doi": "10.1145/3705328.3748071",
+            "ee": "https://doi.org/10.1145/3705328.3748071"
+        },
+        "conf/recsys/ShinodaSF25": {
+            "title": "Popularity‑Bias Vulnerability: Semi‑Supervised Label Inference Attack on Federated Recommender Systems.",
+            "authors": "Kenji Shinoda, Takeyuki Sasai, Shintaro Fukushima",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "660-665",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ShinodaSF25",
+            "doi": "10.1145/3705328.3748024",
+            "ee": "https://doi.org/10.1145/3705328.3748024"
+        },
+        "conf/recsys/SilvaBN25": {
+            "title": "Location Matters: Leveraging Multi-Resolution Geo-Embeddings for Housing Search.",
+            "authors": "Ivo Silva, Guilherme G. Bonaldo, Pedro F. Nogueira",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1006-1009",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/SilvaBN25",
+            "doi": "10.1145/3705328.3748136",
+            "ee": "https://doi.org/10.1145/3705328.3748136"
+        },
+        "conf/recsys/SinghMSPPEKBC25": {
+            "title": "Operational Twin-Driven AI Recommender for Strategic Service Planning.",
+            "authors": "Vivek Singh, Sarith Mohan, Chetan L. Srinidhi, Santosh Pai, Ullaskrishnan Poikavila, Codruta Ene, Ankur Kapoor, Neil Biehn, Dorin Comaniciu",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1026-1029",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/SinghMSPPEKBC25",
+            "doi": "10.1145/3705328.3748099",
+            "ee": "https://doi.org/10.1145/3705328.3748099"
+        },
+        "conf/recsys/Sonie25": {
+            "title": "concept2code: Sequential Recommendation with Large Language Models.",
+            "authors": "Omprakash Sonie",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1423-1424",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Sonie25",
+            "doi": "10.1145/3705328.3748003",
+            "ee": "https://doi.org/10.1145/3705328.3748003"
+        },
+        "conf/recsys/SpilloMMGLS25": {
+            "title": "See the Movie, Hear the Song, Read the Book: Extending MovieLens-1M, Last.fm-2K, and DBbook with Multimodal Data.",
+            "authors": "Giuseppe Spillo, Elio Musacchio, Cataldo Musto, Marco de Gemmis, Pasquale Lops, Giovanni Semeraro",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "847-856",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/SpilloMMGLS25",
+            "doi": "10.1145/3705328.3748162",
+            "ee": "https://doi.org/10.1145/3705328.3748162"
+        },
+        "conf/recsys/SunH25": {
+            "title": "RicciFlowRec: A Geometric Root Cause Recommender Using Ricci Curvature on Financial Graphs.",
+            "authors": "Zhongtian Sun, Anoushka Harit",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1284-1289",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/SunH25",
+            "doi": "10.1145/3705328.3759312",
+            "ee": "https://doi.org/10.1145/3705328.3759312"
+        },
+        "conf/recsys/TikhonovichZPSS25": {
+            "title": "eSASRec: Enhancing Transformer-based Recommendations in a Modular Fashion.",
+            "authors": "Daria Tikhonovich, Nikita Zelinskiy, Aleksandr V. Petrov, Mayya Spirina, Andrei Semenov, Andrey V. Savchenko, Sergei Kuliev",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1175-1180",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/TikhonovichZPSS25",
+            "doi": "10.1145/3705328.3759317",
+            "ee": "https://doi.org/10.1145/3705328.3759317"
+        },
+        "conf/recsys/TomasiFCKLD25": {
+            "title": "Prompt-to-Slate: Diffusion Models for Prompt-Conditioned Slate Generation.",
+            "authors": "Federico Tomasi, Francesco Fabbri, Justin Carter, Elias Kalomiris, Mounia Lalmas, Zhenwen Dai",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "401-410",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/TomasiFCKLD25",
+            "doi": "10.1145/3705328.3748072",
+            "ee": "https://doi.org/10.1145/3705328.3748072"
+        },
+        "conf/recsys/ToniPGPLC25": {
+            "title": "You Don&apos;t Bring Me Flowers: Mitigating Unwanted Recommendations Through Conformal Risk Control.",
+            "authors": "Giovanni De Toni, Erasmo Purificato, Emilia Gómez, Andrea Passerini, Bruno Lepri, Cristian Consonni",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "492-502",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ToniPGPLC25",
+            "doi": "10.1145/3705328.3748054",
+            "ee": "https://doi.org/10.1145/3705328.3748054"
+        },
+        "conf/recsys/TranSMBM25": {
+            "title": "&quot;Beyond the past&quot;: Leveraging Audio and Human Memory for Sequential Music Recommendation.",
+            "authors": "Viet-Anh Tran, Bruno Sguerra, Gabriel Meseguer-Brocal, Léa Briand, Manuel Moussallam",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "509-514",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/TranSMBM25",
+            "doi": "10.1145/3705328.3748018",
+            "ee": "https://doi.org/10.1145/3705328.3748018"
+        },
+        "conf/recsys/Ungruh25": {
+            "title": "Are Recommender Systems Serving Children? Toward Child-Aware Design and Evaluation.",
+            "authors": "Robin Ungruh",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1451-1457",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Ungruh25",
+            "doi": "10.1145/3705328.3748752",
+            "ee": "https://doi.org/10.1145/3705328.3748752"
+        },
+        "conf/recsys/UngruhBKP25": {
+            "title": "Impacts of Mainstream-Driven Algorithms on Recommendations for Children Across Domains: A Reproducibility Study.",
+            "authors": "Robin Ungruh, Alejandro Bellogín, Dominik Kowald, Maria Soledad Pera",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "783-791",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/UngruhBKP25",
+            "doi": "10.1145/3705328.3748160",
+            "ee": "https://doi.org/10.1145/3705328.3748160"
+        },
+        "conf/recsys/UngruhBP25": {
+            "title": "From Previous Plays to Long-Term Tastes: Exploring the Long-term Reliability of Recommender Systems Simulations for Children.",
+            "authors": "Robin Ungruh, Alejandro Bellogín, Maria Soledad Pera",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1193-1198",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/UngruhBP25",
+            "doi": "10.1145/3705328.3759301",
+            "ee": "https://doi.org/10.1145/3705328.3759301"
+        },
+        "conf/recsys/ValverdeYLGZEKI25": {
+            "title": "Cross-Batch Aggregation for Streaming Learning from Label Proportions in Industrial-Scale Recommendation Systems.",
+            "authors": "Jonathan Valverde, Tiansheng Yao, Xiang Li, Yuan Gao, Yin Zhang, Andrew Evdokimov, Adam Kraft, Samuel Ieong, Jerry Zhang, Ed H. Chi, Derek Zhiyuan Cheng, Ruoxi Wang",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "935-939",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ValverdeYLGZEKI25",
+            "doi": "10.1145/3705328.3748115",
+            "ee": "https://doi.org/10.1145/3705328.3748115"
+        },
+        "conf/recsys/VandenbrouckeMM25": {
+            "title": "Not One News Recommender To Fit Them All: How Different Recommender Strategies Serve Various User Segments.",
+            "authors": "Hanne Vandenbroucke, Ulysse Maes, Lien Michiels, Annelien Smets",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "643-648",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/VandenbrouckeMM25",
+            "doi": "10.1145/3705328.3748034",
+            "ee": "https://doi.org/10.1145/3705328.3748034"
+        },
+        "conf/recsys/VellardCRLT25": {
+            "title": "Interactive Playlist Generation from Titles.",
+            "authors": "Eléa Vellard, Enzo Charolois-Pasqua, Youssra Rebboud, Pasquale Lisena, Raphaël Troncy",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1337-1339",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/VellardCRLT25",
+            "doi": "10.1145/3705328.3759336",
+            "ee": "https://doi.org/10.1145/3705328.3759336"
+        },
+        "conf/recsys/VenteHASBG25": {
+            "title": "APS Explorer: Navigating Algorithm Performance Spaces for Informed Dataset Selection.",
+            "authors": "Tobias Vente, Michael Heep, Abdullah Abbas, Theodor Sperle, Joeran Beel, Bart Goethals",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1322-1324",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/VenteHASBG25",
+            "doi": "10.1145/3705328.3759342",
+            "ee": "https://doi.org/10.1145/3705328.3759342"
+        },
+        "conf/recsys/VinagrePMPG25": {
+            "title": "Data Access for Recommender Systems Research: leveraging the EU&apos;s Digital Services Act.",
+            "authors": "João Vinagre, Lorenzo Porcaro, Silvia Merisio, Erasmo Purificato, Emilia Gómez",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1425-1426",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/VinagrePMPG25",
+            "doi": "10.1145/3705328.3748004",
+            "ee": "https://doi.org/10.1145/3705328.3748004"
+        },
+        "conf/recsys/Vlachou25": {
+            "title": "Failure Prediction in Conversational Recommendation Systems.",
+            "authors": "Maria Vlachou",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "599-604",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Vlachou25",
+            "doi": "10.1145/3705328.3748043",
+            "ee": "https://doi.org/10.1145/3705328.3748043"
+        },
+        "conf/recsys/Vlachou25a": {
+            "title": "Fashion-AlterEval: A Dataset for Improved Evaluation of Conversational Recommendation Systems with Alternative Relevant Items.",
+            "authors": "Maria Vlachou",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "755-763",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Vlachou25a",
+            "doi": "10.1145/3705328.3748149",
+            "ee": "https://doi.org/10.1145/3705328.3748149"
+        },
+        "conf/recsys/WangHJ25": {
+            "title": "Beyond Visit Trajectories: Enhancing POI Recommendation via LLM-Augmented Text and Image Representations.",
+            "authors": "Zehui Wang, Wolfram Höpken, Dietmar Jannach",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "521-526",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/WangHJ25",
+            "doi": "10.1145/3705328.3748014",
+            "ee": "https://doi.org/10.1145/3705328.3748014"
+        },
+        "conf/recsys/WangJBZGD25": {
+            "title": "Item-centric Exploration for Cold Start Problem.",
+            "authors": "Dong Wang, Junyi Jiao, Arnab Bhadury, Yaping Zhang, Mingyan Gao, Onkar Dalal",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "987-990",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/WangJBZGD25",
+            "doi": "10.1145/3705328.3748113",
+            "ee": "https://doi.org/10.1145/3705328.3748113"
+        },
+        "conf/recsys/WangSS025": {
+            "title": "Off-Policy Evaluation of Candidate Generators in Two-Stage Recommender Systems.",
+            "authors": "Peiyao Wang, Zhan Shi, Amina Shabbeer, Ben London",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "350-359",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/WangSS025",
+            "doi": "10.1145/3705328.3748057",
+            "ee": "https://doi.org/10.1145/3705328.3748057"
+        },
+        "conf/recsys/WangTSCW25": {
+            "title": "Privacy Risks of LLM-Empowered Recommender Systems: An Inversion Attack Perspective.",
+            "authors": "Yubo Wang, Min Tang, Nuo Shen, Shujie Cui, Weiqing Wang",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "812-821",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/WangTSCW25",
+            "doi": "10.1145/3705328.3748158",
+            "ee": "https://doi.org/10.1145/3705328.3748158"
+        },
+        "conf/recsys/WangXBTLL25": {
+            "title": "Enhancing Transferability and Consistency in Cross-Domain Recommendations via Supervised Disentanglement.",
+            "authors": "Yuhan Wang, Qing Xie, Zhifeng Bao, Mengzi Tang, Lin Li, Yongjian Liu",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "104-113",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/WangXBTLL25",
+            "doi": "10.1145/3705328.3748044",
+            "ee": "https://doi.org/10.1145/3705328.3748044"
+        },
+        "conf/recsys/WangZCGWWW25": {
+            "title": "Not All Impressions Are Created Equal: Psychology-Informed Retention Optimization for Short-Form Video Recommendation.",
+            "authors": "Yuyan Wang, Jing Zhong, Yuxin Cui, Zhaohui Guo, Chuanqi Wei, Yanchen Wang, Zellux Wang",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1022-1025",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/WangZCGWWW25",
+            "doi": "10.1145/3705328.3748122",
+            "ee": "https://doi.org/10.1145/3705328.3748122"
+        },
+        "conf/recsys/WaterschootTB25": {
+            "title": "Consistent Explainers or Unreliable Narrators? Understanding LLM-generated Group Recommendations.",
+            "authors": "Cedric Waterschoot, Nava Tintarev, Francesco Barile",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "539-544",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/WaterschootTB25",
+            "doi": "10.1145/3705328.3748015",
+            "ee": "https://doi.org/10.1145/3705328.3748015"
+        },
+        "conf/recsys/WeaverBB025": {
+            "title": "Efficient Off-Policy Evaluation of Content Blending in Station-Based Music Experiences.",
+            "authors": "Chelsea Weaver, Arvind Balasubramanian, Juan Borgnino, Ben London",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "949-953",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/WeaverBB025",
+            "doi": "10.1145/3705328.3748114",
+            "ee": "https://doi.org/10.1145/3705328.3748114"
+        },
+        "conf/recsys/WenWYCJZ25": {
+            "title": "USB-Rec: An Effective Framework for Improving Conversational Recommendation Capability of Large Language Model.",
+            "authors": "Jianyu Wen, Jingyun Wang, Cilin Yan, Jiayin Cai, Xiaolong Jiang, Ying Zhang",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "472-481",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/WenWYCJZ25",
+            "doi": "10.1145/3705328.3748089",
+            "ee": "https://doi.org/10.1145/3705328.3748089"
+        },
+        "conf/recsys/WilmN25": {
+            "title": "Identifying Offline Metrics that Predict Online Impact: A Pragmatic Strategy for Real-World Recommender Systems.",
+            "authors": "Timo Wilm, Philipp Normann",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "967-970",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/WilmN25",
+            "doi": "10.1145/3705328.3748111",
+            "ee": "https://doi.org/10.1145/3705328.3748111"
+        },
+        "conf/recsys/Wu00ZX0L25": {
+            "title": "IP2: Entity-Guided Interest Probing for Personalized News Recommendation.",
+            "authors": "Youlin Wu, Yuanyuan Sun, Xiaokun Zhang, Haoxi Zhan, Bo Xu, Liang Yang, Hongfei Lin",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "187-196",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Wu00ZX0L25",
+            "doi": "10.1145/3705328.3748091",
+            "ee": "https://doi.org/10.1145/3705328.3748091"
+        },
+        "conf/recsys/WuY0LYY25": {
+            "title": "RankGraph: Unified Heterogeneous Graph Learning for Cross-Domain Recommendation.",
+            "authors": "Renzhi Wu, Junjie Yang, Li Chen, Hong Li, Li Yu, Hong Yan",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1050-1053",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/WuY0LYY25",
+            "doi": "10.1145/3705328.3748118",
+            "ee": "https://doi.org/10.1145/3705328.3748118"
+        },
+        "conf/recsys/YadaAWUSR25": {
+            "title": "Improving Visual Recommendation on E-commerce Platforms Using Vision-Language Models.",
+            "authors": "Yuki Yada, Sho Akiyama, Ryo Watanabe, Yuta Ueno, Yusuke Shido, Andre Rusli",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "975-978",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/YadaAWUSR25",
+            "doi": "10.1145/3705328.3748128",
+            "ee": "https://doi.org/10.1145/3705328.3748128"
+        },
+        "conf/recsys/YangAZZSEZLXRD25": {
+            "title": "Deep Reinforcement Learning for Ranking Utility Tuning in the Ad Recommender System at Pinterest.",
+            "authors": "Xiao Yang, Mehdi Ayed, Longyu Zhao, Fan Zhou, Yuchen Shen, Abe Engle, Jinfeng Zhuang, Ling Leng, Jiajing Xu, Charles Rosenberg, Prathibha Deshikachar",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "945-948",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/YangAZZSEZLXRD25",
+            "doi": "10.1145/3705328.3748144",
+            "ee": "https://doi.org/10.1145/3705328.3748144"
+        },
+        "conf/recsys/YilmaDPPL25": {
+            "title": "ArtAICare: An End-to-End Platform for Personalized Art Therapy.",
+            "authors": "Bereket Abera Yilma, Saravanakumar Duraisamy, Stefan Penchev, Tudor Pristav, Luis A. Leiva",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1325-1327",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/YilmaDPPL25",
+            "doi": "10.1145/3705328.3759338",
+            "ee": "https://doi.org/10.1145/3705328.3759338"
+        },
+        "conf/recsys/YilmaL25": {
+            "title": "Affect-aware Cross-Domain Recommendation for Art Therapy via Music Preference Elicitation.",
+            "authors": "Bereket Abera Yilma, Luis A. Leiva",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "31-40",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/YilmaL25",
+            "doi": "10.1145/3705328.3748084",
+            "ee": "https://doi.org/10.1145/3705328.3748084"
+        },
+        "conf/recsys/YuWDDX25": {
+            "title": "Unified Survey Modeling to Limit Negative User Experiences in Recommendation Systems.",
+            "authors": "Chenghui Yu, Haoze Wu, Jian Ding, Bingfeng Deng, Hongyu Xiong",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1104-1107",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/YuWDDX25",
+            "doi": "10.1145/3705328.3748108",
+            "ee": "https://doi.org/10.1145/3705328.3748108"
+        },
+        "conf/recsys/YunCC25": {
+            "title": "Rethinking Overconfidence in VAEs: Can Label Smoothing Help?",
+            "authors": "Woo-Seong Yun, Yeojun Choi, Yoon-Sik Cho",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "666-670",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/YunCC25",
+            "doi": "10.1145/3705328.3748039",
+            "ee": "https://doi.org/10.1145/3705328.3748039"
+        },
+        "conf/recsys/YusupovRF25": {
+            "title": "Leveraging Geometric Insights in Hyperbolic Triplet Loss for Improved Recommendations.",
+            "authors": "Viacheslav Yusupov, Maxim V. Rakhuba, Evgeny Frolov",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1217-1221",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/YusupovRF25",
+            "doi": "10.1145/3705328.3759328",
+            "ee": "https://doi.org/10.1145/3705328.3759328"
+        },
+        "conf/recsys/ZainulabidovaBH25": {
+            "title": "Learning geometry-aware recommender systems with manifold regularization.",
+            "authors": "Zaira Zainulabidova, Julia Borisova, Alexander Hvatov",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1212-1216",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ZainulabidovaBH25",
+            "doi": "10.1145/3705328.3759323",
+            "ee": "https://doi.org/10.1145/3705328.3759323"
+        },
+        "conf/recsys/ZangerleS025": {
+            "title": "Beyond Algorithms: Reclaiming the Interdisciplinary Roots of Recommender Systems (BEYOND 2025).",
+            "authors": "Eva Zangerle, Alan Said, Christine Bauer",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1360-1361",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ZangerleS025",
+            "doi": "10.1145/3705328.3747998",
+            "ee": "https://doi.org/10.1145/3705328.3747998"
+        },
+        "conf/recsys/Zeng0025": {
+            "title": "Are We Really Making Recommendations Robust? Revisiting Model Evaluation for Denoising Recommendation.",
+            "authors": "Guohang Zeng, Jie Lu, Guangquan Zhang",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "706-715",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Zeng0025",
+            "doi": "10.1145/3705328.3748153",
+            "ee": "https://doi.org/10.1145/3705328.3748153"
+        },
+        "conf/recsys/ZhangY0ZXZY25": {
+            "title": "SGCL: Unifying Self-Supervised and Supervised Learning for Graph Recommendation.",
+            "authors": "Weizhi Zhang, Liangwei Yang, Zihe Song, Henry Peng Zou, Ke Xu, Yuanjie Zhu, Philip S. Yu",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "671-676",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ZhangY0ZXZY25",
+            "doi": "10.1145/3705328.3748036",
+            "ee": "https://doi.org/10.1145/3705328.3748036"
+        },
+        "conf/recsys/ZhangZSXW25": {
+            "title": "Test-Time Alignment with State Space Model for Tracking User Interest Shifts in Sequential Recommendation.",
+            "authors": "Changshuo Zhang, Xiao Zhang, Teng Shi, Jun Xu, Ji-Rong Wen",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "461-471",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ZhangZSXW25",
+            "doi": "10.1145/3705328.3748060",
+            "ee": "https://doi.org/10.1145/3705328.3748060"
+        },
+        "conf/recsys/Zhao0LW0R25": {
+            "title": "LANCE: Exploration and Reflection for LLM-based Textual Attacks on News Recommender Systems.",
+            "authors": "Yuyue Zhao, Jin Huang, Shuchang Liu, Jiancan Wu, Xiang Wang, Maarten de Rijke",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "197-206",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Zhao0LW0R25",
+            "doi": "10.1145/3705328.3748081",
+            "ee": "https://doi.org/10.1145/3705328.3748081"
+        },
+        "conf/recsys/ZhaoMCZY025": {
+            "title": "Multi-Granularity Distribution Modeling for Video Watch Time Prediction via Exponential-Gaussian Mixture Network.",
+            "authors": "Xu Zhao, Ruibo Ma, Jiaqi Chen, Weiqi Zhao, Ping Yang, Yao Hu",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "309-318",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ZhaoMCZY025",
+            "doi": "10.1145/3705328.3748080",
+            "ee": "https://doi.org/10.1145/3705328.3748080"
+        },
+        "conf/recsys/ZhaoWRV25": {
+            "title": "Model Meets Knowledge: Analyzing Knowledge Types for Conversational Recommender Systems.",
+            "authors": "Jujia Zhao, Yumeng Wang, Zhaochun Ren, Suzan Verberne",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "802-811",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ZhaoWRV25",
+            "doi": "10.1145/3705328.3748152",
+            "ee": "https://doi.org/10.1145/3705328.3748152"
+        },
+        "conf/recsys/ZhaoZKHSSWNKYOZ25": {
+            "title": "Enhancing Online Ranking Systems via Multi-Surface Co-Training for Content Understanding.",
+            "authors": "Gwendolyn Zhao, Yilin Zheng, Raghu Keshavan, Lukasz Heldt, Qian Sun, Fabio Soldo, Li Wei, Aniruddh Nath, Nikhil Khani, Weilong Yang, Dapo Omidiran, Rein Zhang, Mei Chen, Lichan Hong, Xinyang Yi",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "958-961",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ZhaoZKHSSWNKYOZ25",
+            "doi": "10.1145/3705328.3748101",
+            "ee": "https://doi.org/10.1145/3705328.3748101"
+        },
+        "conf/recsys/ZhengHPRWXNL00L25": {
+            "title": "Enhancing Embedding Representation Stability in Recommendation Systems with Semantic ID.",
+            "authors": "Carolina Zheng, Minhui Huang, Dmitrii Pedchenko, Kaushik Rangadurai, Siyu Wang, Fan Xia, Gaby Nahum, Jie Lei, Yang Yang, Tao Liu, Zutian Luo, Xiaohan Wei, Dinesh Ramasamy, Jiyan Yang, Yiping Han, Lin Yang, Hangjun Xu, Rong Jin, Shuang Yang",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "954-957",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ZhengHPRWXNL00L25",
+            "doi": "10.1145/3705328.3748123",
+            "ee": "https://doi.org/10.1145/3705328.3748123"
+        },
+        "conf/recsys/ZhuSES25": {
+            "title": "Metadata Generation and Evaluation using LLMs - Case Study on Canonical Titles.",
+            "authors": "Sinan Zhu, Sanja Simonovikj, Darren Edmonds, Yang Sun",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1010-1013",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ZhuSES25",
+            "doi": "10.1145/3705328.3748100",
+            "ee": "https://doi.org/10.1145/3705328.3748100"
+        },
+        "conf/recsys/ZielnickiH25": {
+            "title": "Orthogonal Low Rank Embedding Stabilization.",
+            "authors": "Kevin Zielnicki, Ko-Jen Hsiao",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1030-1033",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ZielnickiH25",
+            "doi": "10.1145/3705328.3748141",
+            "ee": "https://doi.org/10.1145/3705328.3748141"
+        },
+        "conf/recsys/Zilbershtein25": {
+            "title": "Fair and Transparent Recommender Systems for Advertisements.",
+            "authors": "Dina Zilbershtein",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1473-1478",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/Zilbershtein25",
+            "doi": "10.1145/3705328.3748755",
+            "ee": "https://doi.org/10.1145/3705328.3748755"
+        },
+        "conf/recsys/ZinmanCFBFE25": {
+            "title": "Personalized Interest Graphs for Theme-Driven User Behavior.",
+            "authors": "Oded Zinman, Nazmul Chowdhury, Leandro Fiaschetti, Yuri M. Brovman, Guy Feigenblat, Yotam Eshel",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1038-1041",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ZinmanCFBFE25",
+            "doi": "10.1145/3705328.3748133",
+            "ee": "https://doi.org/10.1145/3705328.3748133"
+        },
+        "conf/recsys/ZmeskalovaLSKA25": {
+            "title": "Recurrent Autoregressive Linear Model for Next-Basket Recommendation.",
+            "authors": "Tereza Zmeskalová, Antoine Ledent, Martin Spisák, Pavel Kordík, Rodrigo Alves",
+            "venue": "RecSys 2025",
+            "venue_short": "RecSys2025",
+            "pages": "1273-1278",
+            "dblp_url": "https://dblp.org/rec/conf/recsys/ZmeskalovaLSKA25",
+            "doi": "10.1145/3705328.3759313",
+            "ee": "https://doi.org/10.1145/3705328.3759313"
+        }
+    }
+}
