@@ -514,8 +514,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.47/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.12556",
+            "arxiv_url": "https://arxiv.org/abs/2402.12556"
         },
         "2024.acl-long.48": {
             "title": "Token-wise Influential Training Data Retrieval for Large Language Models",
@@ -591,8 +591,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.54/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2309.12030",
+            "arxiv_url": "https://arxiv.org/abs/2309.12030"
         },
         "2024.acl-long.55": {
             "title": "AbsInstruct: Eliciting Abstraction Ability from LLMs through Explanation Tuning with Plausibility Estimation",
@@ -657,8 +657,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.60/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.18678",
+            "arxiv_url": "https://arxiv.org/abs/2402.18678"
         },
         "2024.acl-long.61": {
             "title": "Tell Me More! Towards Implicit User Intention Understanding of Language Model Driven Agents",
@@ -668,8 +668,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.61/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.09205",
+            "arxiv_url": "https://arxiv.org/abs/2402.09205"
         },
         "2024.acl-long.62": {
             "title": "InstructProtein: Aligning Human and Protein Language via Knowledge Instruction",
@@ -745,8 +745,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.68/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2305.05994",
+            "arxiv_url": "https://arxiv.org/abs/2305.05994"
         },
         "2024.acl-long.69": {
             "title": "TaSL: Continual Dialog State Tracking via Task Skill Localization and Consolidation",
@@ -767,8 +767,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.70/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.06066",
+            "arxiv_url": "https://arxiv.org/abs/2401.06066"
         },
         "2024.acl-long.71": {
             "title": "Grounding Language Model with Chunking-Free In-Context Retrieval",
@@ -778,8 +778,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.71/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.09760",
+            "arxiv_url": "https://arxiv.org/abs/2402.09760"
         },
         "2024.acl-long.72": {
             "title": "Advancing Abductive Reasoning in Knowledge Graphs through Complex Logical Hypothesis Generation",
@@ -800,8 +800,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.73/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2302.12246",
+            "arxiv_url": "https://arxiv.org/abs/2302.12246"
         },
         "2024.acl-long.74": {
             "title": "EasyGen: Easing Multimodal Generation with BiDiffuser and LLMs",
@@ -833,8 +833,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.76/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.06052",
+            "arxiv_url": "https://arxiv.org/abs/2406.06052"
         },
         "2024.acl-long.77": {
             "title": "Mitigating Catastrophic Forgetting in Large Language Models with Self-Synthesized Rehearsal",
@@ -866,8 +866,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.79/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.16063",
+            "arxiv_url": "https://arxiv.org/abs/2402.16063"
         },
         "2024.acl-long.80": {
             "title": "Transitive Consistency Constrained Learning for Entity-to-Entity Stance Detection",
@@ -899,8 +899,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.82/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2310.01468",
+            "arxiv_url": "https://arxiv.org/abs/2310.01468"
         },
         "2024.acl-long.83": {
             "title": "WaterBench: Towards Holistic Evaluation of Watermarks for Large Language Models",
@@ -1086,8 +1086,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.99/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.11296",
+            "arxiv_url": "https://arxiv.org/abs/2402.11296"
         },
         "2024.acl-long.100": {
             "title": "UniCoder: Scaling Code Large Language Model via Universal Code",
@@ -1130,8 +1130,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.103/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.00263",
+            "arxiv_url": "https://arxiv.org/abs/2402.00263"
         },
         "2024.acl-long.104": {
             "title": "AFaCTA: Assisting the Annotation of Factual Claim Detection with Reliable LLM Annotators",
@@ -1141,8 +1141,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.104/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.11073",
+            "arxiv_url": "https://arxiv.org/abs/2402.11073"
         },
         "2024.acl-long.105": {
             "title": "Towards Faithful and Robust LLM Specialists for Evidence-Based Question-Answering",
@@ -1152,8 +1152,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.105/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.08277",
+            "arxiv_url": "https://arxiv.org/abs/2402.08277"
         },
         "2024.acl-long.106": {
             "title": "LoRAMoE: Alleviating World Knowledge Forgetting in Large Language Models via MoE-Style Plugin",
@@ -1163,8 +1163,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.106/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2312.09979",
+            "arxiv_url": "https://arxiv.org/abs/2312.09979"
         },
         "2024.acl-long.107": {
             "title": "Self-Alignment for Factuality: Mitigating Hallucinations in LLMs via Self-Evaluation",
@@ -1174,8 +1174,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.107/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.09267",
+            "arxiv_url": "https://arxiv.org/abs/2402.09267"
         },
         "2024.acl-long.108": {
             "title": "M-RAG: Reinforcing Large Language Model Performance through Retrieval-Augmented Generation with Multiple Partitions",
@@ -1207,8 +1207,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.110/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.06760",
+            "arxiv_url": "https://arxiv.org/abs/2401.06760"
         },
         "2024.acl-long.111": {
             "title": "ValueBench: Towards Comprehensively Evaluating Value Orientations and Understanding of Large Language Models",
@@ -1240,8 +1240,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.113/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2305.13235",
+            "arxiv_url": "https://arxiv.org/abs/2305.13235"
         },
         "2024.acl-long.114": {
             "title": "Handling Ambiguity in Emotion: From Out-of-Domain Detection to Distribution Estimation",
@@ -1251,8 +1251,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.114/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.12862",
+            "arxiv_url": "https://arxiv.org/abs/2402.12862"
         },
         "2024.acl-long.115": {
             "title": "REANO: Optimising Retrieval-Augmented Reader Models through Knowledge Graph Generation",
@@ -1273,8 +1273,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.116/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2305.01713",
+            "arxiv_url": "https://arxiv.org/abs/2305.01713"
         },
         "2024.acl-long.117": {
             "title": "MoPS: Modular Story Premise Synthesis for Open-Ended Automatic Story Generation",
@@ -1317,8 +1317,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.120/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.12368",
+            "arxiv_url": "https://arxiv.org/abs/2402.12368"
         },
         "2024.acl-long.121": {
             "title": "Enhancing Contrastive Learning with Noise-Guided Attack: Towards Continual Relation Extraction in the Wild",
@@ -1394,8 +1394,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.127/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.09207",
+            "arxiv_url": "https://arxiv.org/abs/2403.09207"
         },
         "2024.acl-long.128": {
             "title": "CANDLE: Iterative Conceptualization and Instantiation Distillation from Large Language Models for Commonsense Reasoning",
@@ -1405,8 +1405,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.128/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.07286",
+            "arxiv_url": "https://arxiv.org/abs/2401.07286"
         },
         "2024.acl-long.129": {
             "title": "MEFT: Memory-Efficient Fine-Tuning through Sparse Adapter",
@@ -1416,8 +1416,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.129/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.04984",
+            "arxiv_url": "https://arxiv.org/abs/2406.04984"
         },
         "2024.acl-long.130": {
             "title": "Surgical Feature-Space Decomposition of LLMs: Why, When and How?",
@@ -1449,8 +1449,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.132/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.12728",
+            "arxiv_url": "https://arxiv.org/abs/2402.12728"
         },
         "2024.acl-long.133": {
             "title": "Unlocking Data-free Low-bit Quantization with Matrix Decomposition for KV Cache Compression",
@@ -1460,8 +1460,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.133/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.12591",
+            "arxiv_url": "https://arxiv.org/abs/2405.12591"
         },
         "2024.acl-long.134": {
             "title": "VerifiNER: Verification-augmented NER via Knowledge-grounded Reasoning with Large Language Models",
@@ -1504,8 +1504,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.137/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.17509",
+            "arxiv_url": "https://arxiv.org/abs/2402.17509"
         },
         "2024.acl-long.138": {
             "title": "HyCoRec: Hypergraph-Enhanced Multi-Preference Learning for Alleviating Matthew Effect in Conversational Recommendation",
@@ -1537,8 +1537,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.140/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2311.09641",
+            "arxiv_url": "https://arxiv.org/abs/2311.09641"
         },
         "2024.acl-long.141": {
             "title": "Time is Encoded in the Weights of Finetuned Language Models",
@@ -1548,8 +1548,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.141/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2312.13401",
+            "arxiv_url": "https://arxiv.org/abs/2312.13401"
         },
         "2024.acl-long.142": {
             "title": "Long-Context Language Modeling with Parallel Context Encoding",
@@ -1570,8 +1570,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.143/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.12528",
+            "arxiv_url": "https://arxiv.org/abs/2405.12528"
         },
         "2024.acl-long.144": {
             "title": "IMO: Greedy Layer-Wise Sparse Representation Learning for Out-of-Distribution Text Classification with Pre-trained Models",
@@ -1581,8 +1581,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.144/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2404.13504",
+            "arxiv_url": "https://arxiv.org/abs/2404.13504"
         },
         "2024.acl-long.145": {
             "title": "Generative Pretrained Structured Transformers: Unsupervised Syntactic Language Models at Scale",
@@ -1614,8 +1614,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.147/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2305.12839",
+            "arxiv_url": "https://arxiv.org/abs/2305.12839"
         },
         "2024.acl-long.148": {
             "title": "Is Table Retrieval a Solved Problem? Exploring Join-Aware Multi-Table Retrieval",
@@ -1647,8 +1647,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.150/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.05789",
+            "arxiv_url": "https://arxiv.org/abs/2403.05789"
         },
         "2024.acl-long.151": {
             "title": "MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs",
@@ -1713,8 +1713,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.156/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.16902",
+            "arxiv_url": "https://arxiv.org/abs/2402.16902"
         },
         "2024.acl-long.157": {
             "title": "Improving Event Definition Following For Zero-Shot Event Detection",
@@ -1724,8 +1724,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.157/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.02586",
+            "arxiv_url": "https://arxiv.org/abs/2403.02586"
         },
         "2024.acl-long.158": {
             "title": "Through the MUD: A Multi-Defendant Charge Prediction Benchmark with Linked Crime Elements",
@@ -1757,8 +1757,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.160/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.11638",
+            "arxiv_url": "https://arxiv.org/abs/2402.11638"
         },
         "2024.acl-long.161": {
             "title": "Training Language Models to Generate Text with Citations via Fine-grained Rewards",
@@ -1779,8 +1779,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.162/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2407.06904",
+            "arxiv_url": "https://arxiv.org/abs/2407.06904"
         },
         "2024.acl-long.163": {
             "title": "GSM-Plus: A Comprehensive Benchmark for Evaluating the Robustness of LLMs as Mathematical Problem Solvers",
@@ -1801,8 +1801,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.164/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.02148",
+            "arxiv_url": "https://arxiv.org/abs/2406.02148"
         },
         "2024.acl-long.165": {
             "title": "AutoAct: Automatic Agent Learning from Scratch for QA via Self-Planning",
@@ -1834,8 +1834,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.167/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2408.06385",
+            "arxiv_url": "https://arxiv.org/abs/2408.06385"
         },
         "2024.acl-long.168": {
             "title": "MELoRA: Mini-Ensemble Low-Rank Adapters for Parameter-Efficient Fine-Tuning",
@@ -1845,8 +1845,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.168/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.17263",
+            "arxiv_url": "https://arxiv.org/abs/2402.17263"
         },
         "2024.acl-long.169": {
             "title": "Can LLMs Learn from Previous Mistakes? Investigating LLMs’ Errors to Boost for Reasoning",
@@ -1867,8 +1867,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.170/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.17959",
+            "arxiv_url": "https://arxiv.org/abs/2402.17959"
         },
         "2024.acl-long.171": {
             "title": "Detoxifying Large Language Models via Knowledge Editing",
@@ -1977,8 +1977,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.180/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.11573",
+            "arxiv_url": "https://arxiv.org/abs/2402.11573"
         },
         "2024.acl-long.181": {
             "title": "GrowOVER: How Can LLMs Adapt to Growing Real-World Knowledge?",
@@ -2021,8 +2021,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.184/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2310.02031",
+            "arxiv_url": "https://arxiv.org/abs/2310.02031"
         },
         "2024.acl-long.185": {
             "title": "Beyond Memorization: The Challenge of Random Memory Access in Language Models",
@@ -2054,8 +2054,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.187/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.10288",
+            "arxiv_url": "https://arxiv.org/abs/2405.10288"
         },
         "2024.acl-long.188": {
             "title": "Collaboration or Corporate Capture? Quantifying NLP’s Reliance on Industry Artifacts and Contributions",
@@ -2087,8 +2087,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.190/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2407.16168",
+            "arxiv_url": "https://arxiv.org/abs/2407.16168"
         },
         "2024.acl-long.191": {
             "title": "Llama2Vec: Unsupervised Adaptation of Large Language Models for Dense Retrieval",
@@ -2109,8 +2109,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.192/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2306.11372",
+            "arxiv_url": "https://arxiv.org/abs/2306.11372"
         },
         "2024.acl-long.193": {
             "title": "Metaphor Understanding Challenge Dataset for LLMs",
@@ -2120,8 +2120,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.193/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.11810",
+            "arxiv_url": "https://arxiv.org/abs/2403.11810"
         },
         "2024.acl-long.194": {
             "title": "A Multi-Task Embedder For Retrieval Augmented LLMs",
@@ -2131,8 +2131,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.194/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2310.07554",
+            "arxiv_url": "https://arxiv.org/abs/2310.07554"
         },
         "2024.acl-long.195": {
             "title": "Language Models Don’t Learn the Physical Manifestation of Language",
@@ -2197,8 +2197,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.200/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2303.16166",
+            "arxiv_url": "https://arxiv.org/abs/2303.16166"
         },
         "2024.acl-long.201": {
             "title": "SBAAM! Eliminating Transcript Dependency in Automatic Subtitling",
@@ -2230,8 +2230,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.203/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.13542",
+            "arxiv_url": "https://arxiv.org/abs/2402.13542"
         },
         "2024.acl-long.204": {
             "title": "Crayon: Customized On-Device LLM via Instant Adapter Blending and Edge-Server Hybrid Inference",
@@ -2252,8 +2252,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.205/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.06004",
+            "arxiv_url": "https://arxiv.org/abs/2406.06004"
         },
         "2024.acl-long.206": {
             "title": "MentalManip: A Dataset For Fine-grained Analysis of Mental Manipulation in Conversations",
@@ -2329,8 +2329,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.212/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2305.11004",
+            "arxiv_url": "https://arxiv.org/abs/2305.11004"
         },
         "2024.acl-long.213": {
             "title": "Semiparametric Token-Sequence Co-Supervision",
@@ -2340,8 +2340,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.213/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.09024",
+            "arxiv_url": "https://arxiv.org/abs/2403.09024"
         },
         "2024.acl-long.214": {
             "title": "Instruction Fusion: Advancing Prompt Evolution through Hybridization",
@@ -2351,8 +2351,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.214/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2312.15692",
+            "arxiv_url": "https://arxiv.org/abs/2312.15692"
         },
         "2024.acl-long.215": {
             "title": "TimeArena: Shaping Efficient Multitasking Language Agents in a Time-Aware Simulation",
@@ -2362,8 +2362,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.215/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.05733",
+            "arxiv_url": "https://arxiv.org/abs/2402.05733"
         },
         "2024.acl-long.216": {
             "title": "Exploring Memorization in Fine-tuned Language Models",
@@ -2373,8 +2373,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.216/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2310.06714",
+            "arxiv_url": "https://arxiv.org/abs/2310.06714"
         },
         "2024.acl-long.217": {
             "title": "Towards Real-world Scenario: Imbalanced New Intent Discovery",
@@ -2417,8 +2417,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.220/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2407.06654",
+            "arxiv_url": "https://arxiv.org/abs/2407.06654"
         },
         "2024.acl-long.221": {
             "title": "Rule or Story, Which is a Better Commonsense Expression for Talking with Large Language Models?",
@@ -2450,8 +2450,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.223/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.03149",
+            "arxiv_url": "https://arxiv.org/abs/2401.03149"
         },
         "2024.acl-long.224": {
             "title": "MAVEN-ARG: Completing the Puzzle of All-in-One Event Understanding Dataset with Event Argument Annotation",
@@ -2472,8 +2472,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.225/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2312.14890",
+            "arxiv_url": "https://arxiv.org/abs/2312.14890"
         },
         "2024.acl-long.226": {
             "title": "Can Watermarks Survive Translation? On the Cross-lingual Consistency of Text Watermark for Large Language Models",
@@ -2494,8 +2494,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.227/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.15482",
+            "arxiv_url": "https://arxiv.org/abs/2403.15482"
         },
         "2024.acl-long.228": {
             "title": "In-context Mixing (ICM): Code-mixed Prompts for Multilingual LLMs",
@@ -2538,8 +2538,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.231/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.19763",
+            "arxiv_url": "https://arxiv.org/abs/2405.19763"
         },
         "2024.acl-long.232": {
             "title": "Intuitive or Dependent? Investigating LLMs’ Behavior Style to Conflicting Prompts",
@@ -2549,8 +2549,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.232/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2309.17415",
+            "arxiv_url": "https://arxiv.org/abs/2309.17415"
         },
         "2024.acl-long.233": {
             "title": "CoCA: Fusing Position Embedding with Collinear Constrained Attention in Transformers for Long Context Window Extending",
@@ -2560,8 +2560,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.233/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2309.08646",
+            "arxiv_url": "https://arxiv.org/abs/2309.08646"
         },
         "2024.acl-long.234": {
             "title": "InfoLossQA: Characterizing and Recovering Information Loss in Text Simplification",
@@ -2593,8 +2593,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.236/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2305.13915",
+            "arxiv_url": "https://arxiv.org/abs/2305.13915"
         },
         "2024.acl-long.237": {
             "title": "Strengthened Symbol Binding Makes Large Language Models Reliable Multiple-Choice Selectors",
@@ -2615,8 +2615,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.238/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2410.02811",
+            "arxiv_url": "https://arxiv.org/abs/2410.02811"
         },
         "2024.acl-long.239": {
             "title": "Uncertainty-Guided Modal Rebalance for Hateful Memes Detection",
@@ -2648,8 +2648,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.241/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.07803",
+            "arxiv_url": "https://arxiv.org/abs/2401.07803"
         },
         "2024.acl-long.242": {
             "title": "Small Models, Big Insights: Leveraging Slim Proxy Models To Decide When and What to Retrieve for LLMs",
@@ -2670,8 +2670,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.243/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.01131",
+            "arxiv_url": "https://arxiv.org/abs/2406.01131"
         },
         "2024.acl-long.244": {
             "title": "LLM-based Rewriting of Inappropriate Argumentation using Reinforcement Learning from Machine Feedback",
@@ -2681,8 +2681,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.244/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.03363",
+            "arxiv_url": "https://arxiv.org/abs/2406.03363"
         },
         "2024.acl-long.245": {
             "title": "Graph Language Models",
@@ -2703,8 +2703,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.246/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2404.18570",
+            "arxiv_url": "https://arxiv.org/abs/2404.18570"
         },
         "2024.acl-long.247": {
             "title": "Exploiting Intrinsic Multilateral Logical Rules for Weakly Supervised Natural Language Video Localization",
@@ -2736,8 +2736,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.249/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.03452",
+            "arxiv_url": "https://arxiv.org/abs/2406.03452"
         },
         "2024.acl-long.250": {
             "title": "Factual Confidence of LLMs: on Reliability and Robustness of Current Estimators",
@@ -2758,8 +2758,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.251/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.01391",
+            "arxiv_url": "https://arxiv.org/abs/2402.01391"
         },
         "2024.acl-long.252": {
             "title": "One-Shot Learning as Instruction Data Prospector for Large Language Models",
@@ -2780,8 +2780,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.253/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.17633",
+            "arxiv_url": "https://arxiv.org/abs/2401.17633"
         },
         "2024.acl-long.254": {
             "title": "A Chain-of-Thought Is as Strong as Its Weakest Link: A Benchmark for Verifiers of Reasoning Chains",
@@ -2846,8 +2846,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.259/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.09136",
+            "arxiv_url": "https://arxiv.org/abs/2402.09136"
         },
         "2024.acl-long.260": {
             "title": "When Only Time Will Tell: Interpreting How Transformers Process Local Ambiguities Through the Lens of Restart-Incrementality",
@@ -2890,8 +2890,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.263/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.09221",
+            "arxiv_url": "https://arxiv.org/abs/2402.09221"
         },
         "2024.acl-long.264": {
             "title": "DiffuCOMET: Contextual Commonsense Knowledge Diffusion",
@@ -2901,8 +2901,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.264/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.17011",
+            "arxiv_url": "https://arxiv.org/abs/2402.17011"
         },
         "2024.acl-long.265": {
             "title": "Systematic Task Exploration with LLMs: A Study in Citation Text Generation",
@@ -2945,8 +2945,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.268/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2305.15060",
+            "arxiv_url": "https://arxiv.org/abs/2305.15060"
         },
         "2024.acl-long.269": {
             "title": "MapCoder: Multi-Agent Code Generation for Competitive Problem Solving",
@@ -2956,8 +2956,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.269/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.11403",
+            "arxiv_url": "https://arxiv.org/abs/2405.11403"
         },
         "2024.acl-long.270": {
             "title": "RelayAttention for Efficient Large Language Model Serving with Long System Prompts",
@@ -2978,8 +2978,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.271/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2306.06427",
+            "arxiv_url": "https://arxiv.org/abs/2306.06427"
         },
         "2024.acl-long.272": {
             "title": "Open Grounded Planning: Challenges and Benchmark Construction",
@@ -3044,8 +3044,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.277/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2306.08658",
+            "arxiv_url": "https://arxiv.org/abs/2306.08658"
         },
         "2024.acl-long.278": {
             "title": "Estimating Agreement by Chance for Sequence Annotation",
@@ -3077,8 +3077,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.280/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2312.14187",
+            "arxiv_url": "https://arxiv.org/abs/2312.14187"
         },
         "2024.acl-long.281": {
             "title": "Eliciting Better Multilingual Structured Reasoning from LLMs through Code",
@@ -3088,8 +3088,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.281/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.02567",
+            "arxiv_url": "https://arxiv.org/abs/2403.02567"
         },
         "2024.acl-long.282": {
             "title": "OLIVE: Object Level In-Context Visual Embeddings",
@@ -3121,8 +3121,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.284/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2312.09542",
+            "arxiv_url": "https://arxiv.org/abs/2312.09542"
         },
         "2024.acl-long.285": {
             "title": "Beyond Scaling: Predicting Patent Approval with Domain-specific Fine-grained Claim Dependency Graph",
@@ -3132,8 +3132,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.285/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2404.14372",
+            "arxiv_url": "https://arxiv.org/abs/2404.14372"
         },
         "2024.acl-long.286": {
             "title": "PCAD: Towards ASR-Robust Spoken Language Understanding via Prototype Calibration and Asymmetric Decoupling",
@@ -3220,8 +3220,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.293/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.12250",
+            "arxiv_url": "https://arxiv.org/abs/2405.12250"
         },
         "2024.acl-long.294": {
             "title": "Noise Correction on Subjective Datasets",
@@ -3231,8 +3231,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.294/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2311.00619",
+            "arxiv_url": "https://arxiv.org/abs/2311.00619"
         },
         "2024.acl-long.295": {
             "title": "Generative Explore-Exploit: Training-free Optimization of Generative Recommender Systems using LLM Optimizers",
@@ -3264,8 +3264,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.297/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.16998",
+            "arxiv_url": "https://arxiv.org/abs/2402.16998"
         },
         "2024.acl-long.298": {
             "title": "Threads of Subtlety: Detecting Machine-Generated Texts Through Discourse Motifs",
@@ -3374,8 +3374,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.307/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.10150",
+            "arxiv_url": "https://arxiv.org/abs/2405.10150"
         },
         "2024.acl-long.308": {
             "title": "Benchmarking Data Science Agents",
@@ -3385,8 +3385,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.308/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.17168",
+            "arxiv_url": "https://arxiv.org/abs/2402.17168"
         },
         "2024.acl-long.309": {
             "title": "Language-Specific Neurons: The Key to Multilingual Capabilities in Large Language Models",
@@ -3407,8 +3407,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.310/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2311.08011",
+            "arxiv_url": "https://arxiv.org/abs/2311.08011"
         },
         "2024.acl-long.311": {
             "title": "A Deep Dive into the Trade-Offs of Parameter-Efficient Preference Alignment Techniques",
@@ -3418,8 +3418,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.311/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.04879",
+            "arxiv_url": "https://arxiv.org/abs/2406.04879"
         },
         "2024.acl-long.312": {
             "title": "Zero-Shot Cross-Domain Dialogue State Tracking via Dual Low-Rank Adaptation",
@@ -3462,8 +3462,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.315/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.12948",
+            "arxiv_url": "https://arxiv.org/abs/2402.12948"
         },
         "2024.acl-long.316": {
             "title": "Event-Radar: Event-driven Multi-View Learning for Multimodal Fake News Detection",
@@ -3539,8 +3539,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.322/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2411.00873",
+            "arxiv_url": "https://arxiv.org/abs/2411.00873"
         },
         "2024.acl-long.323": {
             "title": "SparseFlow: Accelerating Transformers by Sparsifying Information Flows",
@@ -3605,8 +3605,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.328/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.09980",
+            "arxiv_url": "https://arxiv.org/abs/2405.09980"
         },
         "2024.acl-long.329": {
             "title": "On Measuring Faithfulness or Self-consistency of Natural Language Explanations",
@@ -3627,8 +3627,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.330/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.18243",
+            "arxiv_url": "https://arxiv.org/abs/2402.18243"
         },
         "2024.acl-long.331": {
             "title": "Rethinking the Bounds of LLM Reasoning: Are Multi-Agent Discussions the Key?",
@@ -3638,8 +3638,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.331/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.18272",
+            "arxiv_url": "https://arxiv.org/abs/2402.18272"
         },
         "2024.acl-long.332": {
             "title": "Soft Knowledge Prompt: Help External Knowledge Become a Better Teacher to Instruct LLM in Knowledge-based VQA",
@@ -3671,8 +3671,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.334/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.14800",
+            "arxiv_url": "https://arxiv.org/abs/2402.14800"
         },
         "2024.acl-long.335": {
             "title": "UNIMO-G: Unified Image Generation through Multimodal Conditional Diffusion",
@@ -3726,8 +3726,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.339/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2404.09313",
+            "arxiv_url": "https://arxiv.org/abs/2404.09313"
         },
         "2024.acl-long.340": {
             "title": "FastFiD: Improve Inference Efficiency of Open Domain Question Answering via Sentence Selection",
@@ -3759,8 +3759,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.342/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.01835",
+            "arxiv_url": "https://arxiv.org/abs/2406.01835"
         },
         "2024.acl-long.343": {
             "title": "Unlearning Traces the Influential Training Data of Language Models",
@@ -3770,8 +3770,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.343/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.15241",
+            "arxiv_url": "https://arxiv.org/abs/2401.15241"
         },
         "2024.acl-long.344": {
             "title": "Exploring Alignment in Shared Cross-lingual Spaces",
@@ -3792,8 +3792,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.345/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2310.12481",
+            "arxiv_url": "https://arxiv.org/abs/2310.12481"
         },
         "2024.acl-long.346": {
             "title": "Self-Evolving GPT: A Lifelong Autonomous Experiential Learner",
@@ -3946,8 +3946,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.359/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.10849",
+            "arxiv_url": "https://arxiv.org/abs/2403.10849"
         },
         "2024.acl-long.360": {
             "title": "GroundingGPT: Language Enhanced Multi-modal Grounding Model",
@@ -3957,8 +3957,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.360/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.06071",
+            "arxiv_url": "https://arxiv.org/abs/2401.06071"
         },
         "2024.acl-long.361": {
             "title": "Automated Justification Production for Claim Veracity in Fact Checking: A Survey on Architectures and Approaches",
@@ -4001,8 +4001,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.364/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2311.09808",
+            "arxiv_url": "https://arxiv.org/abs/2311.09808"
         },
         "2024.acl-long.365": {
             "title": "Narrowing the Knowledge Evaluation Gap: Open-Domain Question Answering with Multi-Granularity Answers",
@@ -4023,8 +4023,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.366/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.14840",
+            "arxiv_url": "https://arxiv.org/abs/2403.14840"
         },
         "2024.acl-long.367": {
             "title": "XCodeEval: An Execution-based Large Scale Multilingual Multitask Benchmark for Code Understanding, Generation, Translation and Retrieval",
@@ -4100,8 +4100,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.373/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.19545",
+            "arxiv_url": "https://arxiv.org/abs/2406.19545"
         },
         "2024.acl-long.374": {
             "title": "Robust Frame-Semantic Models with Lexical Unit Trees and Negative Samples",
@@ -4133,8 +4133,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.376/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2307.06857",
+            "arxiv_url": "https://arxiv.org/abs/2307.06857"
         },
         "2024.acl-long.377": {
             "title": "ARIES: A Corpus of Scientific Paper Edits Made in Response to Peer Reviews",
@@ -4144,8 +4144,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.377/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2306.12587",
+            "arxiv_url": "https://arxiv.org/abs/2306.12587"
         },
         "2024.acl-long.378": {
             "title": "The Unreasonable Effectiveness of Easy Training Data for Hard Tasks",
@@ -4166,8 +4166,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.379/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2311.08711",
+            "arxiv_url": "https://arxiv.org/abs/2311.08711"
         },
         "2024.acl-long.380": {
             "title": "MIDGARD: Self-Consistency Using Minimum Description Length for Structured Commonsense Reasoning",
@@ -4199,8 +4199,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.382/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.14963",
+            "arxiv_url": "https://arxiv.org/abs/2402.14963"
         },
         "2024.acl-long.383": {
             "title": "Where Do People Tell Stories Online? Story Detection Across Online Communities",
@@ -4210,8 +4210,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.383/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2311.09675",
+            "arxiv_url": "https://arxiv.org/abs/2311.09675"
         },
         "2024.acl-long.384": {
             "title": "Large Language Models Are No Longer Shallow Parsers",
@@ -4276,8 +4276,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.389/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.07432",
+            "arxiv_url": "https://arxiv.org/abs/2402.07432"
         },
         "2024.acl-long.390": {
             "title": "From Moments to Milestones: Incremental Timeline Summarization Leveraging Large Language Models",
@@ -4353,8 +4353,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.396/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.11053",
+            "arxiv_url": "https://arxiv.org/abs/2401.11053"
         },
         "2024.acl-long.397": {
             "title": "Generate-then-Ground in Retrieval-Augmented Generation for Multi-hop Question Answering",
@@ -4397,8 +4397,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.400/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.06408",
+            "arxiv_url": "https://arxiv.org/abs/2401.06408"
         },
         "2024.acl-long.401": {
             "title": "MT-Bench-101: A Fine-Grained Benchmark for Evaluating Large Language Models in Multi-Turn Dialogues",
@@ -4419,8 +4419,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.402/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2404.08681",
+            "arxiv_url": "https://arxiv.org/abs/2404.08681"
         },
         "2024.acl-long.403": {
             "title": "What Evidence Do Language Models Find Convincing?",
@@ -4485,8 +4485,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.408/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.15048",
+            "arxiv_url": "https://arxiv.org/abs/2402.15048"
         },
         "2024.acl-long.409": {
             "title": "Trial and Error: Exploration-Based Trajectory Optimization of LLM Agents",
@@ -4496,8 +4496,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.409/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.02502",
+            "arxiv_url": "https://arxiv.org/abs/2403.02502"
         },
         "2024.acl-long.410": {
             "title": "ReFT: Reasoning with Reinforced Fine-Tuning",
@@ -4540,8 +4540,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.413/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.15754",
+            "arxiv_url": "https://arxiv.org/abs/2402.15754"
         },
         "2024.acl-long.414": {
             "title": "Conundrums in Cross-Prompt Automated Essay Scoring: Making Sense of the State of the Art",
@@ -4584,8 +4584,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.417/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.01679",
+            "arxiv_url": "https://arxiv.org/abs/2402.01679"
         },
         "2024.acl-long.418": {
             "title": "EIT: Enhanced Interactive Transformer",
@@ -4595,8 +4595,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.418/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2212.10197",
+            "arxiv_url": "https://arxiv.org/abs/2212.10197"
         },
         "2024.acl-long.419": {
             "title": "MARS: Meaning-Aware Response Scoring for Uncertainty Estimation in Generative LLMs",
@@ -4606,8 +4606,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.419/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.11756",
+            "arxiv_url": "https://arxiv.org/abs/2402.11756"
         },
         "2024.acl-long.420": {
             "title": "EXAMS-V: A Multi-Discipline Multilingual Multimodal Exam Benchmark for Evaluating Vision Language Models",
@@ -4617,8 +4617,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.420/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.10378",
+            "arxiv_url": "https://arxiv.org/abs/2403.10378"
         },
         "2024.acl-long.421": {
             "title": "Order-Agnostic Data Augmentation for Few-Shot Named Entity Recognition",
@@ -4639,8 +4639,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.422/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.12192",
+            "arxiv_url": "https://arxiv.org/abs/2401.12192"
         },
         "2024.acl-long.423": {
             "title": "Large Language Models are Superpositions of All Characters: Attaining Arbitrary Role-play via Self-Alignment",
@@ -4650,8 +4650,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.423/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.12474",
+            "arxiv_url": "https://arxiv.org/abs/2401.12474"
         },
         "2024.acl-long.424": {
             "title": "PlatoLM: Teaching LLMs in Multi-Round Dialogue via a User Simulator",
@@ -4683,8 +4683,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.426/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.06837",
+            "arxiv_url": "https://arxiv.org/abs/2401.06837"
         },
         "2024.acl-long.427": {
             "title": "Analysing The Impact of Sequence Composition on Language Model Pre-Training",
@@ -4705,8 +4705,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.428/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2408.03675",
+            "arxiv_url": "https://arxiv.org/abs/2408.03675"
         },
         "2024.acl-long.429": {
             "title": "SpikeVoice: High-Quality Text-to-Speech Via Efficient Spiking Neural Network",
@@ -4716,8 +4716,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.429/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2408.00788",
+            "arxiv_url": "https://arxiv.org/abs/2408.00788"
         },
         "2024.acl-long.430": {
             "title": "Context-aware Difference Distilling for Multi-change Captioning",
@@ -4815,8 +4815,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.438/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2312.15194",
+            "arxiv_url": "https://arxiv.org/abs/2312.15194"
         },
         "2024.acl-long.439": {
             "title": "MemeGuard: An LLM and VLM-based Framework for Advancing Content Moderation via Meme Intervention",
@@ -4826,8 +4826,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.439/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.05344",
+            "arxiv_url": "https://arxiv.org/abs/2406.05344"
         },
         "2024.acl-long.440": {
             "title": "Efficient OCR for Building a Diverse Digital History",
@@ -4837,8 +4837,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.440/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2304.02737",
+            "arxiv_url": "https://arxiv.org/abs/2304.02737"
         },
         "2024.acl-long.441": {
             "title": "Acquiring Clean Language Models from Backdoor Poisoned Datasets by Downscaling Frequency Space",
@@ -4881,8 +4881,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.444/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2404.18655",
+            "arxiv_url": "https://arxiv.org/abs/2404.18655"
         },
         "2024.acl-long.445": {
             "title": "Full Parameter Fine-tuning for Large Language Models with Limited Resources",
@@ -4892,8 +4892,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.445/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2306.09782",
+            "arxiv_url": "https://arxiv.org/abs/2306.09782"
         },
         "2024.acl-long.446": {
             "title": "M^3CoT: A Novel Benchmark for Multi-Domain Multi-step Multi-modal Chain-of-Thought",
@@ -4903,8 +4903,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.446/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.16473",
+            "arxiv_url": "https://arxiv.org/abs/2405.16473"
         },
         "2024.acl-long.447": {
             "title": "Long Context is Not Long at All: A Prospector of Long-Dependency Data for Large Language Models",
@@ -4936,8 +4936,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.449/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2407.14733",
+            "arxiv_url": "https://arxiv.org/abs/2407.14733"
         },
         "2024.acl-long.450": {
             "title": "A Modular Approach for Multimodal Summarization of TV Shows",
@@ -4947,8 +4947,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.450/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.03823",
+            "arxiv_url": "https://arxiv.org/abs/2403.03823"
         },
         "2024.acl-long.451": {
             "title": "Think Twice: Perspective-Taking Improves Large Language Models’ Theory-of-Mind Capabilities",
@@ -4969,8 +4969,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.452/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2311.06602",
+            "arxiv_url": "https://arxiv.org/abs/2311.06602"
         },
         "2024.acl-long.453": {
             "title": "Direct Metric Optimization for Image Captioning through Reward-Weighted Augmented Data Utilization",
@@ -5002,8 +5002,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.455/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.06492",
+            "arxiv_url": "https://arxiv.org/abs/2402.06492"
         },
         "2024.acl-long.456": {
             "title": "Label-Efficient Model Selection for Text Generation",
@@ -5013,8 +5013,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.456/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.07891",
+            "arxiv_url": "https://arxiv.org/abs/2402.07891"
         },
         "2024.acl-long.457": {
             "title": "Machine Unlearning of Pre-trained Large Language Models",
@@ -5068,8 +5068,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.461/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2312.06924",
+            "arxiv_url": "https://arxiv.org/abs/2312.06924"
         },
         "2024.acl-long.462": {
             "title": "Speech language models lack important brain-relevant semantics",
@@ -5079,8 +5079,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.462/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2311.04664",
+            "arxiv_url": "https://arxiv.org/abs/2311.04664"
         },
         "2024.acl-long.463": {
             "title": "DocLLM: A Layout-Aware Generative Language Model for Multimodal Document Understanding",
@@ -5090,8 +5090,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.463/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.00908",
+            "arxiv_url": "https://arxiv.org/abs/2401.00908"
         },
         "2024.acl-long.464": {
             "title": "Bypassing LLM Watermarks with Color-Aware Substitutions",
@@ -5101,8 +5101,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.464/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.14719",
+            "arxiv_url": "https://arxiv.org/abs/2403.14719"
         },
         "2024.acl-long.465": {
             "title": "Parallel Structures in Pre-training Data Yield In-Context Learning",
@@ -5112,8 +5112,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.465/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.12530",
+            "arxiv_url": "https://arxiv.org/abs/2402.12530"
         },
         "2024.acl-long.466": {
             "title": "OpenToM: A Comprehensive Benchmark for Evaluating Theory-of-Mind Reasoning Capabilities of Large Language Models",
@@ -5145,8 +5145,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.468/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.18571",
+            "arxiv_url": "https://arxiv.org/abs/2402.18571"
         },
         "2024.acl-long.469": {
             "title": "Towards Real-World Writing Assistance: A Chinese Character Checking Benchmark with Faked and Misspelled Characters",
@@ -5189,8 +5189,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.472/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.19094",
+            "arxiv_url": "https://arxiv.org/abs/2405.19094"
         },
         "2024.acl-long.473": {
             "title": "Enhancing Dialogue State Tracking Models through LLM-backed User-Agents Simulation",
@@ -5200,8 +5200,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.473/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.13037",
+            "arxiv_url": "https://arxiv.org/abs/2405.13037"
         },
         "2024.acl-long.474": {
             "title": "MetaSumPerceiver: Multimodal Multi-Document Evidence Summarization for Fact-Checking",
@@ -5211,8 +5211,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.474/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2407.13089",
+            "arxiv_url": "https://arxiv.org/abs/2407.13089"
         },
         "2024.acl-long.475": {
             "title": "KnowCoder: Coding Structured Knowledge into LLMs for Universal Information Extraction",
@@ -5222,8 +5222,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.475/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.07969",
+            "arxiv_url": "https://arxiv.org/abs/2403.07969"
         },
         "2024.acl-long.476": {
             "title": "ERA-CoT: Improving Chain-of-Thought through Entity Relationship Analysis",
@@ -5233,8 +5233,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.476/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.06932",
+            "arxiv_url": "https://arxiv.org/abs/2403.06932"
         },
         "2024.acl-long.477": {
             "title": "On the Multi-turn Instruction Following for Conversational Web Agents",
@@ -5244,8 +5244,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.477/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.15057",
+            "arxiv_url": "https://arxiv.org/abs/2402.15057"
         },
         "2024.acl-long.478": {
             "title": "Mobile-Bench: An Evaluation Benchmark for LLM-based Mobile Agents",
@@ -5255,8 +5255,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.478/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2407.00993",
+            "arxiv_url": "https://arxiv.org/abs/2407.00993"
         },
         "2024.acl-long.479": {
             "title": "MC^2: Towards Transparent and Culturally-Aware NLP for Minority Languages in China",
@@ -5321,8 +5321,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.484/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.07920",
+            "arxiv_url": "https://arxiv.org/abs/2403.07920"
         },
         "2024.acl-long.485": {
             "title": "StreamSpeech: Simultaneous Speech-to-Speech Translation with Multi-task Learning",
@@ -5354,8 +5354,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.487/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.05918",
+            "arxiv_url": "https://arxiv.org/abs/2406.05918"
         },
         "2024.acl-long.488": {
             "title": "NaijaHate: Evaluating Hate Speech Detection on Nigerian Twitter Using Representative Data",
@@ -5376,8 +5376,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.489/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.14168",
+            "arxiv_url": "https://arxiv.org/abs/2403.14168"
         },
         "2024.acl-long.490": {
             "title": "Mitigating Biases for Instruction-following Language Models via Bias Neurons Elimination",
@@ -5431,8 +5431,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.494/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2408.08506",
+            "arxiv_url": "https://arxiv.org/abs/2408.08506"
         },
         "2024.acl-long.495": {
             "title": "Few-shot Transfer Learning for Knowledge Base Question Answering: Fusing Supervised Models with In-Context Learning",
@@ -5475,8 +5475,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.498/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.07529",
+            "arxiv_url": "https://arxiv.org/abs/2401.07529"
         },
         "2024.acl-long.499": {
             "title": "Focus on Your Question! Interpreting and Mitigating Toxic CoT Problems in Commonsense Reasoning",
@@ -5541,8 +5541,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.504/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.08173",
+            "arxiv_url": "https://arxiv.org/abs/2406.08173"
         },
         "2024.acl-long.505": {
             "title": "SeeClick: Harnessing GUI Grounding for Advanced Visual GUI Agents",
@@ -5552,8 +5552,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.505/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.10935",
+            "arxiv_url": "https://arxiv.org/abs/2401.10935"
         },
         "2024.acl-long.506": {
             "title": "InterrogateLLM: Zero-Resource Hallucination Detection in LLM-Generated Answers",
@@ -5563,8 +5563,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.506/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.02889",
+            "arxiv_url": "https://arxiv.org/abs/2403.02889"
         },
         "2024.acl-long.507": {
             "title": "F-Eval: Asssessing Fundamental Abilities with Refined Evaluation Methods",
@@ -5574,8 +5574,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.507/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.14869",
+            "arxiv_url": "https://arxiv.org/abs/2401.14869"
         },
         "2024.acl-long.508": {
             "title": "Comparing Inferential Strategies of Humans and Large Language Models in Deductive Reasoning",
@@ -5607,8 +5607,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.510/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2312.08935",
+            "arxiv_url": "https://arxiv.org/abs/2312.08935"
         },
         "2024.acl-long.511": {
             "title": "Large Language Models are not Fair Evaluators",
@@ -5640,8 +5640,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.513/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.14040",
+            "arxiv_url": "https://arxiv.org/abs/2405.14040"
         },
         "2024.acl-long.514": {
             "title": "Fine-Grained Image-Text Alignment in Medical Imaging Enables Explainable Cyclic Image-Report Generation",
@@ -5662,8 +5662,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.515/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2312.14033",
+            "arxiv_url": "https://arxiv.org/abs/2312.14033"
         },
         "2024.acl-long.516": {
             "title": "Are LLM-based Evaluators Confusing NLG Quality Criteria?",
@@ -5695,8 +5695,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.518/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.10644",
+            "arxiv_url": "https://arxiv.org/abs/2402.10644"
         },
         "2024.acl-long.519": {
             "title": "Temperature-scaling surprisal estimates improve fit to human reading times – but does it do so for the “right reasons”?",
@@ -5728,8 +5728,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.521/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.12226",
+            "arxiv_url": "https://arxiv.org/abs/2402.12226"
         },
         "2024.acl-long.522": {
             "title": "CofiPara: A Coarse-to-fine Paradigm for Multimodal Sarcasm Target Identification with Large Multimodal Models",
@@ -5750,8 +5750,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.523/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.11907",
+            "arxiv_url": "https://arxiv.org/abs/2402.11907"
         },
         "2024.acl-long.524": {
             "title": "Diffusion Lens: Interpreting Text Encoders in Text-to-Image Pipelines",
@@ -5772,8 +5772,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.525/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2310.07301",
+            "arxiv_url": "https://arxiv.org/abs/2310.07301"
         },
         "2024.acl-long.526": {
             "title": "Robust Singing Voice Transcription Serves Synthesis",
@@ -5882,8 +5882,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.535/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.04578",
+            "arxiv_url": "https://arxiv.org/abs/2406.04578"
         },
         "2024.acl-long.536": {
             "title": "Dodo: Dynamic Contextual Compression for Decoder-only LMs",
@@ -5904,8 +5904,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.537/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.05596",
+            "arxiv_url": "https://arxiv.org/abs/2401.05596"
         },
         "2024.acl-long.538": {
             "title": "NewsBench: A Systematic Evaluation Framework for Assessing Editorial Capabilities of Large Language Models in Chinese Journalism",
@@ -5926,8 +5926,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.539/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.06838",
+            "arxiv_url": "https://arxiv.org/abs/2401.06838"
         },
         "2024.acl-long.540": {
             "title": "Enhancing Noise Robustness of Retrieval-Augmented Language Models with Adaptive Adversarial Training",
@@ -5948,8 +5948,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.541/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2311.08390",
+            "arxiv_url": "https://arxiv.org/abs/2311.08390"
         },
         "2024.acl-long.542": {
             "title": "CoELM: Construction-Enhanced Language Modeling",
@@ -6025,8 +6025,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.548/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2407.04801",
+            "arxiv_url": "https://arxiv.org/abs/2407.04801"
         },
         "2024.acl-long.549": {
             "title": "OWSM-CTC: An Open Encoder-Only Speech Foundation Model for Speech Recognition, Translation, and Language Identification",
@@ -6135,8 +6135,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.558/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2308.09729",
+            "arxiv_url": "https://arxiv.org/abs/2308.09729"
         },
         "2024.acl-long.559": {
             "title": "AGB-DE: A Corpus for the Automated Legal Assessment of Clauses in German Consumer Contracts",
@@ -6146,8 +6146,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.559/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.06809",
+            "arxiv_url": "https://arxiv.org/abs/2406.06809"
         },
         "2024.acl-long.560": {
             "title": "Examining the robustness of LLM evaluation to the distributional assumptions of benchmarks",
@@ -6157,8 +6157,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.560/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2404.16966",
+            "arxiv_url": "https://arxiv.org/abs/2404.16966"
         },
         "2024.acl-long.561": {
             "title": "Re-Tuning: Overcoming the Compositionality Limits of Large Language Models with Recursive Tuning",
@@ -6179,8 +6179,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.562/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.06954",
+            "arxiv_url": "https://arxiv.org/abs/2401.06954"
         },
         "2024.acl-long.563": {
             "title": "Large Language Models Can Learn Temporal Reasoning",
@@ -6190,8 +6190,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.563/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.06853",
+            "arxiv_url": "https://arxiv.org/abs/2401.06853"
         },
         "2024.acl-long.564": {
             "title": "Learning Relational Decomposition of Queries for Question Answering from Tables",
@@ -6223,8 +6223,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.566/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2306.16564",
+            "arxiv_url": "https://arxiv.org/abs/2306.16564"
         },
         "2024.acl-long.567": {
             "title": "Simul-LLM: A Framework for Exploring High-Quality Simultaneous Translation with Large Language Models",
@@ -6267,8 +6267,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.570/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.04746",
+            "arxiv_url": "https://arxiv.org/abs/2403.04746"
         },
         "2024.acl-long.571": {
             "title": "HyperMoE: Towards Better Mixture of Experts via Transferring Among Experts",
@@ -6278,8 +6278,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.571/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.12656",
+            "arxiv_url": "https://arxiv.org/abs/2402.12656"
         },
         "2024.acl-long.572": {
             "title": "Aligning Large Language Models with Human Preferences through Representation Engineering",
@@ -6289,8 +6289,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.572/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2312.15997",
+            "arxiv_url": "https://arxiv.org/abs/2312.15997"
         },
         "2024.acl-long.573": {
             "title": "CODIS: Benchmarking Context-dependent Visual Comprehension for Multimodal Large Language Models",
@@ -6300,8 +6300,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.573/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.13607",
+            "arxiv_url": "https://arxiv.org/abs/2402.13607"
         },
         "2024.acl-long.574": {
             "title": "ARAIDA: Analogical Reasoning-Augmented Interactive Data Annotation",
@@ -6399,8 +6399,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.582/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.10654",
+            "arxiv_url": "https://arxiv.org/abs/2402.10654"
         },
         "2024.acl-long.583": {
             "title": "PAGED: A Benchmark for Procedural Graphs Extraction from Documents",
@@ -6432,8 +6432,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.585/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.00396",
+            "arxiv_url": "https://arxiv.org/abs/2401.00396"
         },
         "2024.acl-long.586": {
             "title": "The Dawn After the Dark: An Empirical Study on Factuality Hallucination in Large Language Models",
@@ -6443,8 +6443,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.586/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.03205",
+            "arxiv_url": "https://arxiv.org/abs/2401.03205"
         },
         "2024.acl-long.587": {
             "title": "Revisiting Knowledge Distillation for Autoregressive Language Models",
@@ -6454,8 +6454,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.587/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.11890",
+            "arxiv_url": "https://arxiv.org/abs/2402.11890"
         },
         "2024.acl-long.588": {
             "title": "Continual Learning with Semi-supervised Contrastive Distillation for Incremental Neural Machine Translation",
@@ -6498,8 +6498,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.591/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.15911",
+            "arxiv_url": "https://arxiv.org/abs/2402.15911"
         },
         "2024.acl-long.592": {
             "title": "Hide and Seek in Noise Labels: Noise-Robust Collaborative Active Learning with LLMs-Powered Assistance",
@@ -6509,8 +6509,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.592/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2504.02901",
+            "arxiv_url": "https://arxiv.org/abs/2504.02901"
         },
         "2024.acl-long.593": {
             "title": "CLOMO: Counterfactual Logical Modification with Large Language Models",
@@ -6531,8 +6531,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.594/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.10812",
+            "arxiv_url": "https://arxiv.org/abs/2402.10812"
         },
         "2024.acl-long.595": {
             "title": "IndicGenBench: A Multilingual Benchmark to Evaluate Generation Capabilities of LLMs on Indic Languages",
@@ -6553,8 +6553,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.596/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2408.06603",
+            "arxiv_url": "https://arxiv.org/abs/2408.06603"
         },
         "2024.acl-long.597": {
             "title": "Uncertainty Aware Learning for Language Model Alignment",
@@ -6575,8 +6575,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.598/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.12388",
+            "arxiv_url": "https://arxiv.org/abs/2403.12388"
         },
         "2024.acl-long.599": {
             "title": "Fundamental Capabilities of Large Language Models and their Applications in Domain Scenarios: A Survey",
@@ -6597,8 +6597,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.600/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.18932",
+            "arxiv_url": "https://arxiv.org/abs/2403.18932"
         },
         "2024.acl-long.601": {
             "title": "Fortify the Shortest Stave in Attention: Enhancing Context Awareness of Large Language Models for Effective Tool Use",
@@ -6619,8 +6619,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.602/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.10637",
+            "arxiv_url": "https://arxiv.org/abs/2405.10637"
         },
         "2024.acl-long.603": {
             "title": "Enhancing Multilingual Capabilities of Large Language Models through Self-Distillation from Resource-Rich Languages",
@@ -6630,8 +6630,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.603/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.12204",
+            "arxiv_url": "https://arxiv.org/abs/2402.12204"
         },
         "2024.acl-long.604": {
             "title": "Benchmarking Chinese Commonsense Reasoning of LLMs: From Chinese-Specifics to Reasoning-Memorization Correlations",
@@ -6641,8 +6641,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.604/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.14112",
+            "arxiv_url": "https://arxiv.org/abs/2403.14112"
         },
         "2024.acl-long.605": {
             "title": "Browse and Concentrate: Comprehending Multimodal Content via Prior-LLM Context Fusion",
@@ -6663,8 +6663,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.606/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.12750",
+            "arxiv_url": "https://arxiv.org/abs/2402.12750"
         },
         "2024.acl-long.607": {
             "title": "Draft & Verify: Lossless Large Language Model Acceleration via Self-Speculative Decoding",
@@ -6751,8 +6751,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.614/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.16854",
+            "arxiv_url": "https://arxiv.org/abs/2403.16854"
         },
         "2024.acl-long.615": {
             "title": "Learning to Plan and Generate Text with Citations",
@@ -6817,8 +6817,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.620/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.06619",
+            "arxiv_url": "https://arxiv.org/abs/2402.06619"
         },
         "2024.acl-long.621": {
             "title": "Language Models can Exploit Cross-Task In-context Learning for Data-Scarce Novel Tasks",
@@ -6839,8 +6839,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.622/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2312.11075",
+            "arxiv_url": "https://arxiv.org/abs/2312.11075"
         },
         "2024.acl-long.623": {
             "title": "ChunkAttention: Efficient Self-Attention with Prefix-Aware KV Cache and Two-Phase Partition",
@@ -6971,8 +6971,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.634/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2407.02056",
+            "arxiv_url": "https://arxiv.org/abs/2407.02056"
         },
         "2024.acl-long.635": {
             "title": "More frequent verbs are associated with more diverse valency frames: Efficient principles at the lexicon-grammar interface",
@@ -7015,8 +7015,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.638/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.01275",
+            "arxiv_url": "https://arxiv.org/abs/2401.01275"
         },
         "2024.acl-long.639": {
             "title": "Generative Cross-Modal Retrieval: Memorizing Images in Multimodal Language Models for Retrieval and Beyond",
@@ -7026,8 +7026,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.639/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.10805",
+            "arxiv_url": "https://arxiv.org/abs/2402.10805"
         },
         "2024.acl-long.640": {
             "title": "Self-Training with Pseudo-Label Scorer for Aspect Sentiment Quad Prediction",
@@ -7081,8 +7081,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.644/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.04588",
+            "arxiv_url": "https://arxiv.org/abs/2402.04588"
         },
         "2024.acl-long.645": {
             "title": "Document-level Claim Extraction and Decontextualisation for Fact-Checking",
@@ -7202,8 +7202,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.655/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.11683",
+            "arxiv_url": "https://arxiv.org/abs/2402.11683"
         },
         "2024.acl-long.656": {
             "title": "LANDeRMT: Dectecting and Routing Language-Aware Neurons for Selectively Finetuning LLMs to Machine Translation",
@@ -7213,8 +7213,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.656/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2409.19523",
+            "arxiv_url": "https://arxiv.org/abs/2409.19523"
         },
         "2024.acl-long.657": {
             "title": "A Joint Coreference-Aware Approach to Document-Level Target Sentiment Analysis",
@@ -7257,8 +7257,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.660/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.18046",
+            "arxiv_url": "https://arxiv.org/abs/2401.18046"
         },
         "2024.acl-long.661": {
             "title": "Search-Adaptor: Embedding Customization for Information Retrieval",
@@ -7268,8 +7268,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.661/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2310.08750",
+            "arxiv_url": "https://arxiv.org/abs/2310.08750"
         },
         "2024.acl-long.662": {
             "title": "Back to Basics: Revisiting REINFORCE-Style Optimization for Learning from Human Feedback in LLMs",
@@ -7279,8 +7279,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.662/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.14740",
+            "arxiv_url": "https://arxiv.org/abs/2402.14740"
         },
         "2024.acl-long.663": {
             "title": "VIEScore: Towards Explainable Metrics for Conditional Image Synthesis Evaluation",
@@ -7290,8 +7290,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.663/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2312.14867",
+            "arxiv_url": "https://arxiv.org/abs/2312.14867"
         },
         "2024.acl-long.664": {
             "title": "Tree Transformer’s Disambiguation Ability of Prepositional Phrase Attachment and Garden Path Effects",
@@ -7334,8 +7334,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.667/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.06310",
+            "arxiv_url": "https://arxiv.org/abs/2401.06310"
         },
         "2024.acl-long.668": {
             "title": "Transferable and Efficient Non-Factual Content Detection via Probe Training with Offline Consistency Checking",
@@ -7345,8 +7345,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.668/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2404.06742",
+            "arxiv_url": "https://arxiv.org/abs/2404.06742"
         },
         "2024.acl-long.669": {
             "title": "What Do Language Models Learn in Context? The Structured Task Hypothesis.",
@@ -7389,8 +7389,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.672/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.04643",
+            "arxiv_url": "https://arxiv.org/abs/2406.04643"
         },
         "2024.acl-long.673": {
             "title": "VoiceCraft: Zero-Shot Speech Editing and Text-to-Speech in the Wild",
@@ -7466,8 +7466,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.679/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2306.05424",
+            "arxiv_url": "https://arxiv.org/abs/2306.05424"
         },
         "2024.acl-long.680": {
             "title": "To Distill or Not to Distill? On the Robustness of Robust Knowledge Distillation",
@@ -7499,8 +7499,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.682/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.04445",
+            "arxiv_url": "https://arxiv.org/abs/2403.04445"
         },
         "2024.acl-long.683": {
             "title": "ActionIE: Action Extraction from Scientific Literature with Programming Languages",
@@ -7543,8 +7543,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.686/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.19457",
+            "arxiv_url": "https://arxiv.org/abs/2402.19457"
         },
         "2024.acl-long.687": {
             "title": "EUROPA: A Legal Multilingual Keyphrase Generation Dataset",
@@ -7565,8 +7565,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.688/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.07359",
+            "arxiv_url": "https://arxiv.org/abs/2406.07359"
         },
         "2024.acl-long.689": {
             "title": "Peacock: A Family of Arabic Multimodal Large Language Models and Benchmarks",
@@ -7576,8 +7576,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.689/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.01031",
+            "arxiv_url": "https://arxiv.org/abs/2403.01031"
         },
         "2024.acl-long.690": {
             "title": "Generating Coherent Sequences of Visual Illustrations for Real-World Manual Tasks",
@@ -7587,8 +7587,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.690/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.10122",
+            "arxiv_url": "https://arxiv.org/abs/2405.10122"
         },
         "2024.acl-long.691": {
             "title": "Cheetah: Natural Language Generation for 517 African Languages",
@@ -7598,8 +7598,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.691/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.01053",
+            "arxiv_url": "https://arxiv.org/abs/2401.01053"
         },
         "2024.acl-long.692": {
             "title": "TaPERA: Enhancing Faithfulness and Interpretability in Long-Form Table QA by Content Planning and Execution-based Reasoning",
@@ -7642,8 +7642,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.695/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.11455",
+            "arxiv_url": "https://arxiv.org/abs/2402.11455"
         },
         "2024.acl-long.696": {
             "title": "Harder Task Needs More Experts: Dynamic Routing in MoE Models",
@@ -7653,8 +7653,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.696/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.07652",
+            "arxiv_url": "https://arxiv.org/abs/2403.07652"
         },
         "2024.acl-long.697": {
             "title": "XLAVS-R: Cross-Lingual Audio-Visual Speech Representation Learning for Noise-Robust Speech Perception",
@@ -7664,8 +7664,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.697/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.14402",
+            "arxiv_url": "https://arxiv.org/abs/2403.14402"
         },
         "2024.acl-long.698": {
             "title": "SOTOPIA-π: Interactive Learning of Socially Intelligent Language Agents",
@@ -7675,8 +7675,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.698/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.08715",
+            "arxiv_url": "https://arxiv.org/abs/2403.08715"
         },
         "2024.acl-long.699": {
             "title": "XFT: Unlocking the Power of Code Instruction Tuning by Simply Merging Upcycled Mixture-of-Experts",
@@ -7686,8 +7686,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.699/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2404.15247",
+            "arxiv_url": "https://arxiv.org/abs/2404.15247"
         },
         "2024.acl-long.700": {
             "title": "Generalizability of Mixture of Domain-Specific Adapters from the Lens of Signed Weight Directions and its Application to Effective Model Pruning",
@@ -7697,8 +7697,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.700/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.10639",
+            "arxiv_url": "https://arxiv.org/abs/2402.10639"
         },
         "2024.acl-long.701": {
             "title": "Learning to Decode Collaboratively with Multiple Language Models",
@@ -7708,8 +7708,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.701/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.03870",
+            "arxiv_url": "https://arxiv.org/abs/2403.03870"
         },
         "2024.acl-long.702": {
             "title": "DRAGIN: Dynamic Retrieval Augmented Generation based on the Real-time Information Needs of Large Language Models",
@@ -7719,8 +7719,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.702/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.10081",
+            "arxiv_url": "https://arxiv.org/abs/2403.10081"
         },
         "2024.acl-long.703": {
             "title": "Living in the Moment: Can Large Language Models Grasp Co-Temporal Reasoning?",
@@ -7752,8 +7752,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.705/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.16499",
+            "arxiv_url": "https://arxiv.org/abs/2402.16499"
         },
         "2024.acl-long.706": {
             "title": "Small But Funny: A Feedback-Driven Approach to Humor Distillation",
@@ -7763,8 +7763,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.706/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.18113",
+            "arxiv_url": "https://arxiv.org/abs/2402.18113"
         },
         "2024.acl-long.707": {
             "title": "Symbol-LLM: Towards Foundational Symbol-centric Interface For Large Language Models",
@@ -7774,8 +7774,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.707/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2311.09278",
+            "arxiv_url": "https://arxiv.org/abs/2311.09278"
         },
         "2024.acl-long.708": {
             "title": "From Sights to Insights: Towards Summarization of Multimodal Clinical Documents",
@@ -7840,8 +7840,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.713/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.10013",
+            "arxiv_url": "https://arxiv.org/abs/2402.10013"
         },
         "2024.acl-long.714": {
             "title": "Context versus Prior Knowledge in Language Models",
@@ -7862,8 +7862,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.715/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.14828",
+            "arxiv_url": "https://arxiv.org/abs/2406.14828"
         },
         "2024.acl-long.716": {
             "title": "Visualization Recommendation with Prompt-based Reprogramming of Large Language Models",
@@ -7895,8 +7895,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.718/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.04495",
+            "arxiv_url": "https://arxiv.org/abs/2405.04495"
         },
         "2024.acl-long.719": {
             "title": "Bridging Word-Pair and Token-Level Metaphor Detection with Explainable Domain Mining",
@@ -7928,8 +7928,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.721/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.02902",
+            "arxiv_url": "https://arxiv.org/abs/2406.02902"
         },
         "2024.acl-long.722": {
             "title": "Maverick: Efficient and Accurate Coreference Resolution Defying Recent Trends",
@@ -7972,8 +7972,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.725/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.01472",
+            "arxiv_url": "https://arxiv.org/abs/2403.01472"
         },
         "2024.acl-long.726": {
             "title": "Advancing Parameter Efficiency in Fine-tuning via Representation Editing",
@@ -7983,8 +7983,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.726/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.15179",
+            "arxiv_url": "https://arxiv.org/abs/2402.15179"
         },
         "2024.acl-long.727": {
             "title": "Context Consistency between Training and Inference in Simultaneous Machine Translation",
@@ -8005,8 +8005,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.728/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2311.07556",
+            "arxiv_url": "https://arxiv.org/abs/2311.07556"
         },
         "2024.acl-long.729": {
             "title": "Chunk, Align, Select: A Simple Long-sequence Processing Method for Transformers",
@@ -8038,8 +8038,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.731/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.16293",
+            "arxiv_url": "https://arxiv.org/abs/2406.16293"
         },
         "2024.acl-long.732": {
             "title": "MULFE: A Multi-Level Benchmark for Free Text Model Editing",
@@ -8071,8 +8071,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.734/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2409.05583",
+            "arxiv_url": "https://arxiv.org/abs/2409.05583"
         },
         "2024.acl-long.735": {
             "title": "HiRoPE: Length Extrapolation for Code Models Using Hierarchical Position",
@@ -8126,8 +8126,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.739/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2404.15522",
+            "arxiv_url": "https://arxiv.org/abs/2404.15522"
         },
         "2024.acl-long.740": {
             "title": "Meta-Tuning LLMs to Leverage Lexical Knowledge for Generalizable Language Style Understanding",
@@ -8137,8 +8137,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.740/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2305.14592",
+            "arxiv_url": "https://arxiv.org/abs/2305.14592"
         },
         "2024.acl-long.741": {
             "title": "Reducing Privacy Risks in Online Self-Disclosures with Language Models",
@@ -8159,8 +8159,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.742/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.11122",
+            "arxiv_url": "https://arxiv.org/abs/2402.11122"
         },
         "2024.acl-long.743": {
             "title": "REFINESUMM: Self-Refining MLLM for Generating a Multimodal Summarization Dataset",
@@ -8203,8 +8203,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.746/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.06301",
+            "arxiv_url": "https://arxiv.org/abs/2403.06301"
         },
         "2024.acl-long.747": {
             "title": "Evaluating Very Long-Term Conversational Memory of LLM Agents",
@@ -8214,8 +8214,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.747/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.17753",
+            "arxiv_url": "https://arxiv.org/abs/2402.17753"
         },
         "2024.acl-long.748": {
             "title": "Prototypical Reward Network for Data-Efficient RLHF",
@@ -8324,8 +8324,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.757/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.16380",
+            "arxiv_url": "https://arxiv.org/abs/2401.16380"
         },
         "2024.acl-long.758": {
             "title": "DeCoT: Debiasing Chain-of-Thought for Knowledge-Intensive Tasks in Large Language Models via Causal Intervention",
@@ -8368,8 +8368,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.761/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.04811",
+            "arxiv_url": "https://arxiv.org/abs/2403.04811"
         },
         "2024.acl-long.762": {
             "title": "Language Models are Homer Simpson! Safety Re-Alignment of Fine-tuned Language Models through Task Arithmetic",
@@ -8379,8 +8379,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.762/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.11746",
+            "arxiv_url": "https://arxiv.org/abs/2402.11746"
         },
         "2024.acl-long.763": {
             "title": "Tracking the Newsworthiness of Public Documents",
@@ -8401,8 +8401,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.764/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.10393",
+            "arxiv_url": "https://arxiv.org/abs/2406.10393"
         },
         "2024.acl-long.765": {
             "title": "Multi-modal Preference Alignment Remedies Degradation of Visual Instruction Tuning on Language Models",
@@ -8412,8 +8412,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.765/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.10884",
+            "arxiv_url": "https://arxiv.org/abs/2402.10884"
         },
         "2024.acl-long.766": {
             "title": "Multistage Collaborative Knowledge Distillation from a Large Language Model for Semi-Supervised Sequence Generation",
@@ -8456,8 +8456,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.769/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.00530",
+            "arxiv_url": "https://arxiv.org/abs/2402.00530"
         },
         "2024.acl-long.770": {
             "title": "Confabulation: The Surprising Value of Large Language Model Hallucinations",
@@ -8467,8 +8467,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.770/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.04175",
+            "arxiv_url": "https://arxiv.org/abs/2406.04175"
         },
         "2024.acl-long.771": {
             "title": "IAPT: Instance-Aware Prompt Tuning for Large Language Models",
@@ -8489,8 +8489,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.772/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2310.05060",
+            "arxiv_url": "https://arxiv.org/abs/2310.05060"
         },
         "2024.acl-long.773": {
             "title": "How Johnny Can Persuade LLMs to Jailbreak Them: Rethinking Persuasion to Challenge AI Safety by Humanizing LLMs",
@@ -8500,8 +8500,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.773/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.06373",
+            "arxiv_url": "https://arxiv.org/abs/2401.06373"
         },
         "2024.acl-long.774": {
             "title": "The Heuristic Core: Understanding Subnetwork Generalization in Pretrained Language Models",
@@ -8544,8 +8544,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.777/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.11009",
+            "arxiv_url": "https://arxiv.org/abs/2403.11009"
         },
         "2024.acl-long.778": {
             "title": "Causal-Guided Active Learning for Debiasing Large Language Models",
@@ -8610,8 +8610,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.783/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2310.14037",
+            "arxiv_url": "https://arxiv.org/abs/2310.14037"
         },
         "2024.acl-long.784": {
             "title": "Distributional Inclusion Hypothesis and Quantifications: Probing for Hypernymy in Functional Distributional Semantics",
@@ -8621,8 +8621,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.784/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2309.08325",
+            "arxiv_url": "https://arxiv.org/abs/2309.08325"
         },
         "2024.acl-long.785": {
             "title": "CausalGym: Benchmarking causal interpretability methods on linguistic tasks",
@@ -8632,8 +8632,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.785/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.12560",
+            "arxiv_url": "https://arxiv.org/abs/2402.12560"
         },
         "2024.acl-long.786": {
             "title": "Don’t Hallucinate, Abstain: Identifying LLM Knowledge Gaps via Multi-LLM Collaboration",
@@ -8654,8 +8654,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.787/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.06416",
+            "arxiv_url": "https://arxiv.org/abs/2401.06416"
         },
         "2024.acl-long.788": {
             "title": "Semisupervised Neural Proto-Language Reconstruction",
@@ -8698,8 +8698,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.791/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.17262",
+            "arxiv_url": "https://arxiv.org/abs/2406.17262"
         },
         "2024.acl-long.792": {
             "title": "Arabic Diacritics in the Wild: Exploiting Opportunities for Improved Diacritization",
@@ -8742,8 +8742,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.795/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2309.08316",
+            "arxiv_url": "https://arxiv.org/abs/2309.08316"
         },
         "2024.acl-long.796": {
             "title": "Cendol: Open Instruction-tuned Generative Large Language Models for Indonesian Languages",
@@ -8753,8 +8753,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.796/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2404.06138",
+            "arxiv_url": "https://arxiv.org/abs/2404.06138"
         },
         "2024.acl-long.797": {
             "title": "Must NLP be Extractive?",
@@ -8775,8 +8775,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.798/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2404.10496",
+            "arxiv_url": "https://arxiv.org/abs/2404.10496"
         },
         "2024.acl-long.799": {
             "title": "Latxa: An Open Language Model and Evaluation Suite for Basque",
@@ -8808,8 +8808,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.801/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.12707",
+            "arxiv_url": "https://arxiv.org/abs/2406.12707"
         },
         "2024.acl-long.802": {
             "title": "IRCoder: Intermediate Representations Make Language Models Robust Multilingual Code Generators",
@@ -8819,8 +8819,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.802/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.03894",
+            "arxiv_url": "https://arxiv.org/abs/2403.03894"
         },
         "2024.acl-long.803": {
             "title": "The Echoes of Multilinguality: Tracing Cultural Value Shifts during Language Model Fine-tuning",
@@ -8830,8 +8830,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.803/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.12744",
+            "arxiv_url": "https://arxiv.org/abs/2405.12744"
         },
         "2024.acl-long.804": {
             "title": "MYTE: Morphology-Driven Byte Encoding for Better and Fairer Multilingual Language Modeling",
@@ -8852,8 +8852,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.805/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2306.02069",
+            "arxiv_url": "https://arxiv.org/abs/2306.02069"
         },
         "2024.acl-long.806": {
             "title": "WebCiteS: Attributed Query-Focused Summarization on Chinese Web Search Results with Citations",
@@ -8885,8 +8885,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.808/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.00143",
+            "arxiv_url": "https://arxiv.org/abs/2403.00143"
         },
         "2024.acl-long.809": {
             "title": "ArtPrompt: ASCII Art-based Jailbreak Attacks against Aligned LLMs",
@@ -8951,8 +8951,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.814/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.13718",
+            "arxiv_url": "https://arxiv.org/abs/2402.13718"
         },
         "2024.acl-long.815": {
             "title": "Natural Language Satisfiability: Exploring the Problem Distribution and Evaluating Transformer-based Language Models",
@@ -9017,8 +9017,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.820/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.10588",
+            "arxiv_url": "https://arxiv.org/abs/2402.10588"
         },
         "2024.acl-long.821": {
             "title": "G-DIG: Towards Gradient-based DIverse and hiGh-quality Instruction Data Selection for Machine Translation",
@@ -9061,8 +9061,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.824/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.05973",
+            "arxiv_url": "https://arxiv.org/abs/2403.05973"
         },
         "2024.acl-long.825": {
             "title": "Iterative Forward Tuning Boosts In-Context Learning in Language Models",
@@ -9072,8 +9072,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.825/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2305.13016",
+            "arxiv_url": "https://arxiv.org/abs/2305.13016"
         },
         "2024.acl-long.826": {
             "title": "Pride and Prejudice: LLM Amplifies Self-Bias in Self-Refinement",
@@ -9083,8 +9083,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.826/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.11436",
+            "arxiv_url": "https://arxiv.org/abs/2402.11436"
         },
         "2024.acl-long.827": {
             "title": "Language Complexity and Speech Recognition Accuracy: Orthographic Complexity Hurts, Phonological Complexity Doesn’t",
@@ -9105,8 +9105,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.828/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2312.06681",
+            "arxiv_url": "https://arxiv.org/abs/2312.06681"
         },
         "2024.acl-long.829": {
             "title": "EconAgent: Large Language Model-Empowered Agents for Simulating Macroeconomic Activities",
@@ -9149,8 +9149,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.832/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2310.19240",
+            "arxiv_url": "https://arxiv.org/abs/2310.19240"
         },
         "2024.acl-long.833": {
             "title": "RomanSetu: Efficiently unlocking multilingual capabilities of Large Language Models via Romanization",
@@ -9182,8 +9182,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.835/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2408.10918",
+            "arxiv_url": "https://arxiv.org/abs/2408.10918"
         },
         "2024.acl-long.836": {
             "title": "Quality-Aware Translation Models: Efficient Generation and Quality Estimation in a Single Model",
@@ -9248,8 +9248,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.841/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.00838",
+            "arxiv_url": "https://arxiv.org/abs/2402.00838"
         },
         "2024.acl-long.842": {
             "title": "Emulated Disalignment: Safety Alignment for Large Language Models May Backfire!",
@@ -9281,8 +9281,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.844/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.17226",
+            "arxiv_url": "https://arxiv.org/abs/2402.17226"
         },
         "2024.acl-long.845": {
             "title": "Aya Model: An Instruction Finetuned Open-Access Multilingual Language Model",
@@ -9292,8 +9292,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.845/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.07827",
+            "arxiv_url": "https://arxiv.org/abs/2402.07827"
         },
         "2024.acl-long.846": {
             "title": "BatchEval: Towards Human-like Text Evaluation",
@@ -9303,8 +9303,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.846/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.00437",
+            "arxiv_url": "https://arxiv.org/abs/2401.00437"
         },
         "2024.acl-long.847": {
             "title": "ToMBench: Benchmarking Theory of Mind in Large Language Models",
@@ -9325,8 +9325,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.848/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2305.05390",
+            "arxiv_url": "https://arxiv.org/abs/2305.05390"
         },
         "2024.acl-long.849": {
             "title": "MultiPICo: Multilingual Perspectivist Irony Corpus",
@@ -9402,8 +9402,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.855/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2311.08817",
+            "arxiv_url": "https://arxiv.org/abs/2311.08817"
         },
         "2024.acl-long.856": {
             "title": "Guardians of the Machine Translation Meta-Evaluation: Sentinel Metrics Fall In!",
@@ -9446,8 +9446,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.859/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2311.04939",
+            "arxiv_url": "https://arxiv.org/abs/2311.04939"
         },
         "2024.acl-long.860": {
             "title": "Let’s Go Real Talk: Spoken Dialogue Model for Face-to-Face Conversation",
@@ -9468,8 +9468,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.861/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.08723",
+            "arxiv_url": "https://arxiv.org/abs/2406.08723"
         },
         "2024.acl-long.862": {
             "title": "Having Beer after Prayer? Measuring Cultural Bias in Large Language Models",
@@ -9479,8 +9479,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.862/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2305.14456",
+            "arxiv_url": "https://arxiv.org/abs/2305.14456"
         },
         "2024.acl-long.863": {
             "title": "Explicating the Implicit: Argument Detection Beyond Sentence Boundaries",
@@ -9501,8 +9501,8 @@
             "venue_short": "ACL2024",
             "decision": "long",
             "anthology_url": "https://aclanthology.org/2024.acl-long.864/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2305.12798",
+            "arxiv_url": "https://arxiv.org/abs/2305.12798"
         },
         "2024.acl-short.1": {
             "title": "Can Language Models Serve as Text-Based World Simulators?",
@@ -9556,8 +9556,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.5/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2311.08981",
+            "arxiv_url": "https://arxiv.org/abs/2311.08981"
         },
         "2024.acl-short.6": {
             "title": "RDRec: Rationale Distillation for LLM-based Recommendation",
@@ -9589,8 +9589,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.8/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.02356",
+            "arxiv_url": "https://arxiv.org/abs/2406.02356"
         },
         "2024.acl-short.9": {
             "title": "Simpson’s Paradox and the Accuracy-Fluency Tradeoff in Translation",
@@ -9600,8 +9600,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.9/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.12690",
+            "arxiv_url": "https://arxiv.org/abs/2402.12690"
         },
         "2024.acl-short.10": {
             "title": "UltraSparseBERT: 99% Conditionally Sparse Language Modelling",
@@ -9622,8 +9622,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.11/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.05138",
+            "arxiv_url": "https://arxiv.org/abs/2402.05138"
         },
         "2024.acl-short.12": {
             "title": "On the Role of Long-tail Knowledge in Retrieval Augmented Large Language Models",
@@ -9633,8 +9633,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.12/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.16367",
+            "arxiv_url": "https://arxiv.org/abs/2406.16367"
         },
         "2024.acl-short.13": {
             "title": "IEPile: Unearthing Large Scale Schema-Conditioned Information Extraction Corpus",
@@ -9677,8 +9677,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.16/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.13269",
+            "arxiv_url": "https://arxiv.org/abs/2403.13269"
         },
         "2024.acl-short.17": {
             "title": "DDPrompt: Differential Diversity Prompting in Large Language Models",
@@ -9787,8 +9787,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.26/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.08760",
+            "arxiv_url": "https://arxiv.org/abs/2405.08760"
         },
         "2024.acl-short.27": {
             "title": "Generating Harder Cross-document Event Coreference Resolution Datasets using Metaphoric Paraphrasing",
@@ -9809,8 +9809,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.28/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.13212",
+            "arxiv_url": "https://arxiv.org/abs/2402.13212"
         },
         "2024.acl-short.29": {
             "title": "RecGPT: Generative Pre-training for Text-based Recommendation",
@@ -9853,8 +9853,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.32/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.05625",
+            "arxiv_url": "https://arxiv.org/abs/2406.05625"
         },
         "2024.acl-short.33": {
             "title": "EmbSpatial-Bench: Benchmarking Spatial Understanding for Embodied Tasks with Large Vision-Language Models",
@@ -9875,8 +9875,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.34/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.12243",
+            "arxiv_url": "https://arxiv.org/abs/2402.12243"
         },
         "2024.acl-short.35": {
             "title": "Dwell in the Beginning: How Language Models Embed Long Documents for Dense Retrieval",
@@ -9886,8 +9886,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.35/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2404.04163",
+            "arxiv_url": "https://arxiv.org/abs/2404.04163"
         },
         "2024.acl-short.36": {
             "title": "That’s Optional: A Contemporary Exploration of “that” Omission in English Subordinate Clauses",
@@ -9941,8 +9941,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.40/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2510.19367",
+            "arxiv_url": "https://arxiv.org/abs/2510.19367"
         },
         "2024.acl-short.41": {
             "title": "STREAM: Simplified Topic Retrieval, Exploration, and Analysis Module",
@@ -9963,8 +9963,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.42/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.06915",
+            "arxiv_url": "https://arxiv.org/abs/2401.06915"
         },
         "2024.acl-short.43": {
             "title": "MaskLID: Code-Switching Language Identification through Iterative Masking",
@@ -10073,8 +10073,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.52/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.04894",
+            "arxiv_url": "https://arxiv.org/abs/2403.04894"
         },
         "2024.acl-short.53": {
             "title": "Time Sensitive Knowledge Editing through Efficient Finetuning",
@@ -10095,8 +10095,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.54/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2401.08189",
+            "arxiv_url": "https://arxiv.org/abs/2401.08189"
         },
         "2024.acl-short.55": {
             "title": "Paraphrasing in Affirmative Terms Improves Negation Understanding",
@@ -10128,8 +10128,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.57/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2404.11109",
+            "arxiv_url": "https://arxiv.org/abs/2404.11109"
         },
         "2024.acl-short.58": {
             "title": "How Good is Zero-Shot MT Evaluation for Low Resource Indian Languages?",
@@ -10139,8 +10139,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.58/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.03893",
+            "arxiv_url": "https://arxiv.org/abs/2406.03893"
         },
         "2024.acl-short.59": {
             "title": "Zero-Shot Cross-Lingual Reranking with Large Language Models for Low-Resource Languages",
@@ -10183,8 +10183,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.62/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.02756",
+            "arxiv_url": "https://arxiv.org/abs/2406.02756"
         },
         "2024.acl-short.63": {
             "title": "Annotating FrameNet via Structure-Conditioned Language Generation",
@@ -10227,8 +10227,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.66/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2406.07239",
+            "arxiv_url": "https://arxiv.org/abs/2406.07239"
         },
         "2024.acl-short.67": {
             "title": "Self-Augmented In-Context Learning for Unsupervised Word Translation",
@@ -10260,8 +10260,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.70/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2405.11282",
+            "arxiv_url": "https://arxiv.org/abs/2405.11282"
         },
         "2024.acl-short.71": {
             "title": "Linear-time Minimum Bayes Risk Decoding with Reference Aggregation",
@@ -10282,8 +10282,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.72/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2402.14652",
+            "arxiv_url": "https://arxiv.org/abs/2402.14652"
         },
         "2024.acl-short.73": {
             "title": "Greed is All You Need: An Evaluation of Tokenizer Inference Methods",
@@ -10315,8 +10315,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.75/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.05696",
+            "arxiv_url": "https://arxiv.org/abs/2403.05696"
         },
         "2024.acl-short.76": {
             "title": "Getting Serious about Humor: Crafting Humor Datasets with Unfunny Large Language Models",
@@ -10326,8 +10326,8 @@
             "venue_short": "ACL2024",
             "decision": "short",
             "anthology_url": "https://aclanthology.org/2024.acl-short.76/",
-            "arxiv_id": null,
-            "arxiv_url": null
+            "arxiv_id": "2403.00794",
+            "arxiv_url": "https://arxiv.org/abs/2403.00794"
         },
         "2024.acl-short.77": {
             "title": "Don’t Buy it! Reassessing the Ad Understanding Abilities of Contrastive Multimodal Models",

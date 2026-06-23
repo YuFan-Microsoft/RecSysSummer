@@ -48,7 +48,9 @@
             "pages": "4149-4159",
             "dblp_url": "https://dblp.org/rec/conf/cikm/00010T0LL0025",
             "doi": "10.1145/3746252.3761066",
-            "ee": "https://doi.org/10.1145/3746252.3761066"
+            "ee": "https://doi.org/10.1145/3746252.3761066",
+            "arxiv_id": "2410.19084",
+            "arxiv_url": "https://arxiv.org/abs/2410.19084"
         },
         "conf/cikm/00010WH025": {
             "title": "Bridging Thoughts and Words: Graph-Based Intent-Semantic Joint Learning for Fake News Detection.",
@@ -58,7 +60,9 @@
             "pages": "3250-3260",
             "dblp_url": "https://dblp.org/rec/conf/cikm/00010WH025",
             "doi": "10.1145/3746252.3761400",
-            "ee": "https://doi.org/10.1145/3746252.3761400"
+            "ee": "https://doi.org/10.1145/3746252.3761400",
+            "arxiv_id": "2509.01660",
+            "arxiv_url": "https://arxiv.org/abs/2509.01660"
         },
         "conf/cikm/0001B0TPCR25": {
             "title": "ESPRESSO: Privacy-Preserving Keyword Search on Decentralized Data with Differential Visibility Constraints.",
@@ -128,7 +132,9 @@
             "pages": "6225-6233",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0001LHLZYLRCCHX25",
             "doi": "10.1145/3746252.3761527",
-            "ee": "https://doi.org/10.1145/3746252.3761527"
+            "ee": "https://doi.org/10.1145/3746252.3761527",
+            "arxiv_id": "2411.09852",
+            "arxiv_url": "https://arxiv.org/abs/2411.09852"
         },
         "conf/cikm/0001LPC25": {
             "title": "PromptTSS: A Prompting-Based Approach for Interactive Multi-Granularity Time Series Segmentation.",
@@ -138,7 +144,9 @@
             "pages": "209-220",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0001LPC25",
             "doi": "10.1145/3746252.3761142",
-            "ee": "https://doi.org/10.1145/3746252.3761142"
+            "ee": "https://doi.org/10.1145/3746252.3761142",
+            "arxiv_id": "2506.11170",
+            "arxiv_url": "https://arxiv.org/abs/2506.11170"
         },
         "conf/cikm/0001LYHLSK25": {
             "title": "HCLeK: Hierarchical Compression of Legal Knowledge for Retrieval-Augmented Generation.",
@@ -158,7 +166,9 @@
             "pages": "1593-1602",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0001LYT025",
             "doi": "10.1145/3746252.3761244",
-            "ee": "https://doi.org/10.1145/3746252.3761244"
+            "ee": "https://doi.org/10.1145/3746252.3761244",
+            "arxiv_id": "2508.16516",
+            "arxiv_url": "https://arxiv.org/abs/2508.16516"
         },
         "conf/cikm/0001TCT00Y025": {
             "title": "Jailbreaking LLMs Through Alignment Vulnerabilities in Out-of-Distribution Settings.",
@@ -198,7 +208,9 @@
             "pages": "4680-4684",
             "dblp_url": "https://dblp.org/rec/conf/cikm/00020CGWMNA25",
             "doi": "10.1145/3746252.3760948",
-            "ee": "https://doi.org/10.1145/3746252.3760948"
+            "ee": "https://doi.org/10.1145/3746252.3760948",
+            "arxiv_id": "2508.21181",
+            "arxiv_url": "https://arxiv.org/abs/2508.21181"
         },
         "conf/cikm/0002B0ZF0WB25": {
             "title": "Learning from Graph: Mitigating Label Noise on Graph through Topological Feature Reconstruction.",
@@ -218,7 +230,9 @@
             "pages": "415-424",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0002CANLLTS25",
             "doi": "10.1145/3746252.3761341",
-            "ee": "https://doi.org/10.1145/3746252.3761341"
+            "ee": "https://doi.org/10.1145/3746252.3761341",
+            "arxiv_id": "2503.18197",
+            "arxiv_url": "https://arxiv.org/abs/2503.18197"
         },
         "conf/cikm/0002H0GH025": {
             "title": "Backdoor in Seconds: Unlocking Vulnerabilities in Large Pre-trained Models via Model Editing.",
@@ -228,7 +242,9 @@
             "pages": "750-760",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0002H0GH025",
             "doi": "10.1145/3746252.3761408",
-            "ee": "https://doi.org/10.1145/3746252.3761408"
+            "ee": "https://doi.org/10.1145/3746252.3761408",
+            "arxiv_id": "2410.18267",
+            "arxiv_url": "https://arxiv.org/abs/2410.18267"
         },
         "conf/cikm/0002KED25": {
             "title": "Learning Global-Local Multi-Scale Node Embeddings with Random Walks and Landmark-Guided Optimization.",
@@ -248,7 +264,9 @@
             "pages": "1861-1871",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0002KF025",
             "doi": "10.1145/3746252.3761117",
-            "ee": "https://doi.org/10.1145/3746252.3761117"
+            "ee": "https://doi.org/10.1145/3746252.3761117",
+            "arxiv_id": "2411.14252",
+            "arxiv_url": "https://arxiv.org/abs/2411.14252"
         },
         "conf/cikm/0002SSYKXAZJHWZ25": {
             "title": "Powering Job Search at Scale: LLM-Enhanced Query Understanding in Job Matching Systems.",
@@ -258,7 +276,9 @@
             "pages": "4971-4975",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0002SSYKXAZJHWZ25",
             "doi": "10.1145/3746252.3760913",
-            "ee": "https://doi.org/10.1145/3746252.3760913"
+            "ee": "https://doi.org/10.1145/3746252.3760913",
+            "arxiv_id": "2509.09690",
+            "arxiv_url": "https://arxiv.org/abs/2509.09690"
         },
         "conf/cikm/0002Z0LS25": {
             "title": "STORM: Spatio-Temporal Similar Trajectory Retrieval on Non-Uniform Maritime Data.",
@@ -278,7 +298,9 @@
             "pages": "3292-3301",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0002Z0Z00025",
             "doi": "10.1145/3746252.3761327",
-            "ee": "https://doi.org/10.1145/3746252.3761327"
+            "ee": "https://doi.org/10.1145/3746252.3761327",
+            "arxiv_id": "2410.11273",
+            "arxiv_url": "https://arxiv.org/abs/2410.11273"
         },
         "conf/cikm/00030000HN25": {
             "title": "Enhancing Graph Collaborative Filtering with FourierKAN Feature Transformation.",
@@ -288,7 +310,9 @@
             "pages": "5376-5380",
             "dblp_url": "https://dblp.org/rec/conf/cikm/00030000HN25",
             "doi": "10.1145/3746252.3760909",
-            "ee": "https://doi.org/10.1145/3746252.3760909"
+            "ee": "https://doi.org/10.1145/3746252.3760909",
+            "arxiv_id": "2406.01034",
+            "arxiv_url": "https://arxiv.org/abs/2406.01034"
         },
         "conf/cikm/0003000WH25": {
             "title": "Hypercomplex Prompt-aware Multimodal Recommendation.",
@@ -298,7 +322,9 @@
             "pages": "403-414",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0003000WH25",
             "doi": "10.1145/3746252.3761174",
-            "ee": "https://doi.org/10.1145/3746252.3761174"
+            "ee": "https://doi.org/10.1145/3746252.3761174",
+            "arxiv_id": "2508.10753",
+            "arxiv_url": "https://arxiv.org/abs/2508.10753"
         },
         "conf/cikm/000300Z025": {
             "title": "Exploring Causal Effect of Social Bias on Faithfulness Hallucinations in Large Language Models.",
@@ -308,7 +334,9 @@
             "pages": "4293-4303",
             "dblp_url": "https://dblp.org/rec/conf/cikm/000300Z025",
             "doi": "10.1145/3746252.3761298",
-            "ee": "https://doi.org/10.1145/3746252.3761298"
+            "ee": "https://doi.org/10.1145/3746252.3761298",
+            "arxiv_id": "2508.07753",
+            "arxiv_url": "https://arxiv.org/abs/2508.07753"
         },
         "conf/cikm/0003D000025": {
             "title": "DO: An Efficient Deep Reinforcement Learning Approach for Optimal Route with Collective Spatial Keywords.",
@@ -338,7 +366,9 @@
             "pages": "4976-4980",
             "dblp_url": "https://dblp.org/rec/conf/cikm/000400HXL25",
             "doi": "10.1145/3746252.3760870",
-            "ee": "https://doi.org/10.1145/3746252.3760870"
+            "ee": "https://doi.org/10.1145/3746252.3760870",
+            "arxiv_id": "2509.00826",
+            "arxiv_url": "https://arxiv.org/abs/2509.00826"
         },
         "conf/cikm/00040Z025": {
             "title": "Publicly Verifiable and Fault-Tolerant Privacy-Preserving Aggregation for Federated Learning.",
@@ -358,7 +388,9 @@
             "pages": "6757-6761",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0004BGCYMPFMIMP25",
             "doi": "10.1145/3746252.3761459",
-            "ee": "https://doi.org/10.1145/3746252.3761459"
+            "ee": "https://doi.org/10.1145/3746252.3761459",
+            "arxiv_id": "2508.02999",
+            "arxiv_url": "https://arxiv.org/abs/2508.02999"
         },
         "conf/cikm/0004DL00025": {
             "title": "Higher-Order Information Matters: A Representation Learning Approach for Social Bot Detection.",
@@ -398,7 +430,9 @@
             "pages": "5780-5787",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0004YGCK25",
             "doi": "10.1145/3746252.3761572",
-            "ee": "https://doi.org/10.1145/3746252.3761572"
+            "ee": "https://doi.org/10.1145/3746252.3761572",
+            "arxiv_id": "2510.14985",
+            "arxiv_url": "https://arxiv.org/abs/2510.14985"
         },
         "conf/cikm/000500WLCZW25": {
             "title": "Autonomous Reasoning-Retrieval for Large Language Model Based Recommendation.",
@@ -428,7 +462,9 @@
             "pages": "6466-6470",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0005QH25",
             "doi": "10.1145/3746252.3761654",
-            "ee": "https://doi.org/10.1145/3746252.3761654"
+            "ee": "https://doi.org/10.1145/3746252.3761654",
+            "arxiv_id": "2405.14246",
+            "arxiv_url": "https://arxiv.org/abs/2405.14246"
         },
         "conf/cikm/0005W25": {
             "title": "Aggregated Gradients-based Adaptive Learning Rate Design in Federated Learning.",
@@ -468,7 +504,9 @@
             "pages": "3177-3187",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0006DW0TX025",
             "doi": "10.1145/3746252.3761370",
-            "ee": "https://doi.org/10.1145/3746252.3761370"
+            "ee": "https://doi.org/10.1145/3746252.3761370",
+            "arxiv_id": "2508.03280",
+            "arxiv_url": "https://arxiv.org/abs/2508.03280"
         },
         "conf/cikm/0006HOL25": {
             "title": "Improving Graph Autoencoders by Hard Sample Refinement with Global Similarity.",
@@ -488,7 +526,9 @@
             "pages": "3209-3219",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0006P0000LJ025",
             "doi": "10.1145/3746252.3761169",
-            "ee": "https://doi.org/10.1145/3746252.3761169"
+            "ee": "https://doi.org/10.1145/3746252.3761169",
+            "arxiv_id": "2509.02017",
+            "arxiv_url": "https://arxiv.org/abs/2509.02017"
         },
         "conf/cikm/0006SCYG025": {
             "title": "DinoCompanion: An Attachment-Theory Informed Multimodal Robot for Emotionally Responsive Child-AI Interaction.",
@@ -498,7 +538,9 @@
             "pages": "6084-6092",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0006SCYG025",
             "doi": "10.1145/3746252.3761511",
-            "ee": "https://doi.org/10.1145/3746252.3761511"
+            "ee": "https://doi.org/10.1145/3746252.3761511",
+            "arxiv_id": "2506.12486",
+            "arxiv_url": "https://arxiv.org/abs/2506.12486"
         },
         "conf/cikm/0006WFJZ25": {
             "title": "Decoder-only Pre-training Enhancement for Spatio-temporal Traffic Forecasting.",
@@ -518,7 +560,9 @@
             "pages": "3931-3941",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0007C0WYOLLC25",
             "doi": "10.1145/3746252.3761340",
-            "ee": "https://doi.org/10.1145/3746252.3761340"
+            "ee": "https://doi.org/10.1145/3746252.3761340",
+            "arxiv_id": "2409.13694",
+            "arxiv_url": "https://arxiv.org/abs/2409.13694"
         },
         "conf/cikm/0007HXLLL25": {
             "title": "GSTBench: A Benchmark Study on the Transferability of Graph Self-Supervised Learning.",
@@ -528,7 +572,9 @@
             "pages": "2761-2770",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0007HXLLL25",
             "doi": "10.1145/3746252.3761422",
-            "ee": "https://doi.org/10.1145/3746252.3761422"
+            "ee": "https://doi.org/10.1145/3746252.3761422",
+            "arxiv_id": "2509.06975",
+            "arxiv_url": "https://arxiv.org/abs/2509.06975"
         },
         "conf/cikm/0007JRLLPB0E25": {
             "title": "TransAct V2: Lifelong User Action Sequence Modeling on Pinterest Recommendation.",
@@ -538,7 +584,9 @@
             "pages": "6881-6882",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0007JRLLPB0E25",
             "doi": "10.1145/3746252.3761433",
-            "ee": "https://doi.org/10.1145/3746252.3761433"
+            "ee": "https://doi.org/10.1145/3746252.3761433",
+            "arxiv_id": "2506.02267",
+            "arxiv_url": "https://arxiv.org/abs/2506.02267"
         },
         "conf/cikm/0007P0CYDT25": {
             "title": "Fine-Grained Graph Rationalization.",
@@ -548,7 +596,9 @@
             "pages": "3708-3719",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0007P0CYDT25",
             "doi": "10.1145/3746252.3761307",
-            "ee": "https://doi.org/10.1145/3746252.3761307"
+            "ee": "https://doi.org/10.1145/3746252.3761307",
+            "arxiv_id": "2312.07859",
+            "arxiv_url": "https://arxiv.org/abs/2312.07859"
         },
         "conf/cikm/0008SYQ00H0025": {
             "title": "STA-GANN: A Valid and Generalizable Spatio-Temporal Kriging Approach.",
@@ -558,7 +608,9 @@
             "pages": "1726-1736",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0008SYQ00H0025",
             "doi": "10.1145/3746252.3761045",
-            "ee": "https://doi.org/10.1145/3746252.3761045"
+            "ee": "https://doi.org/10.1145/3746252.3761045",
+            "arxiv_id": "2508.16161",
+            "arxiv_url": "https://arxiv.org/abs/2508.16161"
         },
         "conf/cikm/0008ZLGHMK25": {
             "title": "Learning to Comparison-Shop.",
@@ -568,7 +620,9 @@
             "pages": "6053-6060",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0008ZLGHMK25",
             "doi": "10.1145/3746252.3761567",
-            "ee": "https://doi.org/10.1145/3746252.3761567"
+            "ee": "https://doi.org/10.1145/3746252.3761567",
+            "arxiv_id": "2512.04009",
+            "arxiv_url": "https://arxiv.org/abs/2512.04009"
         },
         "conf/cikm/0009ZYFPG25": {
             "title": "Dual Context-Aware Negative Sampling Strategy for Graph-based Collaborative Filtering.",
@@ -608,7 +662,9 @@
             "pages": "6554-6558",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0012PPC25",
             "doi": "10.1145/3746252.3761617",
-            "ee": "https://doi.org/10.1145/3746252.3761617"
+            "ee": "https://doi.org/10.1145/3746252.3761617",
+            "arxiv_id": "2508.04248",
+            "arxiv_url": "https://arxiv.org/abs/2508.04248"
         },
         "conf/cikm/00140XML025": {
             "title": "AutoRuleSQL: Hybrid Text-to-SQL via Rule-Driven Fast Paths and LLM Bootstrapping.",
@@ -628,7 +684,9 @@
             "pages": "1685-1695",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0014GJ00WW0GT25",
             "doi": "10.1145/3746252.3761137",
-            "ee": "https://doi.org/10.1145/3746252.3761137"
+            "ee": "https://doi.org/10.1145/3746252.3761137",
+            "arxiv_id": "2412.17374",
+            "arxiv_url": "https://arxiv.org/abs/2412.17374"
         },
         "conf/cikm/0014W025": {
             "title": "Reliable and Efficient Container Orchestration of LLMs via MCP.",
@@ -648,7 +706,9 @@
             "pages": "5855-5862",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0015CX0YYY25",
             "doi": "10.1145/3746252.3761547",
-            "ee": "https://doi.org/10.1145/3746252.3761547"
+            "ee": "https://doi.org/10.1145/3746252.3761547",
+            "arxiv_id": "2508.13676",
+            "arxiv_url": "https://arxiv.org/abs/2508.13676"
         },
         "conf/cikm/0015LC0L25": {
             "title": "TCPN: Temporal Pyramidal Recurrent Network with Contrastive Learning for Temporal Knowledge Graph Reasoning.",
@@ -668,7 +728,9 @@
             "pages": "2945-2955",
             "dblp_url": "https://dblp.org/rec/conf/cikm/00180WLCGY25",
             "doi": "10.1145/3746252.3761114",
-            "ee": "https://doi.org/10.1145/3746252.3761114"
+            "ee": "https://doi.org/10.1145/3746252.3761114",
+            "arxiv_id": "2508.03420",
+            "arxiv_url": "https://arxiv.org/abs/2508.03420"
         },
         "conf/cikm/0020CLLSS0W25": {
             "title": "Force Matching with Relativistic Constraints: A Physics-Inspired Approach to Stable and Efficient Generative Modeling.",
@@ -678,7 +740,9 @@
             "pages": "179-188",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0020CLLSS0W25",
             "doi": "10.1145/3746252.3761227",
-            "ee": "https://doi.org/10.1145/3746252.3761227"
+            "ee": "https://doi.org/10.1145/3746252.3761227",
+            "arxiv_id": "2502.08150",
+            "arxiv_url": "https://arxiv.org/abs/2502.08150"
         },
         "conf/cikm/0023SMWX25": {
             "title": "FinS-Pilot: A Benchmark for Online Financial RAG System.",
@@ -688,7 +752,9 @@
             "pages": "6544-6548",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0023SMWX25",
             "doi": "10.1145/3746252.3761643",
-            "ee": "https://doi.org/10.1145/3746252.3761643"
+            "ee": "https://doi.org/10.1145/3746252.3761643",
+            "arxiv_id": "2506.02037",
+            "arxiv_url": "https://arxiv.org/abs/2506.02037"
         },
         "conf/cikm/0024ZHLLXWWXWC25": {
             "title": "CCAgent: Coordinating Collaborative Data Scaling for Operating System Agents via Web3.",
@@ -768,7 +834,9 @@
             "pages": "4263-4272",
             "dblp_url": "https://dblp.org/rec/conf/cikm/0047HPL025",
             "doi": "10.1145/3746252.3761357",
-            "ee": "https://doi.org/10.1145/3746252.3761357"
+            "ee": "https://doi.org/10.1145/3746252.3761357",
+            "arxiv_id": "2405.16800",
+            "arxiv_url": "https://arxiv.org/abs/2405.16800"
         },
         "conf/cikm/01020N25": {
             "title": "Revisiting Trajectories to Road: A New Diffusion Model and A New Dataset with 1, 000, 000, 000 Points.",
@@ -818,7 +886,9 @@
             "pages": "4-13",
             "dblp_url": "https://dblp.org/rec/conf/cikm/AbbahaddouMLV25",
             "doi": "10.1145/3746252.3761009",
-            "ee": "https://doi.org/10.1145/3746252.3761009"
+            "ee": "https://doi.org/10.1145/3746252.3761009",
+            "arxiv_id": "2509.01170",
+            "arxiv_url": "https://arxiv.org/abs/2509.01170"
         },
         "conf/cikm/AbdallahAPMAJ25": {
             "title": "RerankArena: A Unified Platform for Evaluating Retrieval, Reranking and RAG with Human and LLM Feedback.",
@@ -828,7 +898,9 @@
             "pages": "6593-6597",
             "dblp_url": "https://dblp.org/rec/conf/cikm/AbdallahAPMAJ25",
             "doi": "10.1145/3746252.3761484",
-            "ee": "https://doi.org/10.1145/3746252.3761484"
+            "ee": "https://doi.org/10.1145/3746252.3761484",
+            "arxiv_id": "2508.05512",
+            "arxiv_url": "https://arxiv.org/abs/2508.05512"
         },
         "conf/cikm/AbhishekJHSAG025": {
             "title": "EnhanceMyPrompt: Rewriting Chat Queries for Effective Response Generation from LLMs.",
@@ -848,7 +920,9 @@
             "pages": "6777-6780",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Adamczyk25",
             "doi": "10.1145/3746252.3761660",
-            "ee": "https://doi.org/10.1145/3746252.3761660"
+            "ee": "https://doi.org/10.1145/3746252.3761660",
+            "arxiv_id": "2509.18703",
+            "arxiv_url": "https://arxiv.org/abs/2509.18703"
         },
         "conf/cikm/Adhikari0S25": {
             "title": "FR-LoRA: Fisher Regularized LoRA for Multilingual Continual Learning.",
@@ -928,7 +1002,9 @@
             "pages": "4603-4607",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Ali25",
             "doi": "10.1145/3746252.3760900",
-            "ee": "https://doi.org/10.1145/3746252.3760900"
+            "ee": "https://doi.org/10.1145/3746252.3760900",
+            "arxiv_id": "2509.18408",
+            "arxiv_url": "https://arxiv.org/abs/2509.18408"
         },
         "conf/cikm/AliILAS025": {
             "title": "IARD: Intruder Activity Recognition Dataset for Threat Detection.",
@@ -948,7 +1024,9 @@
             "pages": "149-158",
             "dblp_url": "https://dblp.org/rec/conf/cikm/AliMPT25",
             "doi": "10.1145/3746252.3761216",
-            "ee": "https://doi.org/10.1145/3746252.3761216"
+            "ee": "https://doi.org/10.1145/3746252.3761216",
+            "arxiv_id": "2510.03380",
+            "arxiv_url": "https://arxiv.org/abs/2510.03380"
         },
         "conf/cikm/Amatya25": {
             "title": "Towards Trustworthy AI: Enhancing Factuality, Bias, and Compliance in LLMs.",
@@ -1018,7 +1096,9 @@
             "pages": "87-97",
             "dblp_url": "https://dblp.org/rec/conf/cikm/AttaliPPM25",
             "doi": "10.1145/3746252.3760998",
-            "ee": "https://doi.org/10.1145/3746252.3760998"
+            "ee": "https://doi.org/10.1145/3746252.3760998",
+            "arxiv_id": "2508.19071",
+            "arxiv_url": "https://arxiv.org/abs/2508.19071"
         },
         "conf/cikm/AudiffrenBDC25": {
             "title": "Extreme Multi-Label Completion for Semantic Document Tagging with Taxonomy-Aware Parallel Learning.",
@@ -1028,7 +1108,9 @@
             "pages": "98-108",
             "dblp_url": "https://dblp.org/rec/conf/cikm/AudiffrenBDC25",
             "doi": "10.1145/3746252.3761233",
-            "ee": "https://doi.org/10.1145/3746252.3761233"
+            "ee": "https://doi.org/10.1145/3746252.3761233",
+            "arxiv_id": "2412.13809",
+            "arxiv_url": "https://arxiv.org/abs/2412.13809"
         },
         "conf/cikm/AyoubDDMG25": {
             "title": "Compressed Concatenation of Small Embedding Models.",
@@ -1038,7 +1120,9 @@
             "pages": "4613-4617",
             "dblp_url": "https://dblp.org/rec/conf/cikm/AyoubDDMG25",
             "doi": "10.1145/3746252.3760831",
-            "ee": "https://doi.org/10.1145/3746252.3760831"
+            "ee": "https://doi.org/10.1145/3746252.3760831",
+            "arxiv_id": "2510.04626",
+            "arxiv_url": "https://arxiv.org/abs/2510.04626"
         },
         "conf/cikm/BaekCSJLO25": {
             "title": "Relation-Faceted Graph Pooling with LLM Guidance for Dynamic Span-Aware Information Extraction.",
@@ -1058,7 +1142,9 @@
             "pages": "119-128",
             "dblp_url": "https://dblp.org/rec/conf/cikm/BaekY0L25",
             "doi": "10.1145/3746252.3761190",
-            "ee": "https://doi.org/10.1145/3746252.3761190"
+            "ee": "https://doi.org/10.1145/3746252.3761190",
+            "arxiv_id": "2508.13670",
+            "arxiv_url": "https://arxiv.org/abs/2508.13670"
         },
         "conf/cikm/BajpaiPS25": {
             "title": "Subclass-Aware Inclusive Classifier via Repulsive Hidden Strata.",
@@ -1078,7 +1164,9 @@
             "pages": "6323-6327",
             "dblp_url": "https://dblp.org/rec/conf/cikm/BaoPP25",
             "doi": "10.1145/3746252.3761610",
-            "ee": "https://doi.org/10.1145/3746252.3761610"
+            "ee": "https://doi.org/10.1145/3746252.3761610",
+            "arxiv_id": "2508.03399",
+            "arxiv_url": "https://arxiv.org/abs/2508.03399"
         },
         "conf/cikm/BesrourHS025": {
             "title": "SQuAI: Scientific Question-Answering with Multi-Agent Retrieval-Augmented Generation.",
@@ -1088,7 +1176,9 @@
             "pages": "6603-6608",
             "dblp_url": "https://dblp.org/rec/conf/cikm/BesrourHS025",
             "doi": "10.1145/3746252.3761471",
-            "ee": "https://doi.org/10.1145/3746252.3761471"
+            "ee": "https://doi.org/10.1145/3746252.3761471",
+            "arxiv_id": "2510.15682",
+            "arxiv_url": "https://arxiv.org/abs/2510.15682"
         },
         "conf/cikm/Bin0MZ0M0C25": {
             "title": "International Workshop on Multimodal Generative Search and Recommendation (MMGenSR@CIKM 2025).",
@@ -1108,7 +1198,9 @@
             "pages": "6865-6866",
             "dblp_url": "https://dblp.org/rec/conf/cikm/BindaPECPC25",
             "doi": "10.1145/3746252.3761444",
-            "ee": "https://doi.org/10.1145/3746252.3761444"
+            "ee": "https://doi.org/10.1145/3746252.3761444",
+            "arxiv_id": "2508.07923",
+            "arxiv_url": "https://arxiv.org/abs/2508.07923"
         },
         "conf/cikm/BlasiBC0M25": {
             "title": "Uncovering Corporate Influence: A First Scalable Method for Qualifying Holdings Computation.",
@@ -1148,7 +1240,9 @@
             "pages": "4618-4622",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Bu00W00H25",
             "doi": "10.1145/3746252.3760933",
-            "ee": "https://doi.org/10.1145/3746252.3760933"
+            "ee": "https://doi.org/10.1145/3746252.3760933",
+            "arxiv_id": "2510.04024",
+            "arxiv_url": "https://arxiv.org/abs/2510.04024"
         },
         "conf/cikm/CaiHZLJ25": {
             "title": "Large Model Annotation-Enhanced Spatio-Temporal Fusion Knowledge Tracing Model.",
@@ -1168,7 +1262,9 @@
             "pages": "169-178",
             "dblp_url": "https://dblp.org/rec/conf/cikm/CaiLLZ25",
             "doi": "10.1145/3746252.3761381",
-            "ee": "https://doi.org/10.1145/3746252.3761381"
+            "ee": "https://doi.org/10.1145/3746252.3761381",
+            "arxiv_id": "2508.18313",
+            "arxiv_url": "https://arxiv.org/abs/2508.18313"
         },
         "conf/cikm/Cao000T25": {
             "title": "Dynamic Graph Learning via Historical Information Perception and Multi-Granular Temporal Curriculum Learning.",
@@ -1188,7 +1284,9 @@
             "pages": "5575-5582",
             "dblp_url": "https://dblp.org/rec/conf/cikm/CaoXCGTWLYLNZG25",
             "doi": "10.1145/3746252.3761558",
-            "ee": "https://doi.org/10.1145/3746252.3761558"
+            "ee": "https://doi.org/10.1145/3746252.3761558",
+            "arxiv_id": "2505.13894",
+            "arxiv_url": "https://arxiv.org/abs/2505.13894"
         },
         "conf/cikm/CaoZCCXB25": {
             "title": "SDD: Shape-aware Data-driven Attention Mechanism for Time Series Analysis.",
@@ -1208,7 +1306,9 @@
             "pages": "4623-4627",
             "dblp_url": "https://dblp.org/rec/conf/cikm/CetinkayaE25",
             "doi": "10.1145/3746252.3760791",
-            "ee": "https://doi.org/10.1145/3746252.3760791"
+            "ee": "https://doi.org/10.1145/3746252.3760791",
+            "arxiv_id": "2508.13375",
+            "arxiv_url": "https://arxiv.org/abs/2508.13375"
         },
         "conf/cikm/ChaffinS25": {
             "title": "PyLate: Flexible Training and Retrieval for Late Interaction Models.",
@@ -1218,7 +1318,9 @@
             "pages": "6334-6339",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChaffinS25",
             "doi": "10.1145/3746252.3761608",
-            "ee": "https://doi.org/10.1145/3746252.3761608"
+            "ee": "https://doi.org/10.1145/3746252.3761608",
+            "arxiv_id": "2508.03555",
+            "arxiv_url": "https://arxiv.org/abs/2508.03555"
         },
         "conf/cikm/ChangC025": {
             "title": "Multivariate Wind Power Time Series Forecasting with Noise-Filtering Neural ODEs.",
@@ -1238,7 +1340,9 @@
             "pages": "199-208",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChangHLS25",
             "doi": "10.1145/3746252.3760994",
-            "ee": "https://doi.org/10.1145/3746252.3760994"
+            "ee": "https://doi.org/10.1145/3746252.3760994",
+            "arxiv_id": "2508.14808",
+            "arxiv_url": "https://arxiv.org/abs/2508.14808"
         },
         "conf/cikm/ChangMG25": {
             "title": "T-Retrievability: A Topic-Focused Approach to Measure Fair Document Exposure in Information Retrieval.",
@@ -1248,7 +1352,9 @@
             "pages": "4628-4632",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChangMG25",
             "doi": "10.1145/3746252.3760820",
-            "ee": "https://doi.org/10.1145/3746252.3760820"
+            "ee": "https://doi.org/10.1145/3746252.3760820",
+            "arxiv_id": "2508.21704",
+            "arxiv_url": "https://arxiv.org/abs/2508.21704"
         },
         "conf/cikm/ChapagainHB25": {
             "title": "Pruning Strategies for Backdoor Defense in LLMs.",
@@ -1258,7 +1364,9 @@
             "pages": "4633-4638",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChapagainHB25",
             "doi": "10.1145/3746252.3760946",
-            "ee": "https://doi.org/10.1145/3746252.3760946"
+            "ee": "https://doi.org/10.1145/3746252.3760946",
+            "arxiv_id": "2508.20032",
+            "arxiv_url": "https://arxiv.org/abs/2508.20032"
         },
         "conf/cikm/Chatterjee00ERG25": {
             "title": "ProActLLM: Proactive Conversational Information Seeking with Large Language Models.",
@@ -1278,7 +1386,9 @@
             "pages": "322-331",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Chen0025",
             "doi": "10.1145/3746252.3761076",
-            "ee": "https://doi.org/10.1145/3746252.3761076"
+            "ee": "https://doi.org/10.1145/3746252.3761076",
+            "arxiv_id": "2510.12815",
+            "arxiv_url": "https://arxiv.org/abs/2510.12815"
         },
         "conf/cikm/Chen0025a": {
             "title": "Maximum In-Support Return Modeling for Dynamic Recommendation with Language Model Prior.",
@@ -1288,7 +1398,9 @@
             "pages": "332-341",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Chen0025a",
             "doi": "10.1145/3746252.3761336",
-            "ee": "https://doi.org/10.1145/3746252.3761336"
+            "ee": "https://doi.org/10.1145/3746252.3761336",
+            "arxiv_id": "2510.12816",
+            "arxiv_url": "https://arxiv.org/abs/2510.12816"
         },
         "conf/cikm/Chen0LJ25": {
             "title": "Personalized Tree-Based Progressive Regression Model for Watch-Time Prediction in Short Video Recommendation.",
@@ -1298,7 +1410,9 @@
             "pages": "5609-5616",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Chen0LJ25",
             "doi": "10.1145/3746252.3761538",
-            "ee": "https://doi.org/10.1145/3746252.3761538"
+            "ee": "https://doi.org/10.1145/3746252.3761538",
+            "arxiv_id": "2505.22153",
+            "arxiv_url": "https://arxiv.org/abs/2505.22153"
         },
         "conf/cikm/Chen0ZWYLN25": {
             "title": "Integrating Time Series into LLMs via Multi-layer Steerable Embedding Fusion for Enhanced Forecasting.",
@@ -1308,7 +1422,9 @@
             "pages": "4675-4679",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Chen0ZWYLN25",
             "doi": "10.1145/3746252.3760803",
-            "ee": "https://doi.org/10.1145/3746252.3760803"
+            "ee": "https://doi.org/10.1145/3746252.3760803",
+            "arxiv_id": "2508.16059",
+            "arxiv_url": "https://arxiv.org/abs/2508.16059"
         },
         "conf/cikm/ChenCSZCH00025": {
             "title": "See Beyond a Single View: Multi-Attribution Learning Leads to Better Conversion Rate Prediction.",
@@ -1318,7 +1434,9 @@
             "pages": "5600-5608",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChenCSZCH00025",
             "doi": "10.1145/3746252.3761580",
-            "ee": "https://doi.org/10.1145/3746252.3761580"
+            "ee": "https://doi.org/10.1145/3746252.3761580",
+            "arxiv_id": "2508.15217",
+            "arxiv_url": "https://arxiv.org/abs/2508.15217"
         },
         "conf/cikm/ChenDL0025": {
             "title": "Structure-prior Informed Diffusion Model for Graph Source Localization with Limited Data.",
@@ -1328,7 +1446,9 @@
             "pages": "250-259",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChenDL0025",
             "doi": "10.1145/3746252.3761146",
-            "ee": "https://doi.org/10.1145/3746252.3761146"
+            "ee": "https://doi.org/10.1145/3746252.3761146",
+            "arxiv_id": "2502.17928",
+            "arxiv_url": "https://arxiv.org/abs/2502.17928"
         },
         "conf/cikm/ChenDLMMD25": {
             "title": "ActiViz: Understanding Sample Selection in Active Learning through Boundary Visualization.",
@@ -1398,7 +1518,9 @@
             "pages": "393-402",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChenLZLW25",
             "doi": "10.1145/3746252.3761228",
-            "ee": "https://doi.org/10.1145/3746252.3761228"
+            "ee": "https://doi.org/10.1145/3746252.3761228",
+            "arxiv_id": "2504.14188",
+            "arxiv_url": "https://arxiv.org/abs/2504.14188"
         },
         "conf/cikm/ChenM0LJLWH025": {
             "title": "Advancing Temporal Sensitive Question Answering through Progressive Multi-Step Reflection.",
@@ -1428,7 +1550,9 @@
             "pages": "312-321",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChenS25",
             "doi": "10.1145/3746252.3761131",
-            "ee": "https://doi.org/10.1145/3746252.3761131"
+            "ee": "https://doi.org/10.1145/3746252.3761131",
+            "arxiv_id": "2508.06034",
+            "arxiv_url": "https://arxiv.org/abs/2508.06034"
         },
         "conf/cikm/ChenSSC25": {
             "title": "Let Topology Speak: Graph Neural Network with Topology-Aware Augmentation.",
@@ -1448,7 +1572,9 @@
             "pages": "4665-4669",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChenTHCLZZ25",
             "doi": "10.1145/3746252.3760944",
-            "ee": "https://doi.org/10.1145/3746252.3760944"
+            "ee": "https://doi.org/10.1145/3746252.3760944",
+            "arxiv_id": "2508.18824",
+            "arxiv_url": "https://arxiv.org/abs/2508.18824"
         },
         "conf/cikm/ChenXCHDL25": {
             "title": "High-Context Empathy in Conversations for Large Language Models.",
@@ -1508,7 +1634,9 @@
             "pages": "291-300",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChenZC25",
             "doi": "10.1145/3746252.3761214",
-            "ee": "https://doi.org/10.1145/3746252.3761214"
+            "ee": "https://doi.org/10.1145/3746252.3761214",
+            "arxiv_id": "2508.15262",
+            "arxiv_url": "https://arxiv.org/abs/2508.15262"
         },
         "conf/cikm/ChenZJCLLXG025": {
             "title": "T-Stars-Poster: A Framework for Product-Centric Advertising Image Design.",
@@ -1518,7 +1646,9 @@
             "pages": "5583-5591",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChenZJCLLXG025",
             "doi": "10.1145/3746252.3761554",
-            "ee": "https://doi.org/10.1145/3746252.3761554"
+            "ee": "https://doi.org/10.1145/3746252.3761554",
+            "arxiv_id": "2501.14316",
+            "arxiv_url": "https://arxiv.org/abs/2501.14316"
         },
         "conf/cikm/ChenZLC25": {
             "title": "More Women, Same Stereotypes: Unpacking the Gender Bias Paradox in Large Language Models.",
@@ -1528,7 +1658,9 @@
             "pages": "4639-4643",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChenZLC25",
             "doi": "10.1145/3746252.3760969",
-            "ee": "https://doi.org/10.1145/3746252.3760969"
+            "ee": "https://doi.org/10.1145/3746252.3760969",
+            "arxiv_id": "2503.15904",
+            "arxiv_url": "https://arxiv.org/abs/2503.15904"
         },
         "conf/cikm/Cheng0SC0025": {
             "title": "Neighbor-enhanced Graph Pre-training and Prompt Learning Framework for Fraud Detection.",
@@ -1558,7 +1690,9 @@
             "pages": "6340-6345",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChengWHGE25",
             "doi": "10.1145/3746252.3761621",
-            "ee": "https://doi.org/10.1145/3746252.3761621"
+            "ee": "https://doi.org/10.1145/3746252.3761621",
+            "arxiv_id": "2508.11801",
+            "arxiv_url": "https://arxiv.org/abs/2508.11801"
         },
         "conf/cikm/Choi25": {
             "title": "PP-STAT:  An Efficient Privacy-Preserving Statistical Analysis Framework using Homomorphic Encryption.",
@@ -1568,7 +1702,9 @@
             "pages": "448-457",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Choi25",
             "doi": "10.1145/3746252.3761194",
-            "ee": "https://doi.org/10.1145/3746252.3761194"
+            "ee": "https://doi.org/10.1145/3746252.3761194",
+            "arxiv_id": "2508.12093",
+            "arxiv_url": "https://arxiv.org/abs/2508.12093"
         },
         "conf/cikm/ChoiBCPLC25": {
             "title": "Reference-Aligned Retrieval-Augmented Question Answering over Heterogeneous Proprietary Documents.",
@@ -1578,7 +1714,9 @@
             "pages": "5626-5633",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChoiBCPLC25",
             "doi": "10.1145/3746252.3761566",
-            "ee": "https://doi.org/10.1145/3746252.3761566"
+            "ee": "https://doi.org/10.1145/3746252.3761566",
+            "arxiv_id": "2502.19596",
+            "arxiv_url": "https://arxiv.org/abs/2502.19596"
         },
         "conf/cikm/ChoiHKBL25": {
             "title": "Learnable Orthogonal Decomposition for Non-Regressive Prediction for PDE.",
@@ -1618,7 +1756,9 @@
             "pages": "4685-4689",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChouC25",
             "doi": "10.1145/3746252.3760871",
-            "ee": "https://doi.org/10.1145/3746252.3760871"
+            "ee": "https://doi.org/10.1145/3746252.3760871",
+            "arxiv_id": "2508.10491",
+            "arxiv_url": "https://arxiv.org/abs/2508.10491"
         },
         "conf/cikm/ChristmannW25": {
             "title": "The ReQAP System for Question Answering over Personal Information.",
@@ -1628,7 +1768,9 @@
             "pages": "6619-6623",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChristmannW25",
             "doi": "10.1145/3746252.3761494",
-            "ee": "https://doi.org/10.1145/3746252.3761494"
+            "ee": "https://doi.org/10.1145/3746252.3761494",
+            "arxiv_id": "2508.06880",
+            "arxiv_url": "https://arxiv.org/abs/2508.06880"
         },
         "conf/cikm/ChungB25": {
             "title": "Explain and Monitor Deep Learning Models for Computer Vision using Obz AI.",
@@ -1638,7 +1780,9 @@
             "pages": "6624-6628",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ChungB25",
             "doi": "10.1145/3746252.3761486",
-            "ee": "https://doi.org/10.1145/3746252.3761486"
+            "ee": "https://doi.org/10.1145/3746252.3761486",
+            "arxiv_id": "2508.18188",
+            "arxiv_url": "https://arxiv.org/abs/2508.18188"
         },
         "conf/cikm/ChungW25": {
             "title": "MU-OT: Effective and Unified Machine Unlearning with Optimal Transport for Feature Realignment.",
@@ -1688,7 +1832,9 @@
             "pages": "4695-4699",
             "dblp_url": "https://dblp.org/rec/conf/cikm/DaiMCWLHLL25",
             "doi": "10.1145/3746252.3760880",
-            "ee": "https://doi.org/10.1145/3746252.3760880"
+            "ee": "https://doi.org/10.1145/3746252.3760880",
+            "arxiv_id": "2508.18295",
+            "arxiv_url": "https://arxiv.org/abs/2508.18295"
         },
         "conf/cikm/DaiSHD0025": {
             "title": "FedGVD: Efficient Federated Graph Learning via Unidirectional Distillation with Dynamic Virtual Nodes.",
@@ -1718,7 +1864,9 @@
             "pages": "498-507",
             "dblp_url": "https://dblp.org/rec/conf/cikm/DangeS25",
             "doi": "10.1145/3746252.3761272",
-            "ee": "https://doi.org/10.1145/3746252.3761272"
+            "ee": "https://doi.org/10.1145/3746252.3761272",
+            "arxiv_id": "2509.13906",
+            "arxiv_url": "https://arxiv.org/abs/2509.13906"
         },
         "conf/cikm/DasLJG0025": {
             "title": "When Words Can&apos;t Capture It All: Towards Video-Based User Complaint Text Generation with Multimodal Video Complaint Dataset.",
@@ -1728,7 +1876,9 @@
             "pages": "5634-5641",
             "dblp_url": "https://dblp.org/rec/conf/cikm/DasLJG0025",
             "doi": "10.1145/3746252.3761576",
-            "ee": "https://doi.org/10.1145/3746252.3761576"
+            "ee": "https://doi.org/10.1145/3746252.3761576",
+            "arxiv_id": "2509.19952",
+            "arxiv_url": "https://arxiv.org/abs/2509.19952"
         },
         "conf/cikm/Deng0025": {
             "title": "+VeriRel: Verification Feedback to Enhance Document Retrieval for Scientific Fact Checking.",
@@ -1738,7 +1888,9 @@
             "pages": "4706-4711",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Deng0025",
             "doi": "10.1145/3746252.3760822",
-            "ee": "https://doi.org/10.1145/3746252.3760822"
+            "ee": "https://doi.org/10.1145/3746252.3760822",
+            "arxiv_id": "2508.11122",
+            "arxiv_url": "https://arxiv.org/abs/2508.11122"
         },
         "conf/cikm/DengCCDL025": {
             "title": "Mitigating Latent Confounding Bias in Recommender Systems.",
@@ -1748,7 +1900,9 @@
             "pages": "531-541",
             "dblp_url": "https://dblp.org/rec/conf/cikm/DengCCDL025",
             "doi": "10.1145/3746252.3761177",
-            "ee": "https://doi.org/10.1145/3746252.3761177"
+            "ee": "https://doi.org/10.1145/3746252.3761177",
+            "arxiv_id": "2410.12451",
+            "arxiv_url": "https://arxiv.org/abs/2410.12451"
         },
         "conf/cikm/DengCZ0W0C25": {
             "title": "Correlation-aware Online Change Point Detection.",
@@ -1858,7 +2012,9 @@
             "pages": "6351-6355",
             "dblp_url": "https://dblp.org/rec/conf/cikm/DuttaK25",
             "doi": "10.1145/3746252.3761629",
-            "ee": "https://doi.org/10.1145/3746252.3761629"
+            "ee": "https://doi.org/10.1145/3746252.3761629",
+            "arxiv_id": "2509.11057",
+            "arxiv_url": "https://arxiv.org/abs/2509.11057"
         },
         "conf/cikm/EbrahimiSGASLLB25": {
             "title": "RottenReviews: Benchmarking Review Quality with Human and LLM-Based Judgments.",
@@ -1968,7 +2124,9 @@
             "pages": "6367-6371",
             "dblp_url": "https://dblp.org/rec/conf/cikm/FuZ0Z00FTBWTHH25",
             "doi": "10.1145/3746252.3761647",
-            "ee": "https://doi.org/10.1145/3746252.3761647"
+            "ee": "https://doi.org/10.1145/3746252.3761647",
+            "arxiv_id": "2504.07394",
+            "arxiv_url": "https://arxiv.org/abs/2504.07394"
         },
         "conf/cikm/GabrielliPV025": {
             "title": "AI on the Pulse: Real-Time Health Anomaly Detection with Wearable and Ambient Intelligence.",
@@ -1978,7 +2136,9 @@
             "pages": "4717-4721",
             "dblp_url": "https://dblp.org/rec/conf/cikm/GabrielliPV025",
             "doi": "10.1145/3746252.3760799",
-            "ee": "https://doi.org/10.1145/3746252.3760799"
+            "ee": "https://doi.org/10.1145/3746252.3760799",
+            "arxiv_id": "2508.03436",
+            "arxiv_url": "https://arxiv.org/abs/2508.03436"
         },
         "conf/cikm/GallettaTMF25": {
             "title": "SIoTEc 2025 - 6th edition of ACM Workshop on Secure IoT, Edge and Cloud systems.",
@@ -2058,7 +2218,9 @@
             "pages": "6377-6381",
             "dblp_url": "https://dblp.org/rec/conf/cikm/GhaffariNLG25",
             "doi": "10.1145/3746252.3761645",
-            "ee": "https://doi.org/10.1145/3746252.3761645"
+            "ee": "https://doi.org/10.1145/3746252.3761645",
+            "arxiv_id": "2509.10528",
+            "arxiv_url": "https://arxiv.org/abs/2509.10528"
         },
         "conf/cikm/GhahramanianBC25": {
             "title": "LLM-OFA: On-the-Fly Adaptation of Large Language Models to Address Temporal Drift Across Two Decades of News.",
@@ -2118,7 +2280,9 @@
             "pages": "6382-6386",
             "dblp_url": "https://dblp.org/rec/conf/cikm/GrecoZPT25",
             "doi": "10.1145/3746252.3761618",
-            "ee": "https://doi.org/10.1145/3746252.3761618"
+            "ee": "https://doi.org/10.1145/3746252.3761618",
+            "arxiv_id": "2409.09001",
+            "arxiv_url": "https://arxiv.org/abs/2409.09001"
         },
         "conf/cikm/GregoriadisKP25": {
             "title": "A Large-Scale Web Search Dataset for Federated Online Learning to Rank.",
@@ -2128,7 +2292,9 @@
             "pages": "6387-6391",
             "dblp_url": "https://dblp.org/rec/conf/cikm/GregoriadisKP25",
             "doi": "10.1145/3746252.3761651",
-            "ee": "https://doi.org/10.1145/3746252.3761651"
+            "ee": "https://doi.org/10.1145/3746252.3761651",
+            "arxiv_id": "2508.12353",
+            "arxiv_url": "https://arxiv.org/abs/2508.12353"
         },
         "conf/cikm/GuTX0ZCX25": {
             "title": "SSH-T3 : A Hierarchical Pre-training Framework for Multi-Scenario Financial Risk Assessment.",
@@ -2198,7 +2364,9 @@
             "pages": "5683-5690",
             "dblp_url": "https://dblp.org/rec/conf/cikm/GuoSC0H0ZG25",
             "doi": "10.1145/3746252.3761528",
-            "ee": "https://doi.org/10.1145/3746252.3761528"
+            "ee": "https://doi.org/10.1145/3746252.3761528",
+            "arxiv_id": "2508.14515",
+            "arxiv_url": "https://arxiv.org/abs/2508.14515"
         },
         "conf/cikm/GuoX025": {
             "title": "Time-Period-Aware Embedding Regeneration for Session-Based Recommendation.",
@@ -2218,7 +2386,9 @@
             "pages": "6402-6407",
             "dblp_url": "https://dblp.org/rec/conf/cikm/GuoXCWLY0LL25",
             "doi": "10.1145/3746252.3761605",
-            "ee": "https://doi.org/10.1145/3746252.3761605"
+            "ee": "https://doi.org/10.1145/3746252.3761605",
+            "arxiv_id": "2506.03761",
+            "arxiv_url": "https://arxiv.org/abs/2506.03761"
         },
         "conf/cikm/GuoXHW0WWLC25": {
             "title": "Twin-Flow Generative Ranking Network for Recommendation.",
@@ -2248,7 +2418,9 @@
             "pages": "5691-5698",
             "dblp_url": "https://dblp.org/rec/conf/cikm/GuyGTZ25",
             "doi": "10.1145/3746252.3761577",
-            "ee": "https://doi.org/10.1145/3746252.3761577"
+            "ee": "https://doi.org/10.1145/3746252.3761577",
+            "arxiv_id": "2508.20396",
+            "arxiv_url": "https://arxiv.org/abs/2508.20396"
         },
         "conf/cikm/GwonJL25": {
             "title": "Study on LLMs for Promptagator-Style Dense Retriever Training.",
@@ -2258,7 +2430,9 @@
             "pages": "4748-4752",
             "dblp_url": "https://dblp.org/rec/conf/cikm/GwonJL25",
             "doi": "10.1145/3746252.3760960",
-            "ee": "https://doi.org/10.1145/3746252.3760960"
+            "ee": "https://doi.org/10.1145/3746252.3760960",
+            "arxiv_id": "2510.02241",
+            "arxiv_url": "https://arxiv.org/abs/2510.02241"
         },
         "conf/cikm/HahnVKTM25": {
             "title": "Out of Distribution Detection for Efficient Continual Learning in Quality Prediction for Arc Welding.",
@@ -2268,7 +2442,9 @@
             "pages": "5699-5706",
             "dblp_url": "https://dblp.org/rec/conf/cikm/HahnVKTM25",
             "doi": "10.1145/3746252.3761535",
-            "ee": "https://doi.org/10.1145/3746252.3761535"
+            "ee": "https://doi.org/10.1145/3746252.3761535",
+            "arxiv_id": "2508.16832",
+            "arxiv_url": "https://arxiv.org/abs/2508.16832"
         },
         "conf/cikm/HaldarZGHK25": {
             "title": "Beyond Pairwise Learning-To-Rank At Airbnb.",
@@ -2278,7 +2454,9 @@
             "pages": "5707-5714",
             "dblp_url": "https://dblp.org/rec/conf/cikm/HaldarZGHK25",
             "doi": "10.1145/3746252.3761521",
-            "ee": "https://doi.org/10.1145/3746252.3761521"
+            "ee": "https://doi.org/10.1145/3746252.3761521",
+            "arxiv_id": "2505.09795",
+            "arxiv_url": "https://arxiv.org/abs/2505.09795"
         },
         "conf/cikm/Han0Z0K25": {
             "title": "Augmenting Limited and Biased RCTs through Pseudo-Sample Matching-Based Observational Data Fusion Method.",
@@ -2288,7 +2466,9 @@
             "pages": "5715-5722",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Han0Z0K25",
             "doi": "10.1145/3746252.3761532",
-            "ee": "https://doi.org/10.1145/3746252.3761532"
+            "ee": "https://doi.org/10.1145/3746252.3761532",
+            "arxiv_id": "2509.18148",
+            "arxiv_url": "https://arxiv.org/abs/2509.18148"
         },
         "conf/cikm/HanKC025": {
             "title": "From Bicliques to BiFlexi Cliques: A New Era of Bipartite Subgraph Discovery.",
@@ -2338,7 +2518,9 @@
             "pages": "5731-5738",
             "dblp_url": "https://dblp.org/rec/conf/cikm/HanYCJJ0MHLJHZY25",
             "doi": "10.1145/3746252.3761565",
-            "ee": "https://doi.org/10.1145/3746252.3761565"
+            "ee": "https://doi.org/10.1145/3746252.3761565",
+            "arxiv_id": "2505.18654",
+            "arxiv_url": "https://arxiv.org/abs/2505.18654"
         },
         "conf/cikm/HanZZW025": {
             "title": "Mixture-of-KAN for Multivariate Time Series Forecasting.",
@@ -2358,7 +2540,9 @@
             "pages": "802-812",
             "dblp_url": "https://dblp.org/rec/conf/cikm/HashemiL25",
             "doi": "10.1145/3746252.3761291",
-            "ee": "https://doi.org/10.1145/3746252.3761291"
+            "ee": "https://doi.org/10.1145/3746252.3761291",
+            "arxiv_id": "2509.04684",
+            "arxiv_url": "https://arxiv.org/abs/2509.04684"
         },
         "conf/cikm/He00CK25": {
             "title": "LinkGPT: Leveraging Large Language Models for Enhanced Link Prediction in Text-Attributed Graphs.",
@@ -2438,7 +2622,9 @@
             "pages": "855-866",
             "dblp_url": "https://dblp.org/rec/conf/cikm/HeoW25",
             "doi": "10.1145/3746252.3761345",
-            "ee": "https://doi.org/10.1145/3746252.3761345"
+            "ee": "https://doi.org/10.1145/3746252.3761345",
+            "arxiv_id": "2509.16602",
+            "arxiv_url": "https://arxiv.org/abs/2509.16602"
         },
         "conf/cikm/HoltkemperPB25": {
             "title": "Structuring Data Science Automation: A Competency-Aware Taxonomy Approach.",
@@ -2508,7 +2694,9 @@
             "pages": "5747-5754",
             "dblp_url": "https://dblp.org/rec/conf/cikm/HouSLBWY25",
             "doi": "10.1145/3746252.3761586",
-            "ee": "https://doi.org/10.1145/3746252.3761586"
+            "ee": "https://doi.org/10.1145/3746252.3761586",
+            "arxiv_id": "2508.13517",
+            "arxiv_url": "https://arxiv.org/abs/2508.13517"
         },
         "conf/cikm/HsuLS25": {
             "title": "Model-Agonistic Iterative Graph Diversification for Improving Learning to Solve Graph Optimization Problems.",
@@ -2558,7 +2746,9 @@
             "pages": "928-938",
             "dblp_url": "https://dblp.org/rec/conf/cikm/HuaYFFH25",
             "doi": "10.1145/3746252.3761335",
-            "ee": "https://doi.org/10.1145/3746252.3761335"
+            "ee": "https://doi.org/10.1145/3746252.3761335",
+            "arxiv_id": "2508.09549",
+            "arxiv_url": "https://arxiv.org/abs/2508.09549"
         },
         "conf/cikm/Huang0LW025": {
             "title": "Spatio-Temporal Residual Masked Autoencoder for Urban Rent Estimation.",
@@ -2578,7 +2768,9 @@
             "pages": "6789-6792",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Huang25",
             "doi": "10.1145/3746252.3761665",
-            "ee": "https://doi.org/10.1145/3746252.3761665"
+            "ee": "https://doi.org/10.1145/3746252.3761665",
+            "arxiv_id": "2509.12534",
+            "arxiv_url": "https://arxiv.org/abs/2509.12534"
         },
         "conf/cikm/HuangC025": {
             "title": "Flexiffusion: Training-Free Segment-Wise Neural Architecture Search for Efficient Diffusion Models.",
@@ -2588,7 +2780,9 @@
             "pages": "949-959",
             "dblp_url": "https://dblp.org/rec/conf/cikm/HuangC025",
             "doi": "10.1145/3746252.3761406",
-            "ee": "https://doi.org/10.1145/3746252.3761406"
+            "ee": "https://doi.org/10.1145/3746252.3761406",
+            "arxiv_id": "2506.02488",
+            "arxiv_url": "https://arxiv.org/abs/2506.02488"
         },
         "conf/cikm/HuangHH0YL25": {
             "title": "Hyperspherical Dynamic Multi-Prototype with Arguments Dependencies and Role Consistency for Event Argument Extraction.",
@@ -2668,7 +2862,9 @@
             "pages": "4827-4831",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Jaiswal0F25",
             "doi": "10.1145/3746252.3760826",
-            "ee": "https://doi.org/10.1145/3746252.3760826"
+            "ee": "https://doi.org/10.1145/3746252.3760826",
+            "arxiv_id": "2508.09170",
+            "arxiv_url": "https://arxiv.org/abs/2508.09170"
         },
         "conf/cikm/JanaKS25": {
             "title": "Deep Modality-Disentangled Prompt Tuning for Few-Shot Multimodal Sarcasm Detection.",
@@ -2758,7 +2954,9 @@
             "pages": "1057-1067",
             "dblp_url": "https://dblp.org/rec/conf/cikm/JeonLKK25",
             "doi": "10.1145/3746252.3761085",
-            "ee": "https://doi.org/10.1145/3746252.3761085"
+            "ee": "https://doi.org/10.1145/3746252.3761085",
+            "arxiv_id": "2509.13753",
+            "arxiv_url": "https://arxiv.org/abs/2509.13753"
         },
         "conf/cikm/JeonLRK25": {
             "title": "Entity-Aware Generative Retrieval for Personalized Contexts.",
@@ -2778,7 +2976,9 @@
             "pages": "1091-1102",
             "dblp_url": "https://dblp.org/rec/conf/cikm/JeonW25",
             "doi": "10.1145/3746252.3761260",
-            "ee": "https://doi.org/10.1145/3746252.3761260"
+            "ee": "https://doi.org/10.1145/3746252.3761260",
+            "arxiv_id": "2509.23289",
+            "arxiv_url": "https://arxiv.org/abs/2509.23289"
         },
         "conf/cikm/JeonZLLFDSTN25": {
             "title": "Leveraging Vulnerabilities in Temporal Graph Neural Networks via Strategic High-Impact Assaults.",
@@ -2788,7 +2988,9 @@
             "pages": "1035-1045",
             "dblp_url": "https://dblp.org/rec/conf/cikm/JeonZLLFDSTN25",
             "doi": "10.1145/3746252.3761282",
-            "ee": "https://doi.org/10.1145/3746252.3761282"
+            "ee": "https://doi.org/10.1145/3746252.3761282",
+            "arxiv_id": "2509.25418",
+            "arxiv_url": "https://arxiv.org/abs/2509.25418"
         },
         "conf/cikm/JeongS0S25": {
             "title": "Frequency-Conditioned Diffusion Models for Time Series Generation.",
@@ -2818,7 +3020,9 @@
             "pages": "1135-1144",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Ji0YHTZ0YMXCZS25",
             "doi": "10.1145/3746252.3761189",
-            "ee": "https://doi.org/10.1145/3746252.3761189"
+            "ee": "https://doi.org/10.1145/3746252.3761189",
+            "arxiv_id": "2412.01377",
+            "arxiv_url": "https://arxiv.org/abs/2412.01377"
         },
         "conf/cikm/JiL0LL0L025": {
             "title": "From Anchors to Answers: A Novel Node Tokenizer for Integrating Graph Structure into Large Language Models.",
@@ -2828,7 +3032,9 @@
             "pages": "1124-1134",
             "dblp_url": "https://dblp.org/rec/conf/cikm/JiL0LL0L025",
             "doi": "10.1145/3746252.3761167",
-            "ee": "https://doi.org/10.1145/3746252.3761167"
+            "ee": "https://doi.org/10.1145/3746252.3761167",
+            "arxiv_id": "2410.10743",
+            "arxiv_url": "https://arxiv.org/abs/2410.10743"
         },
         "conf/cikm/JiaD00000GT25": {
             "title": "SELF: Surrogate-light Feature Selection with Large Language Models in Deep Recommender Systems.",
@@ -2838,7 +3044,9 @@
             "pages": "1145-1155",
             "dblp_url": "https://dblp.org/rec/conf/cikm/JiaD00000GT25",
             "doi": "10.1145/3746252.3761378",
-            "ee": "https://doi.org/10.1145/3746252.3761378"
+            "ee": "https://doi.org/10.1145/3746252.3761378",
+            "arxiv_id": "2412.08516",
+            "arxiv_url": "https://arxiv.org/abs/2412.08516"
         },
         "conf/cikm/JiaYWWDZLZL25": {
             "title": "SUMMA: A Multimodal Large Language Model for Advertisement Summarization.",
@@ -2848,7 +3056,9 @@
             "pages": "1156-1167",
             "dblp_url": "https://dblp.org/rec/conf/cikm/JiaYWWDZLZL25",
             "doi": "10.1145/3746252.3761393",
-            "ee": "https://doi.org/10.1145/3746252.3761393"
+            "ee": "https://doi.org/10.1145/3746252.3761393",
+            "arxiv_id": "2508.20582",
+            "arxiv_url": "https://arxiv.org/abs/2508.20582"
         },
         "conf/cikm/Jiang025": {
             "title": "Chart-CoCa: Self-Improving Chart Understanding of Vision LMs via Code-Driven Synthesis and Candidate-Conditioned Answering.",
@@ -2858,7 +3068,9 @@
             "pages": "1168-1178",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Jiang025",
             "doi": "10.1145/3746252.3761317",
-            "ee": "https://doi.org/10.1145/3746252.3761317"
+            "ee": "https://doi.org/10.1145/3746252.3761317",
+            "arxiv_id": "2508.11975",
+            "arxiv_url": "https://arxiv.org/abs/2508.11975"
         },
         "conf/cikm/Jiang0GHOLF25": {
             "title": "An LLM-based Behavior Modeling Framework for Malicious User Detection.",
@@ -2888,7 +3100,9 @@
             "pages": "1200-1209",
             "dblp_url": "https://dblp.org/rec/conf/cikm/JiangL0Y025",
             "doi": "10.1145/3746252.3761005",
-            "ee": "https://doi.org/10.1145/3746252.3761005"
+            "ee": "https://doi.org/10.1145/3746252.3761005",
+            "arxiv_id": "2508.11173",
+            "arxiv_url": "https://arxiv.org/abs/2508.11173"
         },
         "conf/cikm/JiangL0Y25": {
             "title": "Hierarchy-Consistent Learning and Adaptive Loss Balancing for Hierarchical Multi-Label Classification.",
@@ -2898,7 +3112,9 @@
             "pages": "1190-1199",
             "dblp_url": "https://dblp.org/rec/conf/cikm/JiangL0Y25",
             "doi": "10.1145/3746252.3761241",
-            "ee": "https://doi.org/10.1145/3746252.3761241"
+            "ee": "https://doi.org/10.1145/3746252.3761241",
+            "arxiv_id": "2508.13452",
+            "arxiv_url": "https://arxiv.org/abs/2508.13452"
         },
         "conf/cikm/JiangYL25": {
             "title": "Community-Aware Social Community Recommendation.",
@@ -2908,7 +3124,9 @@
             "pages": "1179-1189",
             "dblp_url": "https://dblp.org/rec/conf/cikm/JiangYL25",
             "doi": "10.1145/3746252.3761373",
-            "ee": "https://doi.org/10.1145/3746252.3761373"
+            "ee": "https://doi.org/10.1145/3746252.3761373",
+            "arxiv_id": "2508.05107",
+            "arxiv_url": "https://arxiv.org/abs/2508.05107"
         },
         "conf/cikm/Jin0Z025": {
             "title": "Point-DMAE: Point Cloud Self-supervised Learning via Density-directed Masked Autoencoders.",
@@ -2938,7 +3156,9 @@
             "pages": "4847-4851",
             "dblp_url": "https://dblp.org/rec/conf/cikm/JinLHZZ25",
             "doi": "10.1145/3746252.3760815",
-            "ee": "https://doi.org/10.1145/3746252.3760815"
+            "ee": "https://doi.org/10.1145/3746252.3760815",
+            "arxiv_id": "2508.08543",
+            "arxiv_url": "https://arxiv.org/abs/2508.08543"
         },
         "conf/cikm/JinO0C25": {
             "title": "Motion-Based Bird-UAV Classification Using 3D-CNN for Long-Range Anti-UAV Systems.",
@@ -2988,7 +3208,9 @@
             "pages": "6420-6425",
             "dblp_url": "https://dblp.org/rec/conf/cikm/JuCNKW0S25",
             "doi": "10.1145/3746252.3761612",
-            "ee": "https://doi.org/10.1145/3746252.3761612"
+            "ee": "https://doi.org/10.1145/3746252.3761612",
+            "arxiv_id": "2507.22224",
+            "arxiv_url": "https://arxiv.org/abs/2507.22224"
         },
         "conf/cikm/JungJ25": {
             "title": "Generalizing Query Performance Prediction under Retriever and Concept Shifts via Data-driven Correction.",
@@ -3008,7 +3230,9 @@
             "pages": "4857-4861",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KadaliP25",
             "doi": "10.1145/3746252.3760886",
-            "ee": "https://doi.org/10.1145/3746252.3760886"
+            "ee": "https://doi.org/10.1145/3746252.3760886",
+            "arxiv_id": "2508.02997",
+            "arxiv_url": "https://arxiv.org/abs/2508.02997"
         },
         "conf/cikm/KalifaSR25": {
             "title": "GOProteinGNN: Leveraging Protein Knowledge Graphs for Protein Representation Learning.",
@@ -3018,7 +3242,9 @@
             "pages": "5763-5771",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KalifaSR25",
             "doi": "10.1145/3746252.3761500",
-            "ee": "https://doi.org/10.1145/3746252.3761500"
+            "ee": "https://doi.org/10.1145/3746252.3761500",
+            "arxiv_id": "2408.00057",
+            "arxiv_url": "https://arxiv.org/abs/2408.00057"
         },
         "conf/cikm/KallooriyakathR25": {
             "title": "Towards Equitable Coreset Selection: Addressing Challenges Under Class Imbalance.",
@@ -3038,7 +3264,9 @@
             "pages": "1272-1281",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KalwarBK25",
             "doi": "10.1145/3746252.3761288",
-            "ee": "https://doi.org/10.1145/3746252.3761288"
+            "ee": "https://doi.org/10.1145/3746252.3761288",
+            "arxiv_id": "2509.22174",
+            "arxiv_url": "https://arxiv.org/abs/2509.22174"
         },
         "conf/cikm/Kang0PJJS25": {
             "title": "Causal Effect Variational Transformer for Public Health Measures and COVID-19 Infection Cluster Analysis.",
@@ -3058,7 +3286,9 @@
             "pages": "4868-4873",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KangK25",
             "doi": "10.1145/3746252.3760807",
-            "ee": "https://doi.org/10.1145/3746252.3760807"
+            "ee": "https://doi.org/10.1145/3746252.3760807",
+            "arxiv_id": "2505.24409",
+            "arxiv_url": "https://arxiv.org/abs/2505.24409"
         },
         "conf/cikm/KangLHTSK25": {
             "title": "Sarcasm Subtype-Specific Reasoning in Dialogue with Multimodal Cues Using Large Language Models.",
@@ -3078,7 +3308,9 @@
             "pages": "1292-1301",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KangP25",
             "doi": "10.1145/3746252.3761128",
-            "ee": "https://doi.org/10.1145/3746252.3761128"
+            "ee": "https://doi.org/10.1145/3746252.3761128",
+            "arxiv_id": "2509.00402",
+            "arxiv_url": "https://arxiv.org/abs/2509.00402"
         },
         "conf/cikm/KapkicMG0CS0C25": {
             "title": "CausalBench-ER: Causally-Informed Explanations and Recommendations for Reproducible Benchmarking.",
@@ -3098,7 +3330,9 @@
             "pages": "2201-2211",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KerdabadiMW025",
             "doi": "10.1145/3746252.3761388",
-            "ee": "https://doi.org/10.1145/3746252.3761388"
+            "ee": "https://doi.org/10.1145/3746252.3761388",
+            "arxiv_id": "2508.21320",
+            "arxiv_url": "https://arxiv.org/abs/2508.21320"
         },
         "conf/cikm/Khatib25": {
             "title": "Reasoning over Incomplete Knowledge Graphs.",
@@ -3138,7 +3372,9 @@
             "pages": "4889-4894",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KimCJ0C25",
             "doi": "10.1145/3746252.3760895",
-            "ee": "https://doi.org/10.1145/3746252.3760895"
+            "ee": "https://doi.org/10.1145/3746252.3760895",
+            "arxiv_id": "2509.02377",
+            "arxiv_url": "https://arxiv.org/abs/2509.02377"
         },
         "conf/cikm/KimCPWHY25": {
             "title": "Leveraging Multi-facet Paths for Heterogeneous Graph Representation Learning.",
@@ -3148,7 +3384,9 @@
             "pages": "1334-1343",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KimCPWHY25",
             "doi": "10.1145/3746252.3761099",
-            "ee": "https://doi.org/10.1145/3746252.3761099"
+            "ee": "https://doi.org/10.1145/3746252.3761099",
+            "arxiv_id": "2407.20648",
+            "arxiv_url": "https://arxiv.org/abs/2407.20648"
         },
         "conf/cikm/KimHLM25": {
             "title": "Jailbreaking LLMs Through Cross-Cultural Prompts.",
@@ -3178,7 +3416,9 @@
             "pages": "1302-1312",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KimJCHJBKLBLKCP25",
             "doi": "10.1145/3746252.3761359",
-            "ee": "https://doi.org/10.1145/3746252.3761359"
+            "ee": "https://doi.org/10.1145/3746252.3761359",
+            "arxiv_id": "2502.16457",
+            "arxiv_url": "https://arxiv.org/abs/2502.16457"
         },
         "conf/cikm/KimJK25": {
             "title": "OASIS: Open-world Adaptive Self-supervised and Imbalanced-aware System.",
@@ -3188,7 +3428,9 @@
             "pages": "1375-1385",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KimJK25",
             "doi": "10.1145/3746252.3761304",
-            "ee": "https://doi.org/10.1145/3746252.3761304"
+            "ee": "https://doi.org/10.1145/3746252.3761304",
+            "arxiv_id": "2508.16656",
+            "arxiv_url": "https://arxiv.org/abs/2508.16656"
         },
         "conf/cikm/KimKKK25": {
             "title": "When User Engagement Meets Structural Cohesiveness: A Decay-Driven Approach to Hypergraph Cores.",
@@ -3208,7 +3450,9 @@
             "pages": "1354-1363",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KimKLS25",
             "doi": "10.1145/3746252.3761286",
-            "ee": "https://doi.org/10.1145/3746252.3761286"
+            "ee": "https://doi.org/10.1145/3746252.3761286",
+            "arxiv_id": "2508.19507",
+            "arxiv_url": "https://arxiv.org/abs/2508.19507"
         },
         "conf/cikm/KimL0APS25": {
             "title": "A Tutorial on Hypergraph Neural Networks: An In-Depth and Step-By-Step Guide.",
@@ -3248,7 +3492,9 @@
             "pages": "1344-1353",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KimLJJK25",
             "doi": "10.1145/3746252.3761250",
-            "ee": "https://doi.org/10.1145/3746252.3761250"
+            "ee": "https://doi.org/10.1145/3746252.3761250",
+            "arxiv_id": "2509.15040",
+            "arxiv_url": "https://arxiv.org/abs/2509.15040"
         },
         "conf/cikm/KimLOK25": {
             "title": "RadialFocus: Geometric Graph Transformers via Distance-Modulated Attention.",
@@ -3308,7 +3554,9 @@
             "pages": "4900-4904",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KoLYK25",
             "doi": "10.1145/3746252.3760902",
-            "ee": "https://doi.org/10.1145/3746252.3760902"
+            "ee": "https://doi.org/10.1145/3746252.3760902",
+            "arxiv_id": "2508.17236",
+            "arxiv_url": "https://arxiv.org/abs/2508.17236"
         },
         "conf/cikm/Kohita25": {
             "title": "Exploring Database Normalization Effects on SQL Generation.",
@@ -3318,7 +3566,9 @@
             "pages": "5788-5796",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Kohita25",
             "doi": "10.1145/3746252.3761583",
-            "ee": "https://doi.org/10.1145/3746252.3761583"
+            "ee": "https://doi.org/10.1145/3746252.3761583",
+            "arxiv_id": "2510.01989",
+            "arxiv_url": "https://arxiv.org/abs/2510.01989"
         },
         "conf/cikm/KokkodisMB25": {
             "title": "Taming the Unicorn: Turning Generative AI Into a Workhorse How to Draw Boundaries, Handle Hallucinations, and Make AI Behave in Product.",
@@ -3348,7 +3598,9 @@
             "pages": "1406-1416",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KrasakisYK25",
             "doi": "10.1145/3746252.3761238",
-            "ee": "https://doi.org/10.1145/3746252.3761238"
+            "ee": "https://doi.org/10.1145/3746252.3761238",
+            "arxiv_id": "2501.07679",
+            "arxiv_url": "https://arxiv.org/abs/2501.07679"
         },
         "conf/cikm/Krzywda25": {
             "title": "Graph Neural Network Architecture Search via Hybrid Genetic Algorithm with Parallel Tempering.",
@@ -3368,7 +3620,9 @@
             "pages": "6654-6658",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KuciaWGT25",
             "doi": "10.1145/3746252.3761485",
-            "ee": "https://doi.org/10.1145/3746252.3761485"
+            "ee": "https://doi.org/10.1145/3746252.3761485",
+            "arxiv_id": "2509.00572",
+            "arxiv_url": "https://arxiv.org/abs/2509.00572"
         },
         "conf/cikm/KwiatkowskiC25": {
             "title": "On Evaluating Loss Functions for Stock Ranking: An Empirical Analysis with Transformer Model.",
@@ -3378,7 +3632,9 @@
             "pages": "4910-4914",
             "dblp_url": "https://dblp.org/rec/conf/cikm/KwiatkowskiC25",
             "doi": "10.1145/3746252.3760812",
-            "ee": "https://doi.org/10.1145/3746252.3760812"
+            "ee": "https://doi.org/10.1145/3746252.3760812",
+            "arxiv_id": "2510.14156",
+            "arxiv_url": "https://arxiv.org/abs/2510.14156"
         },
         "conf/cikm/LahiriSM25": {
             "title": "NLP-QA: A Large-scale Benchmark for Informative Question Answering over Natural Language Processing Documents.",
@@ -3408,7 +3664,9 @@
             "pages": "5797-5804",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LeeAPLKYLLL25",
             "doi": "10.1145/3746252.3761517",
-            "ee": "https://doi.org/10.1145/3746252.3761517"
+            "ee": "https://doi.org/10.1145/3746252.3761517",
+            "arxiv_id": "2508.16936",
+            "arxiv_url": "https://arxiv.org/abs/2508.16936"
         },
         "conf/cikm/LeeD0H25": {
             "title": "Advanced Privacy Protection in Federated Learning using Server-initiated Homomorphic Encryption.",
@@ -3438,7 +3696,9 @@
             "pages": "1458-1467",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LeeJHK25",
             "doi": "10.1145/3746252.3761067",
-            "ee": "https://doi.org/10.1145/3746252.3761067"
+            "ee": "https://doi.org/10.1145/3746252.3761067",
+            "arxiv_id": "2508.20108",
+            "arxiv_url": "https://arxiv.org/abs/2508.20108"
         },
         "conf/cikm/LeeJJKY25": {
             "title": "EdgeSLU: 1.58-bit Voice Control Framework.",
@@ -3588,7 +3848,9 @@
             "pages": "1519-1529",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LeysenFG25",
             "doi": "10.1145/3746252.3761058",
-            "ee": "https://doi.org/10.1145/3746252.3761058"
+            "ee": "https://doi.org/10.1145/3746252.3761058",
+            "arxiv_id": "2508.21547",
+            "arxiv_url": "https://arxiv.org/abs/2508.21547"
         },
         "conf/cikm/Li00BC25": {
             "title": "Linking Ordered and Orderless Modeling for Sequential Recommendation.",
@@ -3618,7 +3880,9 @@
             "pages": "1643-1653",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Li00YZY25",
             "doi": "10.1145/3746252.3761429",
-            "ee": "https://doi.org/10.1145/3746252.3761429"
+            "ee": "https://doi.org/10.1145/3746252.3761429",
+            "arxiv_id": "2305.11700",
+            "arxiv_url": "https://arxiv.org/abs/2305.11700"
         },
         "conf/cikm/Li025": {
             "title": "QGCMA: A Framework for Knowledge-Based Visual Question Answering.",
@@ -3648,7 +3912,9 @@
             "pages": "4940-4944",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Li25",
             "doi": "10.1145/3746252.3760806",
-            "ee": "https://doi.org/10.1145/3746252.3760806"
+            "ee": "https://doi.org/10.1145/3746252.3760806",
+            "arxiv_id": "2206.10295",
+            "arxiv_url": "https://arxiv.org/abs/2206.10295"
         },
         "conf/cikm/LiA025": {
             "title": "Fast Outlier Detection in Oblique Subspaces.",
@@ -3698,7 +3964,9 @@
             "pages": "5822-5830",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LiF00TC0L0YZP025",
             "doi": "10.1145/3746252.3761541",
-            "ee": "https://doi.org/10.1145/3746252.3761541"
+            "ee": "https://doi.org/10.1145/3746252.3761541",
+            "arxiv_id": "2508.21570",
+            "arxiv_url": "https://arxiv.org/abs/2508.21570"
         },
         "conf/cikm/LiHL00025": {
             "title": "Generative Models for Synthetic Data: Transforming Data Mining in the GenAI Era.",
@@ -3708,7 +3976,9 @@
             "pages": "6833-6836",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LiHL00025",
             "doi": "10.1145/3746252.3761455",
-            "ee": "https://doi.org/10.1145/3746252.3761455"
+            "ee": "https://doi.org/10.1145/3746252.3761455",
+            "arxiv_id": "2508.19570",
+            "arxiv_url": "https://arxiv.org/abs/2508.19570"
         },
         "conf/cikm/LiJD25": {
             "title": "From Rules to Flexibility: A Resource and Method for SEC Item Extraction in Post-2021 10-K Filings.",
@@ -3728,7 +3998,9 @@
             "pages": "1613-1623",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LiKB25",
             "doi": "10.1145/3746252.3761111",
-            "ee": "https://doi.org/10.1145/3746252.3761111"
+            "ee": "https://doi.org/10.1145/3746252.3761111",
+            "arxiv_id": "2405.18941",
+            "arxiv_url": "https://arxiv.org/abs/2405.18941"
         },
         "conf/cikm/LiLCCX25": {
             "title": "OFedED: One-shot Federated Learning with Model Ensemble and Dataset Distillation.",
@@ -3768,7 +4040,9 @@
             "pages": "1624-1633",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LiM0Z025",
             "doi": "10.1145/3746252.3761219",
-            "ee": "https://doi.org/10.1145/3746252.3761219"
+            "ee": "https://doi.org/10.1145/3746252.3761219",
+            "arxiv_id": "2510.15368",
+            "arxiv_url": "https://arxiv.org/abs/2510.15368"
         },
         "conf/cikm/LiQZW25": {
             "title": "Tilia: Enhancing LIME with Decision Tree Surrogates.",
@@ -3868,7 +4142,9 @@
             "pages": "1788-1797",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LiangMQDWCLD025",
             "doi": "10.1145/3746252.3761170",
-            "ee": "https://doi.org/10.1145/3746252.3761170"
+            "ee": "https://doi.org/10.1145/3746252.3761170",
+            "arxiv_id": "2508.13843",
+            "arxiv_url": "https://arxiv.org/abs/2508.13843"
         },
         "conf/cikm/LiangWHSWYW00CZ25": {
             "title": "TBGRecall: A Generative Retrieval Model for E-commerce Recommendation Scenarios.",
@@ -3878,7 +4154,9 @@
             "pages": "5863-5870",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LiangWHSWYW00CZ25",
             "doi": "10.1145/3746252.3761557",
-            "ee": "https://doi.org/10.1145/3746252.3761557"
+            "ee": "https://doi.org/10.1145/3746252.3761557",
+            "arxiv_id": "2508.11977",
+            "arxiv_url": "https://arxiv.org/abs/2508.11977"
         },
         "conf/cikm/LiangZY0M025": {
             "title": "Calibrating on Kolmogorov-Arnold Network.",
@@ -3908,7 +4186,9 @@
             "pages": "1798-1808",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LimKKKCKY25",
             "doi": "10.1145/3746252.3761268",
-            "ee": "https://doi.org/10.1145/3746252.3761268"
+            "ee": "https://doi.org/10.1145/3746252.3761268",
+            "arxiv_id": "2508.04792",
+            "arxiv_url": "https://arxiv.org/abs/2508.04792"
         },
         "conf/cikm/LinLDBLYZ025": {
             "title": "GReF: A Unified Generative Framework for Efficient Reranking via Ordered Multi-token Prediction.",
@@ -3918,7 +4198,9 @@
             "pages": "5879-5887",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LinLDBLYZ025",
             "doi": "10.1145/3746252.3761540",
-            "ee": "https://doi.org/10.1145/3746252.3761540"
+            "ee": "https://doi.org/10.1145/3746252.3761540",
+            "arxiv_id": "2510.25220",
+            "arxiv_url": "https://arxiv.org/abs/2510.25220"
         },
         "conf/cikm/LinPYXWFWHLX25": {
             "title": "Crocodile: Cross Experts Covariance for Disentangled Learning in Multi-Domain Recommendation.",
@@ -3928,7 +4210,9 @@
             "pages": "1839-1849",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LinPYXWFWHLX25",
             "doi": "10.1145/3746252.3761332",
-            "ee": "https://doi.org/10.1145/3746252.3761332"
+            "ee": "https://doi.org/10.1145/3746252.3761332",
+            "arxiv_id": "2405.12706",
+            "arxiv_url": "https://arxiv.org/abs/2405.12706"
         },
         "conf/cikm/LinQLL025": {
             "title": "SC-DAG: Semantic-Constrained Diffusion Attacks for Stealthy Exposure Manipulation in Visually-Aware Recommender Systems.",
@@ -3968,7 +4252,9 @@
             "pages": "5871-5878",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LinX0WWLL25",
             "doi": "10.1145/3746252.3761505",
-            "ee": "https://doi.org/10.1145/3746252.3761505"
+            "ee": "https://doi.org/10.1145/3746252.3761505",
+            "arxiv_id": "2504.05628",
+            "arxiv_url": "https://arxiv.org/abs/2504.05628"
         },
         "conf/cikm/LingYG025": {
             "title": "EAPformer: Entropy-Aware Patch Transformer for Multivariate Long-Term Time Series Forecasting.",
@@ -4018,7 +4304,9 @@
             "pages": "6461-6465",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LiuC0YLS0025",
             "doi": "10.1145/3746252.3761613",
-            "ee": "https://doi.org/10.1145/3746252.3761613"
+            "ee": "https://doi.org/10.1145/3746252.3761613",
+            "arxiv_id": "2503.15990",
+            "arxiv_url": "https://arxiv.org/abs/2503.15990"
         },
         "conf/cikm/LiuD00CL25": {
             "title": "AdaPatch: Adaptive Patch-Level Modeling for Non-Stationary Time Series Forecasting.",
@@ -4048,7 +4336,9 @@
             "pages": "1872-1881",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LiuL0WF00L25",
             "doi": "10.1145/3746252.3761210",
-            "ee": "https://doi.org/10.1145/3746252.3761210"
+            "ee": "https://doi.org/10.1145/3746252.3761210",
+            "arxiv_id": "2508.07178",
+            "arxiv_url": "https://arxiv.org/abs/2508.07178"
         },
         "conf/cikm/LiuLYM025": {
             "title": "CSMD: Curated Multimodal Dataset for Chinese Stock Analysis.",
@@ -4058,7 +4348,9 @@
             "pages": "6471-6475",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LiuLYM025",
             "doi": "10.1145/3746252.3761636",
-            "ee": "https://doi.org/10.1145/3746252.3761636"
+            "ee": "https://doi.org/10.1145/3746252.3761636",
+            "arxiv_id": "2511.01318",
+            "arxiv_url": "https://arxiv.org/abs/2511.01318"
         },
         "conf/cikm/LiuLZZB25": {
             "title": "LLMCBR: Large Language Model-based Multi-View and Multi-Grained Learning for Bundle Recommendation.",
@@ -4108,7 +4400,9 @@
             "pages": "5366-5370",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LiuWHZ0025",
             "doi": "10.1145/3746252.3760804",
-            "ee": "https://doi.org/10.1145/3746252.3760804"
+            "ee": "https://doi.org/10.1145/3746252.3760804",
+            "arxiv_id": "2511.01404",
+            "arxiv_url": "https://arxiv.org/abs/2511.01404"
         },
         "conf/cikm/LiuWKCCGCCC25": {
             "title": "Exploring Reasoning-Infused Text Embedding with Large Language Models for Zero-Shot Dense Retrieval.",
@@ -4118,7 +4412,9 @@
             "pages": "4981-4985",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LiuWKCCGCCC25",
             "doi": "10.1145/3746252.3760855",
-            "ee": "https://doi.org/10.1145/3746252.3760855"
+            "ee": "https://doi.org/10.1145/3746252.3760855",
+            "arxiv_id": "2509.00276",
+            "arxiv_url": "https://arxiv.org/abs/2509.00276"
         },
         "conf/cikm/LiuZL25": {
             "title": "Enhancing Recommendation with Reliable Multi-profile Alignment and Collaborative-aware Contrastive Learning.",
@@ -4138,7 +4434,9 @@
             "pages": "1947-1957",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LiuZRY25",
             "doi": "10.1145/3746252.3761141",
-            "ee": "https://doi.org/10.1145/3746252.3761141"
+            "ee": "https://doi.org/10.1145/3746252.3761141",
+            "arxiv_id": "2509.21059",
+            "arxiv_url": "https://arxiv.org/abs/2509.21059"
         },
         "conf/cikm/LoizouT25": {
             "title": "Chunked Data Shapley: A Scalable Dataset Quality Assessment for Machine Learning.",
@@ -4148,7 +4446,9 @@
             "pages": "1958-1967",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LoizouT25",
             "doi": "10.1145/3746252.3761305",
-            "ee": "https://doi.org/10.1145/3746252.3761305"
+            "ee": "https://doi.org/10.1145/3746252.3761305",
+            "arxiv_id": "2508.16255",
+            "arxiv_url": "https://arxiv.org/abs/2508.16255"
         },
         "conf/cikm/LongL025": {
             "title": "CoinCLIP: A Multimodal Framework for Assessing Viability in Web3 Memecoins.",
@@ -4158,7 +4458,9 @@
             "pages": "4986-4990",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LongL025",
             "doi": "10.1145/3746252.3760881",
-            "ee": "https://doi.org/10.1145/3746252.3760881"
+            "ee": "https://doi.org/10.1145/3746252.3760881",
+            "arxiv_id": "2412.07591",
+            "arxiv_url": "https://arxiv.org/abs/2412.07591"
         },
         "conf/cikm/LongQY0NY25": {
             "title": "Harnessing Large Language Models for Group POI Recommendations.",
@@ -4168,7 +4470,9 @@
             "pages": "1968-1978",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LongQY0NY25",
             "doi": "10.1145/3746252.3761018",
-            "ee": "https://doi.org/10.1145/3746252.3761018"
+            "ee": "https://doi.org/10.1145/3746252.3761018",
+            "arxiv_id": "2411.13415",
+            "arxiv_url": "https://arxiv.org/abs/2411.13415"
         },
         "conf/cikm/LongSWS25": {
             "title": "KP-Agent: Keyword Pruning in Sponsored Search Advertising via LLM-Powered Contextual Bandits.",
@@ -4178,7 +4482,9 @@
             "pages": "4991-4995",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LongSWS25",
             "doi": "10.1145/3746252.3760974",
-            "ee": "https://doi.org/10.1145/3746252.3760974"
+            "ee": "https://doi.org/10.1145/3746252.3760974",
+            "arxiv_id": "2601.05257",
+            "arxiv_url": "https://arxiv.org/abs/2601.05257"
         },
         "conf/cikm/LouP0025": {
             "title": "ParaStyleTTS: Toward Efficient and Robust Paralinguistic Style Control for Expressive Text-to-Speech Generation.",
@@ -4188,7 +4494,9 @@
             "pages": "1979-1988",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LouP0025",
             "doi": "10.1145/3746252.3761311",
-            "ee": "https://doi.org/10.1145/3746252.3761311"
+            "ee": "https://doi.org/10.1145/3746252.3761311",
+            "arxiv_id": "2510.18308",
+            "arxiv_url": "https://arxiv.org/abs/2510.18308"
         },
         "conf/cikm/LouPS0025": {
             "title": "Achoio: A Skill-Aware Evaluation Management System for Text-To-Speech Research.",
@@ -4218,7 +4526,9 @@
             "pages": "5898-5906",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LuDLJWL0GTDD025",
             "doi": "10.1145/3746252.3761574",
-            "ee": "https://doi.org/10.1145/3746252.3761574"
+            "ee": "https://doi.org/10.1145/3746252.3761574",
+            "arxiv_id": "2408.06577",
+            "arxiv_url": "https://arxiv.org/abs/2408.06577"
         },
         "conf/cikm/LuoCS025": {
             "title": "Anchor-based Pairwise Comparison via Large Language Model for Recommendation Reranking.",
@@ -4238,7 +4548,9 @@
             "pages": "5915-5922",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LuoCSYHYLZ0HQZZ25",
             "doi": "10.1145/3746252.3761502",
-            "ee": "https://doi.org/10.1145/3746252.3761502"
+            "ee": "https://doi.org/10.1145/3746252.3761502",
+            "arxiv_id": "2411.11739",
+            "arxiv_url": "https://arxiv.org/abs/2411.11739"
         },
         "conf/cikm/LuoHCB25": {
             "title": "Using Large Language Models to Improve Product Information in E-commerce Catalogs.",
@@ -4288,7 +4600,9 @@
             "pages": "5907-5914",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LuoSY025",
             "doi": "10.1145/3746252.3761533",
-            "ee": "https://doi.org/10.1145/3746252.3761533"
+            "ee": "https://doi.org/10.1145/3746252.3761533",
+            "arxiv_id": "2403.06642",
+            "arxiv_url": "https://arxiv.org/abs/2403.06642"
         },
         "conf/cikm/LuoZZWKX00025": {
             "title": "ORCA: Mitigating Over-Reliance for Multi-Task Dwell Time Prediction with Causal Decoupling.",
@@ -4298,7 +4612,9 @@
             "pages": "4996-5000",
             "dblp_url": "https://dblp.org/rec/conf/cikm/LuoZZWKX00025",
             "doi": "10.1145/3746252.3760898",
-            "ee": "https://doi.org/10.1145/3746252.3760898"
+            "ee": "https://doi.org/10.1145/3746252.3760898",
+            "arxiv_id": "2508.16573",
+            "arxiv_url": "https://arxiv.org/abs/2508.16573"
         },
         "conf/cikm/LvCGZQZ0Z25": {
             "title": "MARM: Unlocking the Recommendation Cache Scaling-Law through Memory Augmentation and Scalable Complexity.",
@@ -4358,7 +4674,9 @@
             "pages": "5011-5015",
             "dblp_url": "https://dblp.org/rec/conf/cikm/MaF0Z25",
             "doi": "10.1145/3746252.3760813",
-            "ee": "https://doi.org/10.1145/3746252.3760813"
+            "ee": "https://doi.org/10.1145/3746252.3760813",
+            "arxiv_id": "2509.04461",
+            "arxiv_url": "https://arxiv.org/abs/2509.04461"
         },
         "conf/cikm/MaSPDYWYCZPLL25": {
             "title": "SMTIR: Scenario-Aware Multi-Trigger Induction Network for CTR Prediction.",
@@ -4378,7 +4696,9 @@
             "pages": "2052-2062",
             "dblp_url": "https://dblp.org/rec/conf/cikm/MaWWZ25",
             "doi": "10.1145/3746252.3761108",
-            "ee": "https://doi.org/10.1145/3746252.3761108"
+            "ee": "https://doi.org/10.1145/3746252.3761108",
+            "arxiv_id": "2411.03845",
+            "arxiv_url": "https://arxiv.org/abs/2411.03845"
         },
         "conf/cikm/MaX0025": {
             "title": "Multimodal Sentiment Analysis with Multi-Perspective Thinking via Large Multimodal Models.",
@@ -4438,7 +4758,9 @@
             "pages": "2063-2073",
             "dblp_url": "https://dblp.org/rec/conf/cikm/MarszalekRKSS25",
             "doi": "10.1145/3746252.3761405",
-            "ee": "https://doi.org/10.1145/3746252.3761405"
+            "ee": "https://doi.org/10.1145/3746252.3761405",
+            "arxiv_id": "2503.02585",
+            "arxiv_url": "https://arxiv.org/abs/2503.02585"
         },
         "conf/cikm/Martinek25": {
             "title": "Real until proven fake - Source-Level Audio Deepfake Detection (with PIPNet).",
@@ -4458,7 +4780,9 @@
             "pages": "2074-2083",
             "dblp_url": "https://dblp.org/rec/conf/cikm/MazurDKS25",
             "doi": "10.1145/3746252.3761065",
-            "ee": "https://doi.org/10.1145/3746252.3761065"
+            "ee": "https://doi.org/10.1145/3746252.3761065",
+            "arxiv_id": "2502.03988",
+            "arxiv_url": "https://arxiv.org/abs/2502.03988"
         },
         "conf/cikm/MeiLZYMW25": {
             "title": "Dense Retrieval for Aggregated Search.",
@@ -4538,7 +4862,9 @@
             "pages": "2137-2147",
             "dblp_url": "https://dblp.org/rec/conf/cikm/MoHTTM0HN25",
             "doi": "10.1145/3746252.3761255",
-            "ee": "https://doi.org/10.1145/3746252.3761255"
+            "ee": "https://doi.org/10.1145/3746252.3761255",
+            "arxiv_id": "2508.08634",
+            "arxiv_url": "https://arxiv.org/abs/2508.08634"
         },
         "conf/cikm/MohammadiTSBOFM25": {
             "title": "EFU: Enforcing Federated Unlearning via Functional Encryption.",
@@ -4548,7 +4874,9 @@
             "pages": "2148-2158",
             "dblp_url": "https://dblp.org/rec/conf/cikm/MohammadiTSBOFM25",
             "doi": "10.1145/3746252.3761091",
-            "ee": "https://doi.org/10.1145/3746252.3761091"
+            "ee": "https://doi.org/10.1145/3746252.3761091",
+            "arxiv_id": "2508.07873",
+            "arxiv_url": "https://arxiv.org/abs/2508.07873"
         },
         "conf/cikm/MollaevKOKKPGS25": {
             "title": "Multimodal Banking Dataset: Understanding Client Needs through Event Sequences.",
@@ -4558,7 +4886,9 @@
             "pages": "6476-6480",
             "dblp_url": "https://dblp.org/rec/conf/cikm/MollaevKOKKPGS25",
             "doi": "10.1145/3746252.3761635",
-            "ee": "https://doi.org/10.1145/3746252.3761635"
+            "ee": "https://doi.org/10.1145/3746252.3761635",
+            "arxiv_id": "2409.17587",
+            "arxiv_url": "https://arxiv.org/abs/2409.17587"
         },
         "conf/cikm/Moon0L25": {
             "title": "LLM-Enhanced Linear Autoencoders for Recommendation.",
@@ -4568,7 +4898,9 @@
             "pages": "5036-5040",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Moon0L25",
             "doi": "10.1145/3746252.3760952",
-            "ee": "https://doi.org/10.1145/3746252.3760952"
+            "ee": "https://doi.org/10.1145/3746252.3760952",
+            "arxiv_id": "2508.13500",
+            "arxiv_url": "https://arxiv.org/abs/2508.13500"
         },
         "conf/cikm/MoorZVDL25": {
             "title": "Learning Optimal Personalised Reservation Prices in Impression Ad Auctions with Mixture Density Networks.",
@@ -4598,7 +4930,9 @@
             "pages": "2179-2189",
             "dblp_url": "https://dblp.org/rec/conf/cikm/MorimuraOSM25",
             "doi": "10.1145/3746252.3761252",
-            "ee": "https://doi.org/10.1145/3746252.3761252"
+            "ee": "https://doi.org/10.1145/3746252.3761252",
+            "arxiv_id": "2508.20259",
+            "arxiv_url": "https://arxiv.org/abs/2508.20259"
         },
         "conf/cikm/Mu025": {
             "title": "Get Global Guarantees: On the Probabilistic Nature of Perturbation Robustness.",
@@ -4608,7 +4942,9 @@
             "pages": "2190-2200",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Mu025",
             "doi": "10.1145/3746252.3761039",
-            "ee": "https://doi.org/10.1145/3746252.3761039"
+            "ee": "https://doi.org/10.1145/3746252.3761039",
+            "arxiv_id": "2508.19183",
+            "arxiv_url": "https://arxiv.org/abs/2508.19183"
         },
         "conf/cikm/Mu025a": {
             "title": "Bayesian Privacy Guarantee for User History in Sequential Recommendation Using Randomised Response.",
@@ -4638,7 +4974,9 @@
             "pages": "5053-5057",
             "dblp_url": "https://dblp.org/rec/conf/cikm/NguyenPNNLL25",
             "doi": "10.1145/3746252.3760837",
-            "ee": "https://doi.org/10.1145/3746252.3760837"
+            "ee": "https://doi.org/10.1145/3746252.3760837",
+            "arxiv_id": "2508.08042",
+            "arxiv_url": "https://arxiv.org/abs/2508.08042"
         },
         "conf/cikm/Ni0LFL0ZY25": {
             "title": "A Content-Driven Micro-Video Recommendation Dataset at Scale.",
@@ -4668,7 +5006,9 @@
             "pages": "2222-2231",
             "dblp_url": "https://dblp.org/rec/conf/cikm/NiuMYZYMW25",
             "doi": "10.1145/3746252.3761377",
-            "ee": "https://doi.org/10.1145/3746252.3761377"
+            "ee": "https://doi.org/10.1145/3746252.3761377",
+            "arxiv_id": "2508.20798",
+            "arxiv_url": "https://arxiv.org/abs/2508.20798"
         },
         "conf/cikm/NiuPML25": {
             "title": "Solar Forecasting with Causality: A Graph-Transformer Approach to Spatiotemporal Dependencies.",
@@ -4678,7 +5018,9 @@
             "pages": "5058-5062",
             "dblp_url": "https://dblp.org/rec/conf/cikm/NiuPML25",
             "doi": "10.1145/3746252.3760905",
-            "ee": "https://doi.org/10.1145/3746252.3760905"
+            "ee": "https://doi.org/10.1145/3746252.3760905",
+            "arxiv_id": "2509.15481",
+            "arxiv_url": "https://arxiv.org/abs/2509.15481"
         },
         "conf/cikm/NohJYH25": {
             "title": "Externalizing Social-Cognitive Structures for User Modeling: Toward Theory-Driven Profiling with LLMs.",
@@ -4698,7 +5040,9 @@
             "pages": "4608-4612",
             "dblp_url": "https://dblp.org/rec/conf/cikm/NoughabiSZD25",
             "doi": "10.1145/3746252.3760929",
-            "ee": "https://doi.org/10.1145/3746252.3760929"
+            "ee": "https://doi.org/10.1145/3746252.3760929",
+            "arxiv_id": "2510.21983",
+            "arxiv_url": "https://arxiv.org/abs/2510.21983"
         },
         "conf/cikm/Nunzio25": {
             "title": "POLAR: Policy Optimization for Literature Analysis under Review Constraints.",
@@ -4718,7 +5062,9 @@
             "pages": "5068-5073",
             "dblp_url": "https://dblp.org/rec/conf/cikm/OhKLK25",
             "doi": "10.1145/3746252.3760805",
-            "ee": "https://doi.org/10.1145/3746252.3760805"
+            "ee": "https://doi.org/10.1145/3746252.3760805",
+            "arxiv_id": "2508.17521",
+            "arxiv_url": "https://arxiv.org/abs/2508.17521"
         },
         "conf/cikm/OhLK25": {
             "title": "Neural Differential Equations for Continuous-Time Analysis.",
@@ -4738,7 +5084,9 @@
             "pages": "2232-2242",
             "dblp_url": "https://dblp.org/rec/conf/cikm/OhLKB25",
             "doi": "10.1145/3746252.3760996",
-            "ee": "https://doi.org/10.1145/3746252.3760996"
+            "ee": "https://doi.org/10.1145/3746252.3760996",
+            "arxiv_id": "2508.17519",
+            "arxiv_url": "https://arxiv.org/abs/2508.17519"
         },
         "conf/cikm/OjhaBD25": {
             "title": "FairSplit: Mitigating Bias in Graph Neural Networks through Sensitivity-based Edge Partitioning.",
@@ -4758,7 +5106,9 @@
             "pages": "6492-6497",
             "dblp_url": "https://dblp.org/rec/conf/cikm/OkL25",
             "doi": "10.1145/3746252.3761614",
-            "ee": "https://doi.org/10.1145/3746252.3761614"
+            "ee": "https://doi.org/10.1145/3746252.3761614",
+            "arxiv_id": "2409.09866",
+            "arxiv_url": "https://arxiv.org/abs/2409.09866"
         },
         "conf/cikm/Oldfield0K25": {
             "title": "Revisiting Pre-processing Group Fairness: A Modular Benchmarking Framework.",
@@ -4768,7 +5118,9 @@
             "pages": "6498-6502",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Oldfield0K25",
             "doi": "10.1145/3746252.3761650",
-            "ee": "https://doi.org/10.1145/3746252.3761650"
+            "ee": "https://doi.org/10.1145/3746252.3761650",
+            "arxiv_id": "2508.15193",
+            "arxiv_url": "https://arxiv.org/abs/2508.15193"
         },
         "conf/cikm/OrogatE25": {
             "title": "QueryBridge: One Million Annotated Questions with SPARQL Queries - Dataset for Question Answering over Knowledge Graphs.",
@@ -4818,7 +5170,9 @@
             "pages": "6508-6512",
             "dblp_url": "https://dblp.org/rec/conf/cikm/OuL0L0S25",
             "doi": "10.1145/3746252.3761652",
-            "ee": "https://doi.org/10.1145/3746252.3761652"
+            "ee": "https://doi.org/10.1145/3746252.3761652",
+            "arxiv_id": "2508.09203",
+            "arxiv_url": "https://arxiv.org/abs/2508.09203"
         },
         "conf/cikm/OzbulakSC25": {
             "title": "STKGNN: Scalable Spatio-Temporal Knowledge Graph Reasoning for Activity Recognition.",
@@ -4838,7 +5192,9 @@
             "pages": "2263-2272",
             "dblp_url": "https://dblp.org/rec/conf/cikm/OzgunPHDLW25",
             "doi": "10.1145/3746252.3761164",
-            "ee": "https://doi.org/10.1145/3746252.3761164"
+            "ee": "https://doi.org/10.1145/3746252.3761164",
+            "arxiv_id": "2508.11398",
+            "arxiv_url": "https://arxiv.org/abs/2508.11398"
         },
         "conf/cikm/OzturkSYPHTK25": {
             "title": "terazi: AI Fairness Tool for Doubly Imbalanced Data.",
@@ -4888,7 +5244,9 @@
             "pages": "2273-2283",
             "dblp_url": "https://dblp.org/rec/conf/cikm/PanFWHZ025",
             "doi": "10.1145/3746252.3761289",
-            "ee": "https://doi.org/10.1145/3746252.3761289"
+            "ee": "https://doi.org/10.1145/3746252.3761289",
+            "arxiv_id": "2510.17705",
+            "arxiv_url": "https://arxiv.org/abs/2510.17705"
         },
         "conf/cikm/PanS025": {
             "title": "Revisiting Long-Tailed Learning: Insights from an Architectural Perspective.",
@@ -4898,7 +5256,9 @@
             "pages": "2294-2304",
             "dblp_url": "https://dblp.org/rec/conf/cikm/PanS025",
             "doi": "10.1145/3746252.3761191",
-            "ee": "https://doi.org/10.1145/3746252.3761191"
+            "ee": "https://doi.org/10.1145/3746252.3761191",
+            "arxiv_id": "2411.06098",
+            "arxiv_url": "https://arxiv.org/abs/2411.06098"
         },
         "conf/cikm/Park25": {
             "title": "Numerical Linear Algebraic Foundations for Large-Scale Unsupervised Learning.",
@@ -4928,7 +5288,9 @@
             "pages": "5120-5124",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ParkCJ25",
             "doi": "10.1145/3746252.3760848",
-            "ee": "https://doi.org/10.1145/3746252.3760848"
+            "ee": "https://doi.org/10.1145/3746252.3760848",
+            "arxiv_id": "2508.21550",
+            "arxiv_url": "https://arxiv.org/abs/2508.21550"
         },
         "conf/cikm/ParkGC25": {
             "title": "AnDri: A System for Anomaly and Drift co-Detection.",
@@ -4958,7 +5320,9 @@
             "pages": "5955-5962",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ParkJ25a",
             "doi": "10.1145/3746252.3761496",
-            "ee": "https://doi.org/10.1145/3746252.3761496"
+            "ee": "https://doi.org/10.1145/3746252.3761496",
+            "arxiv_id": "2503.05227",
+            "arxiv_url": "https://arxiv.org/abs/2503.05227"
         },
         "conf/cikm/ParkJKK25": {
             "title": "ASAP: Unsupervised Post-training with Label Distribution Shift Adaptive Learning Rate.",
@@ -4968,7 +5332,9 @@
             "pages": "5094-5098",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ParkJKK25",
             "doi": "10.1145/3746252.3760830",
-            "ee": "https://doi.org/10.1145/3746252.3760830"
+            "ee": "https://doi.org/10.1145/3746252.3760830",
+            "arxiv_id": "2508.13445",
+            "arxiv_url": "https://arxiv.org/abs/2508.13445"
         },
         "conf/cikm/ParkKLL25": {
             "title": "Federated Gradient Boosting for Financial Fraud Detection: An Empirical Study in the Banking Sector.",
@@ -4988,7 +5354,9 @@
             "pages": "5110-5114",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ParkL25",
             "doi": "10.1145/3746252.3760796",
-            "ee": "https://doi.org/10.1145/3746252.3760796"
+            "ee": "https://doi.org/10.1145/3746252.3760796",
+            "arxiv_id": "2510.19257",
+            "arxiv_url": "https://arxiv.org/abs/2510.19257"
         },
         "conf/cikm/ParkLVJC25": {
             "title": "TwinBandit Prompt Optimizer: Adaptive Prompt Optimization via Synergistic Dual MAB-Guided Feedback.",
@@ -5008,7 +5376,9 @@
             "pages": "5099-5104",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ParkLYJ25",
             "doi": "10.1145/3746252.3760790",
-            "ee": "https://doi.org/10.1145/3746252.3760790"
+            "ee": "https://doi.org/10.1145/3746252.3760790",
+            "arxiv_id": "2507.18323",
+            "arxiv_url": "https://arxiv.org/abs/2507.18323"
         },
         "conf/cikm/ParkMW25": {
             "title": "Beyond Masking: Landmark-based Representation Learning and Knowledge-Distillation for Audio-Visual Deepfake Detection.",
@@ -5048,7 +5418,9 @@
             "pages": "2326-2335",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Peng00H0G0Y25",
             "doi": "10.1145/3746252.3761060",
-            "ee": "https://doi.org/10.1145/3746252.3761060"
+            "ee": "https://doi.org/10.1145/3746252.3761060",
+            "arxiv_id": "2508.05023",
+            "arxiv_url": "https://arxiv.org/abs/2508.05023"
         },
         "conf/cikm/PengSSZPBBL025": {
             "title": "Expert-Guided Diffusion Planner for Auto-Bidding.",
@@ -5058,7 +5430,9 @@
             "pages": "5963-5970",
             "dblp_url": "https://dblp.org/rec/conf/cikm/PengSSZPBBL025",
             "doi": "10.1145/3746252.3761497",
-            "ee": "https://doi.org/10.1145/3746252.3761497"
+            "ee": "https://doi.org/10.1145/3746252.3761497",
+            "arxiv_id": "2508.08687",
+            "arxiv_url": "https://arxiv.org/abs/2508.08687"
         },
         "conf/cikm/PengYF025": {
             "title": "Data-centric Prompt Tuning for Dynamic Graphs.",
@@ -5068,7 +5442,9 @@
             "pages": "2336-2345",
             "dblp_url": "https://dblp.org/rec/conf/cikm/PengYF025",
             "doi": "10.1145/3746252.3761161",
-            "ee": "https://doi.org/10.1145/3746252.3761161"
+            "ee": "https://doi.org/10.1145/3746252.3761161",
+            "arxiv_id": "2601.11954",
+            "arxiv_url": "https://arxiv.org/abs/2601.11954"
         },
         "conf/cikm/PhamDL025": {
             "title": "DistillCaps: Enhancing Audio-Language Alignment in Captioning via Retrieval-Augmented Knowledge Distillation.",
@@ -5098,7 +5474,9 @@
             "pages": "2366-2376",
             "dblp_url": "https://dblp.org/rec/conf/cikm/PiryaniMADJ25",
             "doi": "10.1145/3746252.3761295",
-            "ee": "https://doi.org/10.1145/3746252.3761295"
+            "ee": "https://doi.org/10.1145/3746252.3761295",
+            "arxiv_id": "2502.16781",
+            "arxiv_url": "https://arxiv.org/abs/2502.16781"
         },
         "conf/cikm/PomoADNN25": {
             "title": "Do Recommender Systems Really Leverage Multimodal Content? A Comprehensive Analysis on Multimodal Representations for Recommendation.",
@@ -5108,7 +5486,9 @@
             "pages": "2377-2387",
             "dblp_url": "https://dblp.org/rec/conf/cikm/PomoADNN25",
             "doi": "10.1145/3746252.3761398",
-            "ee": "https://doi.org/10.1145/3746252.3761398"
+            "ee": "https://doi.org/10.1145/3746252.3761398",
+            "arxiv_id": "2508.04571",
+            "arxiv_url": "https://arxiv.org/abs/2508.04571"
         },
         "conf/cikm/Praski25": {
             "title": "The Landscape of Foundation Models for Molecular Chemistry.",
@@ -5128,7 +5508,9 @@
             "pages": "2388-2398",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Qi0W00L25",
             "doi": "10.1145/3746252.3761324",
-            "ee": "https://doi.org/10.1145/3746252.3761324"
+            "ee": "https://doi.org/10.1145/3746252.3761324",
+            "arxiv_id": "2410.24175",
+            "arxiv_url": "https://arxiv.org/abs/2410.24175"
         },
         "conf/cikm/QiL25": {
             "title": "LHMformer: Long-Range Historical Memory-Enhanced Transformer for Traffic Forecasting.",
@@ -5168,7 +5550,9 @@
             "pages": "5130-5135",
             "dblp_url": "https://dblp.org/rec/conf/cikm/QianZLYH25",
             "doi": "10.1145/3746252.3760964",
-            "ee": "https://doi.org/10.1145/3746252.3760964"
+            "ee": "https://doi.org/10.1145/3746252.3760964",
+            "arxiv_id": "2508.07458",
+            "arxiv_url": "https://arxiv.org/abs/2508.07458"
         },
         "conf/cikm/Qiang25": {
             "title": "Invariant Treatment Effect Estimation via Consistent Constraints and Information Bottleneck.",
@@ -5278,7 +5662,9 @@
             "pages": "2460-2470",
             "dblp_url": "https://dblp.org/rec/conf/cikm/QuQ0NY25",
             "doi": "10.1145/3746252.3761390",
-            "ee": "https://doi.org/10.1145/3746252.3761390"
+            "ee": "https://doi.org/10.1145/3746252.3761390",
+            "arxiv_id": "2508.05993",
+            "arxiv_url": "https://arxiv.org/abs/2508.05993"
         },
         "conf/cikm/QuanZY25": {
             "title": "ThoughtForest-KGQA: A Multi-Chain Tree Search for Knowledge Graph Reasoning.",
@@ -5298,7 +5684,9 @@
             "pages": "2471-2481",
             "dblp_url": "https://dblp.org/rec/conf/cikm/QueZ0025",
             "doi": "10.1145/3746252.3761155",
-            "ee": "https://doi.org/10.1145/3746252.3761155"
+            "ee": "https://doi.org/10.1145/3746252.3761155",
+            "arxiv_id": "2510.04502",
+            "arxiv_url": "https://arxiv.org/abs/2510.04502"
         },
         "conf/cikm/RaffCEJH25": {
             "title": "Zipf-Gramming: Scaling Byte N-Grams Up to Production Sized Malware Corpora.",
@@ -5308,7 +5696,9 @@
             "pages": "5988-5996",
             "dblp_url": "https://dblp.org/rec/conf/cikm/RaffCEJH25",
             "doi": "10.1145/3746252.3761551",
-            "ee": "https://doi.org/10.1145/3746252.3761551"
+            "ee": "https://doi.org/10.1145/3746252.3761551",
+            "arxiv_id": "2511.13808",
+            "arxiv_url": "https://arxiv.org/abs/2511.13808"
         },
         "conf/cikm/RafiAPC25": {
             "title": "Towards Robust Continual Test-Time Adaptation via Neighbor Filtration.",
@@ -5328,7 +5718,9 @@
             "pages": "5997-6005",
             "dblp_url": "https://dblp.org/rec/conf/cikm/RahmanGJ25",
             "doi": "10.1145/3746252.3761510",
-            "ee": "https://doi.org/10.1145/3746252.3761510"
+            "ee": "https://doi.org/10.1145/3746252.3761510",
+            "arxiv_id": "2507.14240",
+            "arxiv_url": "https://arxiv.org/abs/2507.14240"
         },
         "conf/cikm/RahmaniRYC025": {
             "title": "Towards Understanding Bias in Synthetic Data for Evaluation.",
@@ -5338,7 +5730,9 @@
             "pages": "5166-5170",
             "dblp_url": "https://dblp.org/rec/conf/cikm/RahmaniRYC025",
             "doi": "10.1145/3746252.3760908",
-            "ee": "https://doi.org/10.1145/3746252.3760908"
+            "ee": "https://doi.org/10.1145/3746252.3760908",
+            "arxiv_id": "2506.10301",
+            "arxiv_url": "https://arxiv.org/abs/2506.10301"
         },
         "conf/cikm/RamanujamBJHGZS25": {
             "title": "LinkedIn Post Embeddings: Industrial Scale Embedding Generation and Usage across LinkedIn.",
@@ -5348,7 +5742,9 @@
             "pages": "6038-6044",
             "dblp_url": "https://dblp.org/rec/conf/cikm/RamanujamBJHGZS25",
             "doi": "10.1145/3746252.3761575",
-            "ee": "https://doi.org/10.1145/3746252.3761575"
+            "ee": "https://doi.org/10.1145/3746252.3761575",
+            "arxiv_id": "2405.11344",
+            "arxiv_url": "https://arxiv.org/abs/2405.11344"
         },
         "conf/cikm/RazaWWLF25": {
             "title": "ITL-LIME: Instance-Based Transfer Learning for Enhancing Local Explanations in Low-Resource Data Settings.",
@@ -5358,7 +5754,9 @@
             "pages": "2482-2492",
             "dblp_url": "https://dblp.org/rec/conf/cikm/RazaWWLF25",
             "doi": "10.1145/3746252.3761183",
-            "ee": "https://doi.org/10.1145/3746252.3761183"
+            "ee": "https://doi.org/10.1145/3746252.3761183",
+            "arxiv_id": "2508.13672",
+            "arxiv_url": "https://arxiv.org/abs/2508.13672"
         },
         "conf/cikm/Ren0YSCZL25": {
             "title": "Fine-Grained Emotion Recognition via In-Context Learning.",
@@ -5368,7 +5766,9 @@
             "pages": "2503-2513",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Ren0YSCZL25",
             "doi": "10.1145/3746252.3761319",
-            "ee": "https://doi.org/10.1145/3746252.3761319"
+            "ee": "https://doi.org/10.1145/3746252.3761319",
+            "arxiv_id": "2510.06600",
+            "arxiv_url": "https://arxiv.org/abs/2510.06600"
         },
         "conf/cikm/RenJL25": {
             "title": "Modality Alignment with Multi-scale Bilateral Attention for Multimodal Recommendation.",
@@ -5378,7 +5778,9 @@
             "pages": "2493-2502",
             "dblp_url": "https://dblp.org/rec/conf/cikm/RenJL25",
             "doi": "10.1145/3746252.3761222",
-            "ee": "https://doi.org/10.1145/3746252.3761222"
+            "ee": "https://doi.org/10.1145/3746252.3761222",
+            "arxiv_id": "2509.09114",
+            "arxiv_url": "https://arxiv.org/abs/2509.09114"
         },
         "conf/cikm/RiabinovaM25": {
             "title": "LLM-Driven Attributes Extraction in eCommerce.",
@@ -5448,7 +5850,9 @@
             "pages": "2515-2524",
             "dblp_url": "https://dblp.org/rec/conf/cikm/RyuKK25",
             "doi": "10.1145/3746252.3761047",
-            "ee": "https://doi.org/10.1145/3746252.3761047"
+            "ee": "https://doi.org/10.1145/3746252.3761047",
+            "arxiv_id": "2508.13064",
+            "arxiv_url": "https://arxiv.org/abs/2508.13064"
         },
         "conf/cikm/SaberS25": {
             "title": "Empirical Study of Over-Squashing in GNNs and Causal Estimation of Rewiring Strategies.",
@@ -5468,7 +5872,9 @@
             "pages": "2535-2545",
             "dblp_url": "https://dblp.org/rec/conf/cikm/SadowskiC25",
             "doi": "10.1145/3746252.3761057",
-            "ee": "https://doi.org/10.1145/3746252.3761057"
+            "ee": "https://doi.org/10.1145/3746252.3761057",
+            "arxiv_id": "2509.00710",
+            "arxiv_url": "https://arxiv.org/abs/2509.00710"
         },
         "conf/cikm/Saeedi025": {
             "title": "Neural Shifts in Collaborative Team Recommendation.",
@@ -5488,7 +5894,9 @@
             "pages": "6518-6522",
             "dblp_url": "https://dblp.org/rec/conf/cikm/SagaeLAD025",
             "doi": "10.1145/3746252.3761642",
-            "ee": "https://doi.org/10.1145/3746252.3761642"
+            "ee": "https://doi.org/10.1145/3746252.3761642",
+            "arxiv_id": "2510.20782",
+            "arxiv_url": "https://arxiv.org/abs/2510.20782"
         },
         "conf/cikm/SahaSD25": {
             "title": "Green by Design: Detecting Environmental Claims in Corporate Web Content.",
@@ -5538,7 +5946,9 @@
             "pages": "5202-5207",
             "dblp_url": "https://dblp.org/rec/conf/cikm/SantraGGBN25",
             "doi": "10.1145/3746252.3760942",
-            "ee": "https://doi.org/10.1145/3746252.3760942"
+            "ee": "https://doi.org/10.1145/3746252.3760942",
+            "arxiv_id": "2509.02837",
+            "arxiv_url": "https://arxiv.org/abs/2509.02837"
         },
         "conf/cikm/SasakiYOF25": {
             "title": "Effect of Model Merging in Domain-Specific Ad-hoc Retrieval.",
@@ -5548,7 +5958,9 @@
             "pages": "5208-5212",
             "dblp_url": "https://dblp.org/rec/conf/cikm/SasakiYOF25",
             "doi": "10.1145/3746252.3760920",
-            "ee": "https://doi.org/10.1145/3746252.3760920"
+            "ee": "https://doi.org/10.1145/3746252.3760920",
+            "arxiv_id": "2509.21966",
+            "arxiv_url": "https://arxiv.org/abs/2509.21966"
         },
         "conf/cikm/SatheeshPW25": {
             "title": "cMALC-D: Contextual Multi-Agent LLM-Guided Curriculum Learning with Diversity-Based Context Blending.",
@@ -5558,7 +5970,9 @@
             "pages": "5213-5217",
             "dblp_url": "https://dblp.org/rec/conf/cikm/SatheeshPW25",
             "doi": "10.1145/3746252.3760863",
-            "ee": "https://doi.org/10.1145/3746252.3760863"
+            "ee": "https://doi.org/10.1145/3746252.3760863",
+            "arxiv_id": "2508.20818",
+            "arxiv_url": "https://arxiv.org/abs/2508.20818"
         },
         "conf/cikm/SeneviratneVK25": {
             "title": "Membership Inference Attack Vulnerabilities of Record Linkage Models.",
@@ -5608,7 +6022,9 @@
             "pages": "6523-6527",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Shao0P0WKHZ25",
             "doi": "10.1145/3746252.3761637",
-            "ee": "https://doi.org/10.1145/3746252.3761637"
+            "ee": "https://doi.org/10.1145/3746252.3761637",
+            "arxiv_id": "2509.05768",
+            "arxiv_url": "https://arxiv.org/abs/2509.05768"
         },
         "conf/cikm/SharmaD25": {
             "title": "The Metadata Impedance Mismatch between Databases and Programming Languages.",
@@ -5658,7 +6074,9 @@
             "pages": "2577-2587",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ShenCLRCJ25",
             "doi": "10.1145/3746252.3761247",
-            "ee": "https://doi.org/10.1145/3746252.3761247"
+            "ee": "https://doi.org/10.1145/3746252.3761247",
+            "arxiv_id": "2509.02450",
+            "arxiv_url": "https://arxiv.org/abs/2509.02450"
         },
         "conf/cikm/ShenHCSL25": {
             "title": "ROKAN: Toward Interpretable and Domain-Robust Memory Behavior Modeling.",
@@ -5678,7 +6096,9 @@
             "pages": "6006-6013",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ShenMWTLW25",
             "doi": "10.1145/3746252.3761537",
-            "ee": "https://doi.org/10.1145/3746252.3761537"
+            "ee": "https://doi.org/10.1145/3746252.3761537",
+            "arxiv_id": "2509.11731",
+            "arxiv_url": "https://arxiv.org/abs/2509.11731"
         },
         "conf/cikm/Sheng00LG25": {
             "title": "Local Structure-Adaptive Graph Filtering for Collaborative Filtering.",
@@ -5708,7 +6128,9 @@
             "pages": "5238-5242",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ShestovZMOFKS25",
             "doi": "10.1145/3746252.3760828",
-            "ee": "https://doi.org/10.1145/3746252.3760828"
+            "ee": "https://doi.org/10.1145/3746252.3760828",
+            "arxiv_id": "2508.05688",
+            "arxiv_url": "https://arxiv.org/abs/2508.05688"
         },
         "conf/cikm/Shi000P0F25": {
             "title": "Incremental Learning for LLM-based Tokenization and Recommendation.",
@@ -5738,7 +6160,9 @@
             "pages": "2685-2695",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Shi0ZHF025",
             "doi": "10.1145/3746252.3761314",
-            "ee": "https://doi.org/10.1145/3746252.3761314"
+            "ee": "https://doi.org/10.1145/3746252.3761314",
+            "arxiv_id": "2508.04145",
+            "arxiv_url": "https://arxiv.org/abs/2508.04145"
         },
         "conf/cikm/ShiLRG25": {
             "title": "SimFormer: Multilevel Transformer on Learnable Mesh Graphs for Engineering Simulation.",
@@ -5808,7 +6232,9 @@
             "pages": "2696-2706",
             "dblp_url": "https://dblp.org/rec/conf/cikm/SichermanR25",
             "doi": "10.1145/3746252.3761061",
-            "ee": "https://doi.org/10.1145/3746252.3761061"
+            "ee": "https://doi.org/10.1145/3746252.3761061",
+            "arxiv_id": "2502.01461",
+            "arxiv_url": "https://arxiv.org/abs/2502.01461"
         },
         "conf/cikm/SimKKPL25": {
             "title": "InstANNS: Scalable Approximate Nearest Neighbor Search via Cost-Efficient In-Storage Processing.",
@@ -5838,7 +6264,9 @@
             "pages": "6528-6533",
             "dblp_url": "https://dblp.org/rec/conf/cikm/SmaduICP25",
             "doi": "10.1145/3746252.3761632",
-            "ee": "https://doi.org/10.1145/3746252.3761632"
+            "ee": "https://doi.org/10.1145/3746252.3761632",
+            "arxiv_id": "2509.00893",
+            "arxiv_url": "https://arxiv.org/abs/2509.00893"
         },
         "conf/cikm/SolimanS25": {
             "title": "AutoCoRe-FL: Automatic Concept-based Rule Reasoning in Federated Learning.",
@@ -5858,7 +6286,9 @@
             "pages": "5258-5262",
             "dblp_url": "https://dblp.org/rec/conf/cikm/SolomonA0J25",
             "doi": "10.1145/3746252.3760926",
-            "ee": "https://doi.org/10.1145/3746252.3760926"
+            "ee": "https://doi.org/10.1145/3746252.3760926",
+            "arxiv_id": "2409.17806",
+            "arxiv_url": "https://arxiv.org/abs/2409.17806"
         },
         "conf/cikm/SonCKP25": {
             "title": "Filtered One-Shot Training for Quantum Architecture Search.",
@@ -5878,7 +6308,9 @@
             "pages": "2750-2760",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Song0025",
             "doi": "10.1145/3746252.3761084",
-            "ee": "https://doi.org/10.1145/3746252.3761084"
+            "ee": "https://doi.org/10.1145/3746252.3761084",
+            "arxiv_id": "2510.07035",
+            "arxiv_url": "https://arxiv.org/abs/2510.07035"
         },
         "conf/cikm/Song0YL25": {
             "title": "ProxySampler: Proxy Informativeness Estimation for Efficient Data Selection in Active Learning.",
@@ -5898,7 +6330,9 @@
             "pages": "5268-5272",
             "dblp_url": "https://dblp.org/rec/conf/cikm/SongLCSKJ25",
             "doi": "10.1145/3746252.3760959",
-            "ee": "https://doi.org/10.1145/3746252.3760959"
+            "ee": "https://doi.org/10.1145/3746252.3760959",
+            "arxiv_id": "2508.16707",
+            "arxiv_url": "https://arxiv.org/abs/2508.16707"
         },
         "conf/cikm/SongSGWYWC25": {
             "title": "PRECISE: Pre-training and Fine-tuning Sequential Recommenders with Collaborative and Semantic Information.",
@@ -5948,7 +6382,9 @@
             "pages": "6698-6702",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Sousa0J25",
             "doi": "10.1145/3746252.3761488",
-            "ee": "https://doi.org/10.1145/3746252.3761488"
+            "ee": "https://doi.org/10.1145/3746252.3761488",
+            "arxiv_id": "2509.00250",
+            "arxiv_url": "https://arxiv.org/abs/2509.00250"
         },
         "conf/cikm/StaudingerKCPKH25": {
             "title": "Compare: A Framework for Scientific Comparisons.",
@@ -5958,7 +6394,9 @@
             "pages": "6703-6707",
             "dblp_url": "https://dblp.org/rec/conf/cikm/StaudingerKCPKH25",
             "doi": "10.1145/3746252.3761493",
-            "ee": "https://doi.org/10.1145/3746252.3761493"
+            "ee": "https://doi.org/10.1145/3746252.3761493",
+            "arxiv_id": "2509.06412",
+            "arxiv_url": "https://arxiv.org/abs/2509.06412"
         },
         "conf/cikm/Su0JL0XWGF025": {
             "title": "Towards Explainable Transaction Risk Analysis With Dual Graph Retrieval Augmented Generation.",
@@ -5978,7 +6416,9 @@
             "pages": "2771-2780",
             "dblp_url": "https://dblp.org/rec/conf/cikm/SuLLLLW25",
             "doi": "10.1145/3746252.3761090",
-            "ee": "https://doi.org/10.1145/3746252.3761090"
+            "ee": "https://doi.org/10.1145/3746252.3761090",
+            "arxiv_id": "2410.10320",
+            "arxiv_url": "https://arxiv.org/abs/2410.10320"
         },
         "conf/cikm/SuNG25": {
             "title": "A Demonstration of PKGem: Secure Enrichment of Personal Knowledge Graphs.",
@@ -6008,7 +6448,9 @@
             "pages": "2832-2841",
             "dblp_url": "https://dblp.org/rec/conf/cikm/SunHCL0GZ25",
             "doi": "10.1145/3746252.3761124",
-            "ee": "https://doi.org/10.1145/3746252.3761124"
+            "ee": "https://doi.org/10.1145/3746252.3761124",
+            "arxiv_id": "2508.20400",
+            "arxiv_url": "https://arxiv.org/abs/2508.20400"
         },
         "conf/cikm/SunPGB25": {
             "title": "Dynamic Ensemble Member Selection for Data Stream Classification.",
@@ -6028,7 +6470,9 @@
             "pages": "5273-5278",
             "dblp_url": "https://dblp.org/rec/conf/cikm/SunSNZ0DNL0B25",
             "doi": "10.1145/3746252.3760916",
-            "ee": "https://doi.org/10.1145/3746252.3760916"
+            "ee": "https://doi.org/10.1145/3746252.3760916",
+            "arxiv_id": "2508.20452",
+            "arxiv_url": "https://arxiv.org/abs/2508.20452"
         },
         "conf/cikm/SunWZWLW25": {
             "title": "Discovering Group Collapser for Network Resilience.",
@@ -6078,7 +6522,9 @@
             "pages": "6713-6717",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Swati0PN25",
             "doi": "10.1145/3746252.3761476",
-            "ee": "https://doi.org/10.1145/3746252.3761476"
+            "ee": "https://doi.org/10.1145/3746252.3761476",
+            "arxiv_id": "2509.08156",
+            "arxiv_url": "https://arxiv.org/abs/2509.08156"
         },
         "conf/cikm/TanHC00HM25": {
             "title": "Higher-order Structure and Semantics-enhanced User Profiling for Recommendation.",
@@ -6108,7 +6554,9 @@
             "pages": "2842-2852",
             "dblp_url": "https://dblp.org/rec/conf/cikm/TaoQC0DS25",
             "doi": "10.1145/3746252.3761008",
-            "ee": "https://doi.org/10.1145/3746252.3761008"
+            "ee": "https://doi.org/10.1145/3746252.3761008",
+            "arxiv_id": "2501.14600",
+            "arxiv_url": "https://arxiv.org/abs/2501.14600"
         },
         "conf/cikm/TaufeeqP25": {
             "title": "NuFact: Validating Numerical Assertions for Knowledge Graphs.",
@@ -6148,7 +6596,9 @@
             "pages": "2874-2884",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Tian0KBR25",
             "doi": "10.1145/3746252.3761028",
-            "ee": "https://doi.org/10.1145/3746252.3761028"
+            "ee": "https://doi.org/10.1145/3746252.3761028",
+            "arxiv_id": "2508.16021",
+            "arxiv_url": "https://arxiv.org/abs/2508.16021"
         },
         "conf/cikm/TianZ0LLBTWH25": {
             "title": "Selective Mixup for Debiasing Question Selection in Computerized Adaptive Testing.",
@@ -6158,7 +6608,9 @@
             "pages": "2885-2894",
             "dblp_url": "https://dblp.org/rec/conf/cikm/TianZ0LLBTWH25",
             "doi": "10.1145/3746252.3761121",
-            "ee": "https://doi.org/10.1145/3746252.3761121"
+            "ee": "https://doi.org/10.1145/3746252.3761121",
+            "arxiv_id": "2511.15241",
+            "arxiv_url": "https://arxiv.org/abs/2511.15241"
         },
         "conf/cikm/TianZDL25": {
             "title": "CoHN: Context-Aware Hawkes Graph Network for Temporal Knowledge Graph Reasoning.",
@@ -6218,7 +6670,9 @@
             "pages": "5294-5298",
             "dblp_url": "https://dblp.org/rec/conf/cikm/TokutakeOHSK25",
             "doi": "10.1145/3746252.3760911",
-            "ee": "https://doi.org/10.1145/3746252.3760911"
+            "ee": "https://doi.org/10.1145/3746252.3760911",
+            "arxiv_id": "2508.17571",
+            "arxiv_url": "https://arxiv.org/abs/2508.17571"
         },
         "conf/cikm/TongSC25": {
             "title": "iMask: Towards a Smart Mask Network Prototype for Monitoring Respiratory Viruses.",
@@ -6248,7 +6702,9 @@
             "pages": "2905-2914",
             "dblp_url": "https://dblp.org/rec/conf/cikm/UdayanganiEL25",
             "doi": "10.1145/3746252.3761064",
-            "ee": "https://doi.org/10.1145/3746252.3761064"
+            "ee": "https://doi.org/10.1145/3746252.3761064",
+            "arxiv_id": "2511.18816",
+            "arxiv_url": "https://arxiv.org/abs/2511.18816"
         },
         "conf/cikm/Uddin25": {
             "title": "Neural Instrumented Factorization: Learning Dynamic Asset Pricing Factors and Loadings through Characteristics Control.",
@@ -6308,7 +6764,9 @@
             "pages": "6733-6737",
             "dblp_url": "https://dblp.org/rec/conf/cikm/VishnubhatlaBFG25",
             "doi": "10.1145/3746252.3761487",
-            "ee": "https://doi.org/10.1145/3746252.3761487"
+            "ee": "https://doi.org/10.1145/3746252.3761487",
+            "arxiv_id": "2509.11676",
+            "arxiv_url": "https://arxiv.org/abs/2509.11676"
         },
         "conf/cikm/VladikaM25": {
             "title": "MedSEBA: Synthesizing Evidence-Based Answers Grounded in Evolving Medical Literature.",
@@ -6318,7 +6776,9 @@
             "pages": "6728-6732",
             "dblp_url": "https://dblp.org/rec/conf/cikm/VladikaM25",
             "doi": "10.1145/3746252.3761463",
-            "ee": "https://doi.org/10.1145/3746252.3761463"
+            "ee": "https://doi.org/10.1145/3746252.3761463",
+            "arxiv_id": "2509.00414",
+            "arxiv_url": "https://arxiv.org/abs/2509.00414"
         },
         "conf/cikm/VuongLOL25": {
             "title": "FairAD: Computationally Efficient Fair Graph Clustering via Algebraic Distance.",
@@ -6328,7 +6788,9 @@
             "pages": "2935-2944",
             "dblp_url": "https://dblp.org/rec/conf/cikm/VuongLOL25",
             "doi": "10.1145/3746252.3761320",
-            "ee": "https://doi.org/10.1145/3746252.3761320"
+            "ee": "https://doi.org/10.1145/3746252.3761320",
+            "arxiv_id": "2510.27136",
+            "arxiv_url": "https://arxiv.org/abs/2510.27136"
         },
         "conf/cikm/Wang0GTWZD25": {
             "title": "Dynamic Network-Based Two-Stage Time Series Forecasting for Affiliate Marketing.",
@@ -6338,7 +6800,9 @@
             "pages": "6177-6184",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Wang0GTWZD25",
             "doi": "10.1145/3746252.3761515",
-            "ee": "https://doi.org/10.1145/3746252.3761515"
+            "ee": "https://doi.org/10.1145/3746252.3761515",
+            "arxiv_id": "2510.11323",
+            "arxiv_url": "https://arxiv.org/abs/2510.11323"
         },
         "conf/cikm/Wang0LLXC25": {
             "title": "AdaHet-MKD: An Adaptive Heterogeneous Multi-teacher Knowledge Distillation for Medical Image Analysis.",
@@ -6358,7 +6822,9 @@
             "pages": "3060-3070",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Wang0Z00L25",
             "doi": "10.1145/3746252.3761205",
-            "ee": "https://doi.org/10.1145/3746252.3761205"
+            "ee": "https://doi.org/10.1145/3746252.3761205",
+            "arxiv_id": "2403.01071",
+            "arxiv_url": "https://arxiv.org/abs/2403.01071"
         },
         "conf/cikm/Wang0ZW25": {
             "title": "PRIMA: Privacy preserving Multi-dimensional Analytic Approach.",
@@ -6378,7 +6844,9 @@
             "pages": "6161-6168",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WangCLXLMLDMJWG25",
             "doi": "10.1145/3746252.3761545",
-            "ee": "https://doi.org/10.1145/3746252.3761545"
+            "ee": "https://doi.org/10.1145/3746252.3761545",
+            "arxiv_id": "2509.01566",
+            "arxiv_url": "https://arxiv.org/abs/2509.01566"
         },
         "conf/cikm/WangCMZW0XL25": {
             "title": "TableTime: Reformulating Time Series Classification as Training-Free Table Understanding with Large Language Models.",
@@ -6388,7 +6856,9 @@
             "pages": "3009-3019",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WangCMZW0XL25",
             "doi": "10.1145/3746252.3761056",
-            "ee": "https://doi.org/10.1145/3746252.3761056"
+            "ee": "https://doi.org/10.1145/3746252.3761056",
+            "arxiv_id": "2411.15737",
+            "arxiv_url": "https://arxiv.org/abs/2411.15737"
         },
         "conf/cikm/WangCTKHLH0LWWH25": {
             "title": "FinSage: A Multi-aspect RAG System for Financial Filings Question Answering.",
@@ -6398,7 +6868,9 @@
             "pages": "6144-6152",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WangCTKHLH0LWWH25",
             "doi": "10.1145/3746252.3761587",
-            "ee": "https://doi.org/10.1145/3746252.3761587"
+            "ee": "https://doi.org/10.1145/3746252.3761587",
+            "arxiv_id": "2504.14493",
+            "arxiv_url": "https://arxiv.org/abs/2504.14493"
         },
         "conf/cikm/WangDZHZLZ0025": {
             "title": "Fraudulent Delivery Detection with Multimodal Courier Behavior Data in Last-Mile Delivery.",
@@ -6418,7 +6890,9 @@
             "pages": "3198-3208",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WangF0LFW25",
             "doi": "10.1145/3746252.3761266",
-            "ee": "https://doi.org/10.1145/3746252.3761266"
+            "ee": "https://doi.org/10.1145/3746252.3761266",
+            "arxiv_id": "2506.06161",
+            "arxiv_url": "https://arxiv.org/abs/2506.06161"
         },
         "conf/cikm/WangGCSLL25": {
             "title": "LCHGNN: Towards Distributed Hypergraph Neural Network Training Based on Communication Graphs with Lightweight Communication Optimization.",
@@ -6438,7 +6912,9 @@
             "pages": "6136-6143",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WangHLZLZZWW25",
             "doi": "10.1145/3746252.3761539",
-            "ee": "https://doi.org/10.1145/3746252.3761539"
+            "ee": "https://doi.org/10.1145/3746252.3761539",
+            "arxiv_id": "2508.14420",
+            "arxiv_url": "https://arxiv.org/abs/2508.14420"
         },
         "conf/cikm/WangJCYJHY025": {
             "title": "Retrieval-LTV: Fine-Grained Transfer Learning for Lifetime Value Estimation in Large-Scale Industrial Retrieval.",
@@ -6468,7 +6944,9 @@
             "pages": "3155-3165",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WangLH025",
             "doi": "10.1145/3746252.3761248",
-            "ee": "https://doi.org/10.1145/3746252.3761248"
+            "ee": "https://doi.org/10.1145/3746252.3761248",
+            "arxiv_id": "2510.09129",
+            "arxiv_url": "https://arxiv.org/abs/2510.09129"
         },
         "conf/cikm/WangLJSD25": {
             "title": "Beyond Surface Similarity: A Riemannian Hierarchical Ranking Framework for Sociological Concept Equivalence.",
@@ -6498,7 +6976,9 @@
             "pages": "3020-3030",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WangMY0ZGZ25",
             "doi": "10.1145/3746252.3761022",
-            "ee": "https://doi.org/10.1145/3746252.3761022"
+            "ee": "https://doi.org/10.1145/3746252.3761022",
+            "arxiv_id": "2508.08876",
+            "arxiv_url": "https://arxiv.org/abs/2508.08876"
         },
         "conf/cikm/WangOXWRXGL25": {
             "title": "Progressive Semantic Residual Quantization for Multimodal-Joint Interest Modeling in Music Recommendation.",
@@ -6508,7 +6988,9 @@
             "pages": "6119-6127",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WangOXWRXGL25",
             "doi": "10.1145/3746252.3761579",
-            "ee": "https://doi.org/10.1145/3746252.3761579"
+            "ee": "https://doi.org/10.1145/3746252.3761579",
+            "arxiv_id": "2508.20359",
+            "arxiv_url": "https://arxiv.org/abs/2508.20359"
         },
         "conf/cikm/WangPWHCN025": {
             "title": "SolarMAE: A Unified framework for Regional Centralized and Distributed Solar Power Forecasting with Weather Pre-training.",
@@ -6548,7 +7030,9 @@
             "pages": "3240-3249",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WangSK25",
             "doi": "10.1145/3746252.3761330",
-            "ee": "https://doi.org/10.1145/3746252.3761330"
+            "ee": "https://doi.org/10.1145/3746252.3761330",
+            "arxiv_id": "2505.01279",
+            "arxiv_url": "https://arxiv.org/abs/2505.01279"
         },
         "conf/cikm/WangSLYLX25": {
             "title": "MGFSG-EE: A Method based on Multi-grained Fusion and Scene Graph Enhancement for Event Extraction.",
@@ -6588,7 +7072,9 @@
             "pages": "2956-2966",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WangX0LWG025",
             "doi": "10.1145/3746252.3760999",
-            "ee": "https://doi.org/10.1145/3746252.3760999"
+            "ee": "https://doi.org/10.1145/3746252.3760999",
+            "arxiv_id": "2509.11094",
+            "arxiv_url": "https://arxiv.org/abs/2509.11094"
         },
         "conf/cikm/WangXDZZFW25": {
             "title": "ACMCG: A Cost-effective Active Clustering with Minimal Constraint Graph.",
@@ -6628,7 +7114,9 @@
             "pages": "2987-2997",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WangYX25",
             "doi": "10.1145/3746252.3761129",
-            "ee": "https://doi.org/10.1145/3746252.3761129"
+            "ee": "https://doi.org/10.1145/3746252.3761129",
+            "arxiv_id": "2508.19907",
+            "arxiv_url": "https://arxiv.org/abs/2508.19907"
         },
         "conf/cikm/WangYYSS25": {
             "title": "Full-Atom Protein-Protein Interaction Prediction via Atomic Equivariant Attention Network.",
@@ -6698,7 +7186,9 @@
             "pages": "5340-5345",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WangZJ25",
             "doi": "10.1145/3746252.3760864",
-            "ee": "https://doi.org/10.1145/3746252.3760864"
+            "ee": "https://doi.org/10.1145/3746252.3760864",
+            "arxiv_id": "2508.03654",
+            "arxiv_url": "https://arxiv.org/abs/2508.03654"
         },
         "conf/cikm/WangZYX25": {
             "title": "Cequel: Cost-Effective Querying of Large Language Models for Text Clustering.",
@@ -6708,7 +7198,9 @@
             "pages": "2998-3008",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WangZYX25",
             "doi": "10.1145/3746252.3761074",
-            "ee": "https://doi.org/10.1145/3746252.3761074"
+            "ee": "https://doi.org/10.1145/3746252.3761074",
+            "arxiv_id": "2504.15640",
+            "arxiv_url": "https://arxiv.org/abs/2504.15640"
         },
         "conf/cikm/WangZZ025": {
             "title": "Channel-Independent Refiner for Multivariate Time Series Forecasting.",
@@ -6728,7 +7220,9 @@
             "pages": "3093-3102",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WangZZJ25",
             "doi": "10.1145/3746252.3761348",
-            "ee": "https://doi.org/10.1145/3746252.3761348"
+            "ee": "https://doi.org/10.1145/3746252.3761348",
+            "arxiv_id": "2509.25231",
+            "arxiv_url": "https://arxiv.org/abs/2509.25231"
         },
         "conf/cikm/WanyanHM0C25": {
             "title": "Temporal-Aware User Behaviour Simulation with Large Language Models for Recommender Systems.",
@@ -6738,7 +7232,9 @@
             "pages": "5335-5339",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WanyanHM0C25",
             "doi": "10.1145/3746252.3760878",
-            "ee": "https://doi.org/10.1145/3746252.3760878"
+            "ee": "https://doi.org/10.1145/3746252.3760878",
+            "arxiv_id": "2509.16895",
+            "arxiv_url": "https://arxiv.org/abs/2509.16895"
         },
         "conf/cikm/WehnertBLNL25": {
             "title": "Exploration and Visualization of a Legal Knowledge Graph: A Human-Centered Approach.",
@@ -6798,7 +7294,9 @@
             "pages": "3427-3437",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Wu00Z025",
             "doi": "10.1145/3746252.3761427",
-            "ee": "https://doi.org/10.1145/3746252.3761427"
+            "ee": "https://doi.org/10.1145/3746252.3761427",
+            "arxiv_id": "2510.04239",
+            "arxiv_url": "https://arxiv.org/abs/2510.04239"
         },
         "conf/cikm/Wu0W25": {
             "title": "Multi-Resource-Aware Admission Control for Online Data Processing.",
@@ -6838,7 +7336,9 @@
             "pages": "3333-3343",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WuHS025",
             "doi": "10.1145/3746252.3761281",
-            "ee": "https://doi.org/10.1145/3746252.3761281"
+            "ee": "https://doi.org/10.1145/3746252.3761281",
+            "arxiv_id": "2509.02217",
+            "arxiv_url": "https://arxiv.org/abs/2509.02217"
         },
         "conf/cikm/WuMZKZ25": {
             "title": "Spatio-Temporal Forecasting under Open-World Missingness with Adaptive Mixture-of-Experts.",
@@ -6858,7 +7358,9 @@
             "pages": "3355-3365",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WuR0WM0Z25",
             "doi": "10.1145/3746252.3760995",
-            "ee": "https://doi.org/10.1145/3746252.3760995"
+            "ee": "https://doi.org/10.1145/3746252.3760995",
+            "arxiv_id": "2508.18812",
+            "arxiv_url": "https://arxiv.org/abs/2508.18812"
         },
         "conf/cikm/WuSH025": {
             "title": "MillGNN: Learning Multi-Scale Lead-Lag Dependencies for Multi-Variate Time Series Forecasting.",
@@ -6868,7 +7370,9 @@
             "pages": "3344-3354",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WuSH025",
             "doi": "10.1145/3746252.3761173",
-            "ee": "https://doi.org/10.1145/3746252.3761173"
+            "ee": "https://doi.org/10.1145/3746252.3761173",
+            "arxiv_id": "2509.03852",
+            "arxiv_url": "https://arxiv.org/abs/2509.03852"
         },
         "conf/cikm/WuSZL25": {
             "title": "Robust Multi-Label Learning with Instance-Dependent Label Noise.",
@@ -6908,7 +7412,9 @@
             "pages": "3386-3395",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WuYL025",
             "doi": "10.1145/3746252.3761410",
-            "ee": "https://doi.org/10.1145/3746252.3761410"
+            "ee": "https://doi.org/10.1145/3746252.3761410",
+            "arxiv_id": "2508.07016",
+            "arxiv_url": "https://arxiv.org/abs/2508.07016"
         },
         "conf/cikm/WuYLD25": {
             "title": "Learning Conditional Probability Distributions for Robust Probabilistic Inference in Bayesian Network.",
@@ -6928,7 +7434,9 @@
             "pages": "5351-5355",
             "dblp_url": "https://dblp.org/rec/conf/cikm/WuZD25",
             "doi": "10.1145/3746252.3760818",
-            "ee": "https://doi.org/10.1145/3746252.3760818"
+            "ee": "https://doi.org/10.1145/3746252.3760818",
+            "arxiv_id": "2508.20408",
+            "arxiv_url": "https://arxiv.org/abs/2508.20408"
         },
         "conf/cikm/WuZQWD025": {
             "title": "Beyond Return Conditioning: Multi-Scale Sequence Modeling and Advantage-Guided Policy Routing for Offline RL.",
@@ -6958,7 +7466,9 @@
             "pages": "6559-6563",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XiaPQ0L0W25",
             "doi": "10.1145/3746252.3761616",
-            "ee": "https://doi.org/10.1145/3746252.3761616"
+            "ee": "https://doi.org/10.1145/3746252.3761616",
+            "arxiv_id": "2506.16445",
+            "arxiv_url": "https://arxiv.org/abs/2506.16445"
         },
         "conf/cikm/XiaZ0L025": {
             "title": "GraphIAM: Two-Stage Algorithm for Improving Class-Imbalanced Node Classification on Attribute-Missing Graphs.",
@@ -6978,7 +7488,9 @@
             "pages": "5361-5365",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Xiang0YKJ25",
             "doi": "10.1145/3746252.3760793",
-            "ee": "https://doi.org/10.1145/3746252.3760793"
+            "ee": "https://doi.org/10.1145/3746252.3760793",
+            "arxiv_id": "2502.16256",
+            "arxiv_url": "https://arxiv.org/abs/2502.16256"
         },
         "conf/cikm/XiaoDTH25": {
             "title": "Dual-Space Masked Reconstruction for Robust Self-Supervised Human Activity Recognition.",
@@ -6998,7 +7510,9 @@
             "pages": "3509-3519",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XiaoYLM025",
             "doi": "10.1145/3746252.3761379",
-            "ee": "https://doi.org/10.1145/3746252.3761379"
+            "ee": "https://doi.org/10.1145/3746252.3761379",
+            "arxiv_id": "2508.14013",
+            "arxiv_url": "https://arxiv.org/abs/2508.14013"
         },
         "conf/cikm/XiaoZTH25": {
             "title": "Frequency-Domain Disentanglement-Fusion and Dual Contrastive Learning for Sequential Recommendation.",
@@ -7048,7 +7562,9 @@
             "pages": "3550-3559",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XinQ0ZZ00L25",
             "doi": "10.1145/3746252.3761156",
-            "ee": "https://doi.org/10.1145/3746252.3761156"
+            "ee": "https://doi.org/10.1145/3746252.3761156",
+            "arxiv_id": "2407.04020",
+            "arxiv_url": "https://arxiv.org/abs/2407.04020"
         },
         "conf/cikm/Xiong0J0Z25": {
             "title": "Multi-Turn Interactions for Text-to-SQL with Large Language Models.",
@@ -7058,7 +7574,9 @@
             "pages": "3560-3570",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Xiong0J0Z25",
             "doi": "10.1145/3746252.3761052",
-            "ee": "https://doi.org/10.1145/3746252.3761052"
+            "ee": "https://doi.org/10.1145/3746252.3761052",
+            "arxiv_id": "2408.11062",
+            "arxiv_url": "https://arxiv.org/abs/2408.11062"
         },
         "conf/cikm/XiongJKDY25": {
             "title": "ESED: Emotion-Specific Evidence Decomposition for Uncertainty-Aware Multimodal Emotion Recognition in Conversation.",
@@ -7078,7 +7596,9 @@
             "pages": "6185-6192",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XiongNGTWW025",
             "doi": "10.1145/3746252.3761549",
-            "ee": "https://doi.org/10.1145/3746252.3761549"
+            "ee": "https://doi.org/10.1145/3746252.3761549",
+            "arxiv_id": "2508.20559",
+            "arxiv_url": "https://arxiv.org/abs/2508.20559"
         },
         "conf/cikm/XiongWS25": {
             "title": "Interactive Text-to-Visualization: Refining Visualization Outputs Through Natural Language User Feedback.",
@@ -7118,7 +7638,9 @@
             "pages": "3655-3665",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XuCLHB0S25",
             "doi": "10.1145/3746252.3761394",
-            "ee": "https://doi.org/10.1145/3746252.3761394"
+            "ee": "https://doi.org/10.1145/3746252.3761394",
+            "arxiv_id": "2404.14757",
+            "arxiv_url": "https://arxiv.org/abs/2404.14757"
         },
         "conf/cikm/XuK0P25": {
             "title": "In-context Pre-trained Time-Series Foundation Models adapt to Unseen Tasks.",
@@ -7128,7 +7650,9 @@
             "pages": "5386-5390",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XuK0P25",
             "doi": "10.1145/3746252.3760801",
-            "ee": "https://doi.org/10.1145/3746252.3760801"
+            "ee": "https://doi.org/10.1145/3746252.3760801",
+            "arxiv_id": "2602.20307",
+            "arxiv_url": "https://arxiv.org/abs/2602.20307"
         },
         "conf/cikm/XuLBXZG25": {
             "title": "Improving Recommendation Fairness via Graph Structure and Representation Augmentation.",
@@ -7138,7 +7662,9 @@
             "pages": "3645-3654",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XuLBXZG25",
             "doi": "10.1145/3746252.3761004",
-            "ee": "https://doi.org/10.1145/3746252.3761004"
+            "ee": "https://doi.org/10.1145/3746252.3761004",
+            "arxiv_id": "2508.19547",
+            "arxiv_url": "https://arxiv.org/abs/2508.19547"
         },
         "conf/cikm/XuPCW25": {
             "title": "KALE: Knowledge Aggregation for Label-free Model Enhancement.",
@@ -7178,7 +7704,9 @@
             "pages": "3635-3644",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XuW025",
             "doi": "10.1145/3746252.3761098",
-            "ee": "https://doi.org/10.1145/3746252.3761098"
+            "ee": "https://doi.org/10.1145/3746252.3761098",
+            "arxiv_id": "2508.11495",
+            "arxiv_url": "https://arxiv.org/abs/2508.11495"
         },
         "conf/cikm/XuW0J25": {
             "title": "LiveVal: Real-time and Trajectory-based Data Valuation via Adaptive Reference Points.",
@@ -7198,7 +7726,9 @@
             "pages": "6193-6200",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XuWGGXHWL25",
             "doi": "10.1145/3746252.3761561",
-            "ee": "https://doi.org/10.1145/3746252.3761561"
+            "ee": "https://doi.org/10.1145/3746252.3761561",
+            "arxiv_id": "2502.09888",
+            "arxiv_url": "https://arxiv.org/abs/2502.09888"
         },
         "conf/cikm/XuWWLHK25": {
             "title": "Forecasting the Buzz: Enriching Hashtag Popularity Prediction with LLM Reasoning.",
@@ -7208,7 +7738,9 @@
             "pages": "5396-5400",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XuWWLHK25",
             "doi": "10.1145/3746252.3760970",
-            "ee": "https://doi.org/10.1145/3746252.3760970"
+            "ee": "https://doi.org/10.1145/3746252.3760970",
+            "arxiv_id": "2510.08481",
+            "arxiv_url": "https://arxiv.org/abs/2510.08481"
         },
         "conf/cikm/XuXY25": {
             "title": "CLAP:  Coreference-Linked Augmentation for Passage Retrieval.",
@@ -7218,7 +7750,9 @@
             "pages": "3612-3622",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XuXY25",
             "doi": "10.1145/3746252.3761113",
-            "ee": "https://doi.org/10.1145/3746252.3761113"
+            "ee": "https://doi.org/10.1145/3746252.3761113",
+            "arxiv_id": "2508.06941",
+            "arxiv_url": "https://arxiv.org/abs/2508.06941"
         },
         "conf/cikm/XuY0FVP25": {
             "title": "The Structure of Cross-National Collaboration in Open-Source Software Development.",
@@ -7238,7 +7772,9 @@
             "pages": "3666-3676",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XuYT25",
             "doi": "10.1145/3746252.3761224",
-            "ee": "https://doi.org/10.1145/3746252.3761224"
+            "ee": "https://doi.org/10.1145/3746252.3761224",
+            "arxiv_id": "2508.12377",
+            "arxiv_url": "https://arxiv.org/abs/2508.12377"
         },
         "conf/cikm/XuYX025": {
             "title": "From Policy Comparison to Process Consistency and Beyond.",
@@ -7258,7 +7794,9 @@
             "pages": "5381-5385",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XuZN25",
             "doi": "10.1145/3746252.3760817",
-            "ee": "https://doi.org/10.1145/3746252.3760817"
+            "ee": "https://doi.org/10.1145/3746252.3760817",
+            "arxiv_id": "2509.24424",
+            "arxiv_url": "https://arxiv.org/abs/2509.24424"
         },
         "conf/cikm/XuanSSC25": {
             "title": "Evaluating and Addressing Fairness Across User Groups in Negative Sampling for Recommender Systems.",
@@ -7268,7 +7806,9 @@
             "pages": "3720-3729",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XuanSSC25",
             "doi": "10.1145/3746252.3761263",
-            "ee": "https://doi.org/10.1145/3746252.3761263"
+            "ee": "https://doi.org/10.1145/3746252.3761263",
+            "arxiv_id": "2304.07487",
+            "arxiv_url": "https://arxiv.org/abs/2304.07487"
         },
         "conf/cikm/XueZWHYW0A0LS25": {
             "title": "JustEva: A Toolkit to Evaluate LLM Fairness in Legal Knowledge Inference.",
@@ -7278,7 +7818,9 @@
             "pages": "6738-6742",
             "dblp_url": "https://dblp.org/rec/conf/cikm/XueZWHYW0A0LS25",
             "doi": "10.1145/3746252.3761491",
-            "ee": "https://doi.org/10.1145/3746252.3761491"
+            "ee": "https://doi.org/10.1145/3746252.3761491",
+            "arxiv_id": "2509.12104",
+            "arxiv_url": "https://arxiv.org/abs/2509.12104"
         },
         "conf/cikm/YanLD25": {
             "title": "FedSTEP: Asynchronous and Staleness-Aware Personalization for Efficient Federated Learning.",
@@ -7308,7 +7850,9 @@
             "pages": "3824-3833",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Yang0LJLZ0WW25",
             "doi": "10.1145/3746252.3761186",
-            "ee": "https://doi.org/10.1145/3746252.3761186"
+            "ee": "https://doi.org/10.1145/3746252.3761186",
+            "arxiv_id": "2508.10669",
+            "arxiv_url": "https://arxiv.org/abs/2508.10669"
         },
         "conf/cikm/YangLCK25": {
             "title": "Ordinal Embedding for Collaborative Filtering: A Unified Regularization for Enhanced Generalization and Interpretability.",
@@ -7328,7 +7872,9 @@
             "pages": "3773-3782",
             "dblp_url": "https://dblp.org/rec/conf/cikm/YangLGXN25",
             "doi": "10.1145/3746252.3761322",
-            "ee": "https://doi.org/10.1145/3746252.3761322"
+            "ee": "https://doi.org/10.1145/3746252.3761322",
+            "arxiv_id": "2406.11301",
+            "arxiv_url": "https://arxiv.org/abs/2406.11301"
         },
         "conf/cikm/YangMKJJ25": {
             "title": "Unplug and Play Language Models: Decomposing Experts in Language Models at Inference Time.",
@@ -7338,7 +7884,9 @@
             "pages": "3805-3813",
             "dblp_url": "https://dblp.org/rec/conf/cikm/YangMKJJ25",
             "doi": "10.1145/3746252.3761011",
-            "ee": "https://doi.org/10.1145/3746252.3761011"
+            "ee": "https://doi.org/10.1145/3746252.3761011",
+            "arxiv_id": "2404.11916",
+            "arxiv_url": "https://arxiv.org/abs/2404.11916"
         },
         "conf/cikm/YangPKSH25": {
             "title": "CheckDAPR: An MLLM-based Sketch Analysis System for Draw-A-Person-in-the-Rain Assessments.",
@@ -7368,7 +7916,9 @@
             "pages": "6201-6208",
             "dblp_url": "https://dblp.org/rec/conf/cikm/YangYBGYZ25",
             "doi": "10.1145/3746252.3761501",
-            "ee": "https://doi.org/10.1145/3746252.3761501"
+            "ee": "https://doi.org/10.1145/3746252.3761501",
+            "arxiv_id": "2505.19849",
+            "arxiv_url": "https://arxiv.org/abs/2505.19849"
         },
         "conf/cikm/YangYQDL25": {
             "title": "GFlowNet with Gradient-based Optimization for Bayesian Network Structure Learning.",
@@ -7408,7 +7958,9 @@
             "pages": "3783-3793",
             "dblp_url": "https://dblp.org/rec/conf/cikm/YangZS00025",
             "doi": "10.1145/3746252.3761140",
-            "ee": "https://doi.org/10.1145/3746252.3761140"
+            "ee": "https://doi.org/10.1145/3746252.3761140",
+            "arxiv_id": "2505.06911",
+            "arxiv_url": "https://arxiv.org/abs/2505.06911"
         },
         "conf/cikm/YangZZWHJW25": {
             "title": "StreamingRT: Stream KNN Join with Ray Tracing Core.",
@@ -7448,7 +8000,9 @@
             "pages": "3877-3887",
             "dblp_url": "https://dblp.org/rec/conf/cikm/YeLYLS00Y025",
             "doi": "10.1145/3746252.3761097",
-            "ee": "https://doi.org/10.1145/3746252.3761097"
+            "ee": "https://doi.org/10.1145/3746252.3761097",
+            "arxiv_id": "2508.19621",
+            "arxiv_url": "https://arxiv.org/abs/2508.19621"
         },
         "conf/cikm/YeLZSYX00D25": {
             "title": "SG-Filter: Enhancing Similar Text Retrieval via Hierarchical Summarized-Semantic Index and Adaptive Filtering.",
@@ -7478,7 +8032,9 @@
             "pages": "6217-6224",
             "dblp_url": "https://dblp.org/rec/conf/cikm/YeSSWWJ25",
             "doi": "10.1145/3746252.3761529",
-            "ee": "https://doi.org/10.1145/3746252.3761529"
+            "ee": "https://doi.org/10.1145/3746252.3761529",
+            "arxiv_id": "2508.10584",
+            "arxiv_url": "https://arxiv.org/abs/2508.10584"
         },
         "conf/cikm/YeZ0025": {
             "title": "An Embarrassingly Simple but Effective Knowledge-enhanced Recommender.",
@@ -7498,7 +8054,9 @@
             "pages": "5439-5443",
             "dblp_url": "https://dblp.org/rec/conf/cikm/YehLKH25",
             "doi": "10.1145/3746252.3760850",
-            "ee": "https://doi.org/10.1145/3746252.3760850"
+            "ee": "https://doi.org/10.1145/3746252.3760850",
+            "arxiv_id": "2509.03537",
+            "arxiv_url": "https://arxiv.org/abs/2509.03537"
         },
         "conf/cikm/YinF25": {
             "title": "Multi-Armed Bandits with Biased and Heteroscedastic Auxiliary Rewards.",
@@ -7548,7 +8106,9 @@
             "pages": "6857-6860",
             "dblp_url": "https://dblp.org/rec/conf/cikm/YooKT25",
             "doi": "10.1145/3746252.3761452",
-            "ee": "https://doi.org/10.1145/3746252.3761452"
+            "ee": "https://doi.org/10.1145/3746252.3761452",
+            "arxiv_id": "2507.03861",
+            "arxiv_url": "https://arxiv.org/abs/2507.03861"
         },
         "conf/cikm/YouH0LK25": {
             "title": "FAIR-SE: Framework for Analyzing Information Disparities in Search Engines with Diverse LLM-Generated Personas.",
@@ -7568,7 +8128,9 @@
             "pages": "5444-5448",
             "dblp_url": "https://dblp.org/rec/conf/cikm/YouL25",
             "doi": "10.1145/3746252.3760958",
-            "ee": "https://doi.org/10.1145/3746252.3760958"
+            "ee": "https://doi.org/10.1145/3746252.3760958",
+            "arxiv_id": "2508.12149",
+            "arxiv_url": "https://arxiv.org/abs/2508.12149"
         },
         "conf/cikm/YounLKY25": {
             "title": "LLM-based Interactive Coding Education via Predictive Query Management and Student-Centered Fine-Tuning: Design and Implementation with 1500-Student Class Data.",
@@ -7608,7 +8170,9 @@
             "pages": "3952-3962",
             "dblp_url": "https://dblp.org/rec/conf/cikm/YuWMWWG025",
             "doi": "10.1145/3746252.3761391",
-            "ee": "https://doi.org/10.1145/3746252.3761391"
+            "ee": "https://doi.org/10.1145/3746252.3761391",
+            "arxiv_id": "2410.07745",
+            "arxiv_url": "https://arxiv.org/abs/2410.07745"
         },
         "conf/cikm/YuanL25": {
             "title": "TriSeRec: A Tri-view Representation Learning Framework for Sequential/Session-based Recommendation.",
@@ -7648,7 +8212,9 @@
             "pages": "6743-6746",
             "dblp_url": "https://dblp.org/rec/conf/cikm/YucedagJ25",
             "doi": "10.1145/3746252.3761462",
-            "ee": "https://doi.org/10.1145/3746252.3761462"
+            "ee": "https://doi.org/10.1145/3746252.3761462",
+            "arxiv_id": "2505.22031",
+            "arxiv_url": "https://arxiv.org/abs/2505.22031"
         },
         "conf/cikm/YunK25": {
             "title": "Query, Decompose, Compress: Structured Query Expansion for Efficient Multi-Hop Retrieval.",
@@ -7658,7 +8224,9 @@
             "pages": "5459-5463",
             "dblp_url": "https://dblp.org/rec/conf/cikm/YunK25",
             "doi": "10.1145/3746252.3760968",
-            "ee": "https://doi.org/10.1145/3746252.3760968"
+            "ee": "https://doi.org/10.1145/3746252.3760968",
+            "arxiv_id": "2603.21024",
+            "arxiv_url": "https://arxiv.org/abs/2603.21024"
         },
         "conf/cikm/YusufH25": {
             "title": "Robust Handwritten Text Recognition via Multi-Source Adversarial Domain Adaptation for Low-Resource Scripts.",
@@ -7678,7 +8246,9 @@
             "pages": "5469-5473",
             "dblp_url": "https://dblp.org/rec/conf/cikm/YusupovRF25",
             "doi": "10.1145/3746252.3760932",
-            "ee": "https://doi.org/10.1145/3746252.3760932"
+            "ee": "https://doi.org/10.1145/3746252.3760932",
+            "arxiv_id": "2509.01549",
+            "arxiv_url": "https://arxiv.org/abs/2509.01549"
         },
         "conf/cikm/ZawuyaKRL25": {
             "title": "Maneno Yetu: Dynamic Corpus Construction and Pretraining for Swahili NLP.",
@@ -7728,7 +8298,9 @@
             "pages": "4036-4044",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZengYYAHYL0Y25",
             "doi": "10.1145/3746252.3761285",
-            "ee": "https://doi.org/10.1145/3746252.3761285"
+            "ee": "https://doi.org/10.1145/3746252.3761285",
+            "arxiv_id": "2406.02126",
+            "arxiv_url": "https://arxiv.org/abs/2406.02126"
         },
         "conf/cikm/ZerhoudiG25": {
             "title": "UXSim: Towards a Hybrid User Search Simulation.",
@@ -7738,7 +8310,9 @@
             "pages": "6570-6574",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZerhoudiG25",
             "doi": "10.1145/3746252.3761640",
-            "ee": "https://doi.org/10.1145/3746252.3761640"
+            "ee": "https://doi.org/10.1145/3746252.3761640",
+            "arxiv_id": "2602.24241",
+            "arxiv_url": "https://arxiv.org/abs/2602.24241"
         },
         "conf/cikm/Zhai00025": {
             "title": "SGPT: Few-Shot Prompt Tuning for Signed Graphs.",
@@ -7748,7 +8322,9 @@
             "pages": "4045-4055",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Zhai00025",
             "doi": "10.1145/3746252.3761079",
-            "ee": "https://doi.org/10.1145/3746252.3761079"
+            "ee": "https://doi.org/10.1145/3746252.3761079",
+            "arxiv_id": "2412.12155",
+            "arxiv_url": "https://arxiv.org/abs/2412.12155"
         },
         "conf/cikm/Zhang00JL025": {
             "title": "A Privacy-preserving Spatial Dataset Joinable Search in Cloud.",
@@ -7788,7 +8364,9 @@
             "pages": "4139-4148",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Zhang0W0YY25",
             "doi": "10.1145/3746252.3761383",
-            "ee": "https://doi.org/10.1145/3746252.3761383"
+            "ee": "https://doi.org/10.1145/3746252.3761383",
+            "arxiv_id": "2410.10915",
+            "arxiv_url": "https://arxiv.org/abs/2410.10915"
         },
         "conf/cikm/Zhang0W25": {
             "title": "Interpretable Meta-weighting Sparse Neural Additive Networks for Datasets with Label Noise and Class Imbalance.",
@@ -7858,7 +8436,9 @@
             "pages": "4211-4221",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhangFLDLY00T025",
             "doi": "10.1145/3746252.3761321",
-            "ee": "https://doi.org/10.1145/3746252.3761321"
+            "ee": "https://doi.org/10.1145/3746252.3761321",
+            "arxiv_id": "2505.13492",
+            "arxiv_url": "https://arxiv.org/abs/2505.13492"
         },
         "conf/cikm/ZhangH25": {
             "title": "TopKNet: Learning to Perceive the Top-K Pivotal Nodes in Spatio-Temporal Data for Traffic Forecasting.",
@@ -7928,7 +8508,9 @@
             "pages": "5489-5494",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhangJH025",
             "doi": "10.1145/3746252.3760866",
-            "ee": "https://doi.org/10.1145/3746252.3760866"
+            "ee": "https://doi.org/10.1145/3746252.3760866",
+            "arxiv_id": "2508.14493",
+            "arxiv_url": "https://arxiv.org/abs/2508.14493"
         },
         "conf/cikm/ZhangJHZLG0025": {
             "title": "Hyperbolic Prompt Learning for Incremental Event Detection with LLMs.",
@@ -7958,7 +8540,9 @@
             "pages": "6575-6579",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhangLWZX0025",
             "doi": "10.1145/3746252.3761604",
-            "ee": "https://doi.org/10.1145/3746252.3761604"
+            "ee": "https://doi.org/10.1145/3746252.3761604",
+            "arxiv_id": "2504.10167",
+            "arxiv_url": "https://arxiv.org/abs/2504.10167"
         },
         "conf/cikm/ZhangQ0ZXXXZ0025": {
             "title": "HRCformer: Hierarchical Recursive Convolution-Transformer with Multi-Scale Adaptive Recalibration for Time Series Forecasting.",
@@ -7978,7 +8562,9 @@
             "pages": "5484-5488",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhangS0025",
             "doi": "10.1145/3746252.3760851",
-            "ee": "https://doi.org/10.1145/3746252.3760851"
+            "ee": "https://doi.org/10.1145/3746252.3760851",
+            "arxiv_id": "2508.07342",
+            "arxiv_url": "https://arxiv.org/abs/2508.07342"
         },
         "conf/cikm/ZhangSZBY25": {
             "title": "An Robust Entity Alignment Method based on Knowledge Distillation with Noisy Aligned Pairs.",
@@ -7998,7 +8584,9 @@
             "pages": "4066-4075",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhangT25",
             "doi": "10.1145/3746252.3761428",
-            "ee": "https://doi.org/10.1145/3746252.3761428"
+            "ee": "https://doi.org/10.1145/3746252.3761428",
+            "arxiv_id": "2509.23560",
+            "arxiv_url": "https://arxiv.org/abs/2509.23560"
         },
         "conf/cikm/ZhangTJH025": {
             "title": "Distribution-Guided Auto-Encoder for User Multimodal Interest Cross Fusion.",
@@ -8008,7 +8596,9 @@
             "pages": "4128-4138",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhangTJH025",
             "doi": "10.1145/3746252.3761367",
-            "ee": "https://doi.org/10.1145/3746252.3761367"
+            "ee": "https://doi.org/10.1145/3746252.3761367",
+            "arxiv_id": "2508.14485",
+            "arxiv_url": "https://arxiv.org/abs/2508.14485"
         },
         "conf/cikm/ZhangTZZS25": {
             "title": "VoiceVisSystem: End-to-End Voice-driven Data Visualization Generation from Natural Language Questions.",
@@ -8088,7 +8678,9 @@
             "pages": "6284-6292",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhangZLD0DSLCK25",
             "doi": "10.1145/3746252.3761553",
-            "ee": "https://doi.org/10.1145/3746252.3761553"
+            "ee": "https://doi.org/10.1145/3746252.3761553",
+            "arxiv_id": "2508.13390",
+            "arxiv_url": "https://arxiv.org/abs/2508.13390"
         },
         "conf/cikm/ZhangZT0025": {
             "title": "Yes is Harder than No: A Behavioral Study of Framing Effects in Large Language Models Across Downstream Tasks.",
@@ -8108,7 +8700,9 @@
             "pages": "6767-6771",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Zhao0F025",
             "doi": "10.1145/3746252.3761473",
-            "ee": "https://doi.org/10.1145/3746252.3761473"
+            "ee": "https://doi.org/10.1145/3746252.3761473",
+            "arxiv_id": "2508.18689",
+            "arxiv_url": "https://arxiv.org/abs/2508.18689"
         },
         "conf/cikm/Zhao0LC0P25": {
             "title": "FreeGAD: A Training-Free yet Effective Approach for Graph Anomaly Detection.",
@@ -8118,7 +8712,9 @@
             "pages": "4379-4389",
             "dblp_url": "https://dblp.org/rec/conf/cikm/Zhao0LC0P25",
             "doi": "10.1145/3746252.3761125",
-            "ee": "https://doi.org/10.1145/3746252.3761125"
+            "ee": "https://doi.org/10.1145/3746252.3761125",
+            "arxiv_id": "2508.10594",
+            "arxiv_url": "https://arxiv.org/abs/2508.10594"
         },
         "conf/cikm/Zhao0SXD25": {
             "title": "ClariLM: Enhancing Open-domain Clarification Ability for Large Language Models.",
@@ -8138,7 +8734,9 @@
             "pages": "4357-4367",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhaoCG25",
             "doi": "10.1145/3746252.3761283",
-            "ee": "https://doi.org/10.1145/3746252.3761283"
+            "ee": "https://doi.org/10.1145/3746252.3761283",
+            "arxiv_id": "2412.08156",
+            "arxiv_url": "https://arxiv.org/abs/2412.08156"
         },
         "conf/cikm/ZhaoCZL25": {
             "title": "ReCode: Improving LLM-based Code Repair with Fine-Grained Retrieval-Augmented Generation.",
@@ -8148,7 +8746,9 @@
             "pages": "4368-4378",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhaoCZL25",
             "doi": "10.1145/3746252.3761035",
-            "ee": "https://doi.org/10.1145/3746252.3761035"
+            "ee": "https://doi.org/10.1145/3746252.3761035",
+            "arxiv_id": "2509.02330",
+            "arxiv_url": "https://arxiv.org/abs/2509.02330"
         },
         "conf/cikm/ZhaoDZLW025": {
             "title": "Hybrid2: Distributed GNN Training System Enhanced by Dual-Hybrid for Sampling and Loading.",
@@ -8168,7 +8768,9 @@
             "pages": "4346-4356",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhaoHSDLXZSY25",
             "doi": "10.1145/3746252.3761096",
-            "ee": "https://doi.org/10.1145/3746252.3761096"
+            "ee": "https://doi.org/10.1145/3746252.3761096",
+            "arxiv_id": "2404.08707",
+            "arxiv_url": "https://arxiv.org/abs/2404.08707"
         },
         "conf/cikm/ZhaoMKCALPCD025": {
             "title": "CyberBOT: Ontology-Grounded Retrieval Augmented Generation for Reliable Cybersecurity Education.",
@@ -8218,7 +8820,9 @@
             "pages": "4315-4325",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhaoZ0R0LF025",
             "doi": "10.1145/3746252.3761103",
-            "ee": "https://doi.org/10.1145/3746252.3761103"
+            "ee": "https://doi.org/10.1145/3746252.3761103",
+            "arxiv_id": "2508.16910",
+            "arxiv_url": "https://arxiv.org/abs/2508.16910"
         },
         "conf/cikm/ZhaoZWWOYWL25": {
             "title": "Towards Unbiased and Real-Time Staytime Prediction for Live Streaming Recommendation.",
@@ -8258,7 +8862,9 @@
             "pages": "6580-6586",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhengJL0WAHLFYT25",
             "doi": "10.1145/3746252.3761620",
-            "ee": "https://doi.org/10.1145/3746252.3761620"
+            "ee": "https://doi.org/10.1145/3746252.3761620",
+            "arxiv_id": "2412.21151",
+            "arxiv_url": "https://arxiv.org/abs/2412.21151"
         },
         "conf/cikm/ZhengW25": {
             "title": "Modeling Edge-Specific Node Features through Co-Representation Neural Hypergraph Diffusion.",
@@ -8268,7 +8874,9 @@
             "pages": "4444-4454",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhengW25",
             "doi": "10.1145/3746252.3761094",
-            "ee": "https://doi.org/10.1145/3746252.3761094"
+            "ee": "https://doi.org/10.1145/3746252.3761094",
+            "arxiv_id": "2405.14286",
+            "arxiv_url": "https://arxiv.org/abs/2405.14286"
         },
         "conf/cikm/ZhengWYYHHZW25": {
             "title": "Non-autoregressive Generative Auction with Global Externalities for Online Advertising.",
@@ -8308,7 +8916,9 @@
             "pages": "4466-4476",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhongZ0WN025",
             "doi": "10.1145/3746252.3761134",
-            "ee": "https://doi.org/10.1145/3746252.3761134"
+            "ee": "https://doi.org/10.1145/3746252.3761134",
+            "arxiv_id": "2508.15378",
+            "arxiv_url": "https://arxiv.org/abs/2508.15378"
         },
         "conf/cikm/Zhou00B25": {
             "title": "Budget and Frequency Controlled Cost-Aware Model Extraction Attack on Sequential Recommenders.",
@@ -8338,7 +8948,9 @@
             "pages": "5525-5529",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhouBA25",
             "doi": "10.1145/3746252.3760943",
-            "ee": "https://doi.org/10.1145/3746252.3760943"
+            "ee": "https://doi.org/10.1145/3746252.3760943",
+            "arxiv_id": "2508.03083",
+            "arxiv_url": "https://arxiv.org/abs/2508.03083"
         },
         "conf/cikm/ZhouCF00Z25": {
             "title": "Enhancing Dual-Target Cross-Domain Recommendation via Similar User Bridging.",
@@ -8358,7 +8970,9 @@
             "pages": "4498-4508",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhouSLFW25",
             "doi": "10.1145/3746252.3761278",
-            "ee": "https://doi.org/10.1145/3746252.3761278"
+            "ee": "https://doi.org/10.1145/3746252.3761278",
+            "arxiv_id": "2509.00622",
+            "arxiv_url": "https://arxiv.org/abs/2509.00622"
         },
         "conf/cikm/ZhuCQC25": {
             "title": "FinCast: A Foundation Model for Financial Time-Series Forecasting.",
@@ -8368,7 +8982,9 @@
             "pages": "4539-4549",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhuCQC25",
             "doi": "10.1145/3746252.3761261",
-            "ee": "https://doi.org/10.1145/3746252.3761261"
+            "ee": "https://doi.org/10.1145/3746252.3761261",
+            "arxiv_id": "2508.19609",
+            "arxiv_url": "https://arxiv.org/abs/2508.19609"
         },
         "conf/cikm/ZhuFD25": {
             "title": "DebiasedKGE: Towards Mitigating Spurious Forgetting in Continual Knowledge Graph Embedding.",
@@ -8388,7 +9004,9 @@
             "pages": "6309-6316",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhuFZJWHDWZGYCC25",
             "doi": "10.1145/3746252.3761507",
-            "ee": "https://doi.org/10.1145/3746252.3761507"
+            "ee": "https://doi.org/10.1145/3746252.3761507",
+            "arxiv_id": "2507.15551",
+            "arxiv_url": "https://arxiv.org/abs/2507.15551"
         },
         "conf/cikm/ZhuGDB25": {
             "title": "Adversarially Attacking Graph Properties and Sparsification in Graph Learning.",
@@ -8408,7 +9026,9 @@
             "pages": "5535-5539",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhuJC0YL25",
             "doi": "10.1145/3746252.3760833",
-            "ee": "https://doi.org/10.1145/3746252.3760833"
+            "ee": "https://doi.org/10.1145/3746252.3760833",
+            "arxiv_id": "2508.12706",
+            "arxiv_url": "https://arxiv.org/abs/2508.12706"
         },
         "conf/cikm/ZhuKLCY025": {
             "title": "LatentExplainer: Explaining Latent Representations in Deep Generative Models with Multimodal Large Language Models.",
@@ -8418,7 +9038,9 @@
             "pages": "4529-4538",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhuKLCY025",
             "doi": "10.1145/3746252.3761318",
-            "ee": "https://doi.org/10.1145/3746252.3761318"
+            "ee": "https://doi.org/10.1145/3746252.3761318",
+            "arxiv_id": "2406.14862",
+            "arxiv_url": "https://arxiv.org/abs/2406.14862"
         },
         "conf/cikm/ZhuP00L25": {
             "title": "FunLoc: A Novel Function-level Bug Localization Framework Enhanced by Contrastive and Active Learning Strategies.",
@@ -8448,7 +9070,9 @@
             "pages": "6772-6776",
             "dblp_url": "https://dblp.org/rec/conf/cikm/ZhuZZ025a",
             "doi": "10.1145/3746252.3761490",
-            "ee": "https://doi.org/10.1145/3746252.3761490"
+            "ee": "https://doi.org/10.1145/3746252.3761490",
+            "arxiv_id": "2504.10511",
+            "arxiv_url": "https://arxiv.org/abs/2504.10511"
         },
         "conf/cikm/Zhuang0FLJLN25": {
             "title": "Frequency-Decoupled Distillation for Efficient Multimodal Recommendation.",

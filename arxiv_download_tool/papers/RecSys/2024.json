@@ -8,7 +8,9 @@
             "pages": "722-732",
             "dblp_url": "https://dblp.org/rec/conf/recsys/0001JOR24",
             "doi": "10.1145/3640457.3688105",
-            "ee": "https://doi.org/10.1145/3640457.3688105"
+            "ee": "https://doi.org/10.1145/3640457.3688105",
+            "arxiv_id": "2405.05736",
+            "arxiv_url": "https://arxiv.org/abs/2405.05736"
         },
         "conf/recsys/0003L24": {
             "title": "One-class Matrix Factorization: Point-Wise Regression-Based or Pair-Wise Ranking-Based?",
@@ -28,7 +30,9 @@
             "pages": "329-339",
             "dblp_url": "https://dblp.org/rec/conf/recsys/0007QLL024",
             "doi": "10.1145/3640457.3688101",
-            "ee": "https://doi.org/10.1145/3640457.3688101"
+            "ee": "https://doi.org/10.1145/3640457.3688101",
+            "arxiv_id": "2403.17442",
+            "arxiv_url": "https://arxiv.org/abs/2403.17442"
         },
         "conf/recsys/0011WLYEVGZECC24": {
             "title": "Self-Auxiliary Distillation for Sample Efficient Learning in Google-Scale Recommenders.",
@@ -48,7 +52,9 @@
             "pages": "1168-1173",
             "dblp_url": "https://dblp.org/rec/conf/recsys/AbbattistaANMP24",
             "doi": "10.1145/3640457.3691719",
-            "ee": "https://doi.org/10.1145/3640457.3691719"
+            "ee": "https://doi.org/10.1145/3640457.3691719",
+            "arxiv_id": "2409.04329",
+            "arxiv_url": "https://arxiv.org/abs/2409.04329"
         },
         "conf/recsys/AbdollahpouriDM24": {
             "title": "SURE 2024: Workshop on Strategic and Utility-aware REcommendation.",
@@ -88,7 +94,9 @@
             "pages": "1096-1101",
             "dblp_url": "https://dblp.org/rec/conf/recsys/AirdSAVHMB24",
             "doi": "10.1145/3640457.3691706",
-            "ee": "https://doi.org/10.1145/3640457.3691706"
+            "ee": "https://doi.org/10.1145/3640457.3691706",
+            "arxiv_id": "2410.04551",
+            "arxiv_url": "https://arxiv.org/abs/2410.04551"
         },
         "conf/recsys/AliQ0MK024": {
             "title": "GLAMOR: Graph-based LAnguage MOdel embedding for citation Recommendation.",
@@ -128,7 +136,9 @@
             "pages": "1",
             "dblp_url": "https://dblp.org/rec/conf/recsys/AridorGKKK24",
             "doi": "10.1145/3640457.3688158",
-            "ee": "https://doi.org/10.1145/3640457.3688158"
+            "ee": "https://doi.org/10.1145/3640457.3688158",
+            "arxiv_id": "2405.11053",
+            "arxiv_url": "https://arxiv.org/abs/2405.11053"
         },
         "conf/recsys/Ariza-CasabonaB24": {
             "title": "A Comparative Analysis of Text-Based Explainable Recommender Systems.",
@@ -148,7 +158,9 @@
             "pages": "74-83",
             "dblp_url": "https://dblp.org/rec/conf/recsys/AustinKTS24",
             "doi": "10.1145/3640457.3688142",
-            "ee": "https://doi.org/10.1145/3640457.3688142"
+            "ee": "https://doi.org/10.1145/3640457.3688142",
+            "arxiv_id": "2405.00981",
+            "arxiv_url": "https://arxiv.org/abs/2405.00981"
         },
         "conf/recsys/Bakhshizadeh24": {
             "title": "Supporting Knowledge Workers through Personal Information Assistance with Context-aware Recommender Systems.",
@@ -218,7 +230,9 @@
             "pages": "200-208",
             "dblp_url": "https://dblp.org/rec/conf/recsys/BesbesKK24",
             "doi": "10.1145/3640457.3688144",
-            "ee": "https://doi.org/10.1145/3640457.3688144"
+            "ee": "https://doi.org/10.1145/3640457.3688144",
+            "arxiv_id": "2405.03948",
+            "arxiv_url": "https://arxiv.org/abs/2405.03948"
         },
         "conf/recsys/BhattacharyaOL24": {
             "title": "Joint Modeling of Search and Recommendations Via an Unified Contextual Recommender (UniCoRn).",
@@ -228,7 +242,9 @@
             "pages": "793-795",
             "dblp_url": "https://dblp.org/rec/conf/recsys/BhattacharyaOL24",
             "doi": "10.1145/3640457.3688034",
-            "ee": "https://doi.org/10.1145/3640457.3688034"
+            "ee": "https://doi.org/10.1145/3640457.3688034",
+            "arxiv_id": "2408.10394",
+            "arxiv_url": "https://arxiv.org/abs/2408.10394"
         },
         "conf/recsys/Binst24": {
             "title": "How to Evaluate Serendipity in Recommender Systems: the Need for a Serendiptionnaire.",
@@ -258,7 +274,9 @@
             "pages": "158-168",
             "dblp_url": "https://dblp.org/rec/conf/recsys/BorattoFFMM24",
             "doi": "10.1145/3640457.3688064",
-            "ee": "https://doi.org/10.1145/3640457.3688064"
+            "ee": "https://doi.org/10.1145/3640457.3688064",
+            "arxiv_id": "2408.12208",
+            "arxiv_url": "https://arxiv.org/abs/2408.12208"
         },
         "conf/recsys/BorattoFL024": {
             "title": "First International Workshop on Recommender Systems for Sustainability and Social Good (RecSoGood 2024).",
@@ -368,7 +386,9 @@
             "pages": "924-928",
             "dblp_url": "https://dblp.org/rec/conf/recsys/CruzSKC24",
             "doi": "10.1145/3640457.3688170",
-            "ee": "https://doi.org/10.1145/3640457.3688170"
+            "ee": "https://doi.org/10.1145/3640457.3688170",
+            "arxiv_id": "2406.03109",
+            "arxiv_url": "https://arxiv.org/abs/2406.03109"
         },
         "conf/recsys/CuiLWWTWWC24": {
             "title": "Distillation Matters: Empowering Sequential Recommenders to Match the Performance of Large Language Models.",
@@ -378,7 +398,9 @@
             "pages": "507-517",
             "dblp_url": "https://dblp.org/rec/conf/recsys/CuiLWWTWWC24",
             "doi": "10.1145/3640457.3688118",
-            "ee": "https://doi.org/10.1145/3640457.3688118"
+            "ee": "https://doi.org/10.1145/3640457.3688118",
+            "arxiv_id": "2405.00338",
+            "arxiv_url": "https://arxiv.org/abs/2405.00338"
         },
         "conf/recsys/CzappJDH24": {
             "title": "Dynamic Product Image Generation and Recommendation at Scale for Personalized E-commerce.",
@@ -388,7 +410,9 @@
             "pages": "768-770",
             "dblp_url": "https://dblp.org/rec/conf/recsys/CzappJDH24",
             "doi": "10.1145/3640457.3688045",
-            "ee": "https://doi.org/10.1145/3640457.3688045"
+            "ee": "https://doi.org/10.1145/3640457.3688045",
+            "arxiv_id": "2408.12392",
+            "arxiv_url": "https://arxiv.org/abs/2408.12392"
         },
         "conf/recsys/DangLYGJ0Z24": {
             "title": "Repeated Padding for Sequential Recommendation.",
@@ -478,7 +502,9 @@
             "pages": "179-188",
             "dblp_url": "https://dblp.org/rec/conf/recsys/DongHS24",
             "doi": "10.1145/3640457.3688113",
-            "ee": "https://doi.org/10.1145/3640457.3688113"
+            "ee": "https://doi.org/10.1145/3640457.3688113",
+            "arxiv_id": "2408.17332",
+            "arxiv_url": "https://arxiv.org/abs/2408.17332"
         },
         "conf/recsys/DuWJZ024": {
             "title": "A Tutorial on Feature Interpretation in Recommender Systems.",
@@ -588,7 +614,9 @@
             "pages": "884-889",
             "dblp_url": "https://dblp.org/rec/conf/recsys/FerraroE024",
             "doi": "10.1145/3640457.3688163",
-            "ee": "https://doi.org/10.1145/3640457.3688163"
+            "ee": "https://doi.org/10.1145/3640457.3688163",
+            "arxiv_id": "2409.03781",
+            "arxiv_url": "https://arxiv.org/abs/2409.03781"
         },
         "conf/recsys/FerraroPK024": {
             "title": "MuRS 2024: 2nd Music Recommender Systems Workshop.",
@@ -618,7 +646,9 @@
             "pages": "380-390",
             "dblp_url": "https://dblp.org/rec/conf/recsys/GanhorMHNS24",
             "doi": "10.1145/3640457.3688138",
-            "ee": "https://doi.org/10.1145/3640457.3688138"
+            "ee": "https://doi.org/10.1145/3640457.3688138",
+            "arxiv_id": "2409.17864",
+            "arxiv_url": "https://arxiv.org/abs/2409.17864"
         },
         "conf/recsys/GomezCBS24": {
             "title": "AMBAR: A dataset for Assessing Multiple Beyond-Accuracy Recommenders.",
@@ -658,7 +688,9 @@
             "pages": "748-750",
             "dblp_url": "https://dblp.org/rec/conf/recsys/HartmanSTM24",
             "doi": "10.1145/3640457.3688060",
-            "ee": "https://doi.org/10.1145/3640457.3688060"
+            "ee": "https://doi.org/10.1145/3640457.3688060",
+            "arxiv_id": "2408.05344",
+            "arxiv_url": "https://arxiv.org/abs/2408.05344"
         },
         "conf/recsys/HauptmannTT24": {
             "title": "The 6th International Workshop on Health Recommender Systems.",
@@ -698,7 +730,9 @@
             "pages": "838-840",
             "dblp_url": "https://dblp.org/rec/conf/recsys/HsuWEX24",
             "doi": "10.1145/3640457.3688053",
-            "ee": "https://doi.org/10.1145/3640457.3688053"
+            "ee": "https://doi.org/10.1145/3640457.3688053",
+            "arxiv_id": "2508.18700",
+            "arxiv_url": "https://arxiv.org/abs/2508.18700"
         },
         "conf/recsys/Huang0WJHDX24": {
             "title": "Utilizing Non-click Samples via Semi-supervised Learning for Conversion Rate Prediction.",
@@ -748,7 +782,9 @@
             "pages": "816-818",
             "dblp_url": "https://dblp.org/rec/conf/recsys/JeunenBPU24",
             "doi": "10.1145/3640457.3688036",
-            "ee": "https://doi.org/10.1145/3640457.3688036"
+            "ee": "https://doi.org/10.1145/3640457.3688036",
+            "arxiv_id": "2407.20665",
+            "arxiv_url": "https://arxiv.org/abs/2407.20665"
         },
         "conf/recsys/JeunenMPAVSU24": {
             "title": "Multi-Objective Recommendation via Multivariate Policy Learning.",
@@ -758,7 +794,9 @@
             "pages": "712-721",
             "dblp_url": "https://dblp.org/rec/conf/recsys/JeunenMPAVSU24",
             "doi": "10.1145/3640457.3688132",
-            "ee": "https://doi.org/10.1145/3640457.3688132"
+            "ee": "https://doi.org/10.1145/3640457.3688132",
+            "arxiv_id": "2405.02141",
+            "arxiv_url": "https://arxiv.org/abs/2405.02141"
         },
         "conf/recsys/JeunenOSVW24": {
             "title": "CONSEQUENCES - The 3rd Workshop on Causality, Counterfactuals and Sequential Decision-Making for Recommender Systems.",
@@ -778,7 +816,9 @@
             "pages": "878-883",
             "dblp_url": "https://dblp.org/rec/conf/recsys/JeunenU24",
             "doi": "10.1145/3640457.3688162",
-            "ee": "https://doi.org/10.1145/3640457.3688162"
+            "ee": "https://doi.org/10.1145/3640457.3688162",
+            "arxiv_id": "2405.10024",
+            "arxiv_url": "https://arxiv.org/abs/2405.10024"
         },
         "conf/recsys/JiangC0WJZLJB24": {
             "title": "Prompt Tuning for Item Cold-start Recommendation.",
@@ -788,7 +828,9 @@
             "pages": "411-421",
             "dblp_url": "https://dblp.org/rec/conf/recsys/JiangC0WJZLJB24",
             "doi": "10.1145/3640457.3688126",
-            "ee": "https://doi.org/10.1145/3640457.3688126"
+            "ee": "https://doi.org/10.1145/3640457.3688126",
+            "arxiv_id": "2412.18082",
+            "arxiv_url": "https://arxiv.org/abs/2412.18082"
         },
         "conf/recsys/JiangLC0ZLJ0Z24": {
             "title": "MMGCL: Meta Knowledge-Enhanced Multi-view Graph Contrastive Learning for Recommendations.",
@@ -808,7 +850,9 @@
             "pages": "835-837",
             "dblp_url": "https://dblp.org/rec/conf/recsys/JoshiFHZL24",
             "doi": "10.1145/3640457.3688051",
-            "ee": "https://doi.org/10.1145/3640457.3688051"
+            "ee": "https://doi.org/10.1145/3640457.3688051",
+            "arxiv_id": "2409.14517",
+            "arxiv_url": "https://arxiv.org/abs/2409.14517"
         },
         "conf/recsys/JuDTHL24": {
             "title": "Exploring Coresets for Efficient Training and Consistent Evaluation of Recommender Systems.",
@@ -828,7 +872,9 @@
             "pages": "1125-1130",
             "dblp_url": "https://dblp.org/rec/conf/recsys/KeckiS24",
             "doi": "10.1145/3640457.3691711",
-            "ee": "https://doi.org/10.1145/3640457.3691711"
+            "ee": "https://doi.org/10.1145/3640457.3691711",
+            "arxiv_id": "2409.03893",
+            "arxiv_url": "https://arxiv.org/abs/2409.03893"
         },
         "conf/recsys/KekudaZU24": {
             "title": "Embedding based retrieval for long tail search queries in ecommerce.",
@@ -838,7 +884,9 @@
             "pages": "771-774",
             "dblp_url": "https://dblp.org/rec/conf/recsys/KekudaZU24",
             "doi": "10.1145/3640457.3688039",
-            "ee": "https://doi.org/10.1145/3640457.3688039"
+            "ee": "https://doi.org/10.1145/3640457.3688039",
+            "arxiv_id": "2505.01946",
+            "arxiv_url": "https://arxiv.org/abs/2505.01946"
         },
         "conf/recsys/KhaniWNAYLAKKZH24": {
             "title": "Bridging the Gap: Unpacking the Hidden Challenges in Knowledge Distillation for Online Ranking Systems.",
@@ -848,7 +896,9 @@
             "pages": "758-761",
             "dblp_url": "https://dblp.org/rec/conf/recsys/KhaniWNAYLAKKZH24",
             "doi": "10.1145/3640457.3688055",
-            "ee": "https://doi.org/10.1145/3640457.3688055"
+            "ee": "https://doi.org/10.1145/3640457.3688055",
+            "arxiv_id": "2408.14678",
+            "arxiv_url": "https://arxiv.org/abs/2408.14678"
         },
         "conf/recsys/KilleLTYO24": {
             "title": "12th International Workshop on News Recommendation and Analytics (INRA&apos;24).",
@@ -868,7 +918,9 @@
             "pages": "1067-1072",
             "dblp_url": "https://dblp.org/rec/conf/recsys/KlenitskiyVPV24",
             "doi": "10.1145/3640457.3688195",
-            "ee": "https://doi.org/10.1145/3640457.3688195"
+            "ee": "https://doi.org/10.1145/3640457.3688195",
+            "arxiv_id": "2408.12008",
+            "arxiv_url": "https://arxiv.org/abs/2408.12008"
         },
         "conf/recsys/KnijnenburgM24": {
             "title": "Conducting User Experiments in Recommender Systems.",
@@ -908,7 +960,9 @@
             "pages": "1195-1199",
             "dblp_url": "https://dblp.org/rec/conf/recsys/KruseLKPP0UAF24",
             "doi": "10.1145/3640457.3687164",
-            "ee": "https://doi.org/10.1145/3640457.3687164"
+            "ee": "https://doi.org/10.1145/3640457.3687164",
+            "arxiv_id": "2409.20483",
+            "arxiv_url": "https://arxiv.org/abs/2409.20483"
         },
         "conf/recsys/Kusano24": {
             "title": "Data Augmentation using Reverse Prompt for Cost-Efficient Cold-Start Recommendation.",
@@ -938,7 +992,9 @@
             "pages": "1022-1027",
             "dblp_url": "https://dblp.org/rec/conf/recsys/LesotaGWKS24",
             "doi": "10.1145/3640457.3688187",
-            "ee": "https://doi.org/10.1145/3640457.3688187"
+            "ee": "https://doi.org/10.1145/3640457.3688187",
+            "arxiv_id": "2408.11565",
+            "arxiv_url": "https://arxiv.org/abs/2408.11565"
         },
         "conf/recsys/LiCLXSR24": {
             "title": "Privacy Preserving Conversion Modeling in Data Clean Room.",
@@ -948,7 +1004,9 @@
             "pages": "819-822",
             "dblp_url": "https://dblp.org/rec/conf/recsys/LiCLXSR24",
             "doi": "10.1145/3640457.3688054",
-            "ee": "https://doi.org/10.1145/3640457.3688054"
+            "ee": "https://doi.org/10.1145/3640457.3688054",
+            "arxiv_id": "2505.14959",
+            "arxiv_url": "https://arxiv.org/abs/2505.14959"
         },
         "conf/recsys/LiD0024": {
             "title": "EARL: Workshop on Evaluating and Applying Recommendation Systems with Large Language Models.",
@@ -968,7 +1026,9 @@
             "pages": "454-464",
             "dblp_url": "https://dblp.org/rec/conf/recsys/LiLHMSZM24",
             "doi": "10.1145/3640457.3688076",
-            "ee": "https://doi.org/10.1145/3640457.3688076"
+            "ee": "https://doi.org/10.1145/3640457.3688076",
+            "arxiv_id": "2405.18058",
+            "arxiv_url": "https://arxiv.org/abs/2405.18058"
         },
         "conf/recsys/LiLP024": {
             "title": "Dynamic Stage-aware User Interest Learning for Heterogeneous Sequential Recommendation.",
@@ -1008,7 +1068,9 @@
             "pages": "422-432",
             "dblp_url": "https://dblp.org/rec/conf/recsys/LiZAYVKH24",
             "doi": "10.1145/3640457.3688121",
-            "ee": "https://doi.org/10.1145/3640457.3688121"
+            "ee": "https://doi.org/10.1145/3640457.3688121",
+            "arxiv_id": "2405.02429",
+            "arxiv_url": "https://arxiv.org/abs/2405.02429"
         },
         "conf/recsys/LiZFLLH24": {
             "title": "MODEM: Decoupling User Behavior for Shared-Account Video Recommendations on Large Screen Devices.",
@@ -1028,7 +1090,9 @@
             "pages": "370-379",
             "dblp_url": "https://dblp.org/rec/conf/recsys/LiZLTZZ24",
             "doi": "10.1145/3640457.3688115",
-            "ee": "https://doi.org/10.1145/3640457.3688115"
+            "ee": "https://doi.org/10.1145/3640457.3688115",
+            "arxiv_id": "2408.07278",
+            "arxiv_url": "https://arxiv.org/abs/2408.07278"
         },
         "conf/recsys/LichtenbergBR24": {
             "title": "Ranking Across Different Content Types: The Robust Beauty of Multinomial Blending.",
@@ -1038,7 +1102,9 @@
             "pages": "823-825",
             "dblp_url": "https://dblp.org/rec/conf/recsys/LichtenbergBR24",
             "doi": "10.1145/3640457.3688059",
-            "ee": "https://doi.org/10.1145/3640457.3688059"
+            "ee": "https://doi.org/10.1145/3640457.3688059",
+            "arxiv_id": "2408.09168",
+            "arxiv_url": "https://arxiv.org/abs/2408.09168"
         },
         "conf/recsys/LinCYX24": {
             "title": "Bootstrapping Conditional Retrieval for User-to-Item Recommendations.",
@@ -1048,7 +1114,9 @@
             "pages": "755-757",
             "dblp_url": "https://dblp.org/rec/conf/recsys/LinCYX24",
             "doi": "10.1145/3640457.3688057",
-            "ee": "https://doi.org/10.1145/3640457.3688057"
+            "ee": "https://doi.org/10.1145/3640457.3688057",
+            "arxiv_id": "2508.16793",
+            "arxiv_url": "https://arxiv.org/abs/2508.16793"
         },
         "conf/recsys/LinMBPHBP24": {
             "title": "Country-diverted experiments for mitigation of network effects.",
@@ -1108,7 +1176,9 @@
             "pages": "890-895",
             "dblp_url": "https://dblp.org/rec/conf/recsys/LiuLL24",
             "doi": "10.1145/3640457.3688164",
-            "ee": "https://doi.org/10.1145/3640457.3688164"
+            "ee": "https://doi.org/10.1145/3640457.3688164",
+            "arxiv_id": "2410.21048",
+            "arxiv_url": "https://arxiv.org/abs/2410.21048"
         },
         "conf/recsys/LiuZKSZLZLW24": {
             "title": "Embedding Optimization for Training Large-scale Deep Learning Recommendation Systems with EMBark.",
@@ -1158,7 +1228,9 @@
             "pages": "549-559",
             "dblp_url": "https://dblp.org/rec/conf/recsys/MalitestaPAMNS24",
             "doi": "10.1145/3640457.3688070",
-            "ee": "https://doi.org/10.1145/3640457.3688070"
+            "ee": "https://doi.org/10.1145/3640457.3688070",
+            "arxiv_id": "2408.11762",
+            "arxiv_url": "https://arxiv.org/abs/2408.11762"
         },
         "conf/recsys/MatrosovaMSLBM24": {
             "title": "Do Recommender Systems Promote Local Music? A Reproducibility Study Using Music Streaming Data.",
@@ -1168,7 +1240,9 @@
             "pages": "148-157",
             "dblp_url": "https://dblp.org/rec/conf/recsys/MatrosovaMSLBM24",
             "doi": "10.1145/3640457.3688065",
-            "ee": "https://doi.org/10.1145/3640457.3688065"
+            "ee": "https://doi.org/10.1145/3640457.3688065",
+            "arxiv_id": "2408.16430",
+            "arxiv_url": "https://arxiv.org/abs/2408.16430"
         },
         "conf/recsys/Mehta24": {
             "title": "Integrating Matrix Factorization with Graph based Models.",
@@ -1218,7 +1292,9 @@
             "pages": "475-485",
             "dblp_url": "https://dblp.org/rec/conf/recsys/MezentsevGOF24",
             "doi": "10.1145/3640457.3688140",
-            "ee": "https://doi.org/10.1145/3640457.3688140"
+            "ee": "https://doi.org/10.1145/3640457.3688140",
+            "arxiv_id": "2409.18721",
+            "arxiv_url": "https://arxiv.org/abs/2409.18721"
         },
         "conf/recsys/MilogradskiiLPA24": {
             "title": "Revisiting BPR: A Replicability Study of a Common Recommender System Baseline.",
@@ -1228,7 +1304,9 @@
             "pages": "267-277",
             "dblp_url": "https://dblp.org/rec/conf/recsys/MilogradskiiLPA24",
             "doi": "10.1145/3640457.3688073",
-            "ee": "https://doi.org/10.1145/3640457.3688073"
+            "ee": "https://doi.org/10.1145/3640457.3688073",
+            "arxiv_id": "2409.14217",
+            "arxiv_url": "https://arxiv.org/abs/2409.14217"
         },
         "conf/recsys/MohammadiPMZ24": {
             "title": "Are We Explaining the Same Recommenders? Incorporating Recommender Performance for Evaluating Explainers.",
@@ -1248,7 +1326,9 @@
             "pages": "401-410",
             "dblp_url": "https://dblp.org/rec/conf/recsys/MonteilVLMH24",
             "doi": "10.1145/3640457.3688125",
-            "ee": "https://doi.org/10.1145/3640457.3688125"
+            "ee": "https://doi.org/10.1145/3640457.3688125",
+            "arxiv_id": "2404.13298",
+            "arxiv_url": "https://arxiv.org/abs/2404.13298"
         },
         "conf/recsys/Moscati24": {
             "title": "Multimodal Representation Learning for High-Quality Recommendations in Cold-Start and Beyond-Accuracy.",
@@ -1318,7 +1398,9 @@
             "pages": "340-349",
             "dblp_url": "https://dblp.org/rec/conf/recsys/PenhaVPNB24",
             "doi": "10.1145/3640457.3688123",
-            "ee": "https://doi.org/10.1145/3640457.3688123"
+            "ee": "https://doi.org/10.1145/3640457.3688123",
+            "arxiv_id": "2410.16823",
+            "arxiv_url": "https://arxiv.org/abs/2410.16823"
         },
         "conf/recsys/PetrovMT24": {
             "title": "Efficient Inference of Sub-Item Id-based Sequential Recommendation Models with Millions of Items.",
@@ -1328,7 +1410,9 @@
             "pages": "912-917",
             "dblp_url": "https://dblp.org/rec/conf/recsys/PetrovMT24",
             "doi": "10.1145/3640457.3688168",
-            "ee": "https://doi.org/10.1145/3640457.3688168"
+            "ee": "https://doi.org/10.1145/3640457.3688168",
+            "arxiv_id": "2408.09992",
+            "arxiv_url": "https://arxiv.org/abs/2408.09992"
         },
         "conf/recsys/PetrozzielloSL24": {
             "title": "Scale-Invariant Learning-to-Rank.",
@@ -1338,7 +1422,9 @@
             "pages": "826-828",
             "dblp_url": "https://dblp.org/rec/conf/recsys/PetrozzielloSL24",
             "doi": "10.1145/3640457.3688032",
-            "ee": "https://doi.org/10.1145/3640457.3688032"
+            "ee": "https://doi.org/10.1145/3640457.3688032",
+            "arxiv_id": "2410.01959",
+            "arxiv_url": "https://arxiv.org/abs/2410.01959"
         },
         "conf/recsys/Petruzzelli24": {
             "title": "Towards Symbiotic Recommendations: Leveraging LLMs for Conversational Recommendation Systems.",
@@ -1388,7 +1474,9 @@
             "pages": "53-62",
             "dblp_url": "https://dblp.org/rec/conf/recsys/QuXXKS24",
             "doi": "10.1145/3640457.3688107",
-            "ee": "https://doi.org/10.1145/3640457.3688107"
+            "ee": "https://doi.org/10.1145/3640457.3688107",
+            "arxiv_id": "2404.08796",
+            "arxiv_url": "https://arxiv.org/abs/2404.08796"
         },
         "conf/recsys/Raziperchikolaei24": {
             "title": "One-class recommendation systems with the hinge pairwise distance loss and orthogonal representations.",
@@ -1438,7 +1526,9 @@
             "pages": "309-317",
             "dblp_url": "https://dblp.org/rec/conf/recsys/SamraFVGV24",
             "doi": "10.1145/3640457.3688143",
-            "ee": "https://doi.org/10.1145/3640457.3688143"
+            "ee": "https://doi.org/10.1145/3640457.3688143",
+            "arxiv_id": "2409.15568",
+            "arxiv_url": "https://arxiv.org/abs/2409.15568"
         },
         "conf/recsys/Sato24": {
             "title": "Calibrating the Predictions for Top-N Recommendations.",
@@ -1448,7 +1538,9 @@
             "pages": "963-968",
             "dblp_url": "https://dblp.org/rec/conf/recsys/Sato24",
             "doi": "10.1145/3640457.3688177",
-            "ee": "https://doi.org/10.1145/3640457.3688177"
+            "ee": "https://doi.org/10.1145/3640457.3688177",
+            "arxiv_id": "2408.11596",
+            "arxiv_url": "https://arxiv.org/abs/2408.11596"
         },
         "conf/recsys/Schellingerhout24": {
             "title": "Explainable Multi-Stakeholder Job Recommender Systems.",
@@ -1458,7 +1550,9 @@
             "pages": "1318-1322",
             "dblp_url": "https://dblp.org/rec/conf/recsys/Schellingerhout24",
             "doi": "10.1145/3640457.3688014",
-            "ee": "https://doi.org/10.1145/3640457.3688014"
+            "ee": "https://doi.org/10.1145/3640457.3688014",
+            "arxiv_id": "2410.00654",
+            "arxiv_url": "https://arxiv.org/abs/2410.00654"
         },
         "conf/recsys/SeshadriSK24": {
             "title": "Enhancing Sequential Music Recommendation with Negative Feedback-informed Contrastive Learning.",
@@ -1468,7 +1562,9 @@
             "pages": "1028-1032",
             "dblp_url": "https://dblp.org/rec/conf/recsys/SeshadriSK24",
             "doi": "10.1145/3640457.3688188",
-            "ee": "https://doi.org/10.1145/3640457.3688188"
+            "ee": "https://doi.org/10.1145/3640457.3688188",
+            "arxiv_id": "2409.07367",
+            "arxiv_url": "https://arxiv.org/abs/2409.07367"
         },
         "conf/recsys/ShahL0BWWL24": {
             "title": "Analyzing User Preferences and Quality Improvement on Bing&apos;s WebPage Recommendation Experience with Large Language Models.",
@@ -1518,7 +1614,9 @@
             "pages": "733-741",
             "dblp_url": "https://dblp.org/rec/conf/recsys/ShimizuTKKNS24",
             "doi": "10.1145/3640457.3688099",
-            "ee": "https://doi.org/10.1145/3640457.3688099"
+            "ee": "https://doi.org/10.1145/3640457.3688099",
+            "arxiv_id": "2408.11202",
+            "arxiv_url": "https://arxiv.org/abs/2408.11202"
         },
         "conf/recsys/ShtoffVHSRB24": {
             "title": "Low Rank Field-Weighted Factorization Machines for Low Latency Item Recommendation.",
@@ -1528,7 +1626,9 @@
             "pages": "238-246",
             "dblp_url": "https://dblp.org/rec/conf/recsys/ShtoffVHSRB24",
             "doi": "10.1145/3640457.3688097",
-            "ee": "https://doi.org/10.1145/3640457.3688097"
+            "ee": "https://doi.org/10.1145/3640457.3688097",
+            "arxiv_id": "2408.00801",
+            "arxiv_url": "https://arxiv.org/abs/2408.00801"
         },
         "conf/recsys/SilvaMMS24": {
             "title": "A Tool for Explainable Pension Fund Recommendations using Large Language Models.",
@@ -1548,7 +1648,9 @@
             "pages": "1039-1044",
             "dblp_url": "https://dblp.org/rec/conf/recsys/SinghV0KSZHHWTC24",
             "doi": "10.1145/3640457.3688190",
-            "ee": "https://doi.org/10.1145/3640457.3688190"
+            "ee": "https://doi.org/10.1145/3640457.3688190",
+            "arxiv_id": "2306.08121",
+            "arxiv_url": "https://arxiv.org/abs/2306.08121"
         },
         "conf/recsys/Siudek-TkaczukK24": {
             "title": "Off-Policy Selection for Optimizing Ad Display Timing in Mobile Games (Samsung Instant Plays).",
@@ -1618,7 +1720,9 @@
             "pages": "670-679",
             "dblp_url": "https://dblp.org/rec/conf/recsys/SuCWWZZWG24",
             "doi": "10.1145/3640457.3688128",
-            "ee": "https://doi.org/10.1145/3640457.3688128"
+            "ee": "https://doi.org/10.1145/3640457.3688128",
+            "arxiv_id": "2409.13175",
+            "arxiv_url": "https://arxiv.org/abs/2409.13175"
         },
         "conf/recsys/SugaharaYO24": {
             "title": "Is It Really Complementary? Revisiting Behavior-based Labels for Complementary Recommendation.",
@@ -1648,7 +1752,9 @@
             "pages": "560-569",
             "dblp_url": "https://dblp.org/rec/conf/recsys/SunYLW0024",
             "doi": "10.1145/3640457.3688147",
-            "ee": "https://doi.org/10.1145/3640457.3688147"
+            "ee": "https://doi.org/10.1145/3640457.3688147",
+            "arxiv_id": "2408.11623",
+            "arxiv_url": "https://arxiv.org/abs/2408.11623"
         },
         "conf/recsys/Symeonidis24": {
             "title": "Deep Recommendation using Graphs.",
@@ -1678,7 +1784,9 @@
             "pages": "934-938",
             "dblp_url": "https://dblp.org/rec/conf/recsys/TammA24",
             "doi": "10.1145/3640457.3688172",
-            "ee": "https://doi.org/10.1145/3640457.3688172"
+            "ee": "https://doi.org/10.1145/3640457.3688172",
+            "arxiv_id": "2409.08987",
+            "arxiv_url": "https://arxiv.org/abs/2409.08987"
         },
         "conf/recsys/TandoiM24": {
             "title": "Explore versus repeat: insights from an online supermarket.",
@@ -1718,7 +1826,9 @@
             "pages": "209-218",
             "dblp_url": "https://dblp.org/rec/conf/recsys/TomitaY24",
             "doi": "10.1145/3640457.3688130",
-            "ee": "https://doi.org/10.1145/3640457.3688130"
+            "ee": "https://doi.org/10.1145/3640457.3688130",
+            "arxiv_id": "2409.00720",
+            "arxiv_url": "https://arxiv.org/abs/2409.00720"
         },
         "conf/recsys/Tommasel24": {
             "title": "Fairness Matters: A look at LLM-generated group recommendations.",
@@ -1748,7 +1858,9 @@
             "pages": "1108-1112",
             "dblp_url": "https://dblp.org/rec/conf/recsys/TranEFLML24",
             "doi": "10.1145/3640457.3691708",
-            "ee": "https://doi.org/10.1145/3640457.3691708"
+            "ee": "https://doi.org/10.1145/3640457.3691708",
+            "arxiv_id": "2409.18690",
+            "arxiv_url": "https://arxiv.org/abs/2409.18690"
         },
         "conf/recsys/TranSSH24": {
             "title": "Transformers Meet ACT-R: Repeat-Aware and Sequential Listening Session Recommendation.",
@@ -1758,7 +1870,9 @@
             "pages": "486-496",
             "dblp_url": "https://dblp.org/rec/conf/recsys/TranSSH24",
             "doi": "10.1145/3640457.3688139",
-            "ee": "https://doi.org/10.1145/3640457.3688139"
+            "ee": "https://doi.org/10.1145/3640457.3688139",
+            "arxiv_id": "2408.16578",
+            "arxiv_url": "https://arxiv.org/abs/2408.16578"
         },
         "conf/recsys/UngruhDVPH24": {
             "title": "Putting Popularity Bias Mitigation to the Test: A User-Centric Evaluation in Music Recommenders.",
@@ -1778,7 +1892,9 @@
             "pages": "1102-1107",
             "dblp_url": "https://dblp.org/rec/conf/recsys/VancuraKS24",
             "doi": "10.1145/3640457.3691707",
-            "ee": "https://doi.org/10.1145/3640457.3691707"
+            "ee": "https://doi.org/10.1145/3640457.3691707",
+            "arxiv_id": "2409.10309",
+            "arxiv_url": "https://arxiv.org/abs/2409.10309"
         },
         "conf/recsys/VandenbrouckeS24": {
             "title": "It&apos;s (not) all about that CTR: A Multi-Stakeholder Perspective on News Recommender Metrics.",
@@ -1798,7 +1914,9 @@
             "pages": "1191-1194",
             "dblp_url": "https://dblp.org/rec/conf/recsys/VasilevVKBK24",
             "doi": "10.1145/3640457.3691701",
-            "ee": "https://doi.org/10.1145/3640457.3691701"
+            "ee": "https://doi.org/10.1145/3640457.3691701",
+            "arxiv_id": "2409.07272",
+            "arxiv_url": "https://arxiv.org/abs/2409.07272"
         },
         "conf/recsys/VenteWSB24": {
             "title": "From Clicks to Carbon: The Environmental Toll of Recommender Systems.",
@@ -1808,7 +1926,9 @@
             "pages": "580-590",
             "dblp_url": "https://dblp.org/rec/conf/recsys/VenteWSB24",
             "doi": "10.1145/3640457.3688074",
-            "ee": "https://doi.org/10.1145/3640457.3688074"
+            "ee": "https://doi.org/10.1145/3640457.3688074",
+            "arxiv_id": "2408.08203",
+            "arxiv_url": "https://arxiv.org/abs/2408.08203"
         },
         "conf/recsys/WagneN24": {
             "title": "What to compare? Towards understanding user sessions on price comparison platforms.",
@@ -1828,7 +1948,9 @@
             "pages": "23-32",
             "dblp_url": "https://dblp.org/rec/conf/recsys/WanYXJL024",
             "doi": "10.1145/3640457.3688135",
-            "ee": "https://doi.org/10.1145/3640457.3688135"
+            "ee": "https://doi.org/10.1145/3640457.3688135",
+            "arxiv_id": "2408.11523",
+            "arxiv_url": "https://arxiv.org/abs/2408.11523"
         },
         "conf/recsys/WangLLCZT0024": {
             "title": "FLIP: Fine-grained Alignment between ID-based Models and Pretrained Language Models for CTR Prediction.",
@@ -1838,7 +1960,9 @@
             "pages": "94-104",
             "dblp_url": "https://dblp.org/rec/conf/recsys/WangLLCZT0024",
             "doi": "10.1145/3640457.3688106",
-            "ee": "https://doi.org/10.1145/3640457.3688106"
+            "ee": "https://doi.org/10.1145/3640457.3688106",
+            "arxiv_id": "2310.19453",
+            "arxiv_url": "https://arxiv.org/abs/2310.19453"
         },
         "conf/recsys/WangLLMWGZHBBCC24": {
             "title": "LLMs for User Interest Exploration in Large-scale Recommendation Systems.",
@@ -1848,7 +1972,9 @@
             "pages": "872-877",
             "dblp_url": "https://dblp.org/rec/conf/recsys/WangLLMWGZHBBCC24",
             "doi": "10.1145/3640457.3688161",
-            "ee": "https://doi.org/10.1145/3640457.3688161"
+            "ee": "https://doi.org/10.1145/3640457.3688161",
+            "arxiv_id": "2405.16363",
+            "arxiv_url": "https://arxiv.org/abs/2405.16363"
         },
         "conf/recsys/WangLZCZ0L24": {
             "title": "Do Not Wait: Learning Re-Ranking Model Without User Feedback At Serving Time in E-Commerce.",
@@ -1858,7 +1984,9 @@
             "pages": "896-901",
             "dblp_url": "https://dblp.org/rec/conf/recsys/WangLZCZ0L24",
             "doi": "10.1145/3640457.3688165",
-            "ee": "https://doi.org/10.1145/3640457.3688165"
+            "ee": "https://doi.org/10.1145/3640457.3688165",
+            "arxiv_id": "2406.14004",
+            "arxiv_url": "https://arxiv.org/abs/2406.14004"
         },
         "conf/recsys/WangRS24": {
             "title": "A Pre-trained Zero-shot Sequential Recommendation Framework via Popularity Dynamics.",
@@ -1898,7 +2026,9 @@
             "pages": "1163-1167",
             "dblp_url": "https://dblp.org/rec/conf/recsys/WegmethVB24",
             "doi": "10.1145/3640457.3691718",
-            "ee": "https://doi.org/10.1145/3640457.3691718"
+            "ee": "https://doi.org/10.1145/3640457.3691718",
+            "arxiv_id": "2409.05461",
+            "arxiv_url": "https://arxiv.org/abs/2409.05461"
         },
         "conf/recsys/WijayaDFL24": {
             "title": "Rs4rs: Semantically Find Recent Publications from Top Recommendation System-Related Venues.",
@@ -1908,7 +2038,9 @@
             "pages": "1174-1176",
             "dblp_url": "https://dblp.org/rec/conf/recsys/WijayaDFL24",
             "doi": "10.1145/3640457.3691696",
-            "ee": "https://doi.org/10.1145/3640457.3691696"
+            "ee": "https://doi.org/10.1145/3640457.3691696",
+            "arxiv_id": "2409.05570",
+            "arxiv_url": "https://arxiv.org/abs/2409.05570"
         },
         "conf/recsys/WilmNS24": {
             "title": "Pareto Front Approximation for Multi-Objective Session-Based Recommender Systems.",
@@ -1918,7 +2050,9 @@
             "pages": "809-812",
             "dblp_url": "https://dblp.org/rec/conf/recsys/WilmNS24",
             "doi": "10.1145/3640457.3688048",
-            "ee": "https://doi.org/10.1145/3640457.3688048"
+            "ee": "https://doi.org/10.1145/3640457.3688048",
+            "arxiv_id": "2407.16828",
+            "arxiv_url": "https://arxiv.org/abs/2407.16828"
         },
         "conf/recsys/WuCS0WH24": {
             "title": "Learned Ranking Function: From Short-term Behavior Predictions to Long-term User Satisfaction.",
@@ -1928,7 +2062,9 @@
             "pages": "1004-1009",
             "dblp_url": "https://dblp.org/rec/conf/recsys/WuCS0WH24",
             "doi": "10.1145/3640457.3688184",
-            "ee": "https://doi.org/10.1145/3640457.3688184"
+            "ee": "https://doi.org/10.1145/3640457.3688184",
+            "arxiv_id": "2408.06512",
+            "arxiv_url": "https://arxiv.org/abs/2408.06512"
         },
         "conf/recsys/WuCTZ0S24": {
             "title": "Accelerating the Surrogate Retraining for Poisoning Attacks against Recommender Systems.",
@@ -1938,7 +2074,9 @@
             "pages": "701-711",
             "dblp_url": "https://dblp.org/rec/conf/recsys/WuCTZ0S24",
             "doi": "10.1145/3640457.3688148",
-            "ee": "https://doi.org/10.1145/3640457.3688148"
+            "ee": "https://doi.org/10.1145/3640457.3688148",
+            "arxiv_id": "2408.10666",
+            "arxiv_url": "https://arxiv.org/abs/2408.10666"
         },
         "conf/recsys/XiLLCZZCT0024": {
             "title": "Towards Open-World Recommendation with Knowledge Augmentation from Large Language Models.",
@@ -1988,7 +2126,9 @@
             "pages": "778-780",
             "dblp_url": "https://dblp.org/rec/conf/recsys/XuYXLLSZLLHTZZL24",
             "doi": "10.1145/3640457.3688040",
-            "ee": "https://doi.org/10.1145/3640457.3688040"
+            "ee": "https://doi.org/10.1145/3640457.3688040",
+            "arxiv_id": "2409.15373",
+            "arxiv_url": "https://arxiv.org/abs/2409.15373"
         },
         "conf/recsys/YangC24": {
             "title": "Unleashing the Retrieval Potential of Large Language Models in Conversational Recommender Systems.",
@@ -2008,7 +2148,9 @@
             "pages": "633-642",
             "dblp_url": "https://dblp.org/rec/conf/recsys/YangCZZDGZDT24",
             "doi": "10.1145/3640457.3688136",
-            "ee": "https://doi.org/10.1145/3640457.3688136"
+            "ee": "https://doi.org/10.1145/3640457.3688136",
+            "arxiv_id": "2408.07907",
+            "arxiv_url": "https://arxiv.org/abs/2408.07907"
         },
         "conf/recsys/YangGGYYCNZ24": {
             "title": "MLoRA: Multi-Domain Low-Rank Adaptive Network for CTR Prediction.",
@@ -2018,7 +2160,9 @@
             "pages": "287-297",
             "dblp_url": "https://dblp.org/rec/conf/recsys/YangGGYYCNZ24",
             "doi": "10.1145/3640457.3688134",
-            "ee": "https://doi.org/10.1145/3640457.3688134"
+            "ee": "https://doi.org/10.1145/3640457.3688134",
+            "arxiv_id": "2408.08913",
+            "arxiv_url": "https://arxiv.org/abs/2408.08913"
         },
         "conf/recsys/YangYZXPLW0Y24": {
             "title": "Adaptive Fusion of Multi-View for Graph Contrastive Recommendation.",
@@ -2038,7 +2182,9 @@
             "pages": "518-527",
             "dblp_url": "https://dblp.org/rec/conf/recsys/YiO24",
             "doi": "10.1145/3640457.3688096",
-            "ee": "https://doi.org/10.1145/3640457.3688096"
+            "ee": "https://doi.org/10.1145/3640457.3688096",
+            "arxiv_id": "2407.19886",
+            "arxiv_url": "https://arxiv.org/abs/2407.19886"
         },
         "conf/recsys/Yilma24": {
             "title": "Computational Methods for Designing Human-Centered Recommender Systems: A Case Study Approach Intersecting Visual Arts and Healthcare.",
@@ -2058,7 +2204,9 @@
             "pages": "601-611",
             "dblp_url": "https://dblp.org/rec/conf/recsys/YuZY24",
             "doi": "10.1145/3640457.3688108",
-            "ee": "https://doi.org/10.1145/3640457.3688108"
+            "ee": "https://doi.org/10.1145/3640457.3688108",
+            "arxiv_id": "2401.16349",
+            "arxiv_url": "https://arxiv.org/abs/2401.16349"
         },
         "conf/recsys/ZakharovaAKBVSG24": {
             "title": "Stalactite: toolbox for fast prototyping of vertical federated learning systems.",
@@ -2068,7 +2216,9 @@
             "pages": "1187-1190",
             "dblp_url": "https://dblp.org/rec/conf/recsys/ZakharovaAKBVSG24",
             "doi": "10.1145/3640457.3691700",
-            "ee": "https://doi.org/10.1145/3640457.3691700"
+            "ee": "https://doi.org/10.1145/3640457.3691700",
+            "arxiv_id": "2409.15558",
+            "arxiv_url": "https://arxiv.org/abs/2409.15558"
         },
         "conf/recsys/Zhang00GZZG0Y24": {
             "title": "DNS-Rec: Data-aware Neural Architecture Search for Recommender Systems.",
@@ -2078,7 +2228,9 @@
             "pages": "591-600",
             "dblp_url": "https://dblp.org/rec/conf/recsys/Zhang00GZZG0Y24",
             "doi": "10.1145/3640457.3688117",
-            "ee": "https://doi.org/10.1145/3640457.3688117"
+            "ee": "https://doi.org/10.1145/3640457.3688117",
+            "arxiv_id": "2402.00390",
+            "arxiv_url": "https://arxiv.org/abs/2402.00390"
         },
         "conf/recsys/ZhangCW0SC24": {
             "title": "Improving the Shortest Plank: Vulnerability-Aware Adversarial Training for Robust Recommender System.",
@@ -2088,7 +2240,9 @@
             "pages": "680-689",
             "dblp_url": "https://dblp.org/rec/conf/recsys/ZhangCW0SC24",
             "doi": "10.1145/3640457.3688120",
-            "ee": "https://doi.org/10.1145/3640457.3688120"
+            "ee": "https://doi.org/10.1145/3640457.3688120",
+            "arxiv_id": "2409.17476",
+            "arxiv_url": "https://arxiv.org/abs/2409.17476"
         },
         "conf/recsys/ZhangHLCZW24": {
             "title": "Scaling Law of Large Sequential Recommendation Models.",
@@ -2118,7 +2272,9 @@
             "pages": "33-42",
             "dblp_url": "https://dblp.org/rec/conf/recsys/ZhangLWSMS024",
             "doi": "10.1145/3640457.3688075",
-            "ee": "https://doi.org/10.1145/3640457.3688075"
+            "ee": "https://doi.org/10.1145/3640457.3688075",
+            "arxiv_id": "2406.03248",
+            "arxiv_url": "https://arxiv.org/abs/2406.03248"
         },
         "conf/recsys/ZhangSWCLAJLZPY24": {
             "title": "EmbSum: Leveraging the Summarization Capabilities of Large Language Models for Content-Based Recommendations.",
@@ -2128,7 +2284,9 @@
             "pages": "1010-1015",
             "dblp_url": "https://dblp.org/rec/conf/recsys/ZhangSWCLAJLZPY24",
             "doi": "10.1145/3640457.3688185",
-            "ee": "https://doi.org/10.1145/3640457.3688185"
+            "ee": "https://doi.org/10.1145/3640457.3688185",
+            "arxiv_id": "2405.11441",
+            "arxiv_url": "https://arxiv.org/abs/2405.11441"
         },
         "conf/recsys/ZhangXL0RL0KRR24": {
             "title": "Towards Empathetic Conversational Recommender Systems.",
@@ -2138,7 +2296,9 @@
             "pages": "84-93",
             "dblp_url": "https://dblp.org/rec/conf/recsys/ZhangXL0RL0KRR24",
             "doi": "10.1145/3640457.3688133",
-            "ee": "https://doi.org/10.1145/3640457.3688133"
+            "ee": "https://doi.org/10.1145/3640457.3688133",
+            "arxiv_id": "2409.10527",
+            "arxiv_url": "https://arxiv.org/abs/2409.10527"
         },
         "conf/recsys/ZhaoCHS024": {
             "title": "Unlocking the Hidden Treasures: Enhancing Recommendations with Unlabeled Data.",
@@ -2148,7 +2308,9 @@
             "pages": "247-256",
             "dblp_url": "https://dblp.org/rec/conf/recsys/ZhaoCHS024",
             "doi": "10.1145/3640457.3688149",
-            "ee": "https://doi.org/10.1145/3640457.3688149"
+            "ee": "https://doi.org/10.1145/3640457.3688149",
+            "arxiv_id": "2412.18170",
+            "arxiv_url": "https://arxiv.org/abs/2412.18170"
         },
         "conf/recsys/ZhaoS24": {
             "title": "Discerning Canonical User Representation for Cross-Domain Recommendation.",
@@ -2168,7 +2330,9 @@
             "pages": "969-974",
             "dblp_url": "https://dblp.org/rec/conf/recsys/ZhuJLQD024",
             "doi": "10.1145/3640457.3688178",
-            "ee": "https://doi.org/10.1145/3640457.3688178"
+            "ee": "https://doi.org/10.1145/3640457.3688178",
+            "arxiv_id": "2404.14774",
+            "arxiv_url": "https://arxiv.org/abs/2404.14774"
         }
     }
 }

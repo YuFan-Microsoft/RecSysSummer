@@ -305,6 +305,13 @@ def _arxiv_sort_key(aid):
     return (0, aid) if m else (1, aid)
 
 
+def extract_arxiv_id(s):
+    s = (s or "").strip()
+    s = s.rsplit("/abs/", 1)[-1]
+    m = re.search(r"(\d{4}\.\d{4,5}|[a-z\-]+(?:\.[A-Z]{2})?/\d{7})", s)
+    return m.group(1) if m else None
+
+
 def choose(cands, surname):
     if len(cands) == 1:
         return cands[0][0]
@@ -320,37 +327,142 @@ def choose(cands, surname):
     return None  # genuinely ambiguous duplicate title -> skip (stay safe)
 
 
+def _ascii_lower(s):
+    s = "".join(c for c in unicodedata.normalize("NFKD", s)
+                if not unicodedata.combining(c))
+    return s.lower()
+
+
+def same_first_author(a, b):
+    """True if two first-author names plausibly refer to the same person:
+    surname identical AND forename equal or matching initial."""
+    ta = [t for t in re.split(r"[^a-z]+", _ascii_lower(a)) if t]
+    tb = [t for t in re.split(r"[^a-z]+", _ascii_lower(b)) if t]
+    if not ta or not tb or ta[-1] != tb[-1]:
+        return False
+    return ta[0] == tb[0] or ta[0][:1] == tb[0][:1]
+
+
+def fuzzy_fill(files, threshold=0.93):
+    """Second pass: for papers still missing a link, accept a candidate only
+    when the first author matches (surname + forename/initial) AND the title is
+    >= `threshold` similar. Blocks by surname, prunes by word-set overlap."""
+    from difflib import SequenceMatcher
+
+    # collect still-missing papers and the surnames we need
+    missing = []  # (file_idx, paper_ref, title, first_author)
+    datas = []
+    used_ids = set()
+    for fi, path in enumerate(files):
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+        datas.append((path, data))
+        for p in data[next(iter(data))].values():
+            if p.get("arxiv_url") or p.get("arxiv_id"):
+                aid = extract_arxiv_id(p.get("arxiv_id") or p.get("arxiv_url"))
+                if aid:
+                    used_ids.add(aid)
+                continue
+            authors = p.get("authors", "") or ""
+            missing.append((fi, p, p.get("title") or "",
+                            authors.split(",")[0].strip()))
+    need = {first_author_surname(fa) for _, _, _, fa in missing}
+    need.discard("")
+
+    # index restricted to needed surnames: surname -> [(wordset, ntitle, id, author)]
+    by_sur = {}
+    with open(INDEX_PATH, encoding="utf-8") as fh:
+        for line in fh:
+            parts = line.rstrip("\n").split("\t")
+            if len(parts) < 3:
+                continue
+            sur = first_author_surname(parts[2])
+            if sur not in need:
+                continue
+            nt = norm(parts[1])
+            if not nt:
+                continue
+            by_sur.setdefault(sur, []).append(
+                (frozenset(nt.split()), nt, parts[0], parts[2]))
+    log("fuzzy: %d still-missing, index blocks for %d surnames"
+        % (len(missing), len(by_sur)))
+
+    filled = 0
+    per_file = {}
+    for fi, p, title, fa in missing:
+        nt = norm(title)
+        tws = set(nt.split())
+        if not tws:
+            continue
+        sur = first_author_surname(fa)
+        best_r, best_id = 0.0, None
+        for ws, cnt, aid, iauth in by_sur.get(sur, []):
+            inter = len(tws & ws)
+            if not inter or inter / len(tws | ws) < 0.6:
+                continue
+            r = SequenceMatcher(None, cnt, nt).ratio()
+            if r > best_r and r >= threshold and same_first_author(fa, iauth):
+                best_r, best_id = r, aid
+        if best_id and best_id not in used_ids:
+            p["arxiv_id"] = best_id
+            p["arxiv_url"] = "https://arxiv.org/abs/" + best_id
+            used_ids.add(best_id)
+            filled += 1
+            per_file[fi] = per_file.get(fi, 0) + 1
+
+    for fi, (path, data) in enumerate(datas):
+        if per_file.get(fi):
+            atomic_write(path, data)
+            log("  %-16s +%d (fuzzy)"
+                % (os.path.relpath(path, HERE), per_file[fi]))
+    log("### fuzzy done: +%d new links (threshold %.2f) ###"
+        % (filled, threshold))
+    return filled
+
+
 def match_files(files):
     by_title = load_index()
     if not by_title:
         return
-    grand = 0
+    tot_papers = tot_missing0 = tot_filled = 0
+    log("--- per-file: total | was-missing | +filled | still-missing | rate ---")
     for path in files:
         with open(path, encoding="utf-8") as fh:
             data = json.load(fh)
         papers = data[next(iter(data))]
-        found = 0
+        total = len(papers)
+        missing0 = filled = 0
         for p in papers.values():
             if p.get("arxiv_url") or p.get("arxiv_id"):
                 continue
-            nt = norm(p.get("title") or "")
-            cands = by_title.get(nt)
+            missing0 += 1
+            cands = by_title.get(norm(p.get("title") or ""))
             if not cands:
                 continue
             aid = choose(cands, first_author_surname(p.get("authors", "")))
             if aid:
                 p["arxiv_id"] = aid
                 p["arxiv_url"] = "https://arxiv.org/abs/" + aid
-                found += 1
+                filled += 1
         atomic_write(path, data)
-        grand += found
-        log("  %-16s +%d links" % (os.path.basename(path), found))
-    log("### match done: %d new links ###" % grand)
+        still = missing0 - filled
+        rate = (100.0 * filled / missing0) if missing0 else 0.0
+        rel = os.path.relpath(path, HERE)
+        tot_papers += total
+        tot_missing0 += missing0
+        tot_filled += filled
+        log("  %-16s %5d | %5d | +%5d | %5d | %5.1f%%"
+            % (rel, total, missing0, filled, still, rate))
+    tot_still = tot_missing0 - tot_filled
+    tot_rate = (100.0 * tot_filled / tot_missing0) if tot_missing0 else 0.0
+    log("### match done ###")
+    log("  papers=%d  was-missing=%d  filled=%d  still-missing=%d  match-rate=%.1f%%"
+        % (tot_papers, tot_missing0, tot_filled, tot_still, tot_rate))
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("phase", choices=["harvest", "match", "all"])
+    ap.add_argument("phase", choices=["harvest", "match", "fuzzy", "all"])
     ap.add_argument("--from", dest="from_date", default="2017-01-01")
     ap.add_argument("--until", dest="until_date",
                     default=time.strftime("%Y-%m-%d"))
@@ -364,13 +476,15 @@ def main():
     if args.files:
         files = [os.path.join(HERE, f) for f in args.files]
     else:
-        files = sorted(os.path.join(HERE, f) for f in os.listdir(HERE)
-                       if f.endswith(".json") and not f.startswith("_"))
+        import glob as _glob
+        files = sorted(_glob.glob(os.path.join(HERE, "*", "*.json")))
 
     if args.phase in ("harvest", "all"):
         harvest(args.from_date, args.until_date, args.polite, args.restart)
     if args.phase in ("match", "all"):
         match_files(files)
+    if args.phase in ("fuzzy", "all"):
+        fuzzy_fill(files)
 
 
 if __name__ == "__main__":

@@ -108,7 +108,9 @@
             "pages": "18-27",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/AlsuhaibaniZRJX24",
             "doi": "10.1145/3616855.3635849",
-            "ee": "https://doi.org/10.1145/3616855.3635849"
+            "ee": "https://doi.org/10.1145/3616855.3635849",
+            "arxiv_id": "2401.04025",
+            "arxiv_url": "https://arxiv.org/abs/2401.04025"
         },
         "conf/wsdm/Baeza-Yates24": {
             "title": "Introduction to Responsible AI.",
@@ -128,7 +130,9 @@
             "pages": "28-37",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/BaiZLCZNSF24",
             "doi": "10.1145/3616855.3635816",
-            "ee": "https://doi.org/10.1145/3616855.3635816"
+            "ee": "https://doi.org/10.1145/3616855.3635816",
+            "arxiv_id": "2312.10947",
+            "arxiv_url": "https://arxiv.org/abs/2312.10947"
         },
         "conf/wsdm/BautistaBBS24": {
             "title": "MAD: Multi-Scale Anomaly Detection in Link Streams.",
@@ -168,7 +172,9 @@
             "pages": "1042-1045",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/BernardKB24",
             "doi": "10.1145/3616855.3635699",
-            "ee": "https://doi.org/10.1145/3616855.3635699"
+            "ee": "https://doi.org/10.1145/3616855.3635699",
+            "arxiv_id": "2403.00520",
+            "arxiv_url": "https://arxiv.org/abs/2403.00520"
         },
         "conf/wsdm/BrantleyFDJ24": {
             "title": "Ranking with Long-Term Constraints.",
@@ -178,7 +184,9 @@
             "pages": "47-56",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/BrantleyFDJ24",
             "doi": "10.1145/3616855.3635819",
-            "ee": "https://doi.org/10.1145/3616855.3635819"
+            "ee": "https://doi.org/10.1145/3616855.3635819",
+            "arxiv_id": "2307.04923",
+            "arxiv_url": "https://arxiv.org/abs/2307.04923"
         },
         "conf/wsdm/Broder24": {
             "title": "Delphic Costs and Benefits in Web Search: A Utilitarian and Historical Analysis.",
@@ -208,7 +216,9 @@
             "pages": "57-66",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/CaiT0ZWZL24",
             "doi": "10.1145/3616855.3635843",
-            "ee": "https://doi.org/10.1145/3616855.3635843"
+            "ee": "https://doi.org/10.1145/3616855.3635843",
+            "arxiv_id": "2306.17408",
+            "arxiv_url": "https://arxiv.org/abs/2306.17408"
         },
         "conf/wsdm/ChangAM24": {
             "title": "To Copy, or not to Copy; That is a Critical Issue of the Output Softmax Layer in Neural Sequential Recommenders.",
@@ -238,7 +248,9 @@
             "pages": "96-105",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/ChenD0FCHKLL24",
             "doi": "10.1145/3616855.3635852",
-            "ee": "https://doi.org/10.1145/3616855.3635852"
+            "ee": "https://doi.org/10.1145/3616855.3635852",
+            "arxiv_id": "2401.00010",
+            "arxiv_url": "https://arxiv.org/abs/2401.00010"
         },
         "conf/wsdm/ChenLJJDH24": {
             "title": "Towards Mitigating Dimensional Collapse of Representations in Collaborative Filtering.",
@@ -248,7 +260,9 @@
             "pages": "106-115",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/ChenLJJDH24",
             "doi": "10.1145/3616855.3635832",
-            "ee": "https://doi.org/10.1145/3616855.3635832"
+            "ee": "https://doi.org/10.1145/3616855.3635832",
+            "arxiv_id": "2312.17468",
+            "arxiv_url": "https://arxiv.org/abs/2312.17468"
         },
         "conf/wsdm/ChenLWCW024": {
             "title": "Empathetic Response Generation with Relation-aware Commonsense Knowledge.",
@@ -268,7 +282,9 @@
             "pages": "125-133",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/ChenLYXXWXX24",
             "doi": "10.1145/3616855.3635799",
-            "ee": "https://doi.org/10.1145/3616855.3635799"
+            "ee": "https://doi.org/10.1145/3616855.3635799",
+            "arxiv_id": "2401.11107",
+            "arxiv_url": "https://arxiv.org/abs/2401.11107"
         },
         "conf/wsdm/ChenZWLX24": {
             "title": "TemporalMed: Advancing Medical Dialogues with Time-Aware Responses in Large Language Models.",
@@ -308,7 +324,9 @@
             "pages": "143-151",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/CraneLSV24",
             "doi": "10.1145/3616855.3635792",
-            "ee": "https://doi.org/10.1145/3616855.3635792"
+            "ee": "https://doi.org/10.1145/3616855.3635792",
+            "arxiv_id": "2305.17598",
+            "arxiv_url": "https://arxiv.org/abs/2305.17598"
         },
         "conf/wsdm/Cruz-PerezM24": {
             "title": "Automated Topic Generation for the Mexican Platform for Access to Government Public Information During the Period 2003-2020.",
@@ -348,7 +366,9 @@
             "pages": "152-160",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/DeldariSMKSM24",
             "doi": "10.1145/3616855.3635795",
-            "ee": "https://doi.org/10.1145/3616855.3635795"
+            "ee": "https://doi.org/10.1145/3616855.3635795",
+            "arxiv_id": "2307.16847",
+            "arxiv_url": "https://arxiv.org/abs/2307.16847"
         },
         "conf/wsdm/DengD0W24": {
             "title": "CL4DIV: A Contrastive Learning Framework for Search Result Diversification.",
@@ -478,7 +498,9 @@
             "pages": "238-246",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/Gong0ZCLSB24",
             "doi": "10.1145/3616855.3635766",
-            "ee": "https://doi.org/10.1145/3616855.3635766"
+            "ee": "https://doi.org/10.1145/3616855.3635766",
+            "arxiv_id": "2406.16728",
+            "arxiv_url": "https://arxiv.org/abs/2406.16728"
         },
         "conf/wsdm/GoyalRRYZCNW24": {
             "title": "HealAI: A Healthcare LLM for Effective Medical Documentation.",
@@ -648,7 +670,9 @@
             "pages": "322-331",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/KaiserRW24",
             "doi": "10.1145/3616855.3635822",
-            "ee": "https://doi.org/10.1145/3616855.3635822"
+            "ee": "https://doi.org/10.1145/3616855.3635822",
+            "arxiv_id": "2310.13505",
+            "arxiv_url": "https://arxiv.org/abs/2310.13505"
         },
         "conf/wsdm/Kapoor24": {
             "title": "Foundation Models for Aerial Robotics.",
@@ -708,7 +732,9 @@
             "pages": "1142-1144",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/Lajewska24",
             "doi": "10.1145/3616855.3635727",
-            "ee": "https://doi.org/10.1145/3616855.3635727"
+            "ee": "https://doi.org/10.1145/3616855.3635727",
+            "arxiv_id": "2406.19281",
+            "arxiv_url": "https://arxiv.org/abs/2406.19281"
         },
         "conf/wsdm/Lenti24": {
             "title": "Learning Opinion Dynamics from Data.",
@@ -748,7 +774,9 @@
             "pages": "360-368",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/LiCXZMDCLZ24",
             "doi": "10.1145/3616855.3635813",
-            "ee": "https://doi.org/10.1145/3616855.3635813"
+            "ee": "https://doi.org/10.1145/3616855.3635813",
+            "arxiv_id": "2402.07788",
+            "arxiv_url": "https://arxiv.org/abs/2402.07788"
         },
         "conf/wsdm/LiCYZX0Y24": {
             "title": "Global Heterogeneous Graph and Target Interest Denoising for Multi-behavior Sequential Recommendation.",
@@ -768,7 +796,9 @@
             "pages": "378-386",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/LiSCZLL24",
             "doi": "10.1145/3616855.3635794",
-            "ee": "https://doi.org/10.1145/3616855.3635794"
+            "ee": "https://doi.org/10.1145/3616855.3635794",
+            "arxiv_id": "2401.12732",
+            "arxiv_url": "https://arxiv.org/abs/2401.12732"
         },
         "conf/wsdm/LiSZXCCTWY24": {
             "title": "Text-Video Retrieval via Multi-Modal Hypergraph Networks.",
@@ -788,7 +818,9 @@
             "pages": "424-433",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/Lin0HKDW24",
             "doi": "10.1145/3616855.3635779",
-            "ee": "https://doi.org/10.1145/3616855.3635779"
+            "ee": "https://doi.org/10.1145/3616855.3635779",
+            "arxiv_id": "2310.19251",
+            "arxiv_url": "https://arxiv.org/abs/2310.19251"
         },
         "conf/wsdm/LinGZCNSGLJLW24": {
             "title": "Mixed Attention Network for Cross-domain Sequential Recommendation.",
@@ -868,7 +900,9 @@
             "pages": "462-471",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/LiuYLYWPY24",
             "doi": "10.1145/3616855.3635803",
-            "ee": "https://doi.org/10.1145/3616855.3635803"
+            "ee": "https://doi.org/10.1145/3616855.3635803",
+            "arxiv_id": "2310.13253",
+            "arxiv_url": "https://arxiv.org/abs/2310.13253"
         },
         "conf/wsdm/LiuYXWL24": {
             "title": "Interact with the Explanations: Causal Debiased Explainable Recommendation System.",
@@ -1008,7 +1042,9 @@
             "pages": "1174-1175",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/QiaoDSLFKLLWCFW24",
             "doi": "10.1145/3616855.3635736",
-            "ee": "https://doi.org/10.1145/3616855.3635736"
+            "ee": "https://doi.org/10.1145/3616855.3635736",
+            "arxiv_id": "2402.14590",
+            "arxiv_url": "https://arxiv.org/abs/2402.14590"
         },
         "conf/wsdm/QinYZ0ZS24": {
             "title": "Intent Contrastive Learning with Cross Subsequences for Sequential Recommendation.",
@@ -1028,7 +1064,9 @@
             "pages": "557-566",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/Qu0NY24",
             "doi": "10.1145/3616855.3635778",
-            "ee": "https://doi.org/10.1145/3616855.3635778"
+            "ee": "https://doi.org/10.1145/3616855.3635778",
+            "arxiv_id": "2310.14884",
+            "arxiv_url": "https://arxiv.org/abs/2310.14884"
         },
         "conf/wsdm/Rahdari0FMCDK24": {
             "title": "Logic-Scaffolding: Personalized Aspect-Instructed Recommendation Explanation Generation using LLMs.",
@@ -1038,7 +1076,9 @@
             "pages": "1078-1081",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/Rahdari0FMCDK24",
             "doi": "10.1145/3616855.3635689",
-            "ee": "https://doi.org/10.1145/3616855.3635689"
+            "ee": "https://doi.org/10.1145/3616855.3635689",
+            "arxiv_id": "2312.14345",
+            "arxiv_url": "https://arxiv.org/abs/2312.14345"
         },
         "conf/wsdm/RahmanH24": {
             "title": "Customer Understanding for Recommender Systems.",
@@ -1088,7 +1128,9 @@
             "pages": "567-575",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/RenXY00CH24",
             "doi": "10.1145/3616855.3635814",
-            "ee": "https://doi.org/10.1145/3616855.3635814"
+            "ee": "https://doi.org/10.1145/3616855.3635814",
+            "arxiv_id": "2308.05697",
+            "arxiv_url": "https://arxiv.org/abs/2308.05697"
         },
         "conf/wsdm/RoblesMPPM24": {
             "title": "Preserving Heritage: Developing a Translation Tool for Indigenous Dialects.",
@@ -1118,7 +1160,9 @@
             "pages": "576-585",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/RoySLYES024",
             "doi": "10.1145/3616855.3635767",
-            "ee": "https://doi.org/10.1145/3616855.3635767"
+            "ee": "https://doi.org/10.1145/3616855.3635767",
+            "arxiv_id": "2306.01951",
+            "arxiv_url": "https://arxiv.org/abs/2306.01951"
         },
         "conf/wsdm/Roychowdhury24": {
             "title": "Journey of Hallucination-minimized Generative AI Solutions for Financial Decision Makers.",
@@ -1218,7 +1262,9 @@
             "pages": "1086-1089",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/ShirzadkhaniHKR24",
             "doi": "10.1145/3616855.3635694",
-            "ee": "https://doi.org/10.1145/3616855.3635694"
+            "ee": "https://doi.org/10.1145/3616855.3635694",
+            "arxiv_id": "2402.03651",
+            "arxiv_url": "https://arxiv.org/abs/2402.03651"
         },
         "conf/wsdm/ShuangP24": {
             "title": "Using Causal Inference to Solve Uncertainty Issues in Dataset Shift.",
@@ -1238,7 +1284,9 @@
             "pages": "636-644",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/SuWLLLLLBHBCGWB24",
             "doi": "10.1145/3616855.3635833",
-            "ee": "https://doi.org/10.1145/3616855.3635833"
+            "ee": "https://doi.org/10.1145/3616855.3635833",
+            "arxiv_id": "2305.07764",
+            "arxiv_url": "https://arxiv.org/abs/2305.07764"
         },
         "conf/wsdm/SuiZZH024": {
             "title": "Table Meets LLM: Can Large Language Models Understand Structured Table Data? A Benchmark and Empirical Study.",
@@ -1248,7 +1296,9 @@
             "pages": "645-654",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/SuiZZH024",
             "doi": "10.1145/3616855.3635752",
-            "ee": "https://doi.org/10.1145/3616855.3635752"
+            "ee": "https://doi.org/10.1145/3616855.3635752",
+            "arxiv_id": "2305.13062",
+            "arxiv_url": "https://arxiv.org/abs/2305.13062"
         },
         "conf/wsdm/SunBGYZLZC24": {
             "title": "A Multi-Granularity-Aware Aspect Learning Model for Multi-Aspect Dense Retrieval.",
@@ -1258,7 +1308,9 @@
             "pages": "674-682",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/SunBGYZLZC24",
             "doi": "10.1145/3616855.3635770",
-            "ee": "https://doi.org/10.1145/3616855.3635770"
+            "ee": "https://doi.org/10.1145/3616855.3635770",
+            "arxiv_id": "2312.02538",
+            "arxiv_url": "https://arxiv.org/abs/2312.02538"
         },
         "conf/wsdm/SunLCWBZ24": {
             "title": "Rethinking and Simplifying Bootstrapped Graph Latents.",
@@ -1298,7 +1350,9 @@
             "pages": "683-692",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/WallatJA24",
             "doi": "10.1145/3616855.3635818",
-            "ee": "https://doi.org/10.1145/3616855.3635818"
+            "ee": "https://doi.org/10.1145/3616855.3635818",
+            "arxiv_id": "2401.12078",
+            "arxiv_url": "https://arxiv.org/abs/2401.12078"
         },
         "conf/wsdm/Wang24": {
             "title": "NeuralReconciler for Hierarchical Time Series Forecasting.",
@@ -1378,7 +1432,9 @@
             "pages": "740-749",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/WangSWZ024",
             "doi": "10.1145/3616855.3635780",
-            "ee": "https://doi.org/10.1145/3616855.3635780"
+            "ee": "https://doi.org/10.1145/3616855.3635780",
+            "arxiv_id": "2402.02855",
+            "arxiv_url": "https://arxiv.org/abs/2402.02855"
         },
         "conf/wsdm/WangWH24": {
             "title": "FairIF: Boosting Fairness in Deep Learning via Influence Functions with Validation Set Sensitive Attributes.",
@@ -1418,7 +1474,9 @@
             "pages": "712-720",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/WangZW24",
             "doi": "10.1145/3616855.3635793",
-            "ee": "https://doi.org/10.1145/3616855.3635793"
+            "ee": "https://doi.org/10.1145/3616855.3635793",
+            "arxiv_id": "2401.10394",
+            "arxiv_url": "https://arxiv.org/abs/2401.10394"
         },
         "conf/wsdm/WeiRTWSCWYH24": {
             "title": "LLMRec: Large Language Models with Graph Augmentation for Recommendation.",
@@ -1428,7 +1486,9 @@
             "pages": "806-815",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/WeiRTWSCWYH24",
             "doi": "10.1145/3616855.3635853",
-            "ee": "https://doi.org/10.1145/3616855.3635853"
+            "ee": "https://doi.org/10.1145/3616855.3635853",
+            "arxiv_id": "2311.00423",
+            "arxiv_url": "https://arxiv.org/abs/2311.00423"
         },
         "conf/wsdm/WeiYMWTLZ24": {
             "title": "AutoPooling: Automated Pooling Search for Multi-valued Features in Recommendations.",
@@ -1458,7 +1518,9 @@
             "pages": "826-835",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/WiSP24",
             "doi": "10.1145/3616855.3635831",
-            "ee": "https://doi.org/10.1145/3616855.3635831"
+            "ee": "https://doi.org/10.1145/3616855.3635831",
+            "arxiv_id": "2312.16581",
+            "arxiv_url": "https://arxiv.org/abs/2312.16581"
         },
         "conf/wsdm/XiaLGLZSG24": {
             "title": "Neural Kalman Filtering for Robust Temporal Recommendation.",
@@ -1488,7 +1550,9 @@
             "pages": "846-854",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/XiaoYZJNY24",
             "doi": "10.1145/3616855.3635829",
-            "ee": "https://doi.org/10.1145/3616855.3635829"
+            "ee": "https://doi.org/10.1145/3616855.3635829",
+            "arxiv_id": "2401.07769",
+            "arxiv_url": "https://arxiv.org/abs/2401.07769"
         },
         "conf/wsdm/Xie0YZDH24": {
             "title": "Making Small Language Models Better Multi-task Learners with Mixture-of-Task-Adapters.",
@@ -1508,7 +1572,9 @@
             "pages": "864-872",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/XuCZMCZ024",
             "doi": "10.1145/3616855.3635753",
-            "ee": "https://doi.org/10.1145/3616855.3635753"
+            "ee": "https://doi.org/10.1145/3616855.3635753",
+            "arxiv_id": "2402.18262",
+            "arxiv_url": "https://arxiv.org/abs/2402.18262"
         },
         "conf/wsdm/YanBZLL24": {
             "title": "Towards Alignment-Uniformity Aware Representation in Graph Contrastive Learning.",
@@ -1578,7 +1644,9 @@
             "pages": "920-929",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/YuanZC024",
             "doi": "10.1145/3616855.3635783",
-            "ee": "https://doi.org/10.1145/3616855.3635783"
+            "ee": "https://doi.org/10.1145/3616855.3635783",
+            "arxiv_id": "2401.10547",
+            "arxiv_url": "https://arxiv.org/abs/2401.10547"
         },
         "conf/wsdm/YueWHZMW24": {
             "title": "Linear Recurrent Units for Sequential Recommendation.",
@@ -1688,7 +1756,9 @@
             "pages": "967-975",
             "dblp_url": "https://dblp.org/rec/conf/wsdm/ZhaoYWWZCLCC24",
             "doi": "10.1145/3616855.3635827",
-            "ee": "https://doi.org/10.1145/3616855.3635827"
+            "ee": "https://doi.org/10.1145/3616855.3635827",
+            "arxiv_id": "2310.00489",
+            "arxiv_url": "https://arxiv.org/abs/2310.00489"
         },
         "conf/wsdm/ZhouSZCWCW24": {
             "title": "CreST: A Credible Spatiotemporal Learning Framework for Uncertainty-aware Traffic Forecasting.",
