@@ -24,7 +24,8 @@ A curated map of where recent recommender-systems research is evaluated. Startin
 4. [Amazon-2023 · product categories](#3--amazon-2023--product-categories)
 5. [Amazon-2023 · GPU setups](#4--amazon-2023--gpu-setups)
 6. [Amazon-2023 · code availability](#5--amazon-2023--code-availability)
-7. [Methodology](#methodology)
+7. [Amazon-2023 · **baseline** code paths »](Amazon-2023_Baselines_Code.md)
+8. [Methodology](#methodology)
 
 ---
 
@@ -39,6 +40,7 @@ A curated map of where recent recommender-systems research is evaluated. Startin
 | 🧩 **Distinct baselines (Amazon-2023)** | 517 |
 | 🏷️ **Amazon categories used** | 29 |
 | 💻 **Amazon-2023 papers with public code** | 72 / 132 |
+| 🧪 **Per-baseline reproduction-code paths** | [`Amazon-2023_Baselines_Code.md`](Amazon-2023_Baselines_Code.md) |
 
 ---
 
@@ -106,6 +108,8 @@ _Based on 129/132 papers that report baselines._
 ### 2.2 · Baselines in each family
 
 Baselines used by **≥ 2 papers** (paper count in parentheses); a long tail of **423** further baselines appears once each.
+
+> **🧪 Want to *run* these baselines on Amazon-2023?** Each baseline's most-reliable reproduction-code path — priority **official → runs-on-Amazon-2023 → runs-on-other-data** — is in **[`Amazon-2023_Baselines_Code.md`](Amazon-2023_Baselines_Code.md)** (RecBole covers ~23 in one framework; the rest link to each method's own repo).
 
 <details open>
 <summary><b>Sequential / session-based</b> — 64 papers</summary>
@@ -236,6 +240,8 @@ _**A100** is the workhorse — one card for fine-tuning, 4–8× for pre-trainin
 | **No public code** | 60 | `█████████████···` |
 
 > Per-paper links — **paper · arXiv · code** for all 77 — are in **[`Amazon-2023_Code.md`](Amazon-2023_Code.md)**.
+>
+> **🧪 Baseline reproduction code** — for the *baseline methods* compared against (SASRec, TIGER, HSTU, UniSRec…), one verified code path each is in **[`Amazon-2023_Baselines_Code.md`](Amazon-2023_Baselines_Code.md)**.
 
 ---
 
