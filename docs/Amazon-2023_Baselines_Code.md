@@ -127,7 +127,7 @@ Priority per baseline: **official → runs-on-Amazon-2023 → runs-on-other-data
 
 ## Notes
 
-- Baselines + paper counts from [`README.md §2.2`](README.md#22--baselines-in-each-family); arXiv links there.
+- Baselines + paper counts from [`README.md §2.2`](../README.md#22--baselines-in-each-family); arXiv links there.
 - RecBole membership verified against `recbole/model/*` (+ RecBole-DA / RecBole-GNN); every repo URL HTTP-200 checked and matched to its paper; native-2023 data versions confirmed from each repo's download script.
 
 <div align="center"><sub>Companion to <a href="Amazon-2023_Code.md">Amazon-2023_Code.md</a> · corpus on <a href="https://huggingface.co/datasets/yufan/recsys-papers-2025-2026">Hugging Face</a></sub></div>

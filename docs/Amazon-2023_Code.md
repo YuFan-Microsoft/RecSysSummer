@@ -1,6 +1,6 @@
 # 💻 Amazon Reviews 2023 — Code Availability
 
-Which of the **132** Amazon-2023 papers ship public code. **72 / 132** release a working public code repository; the other 60 are omitted (no code, only data/model/demo artifacts, code promised upon acceptance, or a link that is currently broken/empty/expired). Back to the [overview »](README.md)
+Which of the **132** Amazon-2023 papers ship public code. **72 / 132** release a working public code repository; the other 60 are omitted (no code, only data/model/demo artifacts, code promised upon acceptance, or a link that is currently broken/empty/expired). Back to the [overview »](../README.md)
 
 ---
 

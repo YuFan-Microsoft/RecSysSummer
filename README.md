@@ -19,12 +19,12 @@ A curated map of where recent recommender-systems research is evaluated. Startin
 ## Contents
 
 1. [At a glance](#at-a-glance)
-2. [Top 30 evaluation datasets](#1--top-30-evaluation-datasets)
-3. [Amazon-2023 · baselines by family](#2--amazon-2023--baselines-by-method-family)
-4. [Amazon-2023 · product categories](#3--amazon-2023--product-categories)
-5. [Amazon-2023 · GPU setups](#4--amazon-2023--gpu-setups)
-6. [Amazon-2023 · code availability](#5--amazon-2023--code-availability)
-7. [Amazon-2023 · **baseline** code paths »](Amazon-2023_Baselines_Code.md)
+2. [Repository layout](#repository-layout)
+3. [Top 30 evaluation datasets](#1--top-30-evaluation-datasets)
+4. [Amazon-2023 · baselines by family](#2--amazon-2023--baselines-by-method-family)
+5. [Amazon-2023 · product categories](#3--amazon-2023--product-categories)
+6. [Amazon-2023 · GPU setups](#4--amazon-2023--gpu-setups)
+7. [Amazon-2023 · code availability](#5--amazon-2023--code-availability)
 8. [Methodology](#methodology)
 
 ---
@@ -40,7 +40,17 @@ A curated map of where recent recommender-systems research is evaluated. Startin
 | 🧩 **Distinct baselines (Amazon-2023)** | 517 |
 | 🏷️ **Amazon categories used** | 29 |
 | 💻 **Amazon-2023 papers with public code** | 72 / 132 |
-| 🧪 **Per-baseline reproduction-code paths** | [`Amazon-2023_Baselines_Code.md`](Amazon-2023_Baselines_Code.md) |
+| 🧪 **Per-baseline reproduction-code paths** | [`Amazon-2023_Baselines_Code.md`](docs/Amazon-2023_Baselines_Code.md) |
+
+## Repository layout
+
+| Path | Purpose |
+|---|---|
+| **[`README.md`](README.md)** | this survey |
+| **[`docs/`](docs/)** | deep-dives — [code availability](docs/Amazon-2023_Code.md) · [baseline code paths](docs/Amazon-2023_Baselines_Code.md) |
+| **[`amazon_2023/`](amazon_2023/)** | Amazon-2023 dataset processing → Hugging Face |
+| **[`arxiv_download_tool/`](arxiv_download_tool/)** | collect papers — fetch venue metadata, match arXiv, download PDFs |
+| **[`paper_search_engine/`](paper_search_engine/)** | semantic search (Qwen3 embed + rerank) over the collected papers |
 
 ---
 
@@ -109,58 +119,58 @@ _Based on 129/132 papers that report baselines._
 
 Baselines used by **≥ 2 papers** (paper count in parentheses); a long tail of **423** further baselines appears once each.
 
-> **🧪 Want to *run* these baselines on Amazon-2023?** Each baseline's most-reliable reproduction-code path — priority **official → runs-on-Amazon-2023 → runs-on-other-data** — is in **[`Amazon-2023_Baselines_Code.md`](Amazon-2023_Baselines_Code.md)** (RecBole covers ~23 in one framework; the rest link to each method's own repo).
+> **🧪 Want to *run* these baselines on Amazon-2023?** Each baseline's most-reliable reproduction-code path — priority **official → runs-on-Amazon-2023 → runs-on-other-data** — is in **[`Amazon-2023_Baselines_Code.md`](docs/Amazon-2023_Baselines_Code.md)** (RecBole covers ~23 in one framework; the rest link to each method's own repo).
 
-<details open>
+<details>
 <summary><b>Sequential / session-based</b> — 64 papers</summary>
 
 [`SASRec`](https://arxiv.org/abs/1808.09781) (55) · [`GRU4Rec`](https://arxiv.org/abs/1511.06939) (29) · [`BERT4Rec`](https://arxiv.org/abs/1904.06690) (27) · [`Caser`](https://arxiv.org/abs/1809.07426) (15) · [`FMLP-Rec`](https://arxiv.org/abs/2202.13556) (11) · [`S3-Rec`](https://arxiv.org/abs/2008.07873) (10) · [`DuoRec`](https://arxiv.org/abs/2110.05730) (8) · `FDSA` (8) · [`HGN`](https://arxiv.org/abs/1906.09217) (4) · [`CL4SRec`](https://arxiv.org/abs/2010.14395) (3) · [`NextItNet`](https://arxiv.org/abs/1808.05163) (3) · [`MAERec`](https://arxiv.org/abs/2305.04619) (3) · [`SASRec Base`](https://arxiv.org/abs/1808.09781) (2) · [`BERT4Rec Base`](https://arxiv.org/abs/1904.06690) (2) · [`FEARec`](https://arxiv.org/abs/2304.09184) (2) · [`DiffuRec`](https://arxiv.org/abs/2304.00686) (2) · [`CoST`](https://arxiv.org/abs/2404.14774) (2) · [`LRURec`](https://arxiv.org/abs/2310.02367) (2) · [`CORE`](https://arxiv.org/abs/2204.11067) (2) · [`BSARec`](https://arxiv.org/abs/2312.10325) (2) · [`ReaRec`](https://arxiv.org/abs/2503.22675) (2)
 
 </details>
 
-<details open>
+<details>
 <summary><b>Generative retrieval / semantic-ID</b> — 43 papers</summary>
 
 [`TIGER`](https://arxiv.org/abs/2305.05065) (23) · [`HSTU`](https://arxiv.org/abs/2402.17152) (13) · [`LETTER`](https://arxiv.org/abs/2405.07314) (11) · [`LCRec`](https://arxiv.org/abs/2311.09049) (8) · [`VQ-Rec`](https://arxiv.org/abs/2210.12316) (7) · [`P5`](https://arxiv.org/abs/2203.13366) (4) · [`MiniOneRec`](https://arxiv.org/abs/2510.24431) (3) · [`ETEGRec`](https://arxiv.org/abs/2409.05546) (3) · [`ActionPiece`](https://arxiv.org/abs/2502.13581) (3) · [`P5-CID`](https://arxiv.org/abs/2305.06569) (2) · `RK-Means` (2) · [`GenRec`](https://arxiv.org/abs/2307.00457) (2)
 
 </details>
 
-<details open>
+<details>
 <summary><b>LLM-based recommenders</b> — 41 papers</summary>
 
 [`S-DPO`](https://arxiv.org/abs/2406.09215) (7) · [`TALLRec`](https://arxiv.org/abs/2305.00447) (7) · [`BIGRec`](https://arxiv.org/abs/2308.08434) (6) · [`LLaRA`](https://arxiv.org/abs/2312.02445) (6) · [`D3`](https://arxiv.org/abs/2406.14900) (5) · [`RLMRec`](https://arxiv.org/abs/2310.15950) (4) · [`AlphaRec`](https://arxiv.org/abs/2407.05441) (4) · [`LLMRank`](https://arxiv.org/abs/2305.08845) (3) · [`AgentCF`](https://arxiv.org/abs/2310.09233) (3) · [`KAR`](https://arxiv.org/abs/2306.10933) (3) · [`RLMRec-Con`](https://arxiv.org/abs/2310.15950) (3) · [`RLMRec-Gen`](https://arxiv.org/abs/2310.15950) (3) · [`InteRecAgent`](https://arxiv.org/abs/2308.16505) (3) · [`R2ec`](https://arxiv.org/abs/2505.16994) (3) · [`LLMInit`](https://arxiv.org/abs/2503.01814) (2) · [`LLM-ESR`](https://arxiv.org/abs/2405.20646) (2) · [`Chat-Rec`](https://arxiv.org/abs/2303.14524) (2) · [`Rec-R1`](https://arxiv.org/abs/2503.24289) (2) · [`LLM-Rec`](https://arxiv.org/abs/2307.15780) (2) · [`LlamaRec`](https://arxiv.org/abs/2311.02089) (2)
 
 </details>
 
-<details open>
+<details>
 <summary><b>Classical CF · MF, neighborhood, neural CF</b> — 34 papers</summary>
 
 `Popularity` (9) · `MF` (7) · [`NCF`](https://arxiv.org/abs/1708.05031) (5) · [`BPR-MF`](https://arxiv.org/abs/1205.2618) (5) · [`BPR`](https://arxiv.org/abs/1205.2618) (4) · `DMF` (2) · `SVD` (2) · `ALS` (2) · `ItemKNN` (2) · [`NeuMF`](https://arxiv.org/abs/1708.05031) (2)
 
 </details>
 
-<details open>
+<details>
 <summary><b>Text- & multimodal-enhanced</b> — 34 papers</summary>
 
 [`UniSRec`](https://arxiv.org/abs/2206.05941) (11) · [`RecFormer`](https://arxiv.org/abs/2305.13731) (6) · [`MoRec`](https://arxiv.org/abs/2303.13835) (4) · `BM25` (4) · [`VBPR`](https://arxiv.org/abs/1510.01784) (3) · [`BLAIR-BASE`](https://arxiv.org/abs/2403.03952) (3) · [`TedRec`](https://arxiv.org/abs/2402.18166) (3) · [`QARM`](https://arxiv.org/abs/2411.11739) (2) · [`BLAIR-LARGE`](https://arxiv.org/abs/2403.03952) (2)
 
 </details>
 
-<details open>
+<details>
 <summary><b>Graph-based CF</b> — 19 papers</summary>
 
 [`LightGCN`](https://arxiv.org/abs/2002.02126) (15) · [`NGCF`](https://arxiv.org/abs/1905.08108) (3) · [`SimGCL`](https://arxiv.org/abs/2112.08679) (2)
 
 </details>
 
-<details open>
+<details>
 <summary><b>General-purpose LLMs · zero-shot / prompted</b> — 18 papers</summary>
 
 `GPT-4o` (4) · `GPT-4o-mini` (3) · `GPT4` (2) · `Claude 3.5 Haiku` (2) · `Gemini 2.5 Flash` (2) · `GPT-3.5-Turbo` (2)
 
 </details>
 
-<details open>
+<details>
 <summary><b>CTR / feature-interaction</b> — 6 papers</summary>
 
 [`DIN`](https://arxiv.org/abs/1706.06978) (3) · [`CTRL`](https://arxiv.org/abs/2306.02841) (2)
@@ -239,9 +249,9 @@ _**A100** is the workhorse — one card for fine-tuning, 4–8× for pre-trainin
 | **Public code** | 72 | `████████████████` |
 | **No public code** | 60 | `█████████████···` |
 
-> Per-paper links — **paper · arXiv · code** for all 77 — are in **[`Amazon-2023_Code.md`](Amazon-2023_Code.md)**.
+> Per-paper links — **paper · arXiv · code** for all 77 — are in **[`Amazon-2023_Code.md`](docs/Amazon-2023_Code.md)**.
 >
-> **🧪 Baseline reproduction code** — for the *baseline methods* compared against (SASRec, TIGER, HSTU, UniSRec…), one verified code path each is in **[`Amazon-2023_Baselines_Code.md`](Amazon-2023_Baselines_Code.md)**.
+> **🧪 Baseline reproduction code** — for the *baseline methods* compared against (SASRec, TIGER, HSTU, UniSRec…), one verified code path each is in **[`Amazon-2023_Baselines_Code.md`](docs/Amazon-2023_Baselines_Code.md)**.
 
 ---
 
