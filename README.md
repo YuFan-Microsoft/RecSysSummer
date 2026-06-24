@@ -4,8 +4,6 @@
 
 ### A survey of **2025–2026** recommender-systems papers, mapped to the **top-30** most-used evaluation datasets
 
-![Papers](https://img.shields.io/badge/papers-2041-1f6feb?style=flat-square) ![Years](https://img.shields.io/badge/2025--2026-corpus-8957e5?style=flat-square) ![Top datasets](https://img.shields.io/badge/top__eval__datasets-30-fb8500?style=flat-square) ![Amazon-2023](https://img.shields.io/badge/Amazon_2023-132_papers-ff9f1c?style=flat-square) ![With code](https://img.shields.io/badge/with__code-72%2F132-2ea043?style=flat-square) ![Data](https://img.shields.io/badge/full_set-Hugging_Face-ffce00?style=flat-square)
-
 </div>
 
 ---
@@ -35,12 +33,10 @@ A curated map of where recent recommender-systems research is evaluated. Startin
 |---|---|
 | 📚 **Papers · 2025–2026 corpus** | 2,041 |
 | 🗂️ **Papers using a top-30 dataset** | 1,141 |
-| 📊 **Top-30 evaluation datasets** | 30 |
 | 🛒 **Amazon-2023 papers** | 132 |
 | 🧩 **Distinct baselines (Amazon-2023)** | 517 |
 | 🏷️ **Amazon categories used** | 29 |
 | 💻 **Amazon-2023 papers with public code** | 72 / 132 |
-| 🧪 **Per-baseline reproduction-code paths** | [`Amazon-2023_Baselines_Code.md`](docs/Amazon-2023_Baselines_Code.md) |
 
 ## Repository layout
 
@@ -244,12 +240,7 @@ _**A100** is the workhorse — one card for fine-tuning, 4–8× for pre-trainin
 
 **72 / 132** Amazon-2023 papers release a *working* public code repository — a GitHub/GitLab repo or an anonymized review repo (`anonymous.4open.science`). The remaining 60 ship no code, only release data/model/demo artifacts, promise code upon acceptance, or list a link that is currently broken/empty/expired.
 
-| | Papers | |
-|---|---:|:--|
-| **Public code** | 72 | `████████████████` |
-| **No public code** | 60 | `█████████████···` |
-
-> Per-paper links — **paper · arXiv · code** for all 77 — are in **[`Amazon-2023_Code.md`](docs/Amazon-2023_Code.md)**.
+> Per-paper links — **paper · arXiv · code** for all 72 — are in **[`Amazon-2023_Code.md`](docs/Amazon-2023_Code.md)**.
 >
 > **🧪 Baseline reproduction code** — for the *baseline methods* compared against (SASRec, TIGER, HSTU, UniSRec…), one verified code path each is in **[`Amazon-2023_Baselines_Code.md`](docs/Amazon-2023_Baselines_Code.md)**.
 
