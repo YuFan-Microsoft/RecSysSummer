@@ -35,7 +35,9 @@ def generate_embeddings(args):
     print(f"Loaded {len(texts)} items for {args.data.category}")
 
     tokenizer = AutoTokenizer.from_pretrained(args.model.name)
-    model = AutoModel.from_pretrained(args.model.name).to(device).eval()
+    # Force float32: some checkpoints are stored in fp16, and fused (apex)
+    # LayerNorm/RMSNorm kernels reject half-precision inputs.
+    model = AutoModel.from_pretrained(args.model.name, torch_dtype=torch.float32).to(device).eval()
     # T5 ships an encoder-decoder; we only need the encoder for embeddings.
     if hasattr(model, "get_encoder"):
         model = model.get_encoder()
