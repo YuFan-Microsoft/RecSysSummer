@@ -115,6 +115,38 @@ class RQVAE(nn.Module):
             codes.append(idx)
         return quantized, torch.stack(codes, dim=1), vq_loss
 
+    @torch.no_grad()
+    def init_codebooks(self, x, iters=50):
+        """Warm-start each codebook with k-means on the encoder's residuals.
+
+        Random codebooks routinely collapse (almost every item maps to one
+        code), so following the original RQ-VAE recipe we k-means-initialise
+        each level on the residual of the (already-trained-this-step) levels
+        above it. This is the single most effective anti-collapse measure.
+        """
+        z = self.encoder(x)
+        residual = z
+        for codebook in self.codebooks:
+            centroids, assign = kmeans(residual, codebook.shape[0], iters=iters)
+            codebook.data.copy_(centroids)
+            residual = residual - centroids[assign]
+
+    @torch.no_grad()
+    def revive_dead_codes(self, x):
+        """Reset never-used codes to random encoder residuals to fight collapse."""
+        z = self.encoder(x)
+        residual = z
+        for codebook in self.codebooks:
+            dist = torch.cdist(residual, codebook)
+            idx = dist.argmin(dim=1)
+            used = torch.zeros(codebook.shape[0], dtype=torch.bool, device=x.device)
+            used[idx.unique()] = True
+            dead = (~used).nonzero(as_tuple=True)[0]
+            if dead.numel() > 0:
+                pick = torch.randint(0, residual.shape[0], (dead.numel(),), device=x.device)
+                codebook.data[dead] = residual[pick]
+            residual = residual - codebook[idx]
+
     def forward(self, x):
         z = self.encoder(x)
         quantized, codes, vq_loss = self.quantize(z)
@@ -125,8 +157,14 @@ class RQVAE(nn.Module):
 
 def train_rqvae(embeddings, num_hierarchies, codebook_width, epochs, batch_size, lr, device):
     model = RQVAE(embeddings.shape[1], 32, num_hierarchies, codebook_width).to(device)
-    opt = torch.optim.Adam(model.parameters(), lr=lr)
     data = embeddings.to(device)
+    # Standardise inputs (light whitening) + k-means codebook warm-start: both
+    # are needed to keep RQ-VAE from collapsing all items onto a single code.
+    mean = data.mean(dim=0, keepdim=True)
+    std = data.std(dim=0, keepdim=True).clamp(min=1e-6)
+    data = (data - mean) / std
+    model.init_codebooks(data)
+    opt = torch.optim.Adam(model.parameters(), lr=lr)
     for epoch in range(epochs):
         perm = torch.randperm(data.shape[0], device=device)
         total = 0.0
@@ -137,6 +175,8 @@ def train_rqvae(embeddings, num_hierarchies, codebook_width, epochs, batch_size,
             loss.backward()
             opt.step()
             total += loss.item()
+        if (epoch + 1) % 10 == 0:
+            model.revive_dead_codes(data)
         print(f"  rqvae epoch {epoch + 1}/{epochs}  loss={total:.4f}")
     model.eval()
     with torch.no_grad():
