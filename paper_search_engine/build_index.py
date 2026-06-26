@@ -80,7 +80,13 @@ def main() -> None:
         use_flash_attention=cfg["use_flash_attention"],
     )
 
-    texts = [p.embed_text() for p in papers]
+    texts = [p.index_text(cfg.get("index_sections")) for p in papers]
+    sections = cfg.get("index_sections")
+    if sections:
+        print(f"[index] indexing {len(sections)} curated sections per paper: "
+              f"{', '.join(sections)}")
+    else:
+        print("[index] indexing full paper text (no index_sections configured)")
     print(f"[index] embedding {len(texts)} documents ...")
     embeddings = embedder.encode(
         texts,

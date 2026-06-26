@@ -6,10 +6,10 @@
 # --- Data ---------------------------------------------------------------
 # Root folder that contains the markdown papers (.md). May be flat or use
 # per-company sub-folders. Each .md file is one paper (see README for format).
-data_dir: "/yufan/projects/recsys_summer/paper_search_engine/data"
+data_dir: "../data/"
 
 # Where the built index (embeddings + metadata) is written / read from.
-index_dir: "/yufan/projects/recsys_summer/paper_search_engine/index"
+index_dir: "../index"
 
 # --- Models -------------------------------------------------------------
 embedding_model_path: "/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-8B"
@@ -42,6 +42,24 @@ reranker_instruction: "Given a research idea, judge whether the paper is relevan
 
 # --- Indexing -----------------------------------------------------------
 embedding_batch_size: 8      # documents embedded per forward pass
+
+# Each paper is split into numbered sections ("## § N - <name>"). Only the
+# sections listed below are embedded (for recall) and reranked. The goal of
+# this engine is "given an idea, find the relevant paper", so we keep the
+# sections that describe what a paper is and does, and drop critique and
+# future-work sections that only add noise:
+#   dropped -> prior work and limitations,
+#              core mathematical derivation, most vulnerable assumption,
+#              minimum reproducible experiment, strongest counterexample,
+#              follow-up research idea
+# Names are matched case-insensitively. Leave empty/null to index the full text.
+index_sections:
+  - "research problem and importance"
+  - "reconstructing the authors' thought process"
+  - "core intuition"
+  - "method and full pipeline"
+  - "experimental design and conclusions"
+  - "takeaways"
 
 # --- Web UI -------------------------------------------------------------
 share: true                  # Gradio share=True -> public URL

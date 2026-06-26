@@ -84,7 +84,7 @@ def run(args):
 
     if args.eval_only:
         model.load_state_dict(torch.load(args.ckpt.output, map_location=device)["model"])
-        print("test:", evaluate(model, test_loader, device, args.eval.beam_size, ks))
+        print("test:", evaluate(model, test_loader, device, args.eval.test_beam_size, ks))
         return
 
     train_loader = build_loader(splits["train"], asin2idx, codes, H, args.train.batch_size,
@@ -147,9 +147,9 @@ def run(args):
         save_pt({"model": model.state_dict(), "codebook_width": codebook_width,
                  "num_hierarchies": H}, args.ckpt.output)
 
-    # final test with the best checkpoint
+    # final test with the best checkpoint (report at the larger test-time beam)
     model.load_state_dict(torch.load(args.ckpt.output, map_location=device)["model"])
-    test_metrics = evaluate(model, test_loader, device, args.eval.beam_size, ks)
+    test_metrics = evaluate(model, test_loader, device, args.eval.test_beam_size, ks)
     print("test:", test_metrics)
     wandb.log({f"test/{k}": v for k, v in test_metrics.items()})
     wandb.finish()
@@ -168,7 +168,7 @@ def parse_args():
     p.add_argument("--model.num_heads", type=int, default=6)
     p.add_argument("--model.d_ff", type=int, default=1024)
     p.add_argument("--model.d_kv", type=int, default=64)
-    p.add_argument("--model.dropout", type=float, default=0.15)
+    p.add_argument("--model.dropout", type=float, default=0.10)
     p.add_argument("--data.maxlen", type=int, default=20, choices=[20, 50],
                    help="history length; picks the seq_maxlen{20,50} HF config")
     p.add_argument("--model.mlp_layers", type=int, default=2, help="FF bloating depth; 0 disables")
@@ -177,12 +177,15 @@ def parse_args():
 
     p.add_argument("--train.epochs", type=int, default=50)
     p.add_argument("--train.batch_size", type=int, default=256)
-    p.add_argument("--train.lr", type=float, default=1e-3)
-    p.add_argument("--train.weight_decay", type=float, default=1e-4)
+    p.add_argument("--train.lr", type=float, default=5e-4)
+    p.add_argument("--train.weight_decay", type=float, default=1e-6)
     p.add_argument("--train.max_norm", type=float, default=1.0)
 
     p.add_argument("--eval.batch_size", type=int, default=128)
-    p.add_argument("--eval.beam_size", type=int, default=10)
+    p.add_argument("--eval.beam_size", type=int, default=10,
+                   help="beam size for validation/model-selection (fast)")
+    p.add_argument("--eval.test_beam_size", type=int, default=50,
+                   help="beam size for the final test / eval_only (paper standard)")
     p.add_argument("--eval.every", type=int, default=5)
     p.add_argument("--eval.ks", type=str, default="5,10")
 

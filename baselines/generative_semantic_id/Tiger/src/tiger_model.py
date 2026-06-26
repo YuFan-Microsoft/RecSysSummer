@@ -58,7 +58,7 @@ class T5MultiLayerFF(nn.Module):
 
 class TigerModel(nn.Module):
     def __init__(self, num_hierarchies, codebook_width, d_model=128, num_layers=4,
-                 num_heads=6, d_ff=1024, d_kv=64, dropout=0.15, mlp_layers=2,
+                 num_heads=6, d_ff=1024, d_kv=64, dropout=0.10, mlp_layers=2,
                  add_sep_token=True, num_user_bins=None):
         super().__init__()
         self.num_hierarchies = num_hierarchies  # H (includes tie-breaker digit)

@@ -30,6 +30,14 @@ _TITLE_RE = re.compile(r"^\s*#\s+(.*\S)\s*$", re.MULTILINE)
 # filename layout: {Company}_{venue}_{YYYYMMDD}_{Title}.md
 _FNAME_RE = re.compile(r"^(?P<company>[^_]+)_(?P<venue>[^_]+)_(?P<date>\d{8})_")
 
+# A paper body is organised into numbered sections, e.g.
+#   "## § 5 - Method and full pipeline"
+# The separator may be a hyphen, en-dash or em-dash and the casing varies.
+_SECTION_RE = re.compile(
+    r"^##\s+§\s*\d+\s*[-–—]\s*(?P<name>.+?)\s*$",
+    re.MULTILINE,
+)
+
 # pretty display names for the venue token in the filename
 _VENUE_NAMES = {
     "arxiv": "arXiv", "sigir": "SIGIR", "kdd": "KDD", "www": "WWW",
@@ -66,9 +74,50 @@ class Paper:
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
-    def embed_text(self) -> str:
-        """Text fed to the embedding model (title helps disambiguate)."""
+    def index_text(self, selected_sections: list[str] | None = None) -> str:
+        """Text fed to the embedder / reranker.
+
+        When ``selected_sections`` is given, only those sections of the paper
+        are kept (the title is always prepended); otherwise the full body is
+        used. This lets the search engine index the signal-bearing sections
+        (problem / intuition / method / ...) and ignore noise such as the
+        speculative "thought process", critique, or "future work" sections.
+        """
+        if selected_sections:
+            return select_sections_text(self.title, self.content, selected_sections)
         return f"{self.title}\n\n{self.content}".strip()
+
+
+def _normalize_section(name: str) -> str:
+    """Lower-case a section name and strip punctuation / extra whitespace."""
+    name = name.replace("\u2019", "'").strip().rstrip(".")
+    return re.sub(r"\s+", " ", name).lower()
+
+
+def extract_sections(content: str) -> list[tuple[str, str]]:
+    """Split a paper body into ``(normalized_name, body_text)`` pairs, in order."""
+    matches = list(_SECTION_RE.finditer(content))
+    sections: list[tuple[str, str]] = []
+    for i, m in enumerate(matches):
+        start = m.end()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(content)
+        body = content[start:end].strip()
+        sections.append((_normalize_section(m.group("name")), body))
+    return sections
+
+
+def select_sections_text(title: str, content: str, selected: list[str]) -> str:
+    """Build indexing/reranking text from a curated subset of sections.
+
+    Only sections whose (normalized) names appear in ``selected`` are kept; they
+    are emitted in document order with the title prepended. Falls back to the
+    full body when none of the configured sections are found, so the engine
+    stays robust to occasional format drift.
+    """
+    wanted = {_normalize_section(s) for s in selected}
+    parts = [body for name, body in extract_sections(content) if name in wanted and body]
+    joined = "\n\n".join(parts).strip() or content.strip()
+    return f"{title}\n\n{joined}".strip()
 
 
 def _parse_filename_meta(stem: str) -> tuple[str, bool, str, str]:

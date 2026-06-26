@@ -37,7 +37,7 @@ Pick a category with `--data.category`:
 python src/embeddings.py \
     --data.category Beauty_and_Personal_Care \
     --data.output outputs/embeddings.pt \
-    --model.name google/flan-t5-large
+    --model.name sentence-transformers/sentence-t5-base
 
 # 2 — embeddings → semantic IDs
 python src/quantize.py \
@@ -131,12 +131,34 @@ add cost with little gain.
 | Component | Setting |
 |-----------|---------|
 | Tokenizer | RK-Means, L=3, W=256, +1 TIGER dedup digit → **H=4 tokens/item** |
-| Content encoder | Sentence-T5 (fp32) |
+| Content encoder | Sentence-T5 (`sentence-transformers/sentence-t5-base`, fp32) |
 | Model | T5 enc-dec, d_model 128, 4+4 layers, 6 heads, d_kv 64, d_ff 1024, dropout 0.10, mlp_layers 2 |
 | Optimizer | Adam, lr `5e-4`, weight-decay `1e-6`, batch 256 |
-| Epochs | 50 |
+| Epochs | **per-category — see table below** (data-dependent) |
 | Model selection | best **validation Recall@10** (beam 10, fast) |
 | Final test | **beam 50** (paper standard) |
+
+### Per-category settings (epochs are data-dependent)
+
+Convergence is governed by **gradient steps**, not epochs, so the same epoch
+count is wrong across categories: small catalogs need *more* epochs (few
+steps/epoch), large catalogs need *far fewer*. Everything else (tokenizer,
+encoder, model, lr `5e-4`, wd `1e-6`, dropout 0.10, batch 256, beam 10→50) is
+shared. The trainer saves the **best validation Recall@10** checkpoint, so the
+epoch value is an upper bound with early-stopping, not a fixed run length.
+
+| Category | #Interactions | ~steps/epoch (bs 256) | **Recommended epochs** |
+|---|---:|---:|---:|
+| Industrial_and_Scientific | 412,947 | ~1.2K | **200** |
+| Musical_Instruments | 511,836 | ~1.6K | **200** |
+| Video_Games | 814,586 | ~2.4K | **250** |
+| Beauty_and_Personal_Care | 6,624,441 | ~20K | **30** |
+| Books | 9,488,297 | ~31K | **20** |
+
+> All five land at roughly **300K–600K total gradient steps** — the regime where
+> the paper's small-category TIGER converges (~186–253 epochs on Instrument /
+> Scientific / Game). A flat `--train.epochs 50` **under-trains** the three small
+> categories (they need ~200) and is mildly generous for Beauty / Books.
 
 ---
 

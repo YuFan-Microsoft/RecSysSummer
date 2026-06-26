@@ -36,9 +36,11 @@ from tiger_model import TigerModel
 
 
 @torch.no_grad()
-def evaluate_rank0(model, rows, asin2idx, codes, H, args, ks):
+def evaluate_rank0(model, rows, asin2idx, codes, H, args, ks, beam_size=None):
     """Beam-search evaluation on a single rank (rank 0)."""
     model.eval()
+    if beam_size is None:
+        beam_size = args.eval.beam_size
     ds = SequenceDataset(rows, asin2idx, codes, H, max_items=args.data.maxlen)
     loader = DataLoader(ds, batch_size=args.eval.batch_size, shuffle=False,
                         collate_fn=Collate(0), num_workers=2)
@@ -47,7 +49,7 @@ def evaluate_rank0(model, rows, asin2idx, codes, H, args, ks):
     for input_tokens, mask, target, user_id in loader:
         input_tokens, mask = input_tokens.to(device), mask.to(device)
         user_id = user_id.to(device)
-        beams, _ = model.generate(input_tokens, mask, beam_size=args.eval.beam_size, user_id=user_id)
+        beams, _ = model.generate(input_tokens, mask, beam_size=beam_size, user_id=user_id)
         m = compute_metrics(beams.cpu(), target, ks=ks)
         bs = target.shape[0]
         for k, v in m.items():
@@ -148,11 +150,12 @@ def run(args):
     if not os.path.exists(args.ckpt.output):
         strategy.save_model(engine, blob, args.ckpt.output)
 
-    # final test on rank 0 with the best checkpoint
+    # final test on rank 0 with the best checkpoint (report at the larger test-time beam)
     if strategy.is_rank_0():
         state = torch.load(args.ckpt.output, map_location=device)["model"]
         engine.module.load_state_dict(state)
-        test_m = evaluate_rank0(engine.module, splits["test"], asin2idx, codes, H, args, ks)
+        test_m = evaluate_rank0(engine.module, splits["test"], asin2idx, codes, H, args, ks,
+                                beam_size=args.eval.test_beam_size)
         print("test:", test_m, flush=True)
         wandb.log({f"test/{k}": v for k, v in test_m.items()})
     wandb.finish()
@@ -171,7 +174,7 @@ def parse_args():
     p.add_argument("--model.num_heads", type=int, default=6)
     p.add_argument("--model.d_ff", type=int, default=1024)
     p.add_argument("--model.d_kv", type=int, default=64)
-    p.add_argument("--model.dropout", type=float, default=0.15)
+    p.add_argument("--model.dropout", type=float, default=0.10)
     p.add_argument("--data.maxlen", type=int, default=20, choices=[20, 50],
                    help="history length; picks the seq_maxlen{20,50} HF config")
     p.add_argument("--model.mlp_layers", type=int, default=2, help="FF bloating depth; 0 disables")
@@ -181,12 +184,15 @@ def parse_args():
     p.add_argument("--train.epochs", type=int, default=50)
     p.add_argument("--train.micro_batch_size", type=int, default=256, help="batch size per GPU")
     p.add_argument("--train.grad_accum", type=int, default=1)
-    p.add_argument("--train.lr", type=float, default=1e-3)
-    p.add_argument("--train.weight_decay", type=float, default=1e-4)
+    p.add_argument("--train.lr", type=float, default=5e-4)
+    p.add_argument("--train.weight_decay", type=float, default=1e-6)
     p.add_argument("--train.max_norm", type=float, default=1.0)
 
     p.add_argument("--eval.batch_size", type=int, default=128)
-    p.add_argument("--eval.beam_size", type=int, default=10)
+    p.add_argument("--eval.beam_size", type=int, default=10,
+                   help="beam size for validation/model-selection (fast)")
+    p.add_argument("--eval.test_beam_size", type=int, default=50,
+                   help="beam size for the final test (paper standard)")
     p.add_argument("--eval.every", type=int, default=5)
     p.add_argument("--eval.ks", type=str, default="5,10")
 

@@ -1,9 +1,15 @@
 # Paper Finder — semantic search over your Markdown papers
 
-Two-stage semantic search over the `.md` papers collected by the arXiv tool:
+Given a research **idea**, find the most relevant papers from the `.md` corpus
+(`RecSysPaper/`). Two-stage semantic search:
 
 1. **Recall** — embed the query with **Qwen3-Embedding-8B** and take the top candidates by cosine similarity. The recall pool size is derived automatically as `min(2 × top-K, recall_cap)` (default cap **100**).
 2. **Rerank** — score those candidates with **Qwen3-Reranker-8B** and keep the top **K** (slider in the UI, default **15**).
+
+Both stages operate on a **curated subset of each paper's sections** (see below),
+not the full markdown — so the engine matches on *what a paper is and does* and
+ignores critique / speculation / future-work noise. The UI still renders the
+full paper.
 
 A clean, Apple-styled **Gradio** UI lets you type an idea, pick how many papers to return, and flip through them one fully-rendered card at a time with the ‹ › arrows, ordered **most-relevant first**. Launched with `share=True` for a public URL.
 
@@ -27,7 +33,26 @@ data_dir/
   Google/  ...md
   ...
 ```
-Each `.md` starts with `# Title` and an `**arXiv:** [url](url)` line (the format produced by the arXiv download tool). `README.md` files are skipped.
+Each `.md` starts with `# Title` and an `**arXiv:** [url](url)` line, then a
+body split into numbered sections (`## § N - <name>`). `README.md` files are skipped.
+
+## What gets indexed
+
+Every paper has 12 sections. Only the ones that describe **what the paper is and
+does** are embedded and reranked; the rest add noise for idea-matching and are
+dropped. This is controlled by `index_sections` in `config.yaml`:
+
+| Indexed | Dropped |
+| --- | --- |
+| Research problem and importance | Prior work and limitations |
+| Reconstructing the authors' thought process | Core mathematical derivation |
+| Core intuition | Most vulnerable assumption |
+| Method and full pipeline | Minimum reproducible experiment |
+| Experimental design and conclusions | Strongest counterexample |
+| Takeaways | Follow-up research idea |
+
+Set `index_sections` to empty/null to fall back to indexing the full paper text.
+Section names are matched case-insensitively and tolerate `-`/`–`/`—` separators.
 
 ## Setup (remote 8×A100)
 
@@ -65,8 +90,11 @@ python search.py "generative retrieval for sequential recommendation with LLMs"
 ## Tuning
 
 All in `config.yaml`:
+- `index_sections` — which paper sections are embedded/reranked (empty = full text).
 - `rerank_k` — default top-K returned (the UI slider starts here).
 - `recall_cap` — hard upper bound on the recall pool (recall = `min(2 × top-K, recall_cap)`).
 - `embedding_batch_size` — raise it for faster indexing on A100.
 - `use_flash_attention` — set `true` after `pip install flash-attn` for speed/memory.
 - `dtype` — `bfloat16` recommended on A100.
+
+> Changing `index_sections` requires rebuilding the index (`python build_index.py`).

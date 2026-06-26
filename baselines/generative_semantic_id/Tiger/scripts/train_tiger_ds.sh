@@ -13,13 +13,15 @@ deepspeed --num_gpus 8 src/train_tiger_ds.py \
     --data.category Beauty_and_Personal_Care \
     --data.semantic_ids outputs/semantic_ids.pt \
     --ckpt.output outputs/tiger.pt \
-    --train.epochs 50 \
+    --train.epochs 30 \
     --train.micro_batch_size 256 \
     --train.grad_accum 1 \
-    --train.lr 1e-3 \
-    --train.weight_decay 1e-4 \
+    --train.lr 5e-4 \
+    --train.weight_decay 1e-6 \
+    --model.dropout 0.1 \
     --eval.every 5 \
     --eval.beam_size 10 \
+    --eval.test_beam_size 50 \
     --eval.ks 5,10 \
     --ds.zero_stage 2 \
     --ds.param_dtype bf16 \

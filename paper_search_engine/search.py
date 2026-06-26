@@ -15,7 +15,7 @@ from pathlib import Path
 
 import numpy as np
 
-from common import load_config
+from common import load_config, select_sections_text
 from embedder import Qwen3Embedder
 from reranker import Qwen3Reranker
 
@@ -103,7 +103,7 @@ class SearchEngine:
         candidates = [self.metadata[i] for i in top_idx]
         recall_scores = [float(sims[i]) for i in top_idx]
 
-        # --- Stage 2: rerank ---
+        # --- Stage 2: rerank (same curated sections used for recall) ---
         docs = [self._doc_for_rerank(c) for c in candidates]
         rerank_scores = self.reranker.score(
             query, docs, instruction=self.cfg["reranker_instruction"]
@@ -131,9 +131,11 @@ class SearchEngine:
             )
         return results
 
-    @staticmethod
-    def _doc_for_rerank(meta: dict) -> str:
-        """Compact text given to the reranker (title + body)."""
+    def _doc_for_rerank(self, meta: dict) -> str:
+        """Text given to the reranker: title + the curated index sections."""
+        sections = self.cfg.get("index_sections")
+        if sections:
+            return select_sections_text(meta["title"], meta["content"], sections)
         return f"{meta['title']}\n\n{meta['content']}".strip()
 
 

@@ -9,7 +9,7 @@ Example:
     python embeddings.py \
         --data.category Beauty_and_Personal_Care \
         --data.output outputs/embeddings.pt \
-        --model.name google/flan-t5-large
+        --model.name sentence-transformers/sentence-t5-base
 """
 
 import argparse
@@ -66,7 +66,7 @@ def parse_args():
     p.add_argument("--data.category", type=str, required=True,
                    help="e.g. Beauty_and_Personal_Care, Video_Games, Books, ...")
     p.add_argument("--data.output", type=str, required=True)
-    p.add_argument("--model.name", type=str, default="google/flan-t5-large")
+    p.add_argument("--model.name", type=str, default="sentence-transformers/sentence-t5-base")
     p.add_argument("--model.max_length", type=int, default=128)
     p.add_argument("--infer.batch_size", type=int, default=64)
     p.add_argument("--device", type=str, default="auto")
