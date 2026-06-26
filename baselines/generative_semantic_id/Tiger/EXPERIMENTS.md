@@ -99,24 +99,18 @@ Findings from arXiv:2507.22224 and how this repo aligns:
 Run on **Musical_Instruments**, 1 GPU each, 30 epochs, beam 10, selected by
 validation Recall@10. wandb project `tiger-grid-sweep`. (Test metrics shown.)
 
-| Run | Tokenizer | L×W | lr | wd | dropout | mlp | R@5 | N@5 | R@10 | N@10 |
-|-----|-----------|-----|----|----|---------|-----|-----|-----|------|------|
-| A1 paper-baseline | rqkmeans | 3×256 | 5e-4 | 1e-6 | 0.15 | 2 | 0.0320 | 0.0207 | 0.0459 | 0.0252 |
-| A2 | rvq | 3×256 | 5e-4 | 1e-6 | 0.15 | 2 | 0.0308 | 0.0202 | 0.0427 | 0.0241 |
-| A3 | rqvae | 3×256 | 5e-4 | 1e-6 | 0.15 | 2 | 0.0260 | 0.0167 | 0.0380 | 0.0206 |
-| B1 | rqkmeans | 3×**128** | 5e-4 | 1e-6 | 0.15 | 2 | 0.0278 | 0.0182 | 0.0396 | 0.0220 |
-| B2 | rqkmeans | **4**×256 | 5e-4 | 1e-6 | 0.15 | 2 | 0.0272 | 0.0176 | 0.0388 | 0.0213 |
-| C1 (orig default) | rqkmeans | 3×256 | **1e-3** | **1e-4** | 0.15 | 2 | 0.0268 | 0.0176 | 0.0401 | 0.0219 |
-| **C2 (best)** | **rqkmeans** | **3×256** | **5e-4** | **1e-6** | **0.10** | **2** | **0.0325** | **0.0213** | **0.0468** | **0.0260** |
-| C3 | rqkmeans | 3×256 | 5e-4 | 1e-6 | 0.15 | **0** | 0.0308 | 0.0199 | 0.0435 | 0.0241 |
+Axes explored (one shared base config, varying one knob at a time):
+- **Tokenizer**: `rqkmeans` / `rvq` / `rqvae`.
+- **SID dimension** `(L×W)`: `3×256` vs `3×128` vs `4×256`.
+- **Optimizer**: lr `5e-4` / wd `1e-6` vs the aggressive `1e-3` / `1e-4`.
+- **Regularization / head**: dropout `0.15` vs `0.10`; `mlp_layers` 2 vs 0.
 
-**Takeaways** (match the paper):
-- `rqkmeans` > `rvq` > `rqvae` (A1 > A2 > A3).
-- `(L, W) = (3, 256)` beats `3×128` (B1) and `4×256` (B2).
-- LR `5e-4` / wd `1e-6` (A1) beats the aggressive `1e-3` / `1e-4` default (C1).
-- Lower dropout `0.10` (C2) is the single best tweak.
+**Expected orderings** (from the GRID paper; to be re-confirmed on re-run):
+`rqkmeans ≳ rvq > rqvae`; `(L, W) = (3, 256)` best; lr `5e-4` / wd `1e-6` beats
+the aggressive default; lower dropout `0.10` helps.
 
-→ **Best config = C2**, used for all per-category runs below.
+> Sweep results are being regenerated and the next sweep's settings may differ,
+> so per-run numbers are intentionally not recorded here.
 
 ---
 
@@ -137,41 +131,192 @@ validation Recall@10. wandb project `tiger-grid-sweep`. (Test metrics shown.)
 
 ## 6. Per-category results (test, beam 50)
 
-All categories from the HF datasets, best config (§5), model-selected on
+Categories run from the HF datasets, best config (§5), model-selected on
 validation Recall@10, final test with beam 50. wandb project `tiger-allcat`
-(runs `<Cat>_train`).
+(runs `<Cat>_train`): **Musical Instruments, Industrial & Scientific,
+Video Games, Beauty & Personal Care, Books**.
 
-| Category | HF config | #items | R@5 | N@5 | R@10 | N@10 |
-|----------|-----------|--------|-----|-----|------|------|
-| Musical Instruments | `Musical_Instruments` | 24,587 | **0.0357** | 0.0232 | **0.0570** | 0.0301 |
-| Industrial & Scientific | `Industrial_and_Scientific` | 25,848 | **0.0257** | 0.0162 | **0.0407** | 0.0210 |
-| Video Games | `Video_Games` | 25,612 | **0.0523** | 0.0340 | **0.0838** | 0.0441 |
-| Beauty & Personal Care | `Beauty_and_Personal_Care` | 207,649 | **0.0201** | 0.0131 | **0.0312** | 0.0167 |
-| Books | `Books` | 495,063 | **0.0308** | 0.0207 | **0.0457** | 0.0255 |
-
-> Categories **Office / Sports / Toys** referenced in some Amazon-2023
+> Per-category numbers are being regenerated and are intentionally not recorded
+> here yet. Categories **Office / Sports / Toys** referenced in some Amazon-2023
 > benchmarks are **not present** in the user's HF datasets, so they are omitted.
 
-### Reference context (UTGRec table, TIGER row — for orientation only)
+### Reference baselines & reproduction reliability
 
-The user explicitly asked **not** to reproduce these exact values, but they show
-our runs land in the expected TIGER range:
+To judge whether our TIGER reproduction is trustworthy, we compare **only**
+against published results computed on **byte-identical data**. A published number
+is a valid reference only if it passes both gates (see
+`amazon_2023/Matching_Papers_Results_Summary.md`):
 
-| Category | ref R@5 | ref N@5 | ref R@10 | ref N@10 |
-|----------|---------|---------|----------|----------|
-| Instrument | 0.0370 | 0.0244 | 0.0564 | 0.0306 |
-| Scientific | 0.0264 | 0.0175 | 0.0422 | 0.0226 |
-| Game | 0.0559 | 0.0366 | 0.0868 | 0.0467 |
+1. **Statistics match exactly** — the paper's `#users / #items / #interactions`
+   equal `yufan/amazon2023-user-interactions` for that category.
+2. **Processing matches** — official 5-core → chronological → **leave-one-out**.
 
-Our Instrument (R@10 0.0570 vs 0.0564) and Scientific/Game numbers are all
-within a few tenths of a percent of the published TIGER baseline.
+Target statistics (after 5-core) our data must equal:
+
+| Category | #Users | #Items | #Interactions |
+|---|---:|---:|---:|
+| Musical_Instruments | 57,439 | 24,587 | 511,836 |
+| Video_Games | 94,762 | 25,612 | 814,586 |
+| Industrial_and_Scientific | 50,985 | 25,848 | 412,947 |
+| Beauty_and_Personal_Care | 729,576 | 207,649 | 6,624,441 |
+| Books | 776,370 | 495,063 | 9,488,297 |
+
+**Published results to compare against** (transcribed from each paper's main
+table; source: `amazon_2023/Matching_Papers_Results_Summary.md`). Even on
+identical data, each paper re-implements its baselines, so **compare a method
+only against the baselines inside its own paper / lineage** — do not put numbers
+from different papers on one scale.
+
+#### Directly-comparable leaderboard (shared RecBole baseline; maxlen 20, full ranking)
+
+UTGRec / MTGRec / CCFRec / Pctx are exact-match on Instrument / Scientific / Game
+*and* share one baseline implementation, so they sit on a single leaderboard.
+
+**Musical Instruments** — R@5 / R@10 / N@5 / N@10
+| Method | R@5 | R@10 | N@5 | N@10 |
+|---|---:|---:|---:|---:|
+| SASRec (shared) | 0.0333 | 0.0523 | 0.0213 | 0.0274 |
+| TIGER (shared) | 0.0370 | 0.0564 | 0.0244 | 0.0306 |
+| LETTER (shared) | 0.0372 | 0.0580 | 0.0246 | 0.0313 |
+| UTGRec | 0.0398 | 0.0616 | 0.0263 | 0.0334 |
+| MTGRec | 0.0413 | 0.0635 | 0.0275 | 0.0346 |
+| Pctx | 0.0419 | 0.0655 | 0.0275 | 0.0350 |
+| **CCFRec (PQ)** | **0.0432** | **0.0682** | **0.0281** | **0.0361** |
+
+**Industrial & Scientific** — R@5 / R@10 / N@5 / N@10
+| Method | R@5 | R@10 | N@5 | N@10 |
+|---|---:|---:|---:|---:|
+| SASRec | 0.0259 | 0.0412 | 0.0150 | 0.0199 |
+| TIGER | 0.0264 | 0.0422 | 0.0175 | 0.0226 |
+| LETTER | 0.0279 | 0.0435 | 0.0182 | 0.0232 |
+| UTGRec | 0.0308 | 0.0481 | 0.0204 | 0.0255 |
+| Pctx | 0.0323 | 0.0504 | 0.0205 | 0.0263 |
+| MTGRec | 0.0322 | 0.0506 | 0.0212 | 0.0271 |
+| **CCFRec (PQ)** | **0.0364** | **0.0555** | **0.0224** | **0.0285** |
+
+**Video Games** — R@5 / R@10 / N@5 / N@10
+| Method | R@5 | R@10 | N@5 | N@10 |
+|---|---:|---:|---:|---:|
+| SASRec | 0.0535 | 0.0847 | 0.0331 | 0.0438 |
+| TIGER | 0.0559 | 0.0868 | 0.0366 | 0.0467 |
+| LETTER | 0.0563 | 0.0877 | 0.0372 | 0.0473 |
+| UTGRec | 0.0592 | 0.0909 | 0.0390 | 0.0491 |
+| MTGRec | 0.0621 | 0.0956 | 0.0410 | 0.0517 |
+| Pctx | 0.0638 | 0.0981 | 0.0416 | 0.0527 |
+| **CCFRec (PQ)** | **0.0658** | **0.1042** | 0.0413 | **0.0536** |
+
+Ranking (Recall@10), consistent across all three categories:
+`CCFRec > Pctx ≈ MTGRec > UTGRec > LETTER > TIGER > SASRec`.
+
+#### Other exact-match papers (each vs its own baselines — do not cross-compare)
+
+Full per-method metrics as each paper reports them (R@5 / R@10 / N@5 / N@10,
+plus R@1 where given). Bold = each paper's proposed method.
+
+**LARES** (maxlen 20, full ranking; also reports R@20/N@20 in-paper):
+| Cat | Method | R@5 | R@10 | N@5 | N@10 |
+|---|---|---:|---:|---:|---:|
+| Instrument | SASRec | 0.0346 | 0.0536 | 0.0216 | 0.0277 |
+| Instrument | DuoRec | 0.0381 | 0.0598 | 0.0244 | 0.0314 |
+| Instrument | PRL++ | 0.0385 | 0.0587 | 0.0245 | 0.0310 |
+| Instrument | **LARES** | **0.0411** | **0.0636** | **0.0263** | **0.0336** |
+| Scientific | SASRec | 0.0248 | 0.0385 | 0.0150 | 0.0194 |
+| Scientific | DuoRec | 0.0280 | 0.0431 | 0.0178 | 0.0226 |
+| Scientific | PRL++ | 0.0279 | 0.0441 | 0.0176 | 0.0228 |
+| Scientific | **LARES** | **0.0297** | **0.0464** | **0.0191** | **0.0245** |
+| Video Games | SASRec | 0.0578 | 0.0926 | 0.0334 | 0.0446 |
+| Video Games | DuoRec | 0.0592 | 0.0932 | 0.0368 | 0.0477 |
+| Video Games | PRL++ | 0.0587 | 0.0925 | 0.0367 | 0.0475 |
+| Video Games | **LARES** | **0.0616** | **0.0972** | **0.0386** | **0.0500** |
+
+**LLaDA-Rec** (discrete diffusion, full ranking; also reports R@1):
+| Cat | Method | R@1 | R@5 | R@10 | N@5 | N@10 |
+|---|---|---:|---:|---:|---:|---:|
+| Scientific | SASRec | 0.0063 | 0.0240 | 0.0379 | 0.0152 | 0.0197 |
+| Scientific | TIGER | 0.0084 | 0.0282 | 0.0446 | 0.0183 | 0.0236 |
+| Scientific | LETTER | 0.0082 | 0.0273 | 0.0423 | 0.0179 | 0.0227 |
+| Scientific | LC-Rec | 0.0091 | 0.0280 | 0.0434 | 0.0186 | 0.0235 |
+| Scientific | RPG | 0.0087 | 0.0257 | 0.0395 | 0.0174 | 0.0218 |
+| Scientific | **LLaDA-Rec** | **0.0098** | **0.0310** | **0.0474** | **0.0203** | **0.0256** |
+| Instrument | SASRec | 0.0089 | 0.0331 | 0.0525 | 0.0211 | 0.0273 |
+| Instrument | TIGER | 0.0105 | 0.0359 | 0.0566 | 0.0233 | 0.0300 |
+| Instrument | LETTER | 0.0114 | 0.0362 | 0.0562 | 0.0239 | 0.0303 |
+| Instrument | LC-Rec | 0.0119 | 0.0379 | 0.0587 | 0.0251 | 0.0318 |
+| Instrument | RPG | 0.0118 | 0.0362 | 0.0545 | 0.0241 | 0.0300 |
+| Instrument | **LLaDA-Rec** | **0.0128** | **0.0406** | **0.0623** | **0.0268** | **0.0337** |
+| Video Games | SASRec | 0.0128 | 0.0516 | 0.0823 | 0.0323 | 0.0421 |
+| Video Games | TIGER | 0.0166 | 0.0529 | 0.0823 | 0.0348 | 0.0442 |
+| Video Games | LETTER | 0.0170 | 0.0548 | 0.0863 | 0.0360 | 0.0462 |
+| Video Games | LC-Rec | 0.0165 | 0.0567 | 0.0891 | 0.0366 | 0.0471 |
+| Video Games | RPG | 0.0209 | 0.0579 | 0.0853 | 0.0397 | 0.0485 |
+| Video Games | **LLaDA-Rec** | **0.0203** | **0.0623** | **0.0942** | **0.0415** | **0.0517** |
+
+**SID-MLP** (efficiency; matches TIGER teacher at ~8.7× throughput, official `last_out` split):
+| Cat | Method | R@5 | R@10 | N@5 | N@10 |
+|---|---|---:|---:|---:|---:|
+| Instrument | TIGER (teacher) | 0.0386 | 0.0606 | 0.0252 | 0.0323 |
+| Instrument | **SID-MLP** | **0.0396** | **0.0620** | **0.0259** | **0.0332** |
+| Scientific | TIGER (teacher) | 0.0295 | 0.0457 | 0.0191 | 0.0243 |
+| Scientific | **SID-MLP** | **0.0297** | **0.0472** | **0.0193** | **0.0250** |
+| Video Games | TIGER (teacher) | 0.0612 | 0.0951 | 0.0403 | 0.0512 |
+| Video Games | **SID-MLP** | 0.0610 | **0.0953** | 0.0402 | 0.0512 |
+
+**GrIT** (maxlen **50** ⇒ higher absolute scores; own non-TIGER baselines; paper reports
+R@5/R@10/R@20 & N — only R@10/N@10 transcribed here):
+| Cat | best baseline R@10 | GrIT R@10 / N@10 |
+|---|---:|---:|
+| Video Games | 0.1042 (DuoRec) | **0.1047 / 0.0588** |
+| Industrial & Scientific | 0.0476 (DuoRec) | **0.0482 / 0.0286** |
+
+**Augment-or-Not** (Hit@K = Recall@K):
+| Cat | Method | H@5 | H@10 | N@5 | N@10 |
+|---|---|---:|---:|---:|---:|
+| Instrument | SASRec | 0.0224 | 0.0379 | 0.0117 | 0.0167 |
+| Instrument | GRU4Rec | 0.0203 | 0.0322 | 0.0133 | 0.0171 |
+| Instrument | BIGRec (LLM) | 0.0236 | 0.0420 | 0.0133 | 0.0192 |
+| Instrument | P5-CID | 0.0283 | 0.0451 | 0.0180 | 0.0234 |
+| Instrument | TIGER | 0.0332 | 0.0517 | 0.0216 | 0.0276 |
+| Instrument | **LETTER-TIGER** | **0.0339** | **0.0521** | **0.0224** | **0.0282** |
+| Scientific | SASRec | 0.0152 | 0.0255 | 0.0087 | 0.0120 |
+| Scientific | GRU4Rec | 0.0171 | 0.0256 | 0.0118 | 0.0145 |
+| Scientific | BIGRec (LLM) | 0.0160 | 0.0280 | 0.0107 | 0.0144 |
+| Scientific | P5-CID | 0.0137 | 0.0205 | 0.0089 | 0.0110 |
+| Scientific | TIGER | 0.0241 | 0.0385 | 0.0158 | 0.0204 |
+| Scientific | **LETTER-TIGER** | **0.0256** | **0.0396** | **0.0165** | **0.0210** |
+
+**Token-Weighted** — Instrument only (its Scientific is off-by-one item; Hit@K = Recall@K):
+| Cat | Method | H@5 | H@10 | N@5 | N@10 |
+|---|---|---:|---:|---:|---:|
+| Instrument | TIGER | 0.0316 | 0.0501 | 0.0203 | 0.0263 |
+| Instrument | TIGER + IGD | 0.0325 | 0.0503 | 0.0210 | 0.0268 |
+| Instrument | **TIGER + Ours** | **0.0330** | **0.0512** | **0.0215** | **0.0273** |
+
+**MARIUS** — the only exact-match + LOO paper on **Beauty** (decimals):
+| Method | R@5 | R@10 | N@5 | N@10 |
+|---|---:|---:|---:|---:|
+| TIGER | 0.0098 | 0.0163 | 0.0064 | 0.0084 |
+| SASRec++ | 0.0268 | 0.0384 | 0.0188 | **0.0225** |
+| **MARIUS** | **0.0271** | **0.0404** | 0.0181 | 0.0224 |
+
+> **Books has no comparable reference.** The one exact-match Books paper
+> (IntervalLLM) re-ranks 20 candidates and reports HR@1 — a different evaluation
+> protocol, not full-ranking LOO — so its numbers are **not cited here**.
+
+**Reliability notes:**
+
+- **Instrument / Scientific / Video Games** have many exact-match references
+  → a reproduced TIGER landing in their TIGER range is well-validated.
+- **Beauty** has exactly **one** exact-match LOO paper (MARIUS) — thin anchor.
+- **Books** has **no** comparable full-ranking exact-match number (the only
+  Books paper uses a different HR@1 re-ranking protocol) → our Books result
+  **cannot be externally validated**; treat it as indicative only.
 
 ---
 
 ## 7. Notes on evaluation
 
 - **Beam size is the key lever for Recall@10** — it is an eval-only knob.
-  On Instrument, going from beam 10 → beam 50 raised R@10 from 0.0489 → 0.0570.
+  On Instrument, going from beam 10 → beam 50 raises Recall@10 noticeably.
   All final numbers use **beam 50**.
 - Model selection uses beam 10 (much faster, well-correlated with beam 50).
 - For the two large categories (Beauty, Books) evaluation is run every 10 epochs
@@ -217,8 +362,8 @@ we then append **one TIGER de-dup digit** so colliding items stay unique
 | GRID module | `MiniBatchKMeans` | `VectorQuantization` | `VectorQuantization` + enc/dec |
 | GRID config flag | `train_layer_wise: true` | `train_layer_wise: true` | `train_layer_wise: false` |
 
-Paper/our-sweep ranking: **rqkmeans ≈ rvq > rqvae** (Table 1; our A1 ≥ A2 > A3),
-despite RQ-VAE training ~5× longer.
+Paper ranking: **rqkmeans ≈ rvq > rqvae** (Table 1), despite RQ-VAE training
+~5× longer.
 
 ### 8.3 Why R-VQ has no decoder (and adding one alone is pointless)
 
@@ -250,7 +395,8 @@ Setting the R-VQ gradient to zero gives `c_k = mean(assigned residuals)` —
 point of the R-VQ objective**; RK-Means is just a more direct (exact-coordinate)
 solver for the same problem. Both are non-convex (discrete assignment) → local
 optima; RK-Means's exact mean update usually yields slightly lower quantization
-error, which is why our sweep shows **A1 (rqkmeans) ≥ A2 (rvq)** by a small margin.
+error, so we expect **rqkmeans ≳ rvq** by a small margin (to be re-confirmed
+after the re-run).
 
 > In GRID the two are even closer: `MiniBatchKMeans` (Sculley) carries the
 > comment that its update *"is equivalent to an SGD step with lr 0.5"* on the
@@ -283,9 +429,8 @@ only** and amount to a learning-rate rescaling: we use **Adam lr 1e-3 + mean**
 reduction; GRID's clustering modules default to **SGD lr 0.5 + sum** reduction.
 
 > Note: our sweep row **A2 (rvq)** predates this fix and was produced by the old
-> "RK-Means-without-normalization" code — re-run `rvq` if A2 is needed as a clean
-> comparison. The main config (`rqkmeans`) and all per-category results are
-> unaffected.
+> "RK-Means-without-normalization" code — it is being re-run. The main config
+> (`rqkmeans`) is unaffected algorithmically.
 
 ---
 
@@ -309,15 +454,15 @@ Key artifacts:
 
 ## 10. Summary
 
-- **All 5 available Amazon-2023 categories** were run end-to-end with one shared
-  best config (RK-Means 3×256, lr 5e-4, wd 1e-6, dropout 0.10, mlp 2, 50 epochs,
-  beam-10 selection / **beam-50 test**), under one wandb project (`tiger-allcat`).
-- Smaller, denser categories score highest (Video Games R@10 0.0838,
-  Instrument 0.0570); large sparse catalogs are hardest (Beauty 0.0312,
-  Books 0.0457 over ~0.2–0.5 M items).
-- Numbers land in the expected published-TIGER range without per-category tuning,
-  confirming the GRID handbook recipe transfers across catalogs.
-- Two pipeline-blocking bugs were fixed along the way (fp32 embedding load;
-  RQ-VAE anti-collapse).
+- **All 5 available Amazon-2023 categories** are being run end-to-end with one
+  shared best config (RK-Means 3×256, lr 5e-4, wd 1e-6, dropout 0.10, mlp 2,
+  50 epochs, beam-10 selection / **beam-50 test**), under one wandb project
+  (`tiger-allcat`).
+- Expectation: denser categories easiest, large sparse catalogs hardest. The
+  reliability check is whether each reproduced TIGER lands in the
+  **published-TIGER range** (§6 reference table) — strong for Instrument /
+  Scientific / Video Games, thin for Beauty (MARIUS only), absent for Books.
+- Three pipeline issues were fixed along the way (fp32 embedding load;
+  RQ-VAE anti-collapse; R-VQ fidelity — see §2).
 
-_Last updated: all 5 categories complete._
+_Last updated: results being re-run; metric cells pending._
