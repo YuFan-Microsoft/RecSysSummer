@@ -27,10 +27,29 @@ keywords:
         # Dedicated output file for recommendation papers.
         output: './papers/2025-2026_recsys_papers.json'
         # Terms sent to the arXiv query (matched across all metadata fields).
-        filters: ["Recommendation", "Recommender", "Collaborative Filtering", "RecSys"]
-        # Substring terms a paper TITLE must contain to be kept.
-        # "recommend" stem covers recommendation(s)/recommender(s)/recommending/recommended.
-        title_filters: ["recommend", "collaborative filtering", "recsys"]
+        # Broadened beyond the core stems to also surface CTR/sequential/session
+        # and classic CF sub-areas that often never say "recommendation" outright.
+        filters:
+            ["Recommendation", "Recommender", "Collaborative Filtering", "RecSys",
+             "Click-Through Rate", "CTR Prediction", "Sequential Recommendation",
+             "Session-based Recommendation", "Learning to Rank",
+             "Cold-start Recommendation", "User Modeling"]
+        # Substring terms a paper TITLE must contain to be kept (matching is
+        # case- and hyphenation-insensitive). "recommend" stem covers
+        # recommendation(s)/recommender(s)/recommending/recommended.
+        title_filters:
+            ["recommend", "collaborative filtering", "recsys", "click-through rate",
+             "ctr prediction", "learning to rank",
+             "cold-start", "user modeling", "next-item", "session-based"]
+        # Recall booster: when the TITLE misses, still keep a paper whose ABSTRACT
+        # names one of these, but only inside `abstract_categories` so cross-domain
+        # "recommendations" (medical/policy/etc.) are excluded.
+        abstract_filters:
+            ["recommend", "collaborative filtering", "recsys", "click-through rate",
+             "ctr prediction", "sequential recommendation",
+             "session-based recommendation", "next-item prediction"]
+        # cs.IR=retrieval, cs.LG=ML, cs.CL=NLP/LLM, cs.AI=AI \u2014 where RecSys lives.
+        abstract_categories: ["cs.IR", "cs.LG", "cs.CL", "cs.AI"]
     "Multimodal":
         # Dedicated output file for vision-language / multimodal papers.
         output: './papers/2025-2026_vlm_papers.json'

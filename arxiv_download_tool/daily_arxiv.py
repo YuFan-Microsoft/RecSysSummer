@@ -41,6 +41,16 @@ def sort_papers_by_id(papers: dict) -> dict:
     """Sorts a dictionary of papers by their keys (paper_id) in reverse chronological order."""
     return dict(sorted(papers.items(), reverse=True))
 
+def normalize_text(s: str) -> str:
+    """Lowercase and fold hyphens/underscores/slashes to spaces for robust
+    substring matching, then collapse runs of whitespace.
+
+    This lets variants like "collaborative-filtering", "Cold_Start" and
+    "next/item" all match their space-separated filter terms.
+    """
+    s = re.sub(r'[\-_/]+', ' ', s.lower())
+    return re.sub(r'\s+', ' ', s).strip()
+
 def extract_venue(comment: Optional[str], journal_ref: Optional[str]) -> str:
     """Best-effort extraction of an accepted/published venue from arXiv metadata.
 
@@ -154,6 +164,8 @@ def load_config(config_file: Path) -> dict:
     title_filters = {}
     output_paths = {}
     venue_filters = {}
+    abstract_filters = {}
+    abstract_categories = {}
     for key, value in config.get('keywords', {}).items():
         # Keyword terms (optional). Join with " OR ", quoting multi-word phrases.
         filters = value.get('filters', [])
@@ -180,6 +192,13 @@ def load_config(config_file: Path) -> dict:
             title_filters[key] = [t.lower() for t in filters]
         else:
             title_filters[key] = None
+        # Abstract-level recall booster (opt-in). When `abstract_filters` is set, a
+        # paper that fails the title filter is still kept if its ABSTRACT matches
+        # one of these terms and (when `abstract_categories` is given) its primary
+        # category is in that allowlist — catching papers that only name the topic
+        # in the abstract while keeping cross-domain noise out.
+        abstract_filters[key] = [t.lower() for t in value['abstract_filters']] if value.get('abstract_filters') else None
+        abstract_categories[key] = list(value['abstract_categories']) if value.get('abstract_categories') else None
         # Optional per-topic output file; falls back to the global path in main().
         if value.get('output'):
             output_paths[key] = value['output']
@@ -188,10 +207,12 @@ def load_config(config_file: Path) -> dict:
     config['title_filters'] = title_filters
     config['output_paths'] = output_paths
     config['venue_filters'] = venue_filters
+    config['abstract_filters'] = abstract_filters
+    config['abstract_categories'] = abstract_categories
     logging.info(f"Configuration loaded: {config}")
     return config
 
-def get_daily_papers(topic: str, query: str, max_results: int, title_filters: Optional[list[str]] = None, days: Optional[int] = None, since: Optional[datetime.date] = None, date_range: Optional[tuple] = None, venue_filters: Optional['re.Pattern'] = None) -> dict:
+def get_daily_papers(topic: str, query: str, max_results: int, title_filters: Optional[list[str]] = None, days: Optional[int] = None, since: Optional[datetime.date] = None, date_range: Optional[tuple] = None, venue_filters: Optional['re.Pattern'] = None, abstract_filters: Optional[list[str]] = None, abstract_categories: Optional[list[str]] = None) -> dict:
     """
     Searches arXiv for papers based on a query and returns a dictionary of found papers.
 
@@ -204,8 +225,10 @@ def get_daily_papers(topic: str, query: str, max_results: int, title_filters: Op
       wide backfill can be chunked into <10k-result windows (arXiv's paging cap).
     """
     papers = {}
-    # Normalize title filters to lowercase so matching is always case-insensitive.
-    normalized_title_filters = [t.lower() for t in title_filters] if title_filters else None
+    # Normalize filter terms (lowercase + hyphen folding) so matching is robust to
+    # case and hyphenation variants.
+    normalized_title_filters = [normalize_text(t) for t in title_filters] if title_filters else None
+    normalized_abstract_filters = [normalize_text(t) for t in abstract_filters] if abstract_filters else None
     # `since` (an explicit date) takes precedence over `days` for the cutoff.
     cutoff_date = None
     if since is not None:
@@ -233,10 +256,21 @@ def get_daily_papers(topic: str, query: str, max_results: int, title_filters: Op
         if cutoff_date is not None and result.published.date() < cutoff_date:
             break
 
-        # REFACTORED: More efficient and case-insensitive filtering
-        title_lower = result.title.lower()
-        if normalized_title_filters and not any(term in title_lower for term in normalized_title_filters):
-            continue
+        # Text filtering: keep a paper if its TITLE matches one of the title
+        # filters. As an opt-in recall booster, also keep papers whose ABSTRACT
+        # matches one of `abstract_filters`, but only within `abstract_categories`
+        # (when given) so cross-domain hits (e.g. medical/policy "recommendations")
+        # stay out. Text is normalized so hyphenation/case variants still match.
+        if normalized_title_filters:
+            title_norm = normalize_text(result.title)
+            keep = any(term in title_norm for term in normalized_title_filters)
+            if not keep and normalized_abstract_filters:
+                cat_ok = not abstract_categories or result.primary_category in abstract_categories
+                if cat_ok:
+                    abstract_norm = normalize_text(result.summary)
+                    keep = any(term in abstract_norm for term in normalized_abstract_filters)
+            if not keep:
+                continue
 
         # Venue filter: keep only papers whose comment/journal_ref names a target venue.
         if venue_filters is not None:
@@ -303,6 +337,8 @@ def main(**config):
         output_path.parent.mkdir(parents=True, exist_ok=True)
         title_filters = config.get('title_filters', {}).get(topic)
         venue_filters = config.get('venue_filters', {}).get(topic)
+        abstract_filters = config.get('abstract_filters', {}).get(topic)
+        abstract_categories = config.get('abstract_categories', {}).get(topic)
 
         if since is not None:
             # Backfill mode: chunk the range into monthly windows so each arXiv
@@ -320,6 +356,8 @@ def main(**config):
                         title_filters=title_filters,
                         date_range=(window_start, window_end),
                         venue_filters=venue_filters,
+                        abstract_filters=abstract_filters,
+                        abstract_categories=abstract_categories,
                     )
                 except Exception as exc:  # Keep going so one bad window doesn't abort the backfill.
                     logging.error(f"Window {window_start}->{window_end} failed: {exc}")
@@ -341,7 +379,9 @@ def main(**config):
             title_filters=title_filters,
             days=config.get('days'),
             since=since,
-            venue_filters=venue_filters
+            venue_filters=venue_filters,
+            abstract_filters=abstract_filters,
+            abstract_categories=abstract_categories,
         )
         papers = papers_data.get(topic)
         if not papers: # Skip topics with no new papers
