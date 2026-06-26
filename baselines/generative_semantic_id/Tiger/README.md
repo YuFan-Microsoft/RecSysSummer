@@ -98,6 +98,25 @@ catalog, Recall@K / NDCG@K / MRR@K. **Protocol**: train → pick the checkpoint
 with the best **validation Recall@10** → evaluate it once on the held-out test
 split.
 
+### Why input uses one shared table but output uses per-hierarchy heads
+
+A semantic ID is `H` tokens, each drawn from the same range `0..V-1`, but the
+*same* number means different things at different hierarchies. TIGER handles this
+asymmetrically:
+
+- **Input — one big embedding table (`H*V + 1` rows).** Just like an LLM token
+  table; a per-hierarchy offset `h*V` routes level `h`'s code to its own rows.
+  Lookup is "grab a row", so a shared big matrix is fine.
+- **Output — `H` separate heads, each `d_model → V`.** Decoding step `h` must
+  pick a code *within level `h`'s `V` options*, so the softmax is over `V`, never
+  `H*V`. A single combined `H*V` softmax would be meaningless — it would force a
+  level-0 code to compete with a level-2 code that isn't even a valid candidate
+  at that step. (A single *shared* width-`V` head is also valid; TIGER uses `H`
+  per-level heads because each level carries distinct semantics.)
+
+The takeaway: a big shared matrix is fine for *lookup* (input), but the *softmax
+normalization set* must be per-hierarchy (output).
+
 ---
 
 ## Design choices that matter (GRID handbook)
@@ -233,6 +252,30 @@ the RQ-VAE encoder's reconstruction path). Remaining differences are
 hyperparameter-level — we use **Adam lr 1e-3 + mean** reduction; GRID's
 clustering modules default to **SGD lr 0.5 + sum** — i.e. a learning-rate
 rescaling.
+
+### Dead codes & empty clusters
+
+A code (or centroid) is **dead** when no point picks it. In `rvq` / `rqvae` we
+periodically reset dead codes onto random data points (`_revive_dead_codes`,
+every 10 epochs) — the standard **code reset / random restart** trick and the
+single most effective anti-collapse measure for VQ-style codebooks. The plain
+`kmeans` solver currently leaves an empty cluster's centroid untouched, so a dead
+centroid just stays put.
+
+The same revival could be applied inside the k-means Lloyd loop (reset empty
+clusters to a random point, or split the largest cluster). This is in fact what
+mature k-means implementations (e.g. scikit-learn) already do for empty clusters.
+But the payoff differs by regime:
+
+- **Plain k-means** — empty clusters are rare (k ≪ #points, assignments rebuilt
+  each pass), so it's a low-impact safety net, not a headline trick.
+- **VQ / semantic IDs** — with a wide codebook, high dimension, and residual
+  stacking, dead codes are common, so code reset is a **mainstream and necessary**
+  technique (VQ-VAE-2, Jukebox, SoundStream, RQ-VAE all use it).
+
+We keep `kmeans` as-is for reproducibility; reviving its empty clusters would
+slightly raise codebook utilization (and ease `append_dedup_digit` pressure for
+`rqkmeans`) at the cost of changing existing results.
 
 ---
 
