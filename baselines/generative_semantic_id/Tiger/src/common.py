@@ -69,7 +69,7 @@ def get_device(device: str = "auto") -> torch.device:
 # --------------------------------------------------------------------------- #
 # Data loading (HuggingFace)
 # --------------------------------------------------------------------------- #
-DEFAULT_TEXT_FIELDS = ("title", "features", "description", "categories")
+DEFAULT_TEXT_FIELDS = ("title", "categories", "description", "price")
 
 
 def _field_to_text(value):

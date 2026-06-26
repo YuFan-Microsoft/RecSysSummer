@@ -1,0 +1,17 @@
+{
+  // Use Pylance for go-to-definition / IntelliSense.
+  "python.languageServer": "Pylance",
+  "python.analysis.indexing": true,
+  "python.analysis.autoSearchPaths": true,
+  // These scripts use `sys.path.insert(0, <dir>)` at runtime, which Pylance
+  // does not execute. List the import roots here so cross-file "Go to
+  // Definition" works statically.
+  "python.analysis.extraPaths": [
+    "baselines/generative_semantic_id/Tiger/src",
+    "paper_search_engine",
+    "arxiv_download_tool/arxiv_matcher"
+  ],
+  "[python]": {
+    "editor.gotoLocation.multipleDefinitions": "goto"
+  }
+}

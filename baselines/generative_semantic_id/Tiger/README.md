@@ -26,7 +26,7 @@ Pick a category with `--data.category`, one of:
 python src/embeddings.py \
     --data.category Beauty_and_Personal_Care \
     --data.output outputs/embeddings.pt \
-    --model.name sentence-transformers/sentence-t5-base
+    --model.name google/flan-t5-large
 ```
 
 **Step 2 — embeddings → semantic IDs**

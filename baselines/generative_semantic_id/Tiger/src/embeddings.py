@@ -1,7 +1,7 @@
 """Step 1: turn item text into embeddings with a HuggingFace encoder.
 
 Reads item metadata for a category from yufan/amazon2023-item-metadata, builds
-one text string per item (title + features + description + categories), and
+one text string per item (title + categories + description + price), and
 mean-pools an encoder's hidden states into one vector per item. Items are
 ordered by sorted parent_asin so every later step agrees on the index.
 
@@ -9,7 +9,7 @@ Example:
     python embeddings.py \
         --data.category Beauty_and_Personal_Care \
         --data.output outputs/embeddings.pt \
-        --model.name sentence-transformers/sentence-t5-base
+        --model.name google/flan-t5-large
 """
 
 import argparse
@@ -66,7 +66,7 @@ def parse_args():
     p.add_argument("--data.category", type=str, required=True,
                    help="e.g. Beauty_and_Personal_Care, Video_Games, Books, ...")
     p.add_argument("--data.output", type=str, required=True)
-    p.add_argument("--model.name", type=str, default="sentence-transformers/sentence-t5-base")
+    p.add_argument("--model.name", type=str, default="google/flan-t5-large")
     p.add_argument("--model.max_length", type=int, default=128)
     p.add_argument("--infer.batch_size", type=int, default=64)
     p.add_argument("--device", type=str, default="auto")

@@ -11,7 +11,7 @@ SID=outputs/cat/${TAG}_sid.pt
 
 echo "######## [$TAG] STEP1 embeddings ($CAT) ########"
 CUDA_VISIBLE_DEVICES=0 python src/embeddings.py --data.category $CAT \
-  --data.output $EMB --model.name sentence-transformers/sentence-t5-base \
+  --data.output $EMB --model.name google/flan-t5-large \
   --infer.batch_size 256
 
 echo "######## [$TAG] STEP2 quantize rqkmeans 3x256 ########"
