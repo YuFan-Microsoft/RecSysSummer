@@ -2,7 +2,8 @@
 
 Three methods (pick with --method):
     rqkmeans : residual K-means (normalize residuals each level)   [OneRec-style]
-    rvq      : residual vector quantization (no residual normalize)
+    rvq      : residual vector quantization with gradient-trained codebooks,
+               trained layer-wise on the quantization loss (GRID-style, no AE)
     rqvae    : residual-quantized VAE (encoder/decoder + commitment loss)
 
 Each item gets D codes (one per hierarchy). Because different items can collapse
@@ -65,7 +66,7 @@ def kmeans(x: torch.Tensor, k: int, iters: int = 50):
 
 
 # --------------------------------------------------------------------------- #
-# Residual K-means / RVQ (no gradient training; just fit codebooks per level)
+# Residual K-means (no gradient training; just fit codebooks per level)
 # --------------------------------------------------------------------------- #
 def residual_quantize(embeddings, num_hierarchies, codebook_width, normalize_residuals, iters):
     residual = embeddings.clone()
@@ -77,6 +78,103 @@ def residual_quantize(embeddings, num_hierarchies, codebook_width, normalize_res
         codes.append(assign)
         residual = residual - centroids[assign]
     return torch.stack(codes, dim=1)  # (num_items, num_hierarchies)
+
+
+# --------------------------------------------------------------------------- #
+# Residual VQ: trainable codebooks learned by gradient descent, one level at a
+# time, on the quantization loss ||residual - chosen||^2 (GRID-style R-VQ).
+# --------------------------------------------------------------------------- #
+class RVQ(nn.Module):
+    """Residual vector quantization with gradient-trained codebooks.
+
+    Mirrors the R-VQ path in the GRID framework (arXiv:2507.22224): a stack of
+    trainable codebooks (one per hierarchy) learned by gradient descent on the
+    quantization loss ||residual - chosen_centroid||^2, with residuals
+    normalized at each level. Following GRID's `train_layer_wise=True` for R-VQ,
+    the codebooks are trained ONE LEVEL AT A TIME (see `train_rvq`). Unlike
+    `residual_quantize` (plain k-means / Lloyd updates), here each codebook is a
+    leaf parameter updated by an optimizer. There is no encoder/decoder -- that
+    is what `rqvae` adds on top.
+    """
+
+    def __init__(self, dim, num_hierarchies, codebook_width, normalize_residuals=True):
+        super().__init__()
+        self.normalize_residuals = normalize_residuals
+        self.codebooks = nn.ParameterList(
+            [nn.Parameter(torch.empty(codebook_width, dim))
+             for _ in range(num_hierarchies)]
+        )
+
+    def _norm(self, residual):
+        return F.normalize(residual, dim=-1) if self.normalize_residuals else residual
+
+    @torch.no_grad()
+    def residual_at(self, x, level):
+        """Input residual seen by `level`, using the (frozen) earlier codebooks."""
+        residual = x
+        for prev in range(level):
+            r = self._norm(residual)
+            idx = torch.cdist(r, self.codebooks[prev]).argmin(dim=1)
+            residual = r - self.codebooks[prev][idx]
+        return self._norm(residual)
+
+    @torch.no_grad()
+    def encode(self, x):
+        """Assign codes across all levels. Returns (num_items, num_hierarchies)."""
+        residual = x
+        codes = []
+        for codebook in self.codebooks:
+            r = self._norm(residual)
+            idx = torch.cdist(r, codebook).argmin(dim=1)
+            codes.append(idx)
+            residual = r - codebook[idx]
+        return torch.stack(codes, dim=1)
+
+
+@torch.no_grad()
+def _revive_dead_codes(codebook, points):
+    """Reset never-used codes to random points to fight collapse."""
+    idx = torch.cdist(points, codebook).argmin(dim=1)
+    used = torch.zeros(codebook.shape[0], dtype=torch.bool, device=points.device)
+    used[idx.unique()] = True
+    dead = (~used).nonzero(as_tuple=True)[0]
+    if dead.numel() > 0:
+        pick = torch.randint(0, points.shape[0], (dead.numel(),), device=points.device)
+        codebook.data[dead] = points[pick]
+
+
+def train_rvq(embeddings, num_hierarchies, codebook_width, epochs, batch_size, lr,
+              normalize_residuals, device):
+    model = RVQ(embeddings.shape[1], num_hierarchies, codebook_width,
+                normalize_residuals=normalize_residuals).to(device)
+    data = embeddings.to(device)
+    # GRID trains R-VQ layer-wise: one codebook at a time. The residual entering
+    # a level is fixed once the earlier codebooks are frozen, so we precompute it
+    # and refine that level's codebook by gradient descent on the quantization
+    # loss ||residual - chosen||^2 (k-means++ seeded for a stable start).
+    for level in range(num_hierarchies):
+        residual_in = model.residual_at(data, level)
+        seeds, _ = kmeans(residual_in, codebook_width, iters=0)  # k-means++ init only
+        model.codebooks[level].data.copy_(seeds)
+        opt = torch.optim.Adam([model.codebooks[level]], lr=lr)
+        total = 0.0
+        for epoch in range(epochs):
+            perm = torch.randperm(residual_in.shape[0], device=device)
+            total = 0.0
+            for start in range(0, residual_in.shape[0], batch_size):
+                batch = residual_in[perm[start : start + batch_size]]
+                idx = torch.cdist(batch, model.codebooks[level]).argmin(dim=1)
+                chosen = model.codebooks[level][idx]
+                loss = F.mse_loss(chosen, batch)  # quantization loss
+                opt.zero_grad()
+                loss.backward()
+                opt.step()
+                total += loss.item()
+            if (epoch + 1) % 10 == 0:
+                _revive_dead_codes(model.codebooks[level], residual_in)
+        print(f"  rvq layer {level + 1}/{num_hierarchies} trained  loss={total:.4f}")
+    model.eval()
+    return model.encode(data).cpu()
 
 
 # --------------------------------------------------------------------------- #
@@ -209,8 +307,9 @@ def quantize(args):
         codes = residual_quantize(embeddings, args.num_hierarchies, args.codebook_width,
                                   normalize_residuals=True, iters=args.kmeans_iters)
     elif args.method == "rvq":
-        codes = residual_quantize(embeddings, args.num_hierarchies, args.codebook_width,
-                                  normalize_residuals=False, iters=args.kmeans_iters)
+        codes = train_rvq(embeddings, args.num_hierarchies, args.codebook_width,
+                          args.rvq.epochs, args.rvq.batch_size, args.rvq.lr,
+                          normalize_residuals=True, device=device)
     elif args.method == "rqvae":
         codes = train_rqvae(embeddings, args.num_hierarchies, args.codebook_width,
                             args.rqvae.epochs, args.rqvae.batch_size, args.rqvae.lr, device)
@@ -243,6 +342,9 @@ def parse_args():
     p.add_argument("--num_hierarchies", type=int, default=3, help="codes per item BEFORE tie-break")
     p.add_argument("--codebook_width", type=int, default=256)
     p.add_argument("--kmeans_iters", type=int, default=50)
+    p.add_argument("--rvq.epochs", type=int, default=100)
+    p.add_argument("--rvq.batch_size", type=int, default=1024)
+    p.add_argument("--rvq.lr", type=float, default=1e-3)
     p.add_argument("--rqvae.epochs", type=int, default=100)
     p.add_argument("--rqvae.batch_size", type=int, default=1024)
     p.add_argument("--rqvae.lr", type=float, default=1e-3)
