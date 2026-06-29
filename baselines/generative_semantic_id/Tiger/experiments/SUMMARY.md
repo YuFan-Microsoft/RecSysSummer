@@ -15,7 +15,7 @@ Both reproduce ≥ reference. Fixed for all: rqkmeans L3/W256+dedup · sentence-
 | Industrial_and_Scientific | 1024 / 6 (wide) | 0.20 | 5e-4 |
 
 ## Insights
-- **Arch and dropout are category-dependent, and opposite here.** Musical (small ~24.6K) → narrow FFN + mild dropout 0.10; Industrial → wide FFN + strong dropout 0.20.
+- **Arch and dropout are category-dependent, and opposite here.** Musical (small ~24.6K) → narrow FFN + mild dropout 0.10; Industrial → wide FFN + strong dropout 0.20. On Industrial arch barely matters (narrow/wide near-tied at matched dropout); wide only edges ahead at its 0.20 peak.
 - **Dropout is an inverted-U**, peaks 0.10–0.20; ≥0.25 over-regularizes.
 - **lr 5e-4 wins both** at the final arch; narrow tolerates higher lr, low lr (≤2e-4) under-fits.
 - **2 rounds suffice**: r1 8-arm scan picks the winner, r2 only confirms convergence (no arm beat r1).

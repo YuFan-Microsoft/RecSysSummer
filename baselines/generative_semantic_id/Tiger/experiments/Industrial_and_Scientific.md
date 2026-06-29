@@ -58,4 +58,9 @@ Reference (RUC/MTGRec TIGER): **R@10 = 0.0422**.
 | N@5 | 0.0179 | 0.0175 | +0.0004 |
 | N@10 | 0.0231 | 0.0226 | +0.0005 |
 
-**Key takeaway:** wide arch (d_ff 1024/h6) + dropout 0.20 + lr 5e-4 wins; dropout is the dominant lever (inverted-U, peak 0.20), LR centered at 5e-4. Converged in 2 rounds, beats reference on every metric.
+**Key takeaway:**
+- Dropout is the dominant lever — inverted-U, peak 0.15–0.20.
+- lr 5e-4 (centered, flat).
+- Arch barely matters: at matched dropout narrow/wide near-tied (narrow even wins at 0.10/0.25/0.30); best narrow 0.0429 still beats ref.
+- Wide only edges ahead at its 0.20 peak (G6 0.0442).
+- Converged in 2 rounds, beats reference on every metric.
