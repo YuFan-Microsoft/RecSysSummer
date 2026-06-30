@@ -12,6 +12,7 @@ Two phases:
 No credentials required.  `python3 _arxiv_bulk.py all` runs harvest then match.
 """
 import argparse
+import glob
 import json
 import os
 import re
@@ -37,6 +38,24 @@ def _find_metadata_dir():
 
 METADATA_DIR = _find_metadata_dir()
 INDEX_PATH = os.path.join(METADATA_DIR, "arxiv_title_index.tsv")
+# The index may live as one monolithic arxiv_title_index.tsv or as year-split
+# shards (arxiv_title_index_2015-2021.tsv, ...) kept under GitHub's per-file size
+# limit. Reads merge every shard; appends go to the newest (last) shard.
+INDEX_GLOB = os.path.join(METADATA_DIR, "arxiv_title_index*.tsv")
+
+
+def index_shards():
+    """Sorted list of all index files (monolithic and/or year shards)."""
+    return sorted(glob.glob(INDEX_GLOB))
+
+
+def append_path():
+    """File harvest appends new records to: the newest shard, else the
+    monolithic path (created on demand)."""
+    shards = index_shards()
+    return shards[-1] if shards else INDEX_PATH
+
+
 STATE_PATH = os.path.join(HERE, "_harvest_state.json")
 LOG_PATH = os.path.join(HERE, "_arxiv_bulk.log")
 
@@ -204,18 +223,20 @@ def load_state():
 def harvest(from_date, until_date, polite=1.0, restart=False):
     os.makedirs(METADATA_DIR, exist_ok=True)
     state = {} if restart else load_state()
-    if restart and os.path.exists(INDEX_PATH):
-        os.remove(INDEX_PATH)
+    if restart:
+        for shard in index_shards():
+            os.remove(shard)
 
     # dedup: remember every arxiv id already in the index so we never write it
     # twice (e.g. when resuming over an overlapping date window).
     seen = set()
-    if os.path.exists(INDEX_PATH):
-        with open(INDEX_PATH, encoding="utf-8") as fh:
+    for shard in index_shards():
+        with open(shard, encoding="utf-8") as fh:
             for line in fh:
                 i = line.find("\t")
                 if i > 0:
                     seen.add(line[:i])
+    if seen:
         log("dedup: %d ids already in index" % len(seen))
 
     token = state.get("token")
@@ -236,7 +257,7 @@ def harvest(from_date, until_date, polite=1.0, restart=False):
             params["until"] = until_date
         url = OAI_BASE + "?" + urllib.parse.urlencode(params)
 
-    idx = open(INDEX_PATH, "a", encoding="utf-8")
+    idx = open(append_path(), "a", encoding="utf-8")
     try:
         while True:
             body = oai_get(url)
@@ -281,20 +302,22 @@ def harvest(from_date, until_date, polite=1.0, restart=False):
 # --------------------------------------------------------------------------
 def load_index():
     by_title = {}
-    if not os.path.exists(INDEX_PATH):
+    shards = index_shards()
+    if not shards:
         log("no index file; run harvest first")
         return by_title
-    with open(INDEX_PATH, encoding="utf-8") as fh:
-        for line in fh:
-            parts = line.rstrip("\n").split("\t")
-            if len(parts) < 2:
-                continue
-            aid = parts[0]
-            nt = norm(parts[1])
-            author = parts[2] if len(parts) > 2 else ""
-            if not nt:
-                continue
-            by_title.setdefault(nt, []).append((aid, first_author_surname(author)))
+    for shard in shards:
+        with open(shard, encoding="utf-8") as fh:
+            for line in fh:
+                parts = line.rstrip("\n").split("\t")
+                if len(parts) < 2:
+                    continue
+                aid = parts[0]
+                nt = norm(parts[1])
+                author = parts[2] if len(parts) > 2 else ""
+                if not nt:
+                    continue
+                by_title.setdefault(nt, []).append((aid, first_author_surname(author)))
     log("index loaded: %d distinct titles" % len(by_title))
     return by_title
 
@@ -371,19 +394,20 @@ def fuzzy_fill(files, threshold=0.93):
 
     # index restricted to needed surnames: surname -> [(wordset, ntitle, id, author)]
     by_sur = {}
-    with open(INDEX_PATH, encoding="utf-8") as fh:
-        for line in fh:
-            parts = line.rstrip("\n").split("\t")
-            if len(parts) < 3:
-                continue
-            sur = first_author_surname(parts[2])
-            if sur not in need:
-                continue
-            nt = norm(parts[1])
-            if not nt:
-                continue
-            by_sur.setdefault(sur, []).append(
-                (frozenset(nt.split()), nt, parts[0], parts[2]))
+    for shard in index_shards():
+        with open(shard, encoding="utf-8") as fh:
+            for line in fh:
+                parts = line.rstrip("\n").split("\t")
+                if len(parts) < 3:
+                    continue
+                sur = first_author_surname(parts[2])
+                if sur not in need:
+                    continue
+                nt = norm(parts[1])
+                if not nt:
+                    continue
+                by_sur.setdefault(sur, []).append(
+                    (frozenset(nt.split()), nt, parts[0], parts[2]))
     log("fuzzy: %d still-missing, index blocks for %d surnames"
         % (len(missing), len(by_sur)))
 
