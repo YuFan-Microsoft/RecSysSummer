@@ -16,3 +16,9 @@ _harvest_state.json
 
 # paper_search_engine: transient gradio.live endpoint URL (rotates every ~72h)
 paper_search_engine/search_endpoint.txt
+
+# Semantic Scholar API key (secret — never commit)
+.s2_api_key
+
+# arxiv full metadata (generated data, ~2.2GB — too large for GitHub, contains files >100MB)
+arxiv_download_tool/arxiv_full_metadata/

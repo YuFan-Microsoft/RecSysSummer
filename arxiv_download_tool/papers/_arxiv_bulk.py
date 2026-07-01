@@ -27,13 +27,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 def _find_metadata_dir():
-    for cand in (os.path.join(HERE, "arxiv_metadata"),
-                 os.path.join(HERE, "..", "arxiv_metadata"),
-                 os.path.join(HERE, "..", "..", "arxiv_metadata")):
+    for cand in (os.path.join(HERE, "arxiv_index"),
+                 os.path.join(HERE, "..", "arxiv_index"),
+                 os.path.join(HERE, "..", "..", "arxiv_index")):
         cand = os.path.normpath(cand)
         if os.path.isdir(cand):
             return cand
-    return os.path.normpath(os.path.join(HERE, "..", "arxiv_metadata"))
+    return os.path.normpath(os.path.join(HERE, "..", "arxiv_index"))
 
 
 METADATA_DIR = _find_metadata_dir()
