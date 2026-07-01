@@ -1,0 +1,4 @@
+# Paste the current Gradio share link for the arXiv Search app here.
+# The first non-comment, non-empty line is used by search_arxiv.py.
+# Example:
+# https://xxxxxxxxxxxxxxxx.gradio.live

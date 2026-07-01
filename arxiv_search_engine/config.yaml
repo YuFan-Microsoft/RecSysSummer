@@ -1,0 +1,129 @@
+# ============================================================================
+# arXiv Search Engine configuration
+#
+# Two-stage semantic search (Qwen3 embedding recall -> Qwen3 reranker) over the
+# last 5 years of arXiv title + abstract metadata, with three search filters:
+#   * domain  (single-select, one of the top-5 by paper count)
+#   * year(s) (multi-select, e.g. only 2024 + 2025)
+#   * sort    (by relevance, or by citation count)
+#
+# Edit the paths below to match your machine (e.g. the remote 8xA100 box).
+# ============================================================================
+
+# --- Data ---------------------------------------------------------------
+# The corpus is downloaded from Hugging Face:
+#   https://huggingface.co/datasets/yufan/arxiv-metadata-2020-2026
+# Fetch it with:  python download_data.py
+# HF layout is  data_dir/<Domain>/<year>/metadata.jsonl  (one JSON paper/line).
+hf_repo_id: "yufan/arxiv-metadata-2020-2026"
+data_dir: "./arxiv_metadata_hf"
+
+# Where the built index is written / read from. One sub-folder per domain:
+#   index_dir/<Domain>/embeddings.npy   +   index_dir/<Domain>/metadata.json
+index_dir: "./arxiv_index_store"
+
+# --- Domains ------------------------------------------------------------
+# ALL fieldsOfStudy in the dataset (ordered largest -> smallest by paper count;
+# 2020-2026 totals in the comments). `build_index.py` builds a shard for EVERY
+# domain listed here. At serving time the domain filter is SINGLE-select: each
+# search targets exactly ONE domain (the web app only offers domains whose shard
+# has actually been built). Folder names must match the <Domain> folders exactly.
+domains:
+  - "Computer_Science"       # 656,684 papers
+  - "Physics"                # 438,722 papers
+  - "Mathematics"            # 243,044 papers
+  - "Medicine"               #  39,162 papers
+  - "Engineering"            #  32,925 papers
+  - "Economics"              #  14,358 papers
+  - "Biology"                #  10,443 papers
+  - "Materials_Science"      #   5,398 papers
+  - "Unknown"                #   4,985 papers
+  - "Chemistry"              #     404 papers
+  - "Geology"                #     401 papers
+  - "Business"               #     369 papers
+  - "Environmental_Science"  #     358 papers
+  - "Psychology"             #     326 papers
+  - "Geography"              #     229 papers
+  - "Political_Science"      #     159 papers
+  - "Sociology"              #     131 papers
+  - "Philosophy"             #      69 papers
+  - "History"                #      63 papers
+  - "Art"                    #      10 papers
+
+# Human-friendly labels shown in the UI (keyed by the folder name above).
+domain_labels:
+  Computer_Science: "Computer Science"
+  Physics: "Physics"
+  Mathematics: "Mathematics"
+  Medicine: "Medicine"
+  Engineering: "Engineering"
+  Economics: "Economics"
+  Biology: "Biology"
+  Materials_Science: "Materials Science"
+  Unknown: "Unknown"
+  Chemistry: "Chemistry"
+  Geology: "Geology"
+  Business: "Business"
+  Environmental_Science: "Environmental Science"
+  Psychology: "Psychology"
+  Geography: "Geography"
+  Political_Science: "Political Science"
+  Sociology: "Sociology"
+  Philosophy: "Philosophy"
+  History: "History"
+  Art: "Art"
+
+# --- Years --------------------------------------------------------------
+# Years that exist on disk. The UI lets you pick any subset (multi-select);
+# an empty selection means "all years".
+years:
+  - 2020
+  - 2021
+  - 2022
+  - 2023
+  - 2024
+  - 2025
+  - 2026
+
+# --- Models -------------------------------------------------------------
+embedding_model_path: "/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-4B"
+reranker_model_path: "/yufan/open_source_models/Ranker_Model/Qwen3-Reranker-8B"
+
+# NOTE: GPUs 0 and 1 are reserved / unavailable. Only 2-7 may be used.
+#
+# Inference (search.py + the web app) keeps the two models on two GPUs so both
+# can be held at once:
+embedding_device: "cuda:2"
+reranker_device: "cuda:3"
+
+# Index building fans the embedding model out across ALL of these GPUs (one
+# worker process per GPU) to build the index much faster. Uses 2-7 by default.
+index_gpus: [2, 3, 4, 5, 6, 7]
+
+# torch dtype for inference. "bfloat16" is recommended on A100.
+dtype: "bfloat16"
+
+# Set to true only if flash-attn is installed (faster, less memory).
+use_flash_attention: false
+
+# --- Tokenisation -------------------------------------------------------
+# title + abstract is short, so 1024 tokens is plenty and keeps indexing fast.
+embedding_max_length: 1024   # max tokens per document when embedding
+reranker_max_length: 1024    # max tokens per (query, doc) pair when reranking
+
+# --- Retrieval ----------------------------------------------------------
+# rerank_k is the default number of papers returned (also the UI slider default).
+# recall_k is the size of the embedding recall pool that the reranker re-scores.
+rerank_k: 15                 # final results returned after reranking (top-K)
+recall_k: 100                # embedding recall pool size (must be >= rerank_k)
+
+# One-sentence task instructions (English is recommended by Qwen).
+query_instruction: "Given a research topic or idea, retrieve the most relevant arXiv papers by their title and abstract."
+reranker_instruction: "Given a research topic or idea, judge whether the arXiv paper (title + abstract) is relevant to it."
+
+# --- Indexing -----------------------------------------------------------
+embedding_batch_size: 64     # documents embedded per forward pass
+
+# --- Web UI -------------------------------------------------------------
+share: true                  # Gradio share=True -> public URL
+server_port: 7861            # different port from the markdown paper engine

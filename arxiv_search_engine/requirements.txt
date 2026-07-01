@@ -1,0 +1,16 @@
+# Core
+torch>=2.1.0
+transformers>=4.51.0
+accelerate>=0.26.0
+numpy>=1.24.0
+PyYAML>=6.0
+tqdm>=4.65.0
+
+# Data download from Hugging Face
+huggingface_hub>=0.23.0
+
+# Web UI
+gradio>=4.44.0
+
+# Optional (faster attention on A100): install separately if desired
+# flash-attn>=2.5.0
