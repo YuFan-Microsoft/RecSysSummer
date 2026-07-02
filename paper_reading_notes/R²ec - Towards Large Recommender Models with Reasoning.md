@@ -14,7 +14,7 @@
 
 ---
 
-<!-- Reading progress: abstract, plus §1 Introduction, §2 Preliminaries, and §3.1–3.2 (model design + the RecPO reward). §4 experiments and the nine analyses still to read. Verified against the PDF. Statements are the paper's unless marked (inference). -->
+<!-- Reading progress: abstract, §1 Introduction, §2 Preliminaries, §3.1–3.2 (model design + RecPO reward), and the Appendix E/F training pipeline + gradient derivation + Figure 5 prompt templates. §4 experiments and the nine analyses still to read. Verified against the PDF. Statements are the paper's unless marked (inference). -->
 
 ## TL;DR
 
@@ -204,6 +204,30 @@ come from GRPO or RLOO group normalization, and the objective is the usual clipp
 policy-gradient ratio — so RecPO is **PPO-style, not literally PPO**. *(This
 sharpens the shorthand "trained with PPO" carried in the SIDReasoner note.)* The
 full objective (§3.2.3) is for the next pass.
+
+**Keeping the item table fresh (the engineering detail a careful reader
+predicts).** The item embeddings $H_V$ are not fixed weights — each
+$\mathbf{h}_v = f_\theta(x_v)$ is produced by the *same* evolving model, so as
+$\theta$ updates the table goes stale. The training loop (Appendix E) uses a
+hybrid refresh: every $T_\text{refresh}$ steps it re-encodes the **whole catalog**
+($H_V[v] \leftarrow f_\theta(x_v)\ \forall v$) — a lazy periodic refresh — while
+**every** step it re-encodes just the batch's **target items** on the fly
+($H_V[v^+] \leftarrow f_\theta(x_{v^+})$). The on-the-fly targets are what let the
+recommendation gradient flow *through the item encoder itself* (Appendix F:
+$\nabla_\theta s(v) = (\nabla_\theta \mathbf{h}_T)^\top \mathbf{h}_v + \mathbf{h}_T^\top \nabla_\theta f_\theta(x_v)$,
+the second term), so reasoning and item semantics co-adapt; the periodic full
+refresh is the cheap way to keep the rest of the catalog usable for the
+full-catalog-rank reward $R_d$ without re-encoding millions of items every step.
+A subtlety worth keeping: the training loss / similarity softmax is **in-batch**
+(Appendix F denominator $\sum_{v' \in B}$), so the two freshness regimes divide
+labor — on-the-fly batch encodings feed the gradient, the lazily-refreshed full
+table feeds the ranking reward $R_d$.
+
+Two prompt templates make the dual role concrete (Figure 5): a **User Prompt**
+("Analyze in depth and finally recommend next {category} inside `<answer>`…" plus
+the rated purchase history) that drives reasoning-then-recommend, and an **Item
+Prompt** ("Summarize key attributes … inside `<answer>`: {meta}") whose final
+hidden state becomes the item's row in $H_V$.
 
 ## Reader's insights and open questions
 
