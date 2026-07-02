@@ -44,9 +44,9 @@ The paper picks **category 3**, then makes **reasoning** work on top of it.
 
 ### Stage 1 — Enriched SID–language alignment
 
-**§3.2.1 Item quantization (RQ-VAE).** Metadata (title, category, opt. description) → text encoder → embedding **z**; residual-quantize into an SID of length L. Keep **L codebooks** (one per stage), each with **K codewords**. At stage *l*: pick the nearest codeword to residual r_{l-1}, subtract, pass r_l on (r₀ = z). SID = the L indices; z_q = sum of chosen codewords. Loss = L_recon + L_RQ:
-- **L_recon** = ‖z − ẑ‖², ẑ = **decoder** reconstruction of z_q (not the raw codeword-sum).
-- **L_RQ** per stage, split by stop-gradient `sg`: **codebook loss** ‖sg[r_{l-1}] − e‖² (codeword → residual) + **commitment loss** β‖r_{l-1} − sg[e]‖² (encoder → codeword).
+**§3.2.1 Item quantization (RQ-VAE).** Metadata (title, category, opt. description) → text encoder → embedding $z$; residual-quantize into an SID of length $L$. Keep **$L$ codebooks** (one per stage), each with **$K$ codewords**. At stage $l$: pick the nearest codeword to residual $r_{l-1}$, subtract, pass $r_l$ on ($r_0 = z$). SID = the $L$ indices; $z_q$ = sum of chosen codewords. Loss $\mathcal{L}_{\text{RQ-VAE}} = \mathcal{L}_{\text{recon}} + \mathcal{L}_{\text{RQ}}$:
+- **$\mathcal{L}_{\text{recon}} = \lVert z - \hat{z}\rVert^2$**, where $\hat{z}$ is the **decoder** reconstruction of $z_q$ (not the raw codeword-sum).
+- **$\mathcal{L}_{\text{RQ}}$** per stage, split by stop-gradient $\mathrm{sg}[\cdot]$: **codebook loss** $\lVert \mathrm{sg}[r_{l-1}] - e\rVert^2$ (codeword → residual) + **commitment loss** $\beta\lVert r_{l-1} - \mathrm{sg}[e]\rVert^2$ (encoder → codeword).
 
 **§3.2.2 Templated alignment tasks** over existing data: **SID↔Title translation (×2)** and **Next-item prediction (×4 directions: title/SID → title/SID)**.
 
@@ -57,18 +57,18 @@ The paper picks **category 3**, then makes **reasoning** work on top of it.
 
 ### Stage 2 — Reinforced reasoning
 
-**§3.3.1 Cold-start activation.** One **lightweight epoch** of SFT on teacher-generated reasoning to enforce the **reason-then-recommend format**. It does **not** teach new capability (alignment already gave that) — only reliable formatting. Loss = next-token CE on the **completion (τ + target SID)**; the context is masked. *(paper says only "standard SFT"; the loss scope is the conventional reading — inference.)*
+**§3.3.1 Cold-start activation.** One **lightweight epoch** of SFT on teacher-generated reasoning to enforce the **reason-then-recommend format**. It does **not** teach new capability (alignment already gave that) — only reliable formatting. Loss = next-token CE on the **completion ($\tau$ + target SID)**; the context is masked. *(paper says only "standard SFT"; the loss scope is the conventional reading — inference.)*
 
-**§3.3.2 GRPO (outcome-only reward).** R = R_sr + λ·R_f:
-- **R_sr** = (1/2)^{L−m}, m = longest correct **prefix** vs the ground-truth SID — each extra correct prefix token **doubles** the reward (=1 when fully correct). Prefix-match suits the RQ-VAE hierarchy (coarse codes first).
-- **R_f** = 1 iff the SID maps to a **catalog-existing** item (anti-hallucination).
+**§3.3.2 GRPO (outcome-only reward).** $R = R_{sr} + \lambda R_f$:
+- **$R_{sr} = (1/2)^{L-m}$**, $m$ = longest correct **prefix** vs the ground-truth SID — each extra correct prefix token **doubles** the reward ($=1$ when fully correct). Prefix-match suits the RQ-VAE hierarchy (coarse codes first).
+- **$R_f = 1$** iff the SID maps to a **catalog-existing** item (anti-hallucination).
 
-GRPO: sample **K** trajectories τ∘y per context, **normalize rewards within the group** for advantages (group mean = baseline, no critic), PPO-style clipped update + β·KL to a reference policy.
+GRPO: sample **$K$** trajectories $\tau \circ y$ per context, **normalize rewards within the group** for advantages (group mean = baseline, no critic), PPO-style clipped update + $\beta$·KL to a reference policy.
 
 ## Reader's insights & open questions
 
-- **Q1 — Attribution (the deciding question).** Does the reasoning add value, or is most of the gain from Stage-1 alignment (which already trains title↔SID next-item prediction)? The reward is **outcome-only** — τ gets **no direct signal**, credited only via the final SID — so GRPO can only reinforce reasoning that *correlates* with good outcomes; nothing forces τ to be faithful or causal (risk: decorative / post-hoc / reward-hacked reasoning). Sharp test: full model vs. aligned model with reasoning off, and vs. reasoning that emits only candidate SIDs with no NL summary. §4.3 ablation must isolate this. *(inference)*
-- **Idea A — Process supervision on the reasoning** *(reader's idea)*. Outcome-only RL is a fallback *because* reasoning is hard to evaluate. Add a **process reward / PRM** on τ (reward for matching the held-out interest direction, τ↔SID consistency, or a teacher-judged reasoning score). Directly attacks challenge (2).
+- **Q1 — Attribution (the deciding question).** Does the reasoning add value, or is most of the gain from Stage-1 alignment (which already trains title↔SID next-item prediction)? The reward is **outcome-only** — $\tau$ gets **no direct signal**, credited only via the final SID — so GRPO can only reinforce reasoning that *correlates* with good outcomes; nothing forces $\tau$ to be faithful or causal (risk: decorative / post-hoc / reward-hacked reasoning). Sharp test: full model vs. aligned model with reasoning off, and vs. reasoning that emits only candidate SIDs with no NL summary. §4.3 ablation must isolate this. *(inference)*
+- **Idea A — Process supervision on the reasoning** *(reader's idea)*. Outcome-only RL is a fallback *because* reasoning is hard to evaluate. Add a **process reward / PRM** on $\tau$ (reward for matching the held-out interest direction, $\tau$↔SID consistency, or a teacher-judged reasoning score). Directly attacks challenge (2).
 - **Idea B — Latent / pure-SID-space reasoning** *(reader's idea)*. The paper is *explicit* NL reasoning and lists *latent* reasoning as a path it does **not** take. Cutting the NL token cost by reasoning in latent space (or purely in SID space) is genuinely open — you'd trade away the interpretability this paper keeps.
 - **Q2 — Reward design (answered).** See §3.3.2: prefix-doubling match + validity; outcome-only.
 - **Q3 — Interpretability (answered).** The `<think>` trace is human-readable NL interleaved with SIDs → interpretability is genuine, not weak retrieval-evidence.
