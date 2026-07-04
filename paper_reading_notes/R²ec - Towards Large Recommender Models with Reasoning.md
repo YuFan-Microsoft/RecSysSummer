@@ -14,7 +14,7 @@
 
 ---
 
-<!-- Reading progress: abstract, §1 Introduction, §2 Preliminaries, §3.1–3.2 (model design + RecPO reward), and the Appendix E/F training pipeline + gradient derivation + Figure 5 prompt templates. §4 experiments and the nine analyses still to read. Verified against the PDF. Statements are the paper's unless marked (inference). -->
+<!-- Reading progress: full read — abstract, §1–§3 (model + RecPO), §4 experiments (data protocol, Table 1, efficiency Table 4, GRPO/RLOO, Gemma-vs-Qwen), and Appendices B/E/F + Figure 5. Verified against the PDF. Statements are the paper's unless marked (inference). -->
 
 ## TL;DR
 
@@ -242,6 +242,110 @@ the rated purchase history) that drives reasoning-then-recommend, and an **Item
 Prompt** ("Summarize key attributes … inside `<answer>`: {meta}") whose final
 hidden state becomes the item's row in $H_V$.
 
+## Experiments (§4)
+
+**The data protocol (Appendix B) is deliberately unusual, and it matters.** Three
+Amazon domains — Instruments, CDs and Vinyl, Video Games — built with a
+temporal-truncation protocol borrowed from D3 / BigRec: start recent and roll the
+time window backward month by month until 10k items accumulate. Two choices stand
+out. First, they **omit the 5-core filter** on purpose, to "retain the nature
+behaviour characteristic of recommendation scenarios" — i.e. keep the long tail of
+users with only one or two interactions. Second, each history is chronologically
+sorted and **truncated to the latest 20 actions**. Evaluation is full-set ranking
+(scores over the entire catalog), reported as `H@K` and `N@K` for K in 5/10/20.
+Dropping 5-core is double-edged: more realistic, but the resulting sparsity
+**depresses every method's absolute numbers**, and (see below) does so unevenly
+across method families.
+
+**Main result: R²ec is SOTA everywhere, but the margin is very uneven.**
+Improvements over the best baseline run roughly 7%–67%. The spread is the
+interesting part:
+
+| method | Instruments `H@5` | CDs `N@5` |
+|---|---|---|
+| GRU4Rec (traditional) | 0.0171 | — |
+| TIGER (generative) | 0.0171 | 0.0045 |
+| **R²ec** | **0.0237** | **0.0372** |
+
+On Instruments the lead is modest (GRU4Rec and TIGER both 0.0171, R²ec 0.0237 — no
+order-of-magnitude gap). On CDs it explodes to about 8× over TIGER. So the
+"baselines stuck in the thousandths, R²ec in the hundredths" reading holds on CDs
+but not on Instruments.
+
+**Is that a reproduction problem?** A fair suspicion — a mature method like TIGER
+should not collapse to 0.0045 on a normal benchmark. But the more precise read is
+that **the evaluation setup systematically favors R²ec and penalizes the
+generative family**, so the huge gaps are not clean evidence of method
+superiority:
+
+- **Sparsity hurts *frequency-learned* item representations — not just SID.** The
+  tempting reading is "no 5-core hurts Semantic-ID methods and helps embedding
+  methods." The numbers say the divide is subtler. On the sparse CDs split TIGER
+  (SID) sits at `N@5` 0.0045, *and SASRec — a plain ID-embedding method — is just
+  as low* (`N@5`-range ~0.008–0.014); a pure embedding model collapses too. What
+  survives is R²ec's **content-derived** item vectors (each item embedded from its
+  text by the LLM), which give cold items a sensible representation without needing
+  interaction frequency. So the real axis is **content-semantic vs
+  frequency-learned item representation**, not embedding vs SID: SID generation
+  *and* ID embeddings both depend on item frequency and both crack under no-5-core;
+  text/content embeddings do not. Generation adds a second penalty (multi-step
+  decoding, beam coverage), which is why generative baselines like BigRec fall
+  furthest. Cross-check: on the denser Instruments split SASRec (0.0175) nearly
+  matches R²ec (0.0237), and the ~8× gap opens only on sparse CDs — exactly what
+  the content-vs-frequency story predicts.
+- **The baselines are re-adapted, not native.** LLaRA\* and SDPO\* are the authors'
+  modified versions (candidate prompts removed, constrained generation over the
+  full corpus), and every LLM baseline is re-backboned onto Gemma2-2B / Qwen2.5-3B
+  rather than its original configuration.
+
+Neither point proves a bug, but together they suggest a standard 5-core +
+sampled-candidate protocol would probably let the generative baselines close much
+of the gap. Read the SOTA claim as "under this realistic-but-favorable setup," not
+as a settled verdict.
+
+**Backbone: Gemma2-2B beats Qwen2.5-3B**, consistently, and by up to 2× on D3 — the
+smaller model wins. A genuinely interesting data point, but the paper phrases it as
+a tentative "may generally deliver stronger performance," so treat it as
+dataset / task specific rather than a law.
+
+**Ablations (Table 2) — and what `w/ ClsHead` actually tests.** Ordered worst to
+best: `w/ ClsHead` (0.0044) < `w/o Reasoning` (0.0176) < `w/o Rd` (0.0198) <
+`w/o Rc` (0.0244) < full R²ec (0.0264). Three readings. (1) Among the
+reward/objective variants, removing reasoning costs the most — reasoning does real
+work. (2) Both rewards matter, but the discrete NDCG reward `Rd` matters more than
+the continuous similarity reward `Rc` (dropping `Rd` hurts more than dropping
+`Rc`). (3) The easily-missed one, `w/ ClsHead`, is the *worst* variant of all —
+worse than dropping reasoning entirely. It swaps R²ec's item-embedding `rec_head`
+(score = hidden-state inner-product with a content-encoded item vector in a shared
+semantic space) for a plain `|V|`-way classification head: static,
+independently-learned class weights, one per item, not derived from item text. Structurally the two heads are identical — both score
+`h_T` against a `|V|`×d matrix — so this ablation isolates exactly one variable:
+whether that item matrix is *learned from scratch by interaction gradients*
+(ClsHead) or *produced by encoding each item's text* (rec_head). It
+collapses because it discards two things at once — the content-semantic item
+representation (reverting to the extreme of frequency-learned weights, worse even
+than ID-embedding retrieval, hence brutal under no-5-core sparsity), and the
+reasoning–recommendation coupling (a classifier bolted onto reasoning tokens no
+longer shares the item-embedding space). So the crux is not merely "add reasoning"
+but "score items by inner product against content-encoded embeddings rather than a
+classification head" — the same content-vs-frequency axis from the sparsity
+analysis, now seen from inside the model.
+
+**Secondary analyses (§4.4) — mostly setting-specific.** A cluster of smaller
+studies, worth skimming rather than trusting as general laws. *GRPO vs RLOO:* GRPO
+learns faster and reaches higher validation reward but is noisier, and its reasoning
+length drifts upward over training while RLOO stays flat; the paper attributes this
+to GRPO's unit-variance normalization amplifying rewards into larger gradients — a
+real mechanism whose magnitude is dataset-dependent. *Trajectory sampling:* higher
+temperature lengthens reasoning and helps; larger top-K shortens it and slightly
+hurts. *Group size (rollout count):* more rollouts help then plateau — the one
+robustly general takeaway (standard RL diminishing returns). *Embedding strategy:*
+the last hidden state (what R²ec uses) beats max/mean pooling and a special-token
+readout — sensible for a decoder-only model, where the final token already
+aggregates the whole sequence. *Reasoning patterns:* context-aware but, again,
+dataset-specific. Net: the load-bearing design choices are settled by the main
+table and the ClsHead / reward ablations; this section is texture, not structure.
+
 ## Reader's insights and open questions
 
 - *(open, partly answered)* **Does the reasoning cause the gain, or is it just
@@ -263,4 +367,126 @@ hidden state becomes the item's row in $H_V$.
   be *reused or cached* across users with similar histories, cutting the dominant
   cost (the autoregressive reasoning) rather than the already-cheap scoring step?
 
-<!-- To be continued: §4 experiments still to read — Table 1 main results, GRPO-vs-RLOO and temperature/top-K analyses, and the Appendix J case studies — then write a Net read verdict. -->
+- *(my idea — deployable reasoning via self-distillation)* The cleanest answer to
+  the efficiency problem this paper dodges: train a reasoning and a no-reasoning
+  version jointly, use the reasoning model as a **teacher** and the no-reasoning
+  model as a **student** (self-distillation), and serve only the student — paying
+  no reasoning latency online while inheriting the accuracy. Because the `rec_head`
+  is shared, the natural distillation target is the teacher's post-reasoning hidden
+  state `h_T`: the student learns to emit a close `h_T` directly from the user
+  history. Success is bracketed by two references — it must beat the paper's
+  `w/o Reasoning` (naive no-reasoning, ~15% worse) and is upper-bounded by the full
+  teacher. Honest risk: reasoning partly buys *computational depth*, which a
+  single-pass student may structurally fail to absorb, so expect a ceiling below
+  the teacher. Mitigation: give the student a few latent reasoning steps (à la
+  ReaRec) as extra depth to distill into — a hybrid of this paper and ReaRec. If it
+  works, it is exactly the efficiency rebuttal R²ec never provides.
+
+- *(my idea — complexity-adaptive reasoning length)* Not every user needs a long
+  chain; spend reasoning tokens in proportion to how hard the history is, via a
+  length penalty. Where the "optimal length" signal comes from: roll each case out
+  at several length penalties and measure the **accuracy-vs-length elasticity** —
+  flat curve means short suffices, steep curve means length pays. A more elegant
+  variant may skip per-user tuning entirely: fix one penalty in the reward
+  (`accuracy - λ·length`) and let GRPO *emerge* the per-user allocation, since hard
+  cases earn the penalty back with accuracy and easy ones do not (the paper already
+  shows GRPO's length responding during training). The elasticity oracle is then
+  best used offline, to supervise a *length predictor* from user history for a cold
+  start. Watch-outs: defining the history-complexity proxy (length? category
+  spread? intent consistency?), and the high variance of a binary hit/miss signal —
+  estimate elasticity at the segment level, not per user. The two ideas compose:
+  adaptive length decides how much the teacher reasons, then distillation collapses
+  it into a fast student — one coherent "efficient and deployable reasoning
+  recommender" story.
+
+- *(paper-worthiness — checked against the literature)* Both mechanisms are
+  crowded in NLP: reasoning / implicit-CoT distillation (LoRi, Implicit-CoT-via-KD,
+  ACoTD, "Distilling System 2 into System 1") and difficulty-adaptive / budgeted
+  reasoning length (Budgeted CoT arXiv 2309.16775, Difficulty-Adaptive CoT arXiv
+  2402.03883). And the recsys transfer of idea 1 is already partly taken by CoT-Rec
+  (arXiv 2502.13845, personalized-reasoning distillation for LLM recommendation) —
+  check its exact differences first. So two thin standalone papers is risky
+  (incremental-transfer plus salami-slicing). Stronger bet: **one** paper — an
+  efficient-and-deployable reasoning recommender combining adaptive teacher length
+  with student distillation — whose recsys-specific novelty is (a) representation-
+  level `h_T` distillation exploiting the shared `rec_head` (not text-CoT
+  distillation like CoT-Rec), (b) a latent-reasoning student (ReaRec-style) as the
+  depth to distill into, (c) cold / sparse-item gains from content-semantic
+  embeddings, and (d) a characterization of which users are reasoning-worthy. Gate
+  everything on one go/no-go experiment: can the distilled student beat the
+  `w/o Reasoning` ablation (~15% gap) and approach the teacher? If not, the whole
+  efficiency story collapses. Let experimental depth — not upfront planning —
+  decide whether it is one paper or two.
+
+## Net read
+
+R²ec is a clean, well-executed idea: fuse reasoning and recommendation into one LLM
+with two homogeneous heads, and train it end-to-end with an RL reward that adds a
+continuous tie-breaker to a discrete ranking signal. It genuinely stands or falls
+on **unification** — the shared hidden state, so that reasoning reshapes the very
+vector that scores items — and on that axis the design and the ablations
+("w/o Reasoning", "w/ ClsHead") are convincing.
+
+Where it is oversold is **efficiency**: the reasoning chain (~500 tokens) is the
+real serving cost, the flattering Table 4 omits the one baseline (TIGER) that would
+expose it, and the SOTA margins lean on an evaluation setup that quietly
+disadvantages the generative family. Read it as a strong contribution to
+*reasoning-based* recommendation whose accuracy gains are real, but whose
+efficiency and baseline-gap claims deserve a skeptical eye.
+
+## Related work for the follow-up ideas (quick scan — verify before citing)
+
+*This is a rapid literature scan done while judging the two ideas' novelty. Titles
+and arXiv IDs below come from a web search and are **not yet verified against the
+primary sources** — web results hallucinate identifiers, so confirm every one
+before citing. The value here is the landscape, not the exact references.*
+
+**Reasoning / CoT distillation (idea 1 — the teacher → student route).** Transferring
+an explicit-reasoning teacher into a cheaper or reasoning-free student is well
+established in NLP:
+
+- **Implicit CoT via Knowledge Distillation** (Deng et al., ~2023, arXiv 2311.01460)
+  — distills reasoning into the student's latent states so it need not emit
+  intermediate steps at inference; closest in spirit to serving a reasoning-free
+  student.
+- **LoRi — Low-Rank Distillation for Implicit Reasoning** — aligns teacher/student
+  hidden states in a shared low-rank space; a hidden-state-alignment objective close
+  to the `h_T`-distillation target proposed above.
+- **ACoTD — Adaptive CoT Distillation** (2025) — varies distillation depth by student
+  capability (long traces for hard cases, short for easy); overlaps idea 2's
+  difficulty-adaptivity, on the training side.
+- **"Unveiling the Key Factors for Distilling CoT Reasoning"** (ACL 2025 Findings) — a
+  systematic study of what makes CoT distillation work (supervision granularity,
+  teacher diversity over raw accuracy, student personalization).
+- **"Distilling System 2 into System 1"** (Yu et al., 2024) — the general framing:
+  compile deliberate reasoning into a fast single pass.
+- ⭐ **CoT-Rec** (arXiv 2502.13845, "personalized reasoning for LLM-based
+  recommendation") — **the direct recsys collision for idea 1.** It brings CoT
+  (user-preference + item-perception analysis) into an LLM recommender. Must-read:
+  determine whether it also *serves a reasoning-free student and distills a hidden
+  state*, or merely uses CoT to enrich the recommender while still reasoning at
+  inference. That distinction is exactly where idea 1's remaining novelty lives.
+
+**Adaptive / budgeted reasoning length (idea 2 — per-user length).** The mechanism
+(spend reasoning tokens by difficulty, via a length penalty or budget) is very active
+in NLP but, as far as this scan found, **not yet claimed in recommendation** — the
+recsys angle is the opening:
+
+- **Budgeted CoT Reasoning** (Zhou et al., ~2023, arXiv 2309.16775) — per-instance
+  decision of how much reasoning to spend.
+- **Difficulty-Adaptive CoT** (Xu et al., ~2024, arXiv 2402.03883) — allocate reasoning
+  conditioned on estimated example difficulty; the direct NLP analogue of idea 2.
+- **Adaptive Reasoning & Early Exiting** (arXiv 2402.10314) — confidence-based early
+  exit on easy inputs.
+- **Length-penalty / "learn when to think" RL** — a cluster of 2024–2025 works training
+  length-adaptive policies with an accuracy-minus-length reward, the same reward shape
+  suggested above.
+
+**Net positioning.** Idea 1's recsys transfer is partly occupied (CoT-Rec), so its
+novelty must come from the representation-level `h_T` distillation, the
+latent-reasoning student, and cold/sparse-item behavior — not from "CoT distillation
+for rec" in the abstract. Idea 2's recsys transfer looks open, but the mechanism is
+crowded, so its novelty must come from a recsys-specific user-complexity
+characterization and segment-level elasticity, not from length-penalty RL itself.
+Both point to the conclusion recorded above: combine into one efficiency-focused
+paper, gated on the go/no-go distillation experiment.
