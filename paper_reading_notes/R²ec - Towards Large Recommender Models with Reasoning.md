@@ -221,7 +221,7 @@ $\theta$ updates the table goes stale. The training loop (Appendix E) uses a
 hybrid refresh: every $T_{\text{refresh}}$ steps it re-encodes the **whole
 catalog** (recomputing $H_V[v] \leftarrow f_\theta(x_v)$ for every item) — a lazy
 periodic refresh — while **every** step it re-encodes just the batch's **target
-items** on the fly ($H_V[v^+] \leftarrow f_\theta(x_{v^+})$). The on-the-fly
+items** on the fly, as $H_V[v^+] \leftarrow f_\theta(x_{v^+})$. The on-the-fly
 targets are what let the recommendation gradient flow *through the item encoder
 itself*. Appendix F expands the score gradient as
 
