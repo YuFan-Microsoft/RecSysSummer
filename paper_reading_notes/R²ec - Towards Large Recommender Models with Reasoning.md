@@ -202,25 +202,38 @@ without it, many trajectories of *different* reasoning quality collapse to the
 one over another — $R_c$ is what restores that within-rank gradient. Advantages
 come from GRPO or RLOO group normalization, and the objective is the usual clipped
 policy-gradient ratio — so RecPO is **PPO-style, not literally PPO**. *(This
-sharpens the shorthand "trained with PPO" carried in the SIDReasoner note.)* The
-full objective (§3.2.3) is for the next pass.
+sharpens the shorthand "trained with PPO" carried in the SIDReasoner note.)* The full objective (§3.2.3, Eq 8) treats
+$(x_u, o_1, \dots, o_T, v^+)$ as one RL trajectory over a **composite action
+space** — token-level reasoning actions for $t \le T$, then a single item
+recommendation action at $t = T{+}1$, with a per-stage importance ratio (Eq 6). It
+carries one genuinely non-standard twist: **all $G$ trajectories update the
+reasoning tokens** (keeping reasoning diverse), but **only the highest-advantage
+trajectory $i^\star$ contributes the recommendation gradient** (the
+$\delta_{i,i^\star}$ term in Eq 8). So recommendation learning is concentrated on
+the single most promising reasoning path, while the other $G-1$ paths exist only
+to keep exploration alive — diffuse on reasoning, winner-take-all on the item.
+That asymmetry is R²ec's real customization of plain GRPO.
 
 **Keeping the item table fresh (the engineering detail a careful reader
 predicts).** The item embeddings $H_V$ are not fixed weights — each
 $\mathbf{h}_v = f_\theta(x_v)$ is produced by the *same* evolving model, so as
 $\theta$ updates the table goes stale. The training loop (Appendix E) uses a
-hybrid refresh: every $T_\text{refresh}$ steps it re-encodes the **whole catalog**
-($H_V[v] \leftarrow f_\theta(x_v)\ \forall v$) — a lazy periodic refresh — while
-**every** step it re-encodes just the batch's **target items** on the fly
-($H_V[v^+] \leftarrow f_\theta(x_{v^+})$). The on-the-fly targets are what let the
-recommendation gradient flow *through the item encoder itself* (Appendix F:
-$\nabla_\theta s(v) = (\nabla_\theta \mathbf{h}_T)^\top \mathbf{h}_v + \mathbf{h}_T^\top \nabla_\theta f_\theta(x_v)$,
-the second term), so reasoning and item semantics co-adapt; the periodic full
-refresh is the cheap way to keep the rest of the catalog usable for the
-full-catalog-rank reward $R_d$ without re-encoding millions of items every step.
-A subtlety worth keeping: the training loss / similarity softmax is **in-batch**
-(Appendix F denominator $\sum_{v' \in B}$), so the two freshness regimes divide
-labor — on-the-fly batch encodings feed the gradient, the lazily-refreshed full
+hybrid refresh: every $T_{\text{refresh}}$ steps it re-encodes the **whole
+catalog** (recomputing $H_V[v] \leftarrow f_\theta(x_v)$ for every item) — a lazy
+periodic refresh — while **every** step it re-encodes just the batch's **target
+items** on the fly ($H_V[v^+] \leftarrow f_\theta(x_{v^+})$). The on-the-fly
+targets are what let the recommendation gradient flow *through the item encoder
+itself*. Appendix F expands the score gradient as
+
+$$\nabla_\theta s(v) = (\nabla_\theta \mathbf{h}_T)^\top \mathbf{h}_v + \mathbf{h}_T^\top \nabla_\theta f_\theta(x_v),$$
+
+whose second term is precisely the gradient that flows into the item encoder, so
+reasoning and item semantics co-adapt. The periodic full refresh is the cheap way
+to keep the rest of the catalog usable for the full-catalog-rank reward $R_d$
+without re-encoding millions of items every step. A subtlety worth keeping: the
+training loss / similarity softmax is **in-batch** — its denominator is normalized
+over the batch $B$, not the full catalog — so the two freshness regimes divide
+labor: on-the-fly batch encodings feed the gradient, the lazily-refreshed full
 table feeds the ranking reward $R_d$.
 
 Two prompt templates make the dual role concrete (Figure 5): a **User Prompt**
@@ -250,4 +263,4 @@ hidden state becomes the item's row in $H_V$.
   be *reused or cached* across users with similar histories, cutting the dominant
   cost (the autoregressive reasoning) rather than the already-cheap scoring step?
 
-<!-- To be continued: read §4 experiments (three datasets, baselines, the nine analyses — especially the efficiency profiling and the reasoning-behavior case studies), then write the §3.2.3 objective detail and a Net read verdict. -->
+<!-- To be continued: §4 experiments still to read — Table 1 main results, GRPO-vs-RLOO and temperature/top-K analyses, and the Appendix J case studies — then write a Net read verdict. -->
