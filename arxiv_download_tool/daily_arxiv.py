@@ -288,12 +288,10 @@ def get_daily_papers(topic: str, query: str, max_results: int, title_filters: Op
         papers[paper_key] = {
             "title": result.title,
             "authors": get_authors(result.authors),
-            "first_author": get_authors(result.authors, first_author=True),
             "url": result.entry_id,
             "pdf_url": f"{ARXIV_URL_PREFIX}{paper_key}",
             "publish_date": result.published.date().isoformat(),
             "abstract": result.summary.replace("\n", " "),
-            "primary_category": result.primary_category,
             "venue": extract_venue(result.comment, result.journal_ref),
             "venue_short": canonical_venue(result.comment, result.journal_ref),
             "comment": result.comment or "null",
@@ -316,6 +314,12 @@ def update_json_file(filename: Path, new_data: dict):
         if topic not in json_data:
             json_data[topic] = {}
         json_data[topic].update(papers)
+        # Keep papers ordered oldest -> newest by publish_date (arxiv id as
+        # tiebreak) so the file stays chronologically sorted after every update.
+        json_data[topic] = dict(sorted(
+            json_data[topic].items(),
+            key=lambda kv: (kv[1].get('publish_date', ''), kv[0])
+        ))
 
     with open(filename, "w", encoding='utf-8') as f:
         json.dump(json_data, f, indent=4)
