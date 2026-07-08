@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# === Usage ===
+# bash merge_verl_ckpt.sh /path/to/verl/checkpoint/actor
+#
+# Example:
+# bash merge_verl_ckpt.sh ./RecRL_with_Reasoning/Qwen3-1.7B_Mix2-50K_Games/global_step_10/actor
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$REPO_ROOT"
+export PYTHONPATH="$REPO_ROOT${PYTHONPATH:+:$PYTHONPATH}"
+
+CKPT_DIR="./checkpoints/RecRL/Qwen3-1.7B_Mix2-50K_BeamReason_Games/global_step_50/actor"
+
+if [ -z "$CKPT_DIR" ]; then
+    echo "❌ ERROR: Please provide a verl checkpoint directory."
+    echo "Usage: bash merge_verl_ckpt.sh /path/to/actor"
+    exit 1
+fi
+
+# Remove trailing slash if exists
+CKPT_DIR="${CKPT_DIR%/}"
+
+# Output directory
+MERGED_DIR="${CKPT_DIR}_merged"
+
+echo "🔍 Verl checkpoint directory: $CKPT_DIR"
+echo "📦 Will save merged HF model to: $MERGED_DIR"
+echo ""
+
+
+MERGE_PY="$SCRIPT_DIR/merge_fsdp_checkpoint.py"
+
+if [ ! -f "$MERGE_PY" ]; then
+    echo "❌ ERROR: Cannot find merge_fsdp_ckpt.py in Verl installation."
+    echo "Expected at: $MERGE_PY"
+    exit 1
+fi
+
+echo "🔧 Using merge script: $MERGE_PY"
+echo ""
+
+# Run merge
+python3 "$MERGE_PY" \
+    --checkpoint "$CKPT_DIR" 
+    # --save_path "$MERGED_DIR"
+
+echo ""
+echo "✅ Merge completed!"
+echo "📁 Merged HuggingFace model is saved to:"
+echo "   $MERGED_DIR"
+echo ""
+echo "You can load it with:"
+echo "   from transformers import AutoModelForCausalLM"
+echo "   model = AutoModelForCausalLM.from_pretrained('$MERGED_DIR')"

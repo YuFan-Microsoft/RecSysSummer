@@ -1,0 +1,67 @@
+# SIDReasoner Python dependencies
+# Install with:  pip install -r requirements.txt
+#
+# Notes:
+# - Versions are aligned with scripts/install_vllm_sglang_mcore.sh (the tested VERL image).
+# - The RL stage (Stage 3) targets a Linux + CUDA machine. On CPU/macOS, torch/vllm
+#   wheels may not be available; use this file on the GPU training environment.
+# - A few CUDA-compiled packages (flash-attn / flashinfer / sglang / Megatron / TransformerEngine)
+#   CANNOT be installed by plain pip and are listed at the bottom for reference only.
+
+# ============================================================
+# Core deep learning stack (Stage 1 & 2 SFT + evaluation)
+# ============================================================
+torch==2.6.0
+torchvision==0.21.0
+torchaudio==2.6.0
+transformers[hf_xet]>=4.51.0
+accelerate
+datasets
+peft
+tokenizers
+safetensors
+hf-transfer
+
+# ============================================================
+# Data handling / general utilities
+# ============================================================
+numpy<2.0.0
+pandas
+pyarrow>=15.0.0
+tqdm
+fire
+wandb
+bitsandbytes
+
+# ============================================================
+# Reinforcement learning stack (Stage 3, VERL)
+# Linux + CUDA required for vllm.
+# ============================================================
+vllm==0.8.5.post1
+tensordict==0.6.2
+ray[default]
+hydra-core
+omegaconf
+codetiming
+dill
+pybind11
+liger-kernel
+mathruler
+pylatexenc
+qwen-vl-utils
+nvidia-ml-py>=12.560.30
+fastapi[standard]>=0.115.0
+optree>=0.13.0
+pydantic>=2.9
+grpcio>=1.62.1
+
+# ============================================================
+# Requires special installation — NOT plain-pip installable.
+# Install these via: bash scripts/install_vllm_sglang_mcore.sh
+# (they need CUDA/torch-matched prebuilt wheels)
+# ============================================================
+# flash-attn==2.7.4.post1
+# flashinfer-python==0.2.2.post1
+# sglang[all]==0.4.6.post1            # optional rollout backend
+# TransformerEngine @ v2.2.1         # optional Megatron backend
+# Megatron-LM @ core_v0.12.2         # optional Megatron backend

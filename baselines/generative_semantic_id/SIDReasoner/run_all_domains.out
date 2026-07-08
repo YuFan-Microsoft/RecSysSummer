@@ -1,0 +1,48 @@
+############ DOMAIN Video_Games ############
+Wed Jul  8 01:58:12 AM UTC 2026
+>>> split
+>>> launch 8 GPU eval
+>>> merge
+  0%|          | 0/8 [00:00<?, ?it/s]100%|██████████| 8/8 [00:00<00:00, 103.31it/s]
+>>> calc [Video_Games]
+0it [00:00, ?it/s]6142it [00:00, 406094.47it/s]
+10
+[1, 3, 5, 10]
+NDCG:	[0.02165418 0.03458596 0.04564792 0.05540336]
+HR	[0.02165418 0.04444806 0.07147509 0.10175838]
+0
+############ DONE Video_Games ############
+Wed Jul  8 02:02:54 AM UTC 2026
+############ DOMAIN Office_Products ############
+Wed Jul  8 02:02:54 AM UTC 2026
+>>> split
+>>> launch 8 GPU eval
+>>> merge
+  0%|          | 0/8 [00:00<?, ?it/s]100%|██████████| 8/8 [00:00<00:00, 131.70it/s]
+>>> calc [Office_Products]
+0it [00:00, ?it/s]4866it [00:00, 391563.86it/s]
+
+<a_183><b_157><c_31>
+10
+[1, 3, 5, 10]
+NDCG:	[0.08240855 0.10255024 0.11099415 0.11931243]
+HR	[0.08240855 0.11693383 0.13769009 0.16358405]
+1
+############ DONE Office_Products ############
+Wed Jul  8 02:07:20 AM UTC 2026
+############ DOMAIN Industrial_and_Scientific ############
+Wed Jul  8 02:07:20 AM UTC 2026
+>>> split
+>>> launch 8 GPU eval
+>>> merge
+  0%|          | 0/8 [00:00<?, ?it/s]100%|██████████| 8/8 [00:00<00:00, 146.42it/s]
+>>> calc [Industrial_and_Scientific]
+0it [00:00, ?it/s]4533it [00:00, 393769.78it/s]
+10
+[1, 3, 5, 10]
+NDCG:	[0.07081403 0.08338032 0.09051867 0.10104622]
+HR	[0.07081403 0.09265387 0.11008162 0.14273108]
+0
+############ DONE Industrial_and_Scientific ############
+Wed Jul  8 02:11:49 AM UTC 2026
+ALL DOMAINS DONE
