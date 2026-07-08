@@ -1,47 +1,9 @@
 import pandas as pd
 from torch.utils.data import Dataset
-from typing import List
-import json
 import random
 from tqdm import tqdm
 
 import hf_data
-
-# ASSISTANT_PREFIX = "<|im_start|>assistant"
-ASSISTANT_PREFIX = "</think>"
-
-
-class Tokenizer:
-    def __init__(self, tokenizer):
-        self.tokenizer = tokenizer
-        self.bos_id: int = self.tokenizer.bos_token_id
-        self.eos_id: int = self.tokenizer.eos_token_id
-
-
-    def encode(self, s: str, bos: bool, eos: bool) -> List[int]:
-        assert type(s) is str
-        t = self.tokenizer.encode(s)
-        while t[0] == self.bos_id:
-            t = t[1:]
-        while t[-1] == self.eos_id:
-            t = t[:-1]
-
-        if bos and self.bos_id is not None:
-            t = [self.bos_id] + t
-        if eos and self.eos_id is not None:
-            t = t + [self.eos_id]
-        return t
-
-    def decode(self, t: List[int]) -> str:
-        return self.tokenizer.decode(t)
-
-
-def _find_subsequence(sequence, pattern):
-    limit = len(sequence) - len(pattern) + 1
-    for start in range(limit):
-        if sequence[start : start + len(pattern)] == pattern:
-            return start
-    return -1
 
 
 def mask_assistant_response_only(
@@ -113,7 +75,14 @@ def mask_assistant_response_only(
 
 
 
-class SFTData(Dataset):
+class TitleHistory2TitleSFTDataset(Dataset):
+    """SFT task: the user's *title* history -> the next item's *title* (text space).
+
+    No semantic IDs are involved. Each sample pairs the same task with one of
+    several paraphrased instructions (chosen deterministically per sample) for
+    instruction diversity; only the assistant response contributes to the loss.
+    """
+
     def __init__(
         self,
         train_file,
@@ -123,90 +92,63 @@ class SFTData(Dataset):
         test=False,
         seed=0,
         category="",
-        K=4,
-        dedup=False,
         mask_assistant: bool = True,
     ):
         self.data = hf_data.load_df(train_file)
         random.seed(seed)
-        
         if sample > 0:
             self.data = self.data.sample(sample, random_state=seed)
+
         self.tokenizer = tokenizer
         self.test = test
         self.max_len = max_len
         self.category = category
-        # self.K = K
-        self.dedup = dedup
         self.mask_assistant = mask_assistant
+
+        # Paraphrased instructions for the same task (instruction diversity).
         self.instructs = [
-        f"Given a list of {category} the user recetenly enjoy, please write a new {category} that the user may bought",
-        f"Considering the {category} that has recently captured the user's interest, kindly create a compilation of other {category} that the user might have played prior to this.",
-        f"Based on the user's current gaming preference, please draft a list of potential {category} they may have experienced beforehand.",
-        f"Reflecting on the {category} the user has taken pleasure in recently, we request that you formulate a list of {category} that may have preceded the user's current enjoyment.",
-        f"In light of the recent gaming enjoyment expressed by the user, please assemble a list of {category} that could potentially include past titles the user has engaged with.",
-        f"Taking into account the {category} that has lately provided enjoyment to the user, please put together an inventory of {category} the user might have explored previously.",
-        f"Given the user's newfound enjoyment of a particular {category}, would you kindly generate a roster of other {category} that might resonate with their past gaming experiences?",
-        f"In response to the user's recent fondness for a specific {category}, we seek your assistance in listing possible {category} the user may have delighted in earlier.",
-        f"With respect to the {category} currently enjoyed by the user, please compile a suggestive list of {category} they may have played in the past.",
-        f"Bearing in mind the {category} that the user has recently been enthralled by, please construct a catalog of other {category} that the user potentially partook in beforehand.",
-        f"In relation to the user's recent entertainment with a given {category}, it would be appreciated if you could curate a list of {category} that might form part of the user's previous gaming history."
+            f"Given a list of {category} the user recently enjoy, please write a new {category} that the user may bought",
+            f"Considering the {category} that has recently captured the user's interest, kindly create a compilation of other {category} that the user might have played prior to this.",
+            f"Based on the user's current gaming preference, please draft a list of potential {category} they may have experienced beforehand.",
+            f"Reflecting on the {category} the user has taken pleasure in recently, we request that you formulate a list of {category} that may have preceded the user's current enjoyment.",
+            f"In light of the recent gaming enjoyment expressed by the user, please assemble a list of {category} that could potentially include past titles the user has engaged with.",
+            f"Taking into account the {category} that has lately provided enjoyment to the user, please put together an inventory of {category} the user might have explored previously.",
+            f"Given the user's newfound enjoyment of a particular {category}, would you kindly generate a roster of other {category} that might resonate with their past gaming experiences?",
+            f"In response to the user's recent fondness for a specific {category}, we seek your assistance in listing possible {category} the user may have delighted in earlier.",
+            f"With respect to the {category} currently enjoyed by the user, please compile a suggestive list of {category} they may have played in the past.",
+            f"Bearing in mind the {category} that the user has recently been enthralled by, please construct a catalog of other {category} that the user potentially partook in beforehand.",
+            f"In relation to the user's recent entertainment with a given {category}, it would be appreciated if you could curate a list of {category} that might form part of the user's previous gaming history.",
         ]
-        self.get_inputs()  
+        # Fix one instruction per sample up front (seed-fixed) so lazy tokenization
+        # reproduces the same sample<->instruction mapping every epoch.
+        self._instr_idx = [random.randint(0, len(self.instructs) - 1)
+                           for _ in range(len(self.data))]
+
     def __len__(self):
         return len(self.data)
-    
-
-    def generate_prompt(self, data_point):
-        return f"""{data_point["input"]}"""
-
 
     def get_history(self, row):
-        row['history_item_title'] = eval(row['history_item_title'])
-        L = len(row['history_item_title']) 
-        history = ""
-        history_str = "::".join(row["history_item_title"])
-        for i in range(L):
-            if i == 0:
-                history += "\"" + row['history_item_title'][i] + "\""
-            else:
-                history += ",\t\"" + row['history_item_title'][i] + "\""      
-        target_item = str(row['item_title'])
-        target_item = "\"" + target_item + "\"\n"
-        target_item_id = row["item_id"]
-        last_history_item_id = eval(row["history_item_id"])[-1]
-        return {"input": f"The user has palyed the following {self.category}s before: {history}",
-                "output": target_item,
-                "history_str": history_str,
-                "dedup": target_item_id == last_history_item_id}
-    
+        titles = eval(row["history_item_title"])
+        history = ",\t".join(f'"{t}"' for t in titles)
+        return {
+            "input": f"The user has played the following {self.category}s before: {history}",
+            "output": f'"{row["item_title"]}"\n',
+        }
+
     def pre(self, idx):
-        instruction =  f"""Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.
-{self.instructs[random.randint(0, len(self.instructs)-1)]}\n 
-"""
-
+        instruction = (
+            "Below is an instruction that describes a task, paired with an input that "
+            "provides further context. Write a response that appropriately completes the request.\n"
+            f"{self.instructs[self._instr_idx[idx]]}\n \n"
+        )
         history = self.get_history(self.data.iloc[idx])
-        target_item = history["output"]
-
-        history_for_prompt = history.copy()
-        history_for_prompt["output"] = ""
-        prompt = self.generate_prompt(history_for_prompt)
-
-        assistant_response = target_item if not self.test else ""
+        assistant_response = history["output"] if not self.test else ""
 
         messages = [
-            {"role": "system", "content": f"{instruction}"},
-            {"role": "user", "content": prompt},
+            {"role": "system", "content": instruction},
+            {"role": "user", "content": history["input"]},
+            {"role": "assistant", "content": assistant_response},
         ]
-        messages.append({"role": "assistant", "content": assistant_response})
-
-        tokenized = self.tokenizer.apply_chat_template(
-            messages,
-            add_generation_prompt=True if self.test else False,
-            tokenize=True,
-            return_tensors=None,
-        )
-        attention_mask = [1] * len(tokenized)
 
         if self.mask_assistant:
             input_ids, attention_mask, labels = mask_assistant_response_only(
@@ -216,48 +158,25 @@ class SFTData(Dataset):
                 max_len=self.max_len,
             )
         else:
-            input_ids = tokenized
-            labels = list(tokenized)
+            input_ids = self.tokenizer.apply_chat_template(
+                messages, add_generation_prompt=self.test, tokenize=True, return_tensors=None)
+            labels = list(input_ids)
             if len(input_ids) >= self.max_len:
-                # print(len(input_ids))
                 input_ids = input_ids[-self.max_len:]
-                attention_mask = attention_mask[-self.max_len:]
                 labels = labels[-self.max_len:]
-            else:
-                attention_mask = [1] * len(input_ids)
+            attention_mask = [1] * len(input_ids)
 
         return {
             "input_ids": input_ids,
             "attention_mask": attention_mask,
             "labels": labels,
         }
-    
-
-    
-    
-    def get_inputs(self):
-        inputs = []
-        for i in tqdm(range(len(self.data))):
-            inputs.append(self.pre(i))
-            # print(inputs[-1])
-            
-        self.inputs = inputs
-    
-    
-    def get_all(self):
-        temp = []
-        for i in range(len(self.data)):
-            temp.append(self.get_history(self.data.iloc[i]))
-        return temp
-    
-    def get_inputs_list(self):
-        return self.inputs
 
     def __getitem__(self, idx):
-        return self.inputs[idx]
+        return self.pre(idx)
  
 
-class SidSFTDataset(Dataset):
+class SidHistory2SidSFTDataset(Dataset):
     def __init__(
         self,
         train_file,
@@ -282,7 +201,7 @@ class SidSFTDataset(Dataset):
         self.category = category
         self.dedup = dedup
         self.mask_assistant = mask_assistant
-        self.get_inputs()  
+        # Lazy tokenization: each sample is tokenized on-the-fly in __getitem__.
     
     def __len__(self):
         return len(self.data)
@@ -344,27 +263,11 @@ class SidSFTDataset(Dataset):
         }
 
 
-    def get_inputs(self):
-        inputs = []
-        for i in tqdm(range(len(self.data))):
-            inputs.append(self.pre(i))
-            
-        self.inputs = inputs
-    
-    def get_all(self):
-        temp = []
-        for i in range(len(self.data)):
-            temp.append(self.get_history(self.data.iloc[i]))
-        return temp
-    
-    def get_inputs_list(self):
-        return self.inputs
-
     def __getitem__(self, idx):
-        return self.inputs[idx]
+        return self.pre(idx)
 
 
-class EvalSidDataset(Dataset):
+class SidNextItemEvalDataset(Dataset):
 
     def __init__(
         self,
@@ -489,16 +392,13 @@ Can you predict the next possible item that the user may expect?
         for i in range(len(self.data)):
             temp.append(self.get_history(self.data.iloc[i]))
         return temp
-    
-    def get_inputs_list(self):
-        return self.inputs
 
     def __getitem__(self, idx):
         return self.inputs[idx]
 
 
 
-class SidItemFeatDataset(Dataset):
+class TitleSidTranslationDataset(Dataset):
     def __init__(
         self,
         item_file,
@@ -576,8 +476,7 @@ class SidItemFeatDataset(Dataset):
         if sample > 0 and sample < len(self.data):
             self.data = random.sample(self.data, sample)
         
-        if self.tokenizer is not None:
-            self.get_inputs()
+        # Lazy tokenization: __getitem__ tokenizes each sample on-the-fly.
     
     def __len__(self):
         return len(self.data)
@@ -648,21 +547,10 @@ Answer the question about item identification.
             "labels": labels,
         }
     
-    def get_inputs(self):
-        inputs = []
-        for i in tqdm(range(len(self.data))):
-            inputs.append(self.pre(i))
-        self.inputs = inputs
-    
-    def get_inputs_list(self):
-        return self.inputs if hasattr(self, 'inputs') else [self.pre(i) for i in range(len(self))]
-    
     def __getitem__(self, idx):
-        if hasattr(self, 'inputs'):
-            return self.inputs[idx]
         return self.pre(idx)
 
-class FusionSeqRecDataset(Dataset):
+class SidHistory2TitleSFTDataset(Dataset):
     def __init__(
         self,
         train_file,
@@ -732,7 +620,7 @@ class FusionSeqRecDataset(Dataset):
                     self.sid2description[combined_sid] = processed_description
         # print("self.sid2title: ", self.sid2title)
         # print("self.sid2description: ", self.sid2description)
-        self.get_inputs()
+        # Lazy tokenization: __getitem__ tokenizes each sample on-the-fly.
     
     def _process_description(self, description, title):
         """
@@ -788,9 +676,6 @@ class FusionSeqRecDataset(Dataset):
     def generate_prompt_title(self, history):
         return f"The user has sequentially interacted with items {history}. Can you recommend the next item for him? Tell me the title of the item?"
     
-    def generate_prompt_description(self, history):
-        return f"Please review the user's historical interactions: {history}, and describe what kind of item he still needs."
-    
     def get_history(self, row):
         history_item_sid = eval(row['history_item_sid'])
         history_str = ", ".join(history_item_sid)
@@ -833,28 +718,15 @@ class FusionSeqRecDataset(Dataset):
     def pre(self, idx):
         instruction = """Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.
 Can you recommend the next item for the user based on their interaction history?
-"""  
-        # tokens = self.tokenizer.encode(instruction, bos=True, eos=False)
-        
+"""
         history_data = self.get_history(self.data.iloc[idx])
-        
+
         # Skip if duplicate and dedup is enabled
         if self.dedup and history_data['dedup']:
             return None
-        
-        # Randomly choose between title and description tasks
-        """if random.random() < 0.5:
-            # Title task
-            prompt = self.generate_prompt_title(history_data['history_str'])
-            target = history_data['target_title'] + '\n'
-        else:
-            # Description task
-            prompt = self.generate_prompt_description(history_data['history_str'])
-            target = history_data['target_description'] + '\n'
-        """
+
         prompt = self.generate_prompt_title(history_data['history_str'])
         target = history_data['target_title']
-        # print("fusion prompt: ", prompt)
 
         formatted_prompt = self.generate_formatted_prompt(prompt, "")
         assistant_response = target if not self.test else ""
@@ -903,20 +775,7 @@ Can you recommend the next item for the user based on their interaction history?
             "labels": labels,
         }
     
-    def get_inputs(self):
-        inputs = []
-        for i in tqdm(range(len(self.data))):
-            result = self.pre(i)
-            if result is not None:  # Skip None results from deduplication
-                inputs.append(result)
-        self.inputs = inputs
-    
-    def get_inputs_list(self):
-        return self.inputs if hasattr(self, 'inputs') else []
-    
     def __getitem__(self, idx):
-        if hasattr(self, 'inputs'):
-            return self.inputs[idx]
         return self.pre(idx)
 
 
@@ -975,7 +834,7 @@ class TitleHistory2SidSFTDataset(Dataset):
                 combined_sid = sids[0] + sids[1] + sids[2]
                 self.id2sid[item_id] = combined_sid
         
-        self.get_inputs()
+        # Lazy tokenization: __getitem__ tokenizes each sample on-the-fly.
     
     def __len__(self):
         return len(self.data)
@@ -1076,120 +935,13 @@ Based on the user's historical interaction with item titles, predict the semanti
             "labels": labels,
         }
     
-    def get_inputs(self):
-        inputs = []
-        for i in tqdm(range(len(self.data))):
-            result = self.pre(i)
-            if result is not None:  # Skip None results from deduplication
-                inputs.append(result)
-        self.inputs = inputs
-    
-    def get_all(self):
-        temp = []
-        for i in range(len(self.data)):
-            temp.append(self.get_history(self.data.iloc[i]))
-        return temp
-    
-    def get_inputs_list(self):
-        return self.inputs if hasattr(self, 'inputs') else []
-
     def __getitem__(self, idx):
-        if hasattr(self, 'inputs'):
-            return self.inputs[idx]
         result = self.pre(idx)
         return result if result is not None else {"input_ids": [], "attention_mask": [], "labels": []}
 
 
-class SidTextInterleaveDataset(Dataset):
-    def __init__(
-        self,
-        train_file,
-        tokenizer,
-        max_len=2048,
-        sample=-1,
-        seed=0,
-        category="",
-        dedup=False,
-    ):
-        self.data = hf_data.load_df(train_file)
-        random.seed(seed)
-
-        if sample > 0:
-            self.data = self.data.sample(sample, random_state=seed)
-
-        self.tokenizer = tokenizer
-        self.max_len = max_len
-        self.category = category
-        self.dedup = dedup
-
-        self.get_inputs()
-
-    def __len__(self):
-        return len(self.inputs)
-
-    def get_history(self, row):
-        history_item_sid = eval(row["history_item_sid"])
-        history_item_title = eval(row["history_item_title"])
-
-        history_segments = []
-        for sid, title in zip(history_item_sid, history_item_title):
-            history_segments.append(f"{sid}, its title is \"{title}\"")
-
-        history_text = "; ".join(history_segments)
-
-        input_text = f"The user has interacted with: {history_text}."
-
-        target_sid = str(row.get("item_sid", ""))
-        target_title = str(row["item_title"])
-
-        # Next token in LM training is part of same sequence
-        if target_sid:
-            target_part = f" The user is interested in: {target_sid}"
-        else:
-            target_part = f' The user is interested in: "{target_title}"'
-
-        return input_text + target_part
-
-    def pre(self, idx):
-        row = self.data.iloc[idx]
-
-        full_text = self.get_history(row)
-
-        # Tokenize as plain text
-        tokenized = self.tokenizer.encode(
-            full_text,
-            add_special_tokens=False
-        )
-
-        # Truncate
-        if len(tokenized) > self.max_len:
-            tokenized = tokenized[-self.max_len:]
-
-        # LM target = shift left by 1
-        labels = tokenized.copy()
-
-        attention_mask = [1] * len(tokenized)
-
-        return {
-            "input_ids": tokenized,
-            "attention_mask": attention_mask,
-            "labels": labels,
-        }
-
-    def get_inputs(self):
-        self.inputs = []
-        for i in tqdm(range(len(self.data))):
-            res = self.pre(i)
-            if res is not None:
-                self.inputs.append(res)
-
-    def __getitem__(self, idx):
-        return self.inputs[idx]
-
-
-
 # This class reads LLM-generated coherent data mixing sid and natural language.
-class SidTextInterleaveDataset_v2(Dataset):
+class SidTextInterleaveItemDataset(Dataset):
     def __init__(
         self,
         json_file,
@@ -1204,16 +956,19 @@ class SidTextInterleaveDataset_v2(Dataset):
         if sample > 0:
             self.json_data = self.json_data.sample(sample, random_state=seed)
 
+        # ``sid_interleaved_narrative`` is the item-level SID/text narrative (a HF
+        # column of the same name). Its legacy field name was ``llm_stage2``, where
+        # "stage2" meant the offline data-generation step -- NOT training Phase-2.
         self.data = {}
         real_id = 0
-        for item_idx, item_meta in self.json_data.items():
-            if "llm_stage2" in item_meta:
-                self.data[real_id] = item_meta['llm_stage2']
+        for item_meta in self.json_data.values():
+            if "sid_interleaved_narrative" in item_meta:
+                self.data[real_id] = item_meta["sid_interleaved_narrative"]
                 real_id += 1
     
         self.tokenizer = tokenizer
         self.max_len = max_len
-        self.get_inputs()
+        # Lazy tokenization: __getitem__ tokenizes each sample on-the-fly.
 
 
     def __len__(self):
@@ -1244,15 +999,8 @@ class SidTextInterleaveDataset_v2(Dataset):
             "labels": labels,
         }
 
-    def get_inputs(self):
-        self.inputs = []
-        for i in tqdm(range(len(self.data))):
-            res = self.pre(i)
-            if res is not None:
-                self.inputs.append(res)
-
     def __getitem__(self, idx):
-        return self.inputs[idx]
+        return self.pre(idx)
 
 
 
@@ -1274,10 +1022,11 @@ class SidTextInterleaveSequenceDataset(Dataset):
         if sample > 0:
             self.csv_data = self.csv_data.sample(sample, random_state=seed)
 
-        self.data = self.csv_data['integrated_narrative'].tolist()
+        # Drop empty narratives up front (cheap, no tokenization) so the lazy
+        # __getitem__ never has to skip an index.
+        self.data = [x for x in self.csv_data['integrated_narrative'].tolist() if x is not None]
         self.tokenizer = tokenizer
         self.max_len = max_len
-        self.get_inputs()
 
 
     def __len__(self):
@@ -1310,15 +1059,8 @@ class SidTextInterleaveSequenceDataset(Dataset):
             "labels": labels,
         }
 
-    def get_inputs(self):
-        self.inputs = []
-        for i in tqdm(range(len(self.data))):
-            res = self.pre(i)
-            if res is not None:
-                self.inputs.append(res)
-
     def __getitem__(self, idx):
-        return self.inputs[idx]
+        return self.pre(idx)
 
 
 
@@ -1388,7 +1130,20 @@ class ReasoningActivationDataset(Dataset):
                     self.sid2title[combined_sid] = title
                     self.sid2description[combined_sid] = processed_description
         
-        self.get_inputs()
+        # Lazy tokenization: each sample is tokenized on-the-fly in __getitem__.
+        # Drop rows whose reasoning is missing / unclosed up front (cheap, no
+        # tokenization) so lazy __getitem__ never has to skip an index. This
+        # reproduces exactly the rows the original eager get_inputs() filtered out.
+        def _valid_reasoning(r):
+            if pd.isna(r):
+                return False
+            r = str(r).strip()
+            if r == "":
+                return False
+            if r.startswith("<think>") and "</think>" not in r:
+                return False
+            return True
+        self.data = self.data[self.data['reasoning_path'].apply(_valid_reasoning)].reset_index(drop=True)
     
     
     def _process_description(self, description, title):
@@ -1533,17 +1288,6 @@ Can you recommend the next item for the user based on their interaction history?
             "labels": labels,
         }
     
-    def get_inputs(self):
-        inputs = []
-        for i in tqdm(range(len(self.data))):
-            result = self.pre(i)
-            if result is not None:  # Skip None results from deduplication
-                inputs.append(result)
-        self.inputs = inputs
-    
-    def get_inputs_list(self):
-        return self.inputs if hasattr(self, 'inputs') else []
-    
     def __getitem__(self, idx):
         if hasattr(self, 'inputs'):
             return self.inputs[idx]
@@ -1554,7 +1298,7 @@ Can you recommend the next item for the user based on their interaction history?
 
 # This dataset is used for reasoning recommendation task.
 # The learning objective is to generate reasoning then answer given user history.
-class Reasoning_Eval_Dataset(Dataset):
+class ReasoningEvalDataset(Dataset):
     def __init__(
         self,
         data_file,
@@ -1697,10 +1441,6 @@ Can you recommend the next item for the user based on their interaction history?
                 inputs.append(result)
         self.inputs = inputs
     
-    def get_inputs_list(self):
-        return self.inputs if hasattr(self, 'inputs') else []
-    
-    
     def get_all(self):
         temp = []
         for i in range(len(self.data)):
@@ -1714,7 +1454,7 @@ Can you recommend the next item for the user based on their interaction history?
 
 
 
-class GeneralSFTReasonDataset(Dataset):
+class GeneralReasoningSFTDataset(Dataset):
     def __init__(self, train_file, tokenizer, max_len=2048, sample=-1, test=False, seed=0, category="", dedup=False):
         self.data = hf_data.load_general(train_file)
         random.seed(seed)
@@ -1726,11 +1466,20 @@ class GeneralSFTReasonDataset(Dataset):
         self.category = category
         self.dedup = dedup
         self.cnt = 0
-        self.get_inputs()  
+        # Lazy tokenization: samples are tokenized on-the-fly in __getitem__.
+        # Drop rows with no assistant response up front (cheap, no tokenization)
+        # so the dataset length / composition match the original eager version.
+        def _has_assistant(messages):
+            golden = ""
+            for elm in messages:
+                if elm["role"] == "assistant":
+                    golden = elm["content"][0]["text"] if type(elm["content"]) == list else elm["content"]
+            return golden != ""
+        self.data = [m for m in self.data if _has_assistant(m)]
         
     
     def __len__(self):
-        return len(self.inputs)
+        return len(self.data)
 
     
     def pre(self, idx):
@@ -1806,15 +1555,13 @@ class GeneralSFTReasonDataset(Dataset):
             "labels": labels[-self.max_len:],
         }
     
-    def get_inputs(self):
-        inputs = []
-        for i in tqdm(range(len(self.data))):
-            if self.pre(i) is not None:
-                inputs.append(self.pre(i))
-        self.inputs = inputs
-    
-    def get_inputs_list(self):
-        return self.inputs
-
     def __getitem__(self, idx):
-        return self.inputs[idx]
+        out = self.pre(idx)
+        if out is None:
+            # A few raw rows have no assistant turn / fail to encode; fall back to
+            # the next usable sample instead of dropping the index.
+            for j in range(1, len(self.data)):
+                out = self.pre((idx + j) % len(self.data))
+                if out is not None:
+                    break
+        return out

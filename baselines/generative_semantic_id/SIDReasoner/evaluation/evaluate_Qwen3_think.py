@@ -8,7 +8,7 @@ import os
 # os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from data_Qwen3 import  Reasoning_Eval_Dataset
+from data_Qwen3 import  ReasoningEvalDataset
 import random
 from vllm import LLM, SamplingParams
 import logging
@@ -161,7 +161,7 @@ def main(
     tokenizer.padding_side = padding_side
     
     # val_dataset = EvalD3Dataset(train_file=test_data_path, tokenizer=tokenizer, max_len=2560, category=category, test=True, K=K, seed=seed)
-    val_dataset = Reasoning_Eval_Dataset(data_file=test_data_path, item_file=item_file, index_file=index_file, sample=-1, tokenizer=tokenizer, max_len=2048, category=category, test=True, seed=seed)
+    val_dataset = ReasoningEvalDataset(data_file=test_data_path, item_file=item_file, index_file=index_file, sample=-1, tokenizer=tokenizer, max_len=2048, category=category, test=True, seed=seed)
     
     encodings = [val_dataset[i] for i in range(len(val_dataset))]
     test_data = val_dataset.get_all()

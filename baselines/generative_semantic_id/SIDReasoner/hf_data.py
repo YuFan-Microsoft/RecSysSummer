@@ -19,7 +19,7 @@ Config <-> legacy-file mapping
 ------------------------------
     <cat>_seqrec      train/valid/test CSV        -> load_df()
     <cat>_catalog     item.json + index.json      -> load_item_feat(), load_indices()
-                      item_enhanced_v2.json       -> load_enhanced()  (`llm_stage2`)
+                      item_enhanced_v2.json       -> load_enhanced()  (`sid_interleaved_narrative`)
                       info/*.txt                  -> load_info_lines()
     <cat>_reasoning   integrated_narrative.csv    -> load_df()
     general_reasoning general/sampled_data.arrow  -> load_general()
@@ -140,15 +140,16 @@ def load_indices(index_file):
 def load_enhanced(json_file):
     """Replacement for ``json.load(open(<cat>.item_enhanced_v2.json))``.
 
-    Returns ``{id: {"llm_stage2": <sid-interleaved narrative>}}`` — the only
-    field ``SidTextInterleaveDataset_v2`` consumes.
+    Returns ``{id: {"sid_interleaved_narrative": <narrative>}}`` — the only field
+    ``SidTextInterleaveItemDataset`` consumes. (The legacy field name was
+    ``llm_stage2``; "stage2" was the data-generation step, not training Phase-2.)
     """
     df = _catalog(infer_category(json_file))
     out = {}
     for r in df.itertuples(index=False):
         narrative = r.sid_interleaved_narrative
         if narrative is not None and not (isinstance(narrative, float) and np.isnan(narrative)):
-            out[str(r.item_id)] = {"llm_stage2": narrative}
+            out[str(r.item_id)] = {"sid_interleaved_narrative": narrative}
     return out
 
 

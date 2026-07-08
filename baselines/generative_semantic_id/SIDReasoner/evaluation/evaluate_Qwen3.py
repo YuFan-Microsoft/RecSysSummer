@@ -7,7 +7,7 @@ import json
 # os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from data_Qwen3 import EvalSidDataset
+from data_Qwen3 import SidNextItemEvalDataset
 import random
 
 
@@ -150,7 +150,7 @@ def main(
     tokenizer.padding_side = padding_side
     
     # val_dataset = EvalD3Dataset(train_file=test_data_path, tokenizer=tokenizer, max_len=2560, category=category, test=True, K=K, seed=seed)
-    val_dataset = EvalSidDataset(train_file=test_data_path, tokenizer=tokenizer, max_len=2560, category=category, test=True, K=K, seed=seed)
+    val_dataset = SidNextItemEvalDataset(train_file=test_data_path, tokenizer=tokenizer, max_len=2560, category=category, test=True, K=K, seed=seed)
     
     encodings = [val_dataset[i] for i in range(len(val_dataset))]
 

@@ -7,6 +7,9 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 export PYTHONPATH="$REPO_ROOT${PYTHONPATH:+:$PYTHONPATH}"
 
+# Reuse fragmented "reserved but unallocated" CUDA memory to avoid fragmentation OOM.
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+
 CATEGORY="Office_Products"
 EXP_NAME="./output_dir/Office_Products_stage1_sft_Qwen3-1.7B/final_checkpoint"
 TEST_FILE="./data/Amazon/test/Office_Products_5_2016-10-2018-11.csv"

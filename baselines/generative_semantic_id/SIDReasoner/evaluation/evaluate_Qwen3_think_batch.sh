@@ -4,6 +4,9 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 export PYTHONPATH="$REPO_ROOT${PYTHONPATH:+:$PYTHONPATH}"
 
+# Reuse fragmented "reserved but unallocated" CUDA memory to avoid fragmentation OOM.
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+
 # ============ CONFIGS ==============
 # Please change the configs according to your environment before running this script.
 cudalist="4 5 6"      # split by space

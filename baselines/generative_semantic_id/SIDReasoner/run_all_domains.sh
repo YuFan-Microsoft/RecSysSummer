@@ -3,6 +3,9 @@ set -uo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 export PYTHONPATH="$SCRIPT_DIR${PYTHONPATH:+:$PYTHONPATH}"
+
+# Reuse fragmented "reserved but unallocated" CUDA memory to avoid fragmentation OOM.
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 D="/scratch/azureml/cr/j/3ef1a555d23d4aebbab1bbf3ab85d238/exe/wd/Amazon"
 CKROOT="/yufan/open_source_models/Research_Models/SIDReasoner"
 CUDA_LIST="0 1 2 3 4 5 6 7"

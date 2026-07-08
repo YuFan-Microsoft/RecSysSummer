@@ -11,39 +11,64 @@ export NCCL_P2P_DISABLE=1
 export NCCL_IB_DISABLE=1
 export NCCL_NET_GDR_LEVEL=0
 
-CATEGORY="Office_Products"
+# Let the CUDA allocator reuse fragmented "reserved but unallocated" memory via
+# expandable segments. This avoids mid-epoch OOM on the long (3072-token)
+# general-reasoning batches without touching micro_batch_size / LR / global batch.
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+
 BASE_MODEL="Qwen/Qwen3-1.7B"
-TRAIN_FILE="./data/Amazon/train/Office_Products_5_2016-10-2018-11.csv"
-EVAL_FILE="./data/Amazon/valid/Office_Products_5_2016-10-2018-11.csv"
-TEST_FILE="./data/Amazon/test/Office_Products_5_2016-10-2018-11.csv"
-INFO_FILE="./data/Amazon/info/Office_Products_5_2016-10-2018-11.txt"
-OUTPUT_DIR="./output_dir/Office_Products_stage1_sft_Qwen3-1.7B"
-RUN_NAME="Office_Products_stage1_sft_Qwen3-1.7B"
-LOG_FILE="./logs/${RUN_NAME}.txt"
+NUM_GPUS=8
+MASTER_PORT=12340
+
+# The three independent domains, each with its own SID codebook. --category is the
+# single data knob: train/eval/catalog/reasoning are all pulled from the HF dataset
+# for that category via derive_hf_locators(). Train ONE domain at a time.
+#
+# Default: run all three, in sequence. To train a subset, pass category names, e.g.
+#   bash phase1_alignment_sft/sft_Qwen3_enrich.sh Video_Games
+#   bash phase1_alignment_sft/sft_Qwen3_enrich.sh Office_Products Industrial_and_Scientific
+DEFAULT_CATEGORIES=(Video_Games Office_Products Industrial_and_Scientific)
+if [ "$#" -gt 0 ]; then
+    CATEGORIES=("$@")
+else
+    CATEGORIES=("${DEFAULT_CATEGORIES[@]}")
+fi
 
 mkdir -p ./logs ./output_dir
 
-{
-echo "${TRAIN_FILE} ${EVAL_FILE} ${INFO_FILE} ${TEST_FILE}"
+for CATEGORY in "${CATEGORIES[@]}"; do
+    RUN_NAME="${CATEGORY}_stage1_sft_Qwen3-1.7B"
+    OUTPUT_DIR="./output_dir/${RUN_NAME}"
+    LOG_FILE="./logs/${RUN_NAME}.txt"
 
-CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --nproc_per_node 4 \
-    --master_port 12340 \
-    "$SCRIPT_DIR/sft_Qwen3.py" \
-    --base_model "${BASE_MODEL}" \
-    --batch_size 1024 \
-    --micro_batch_size 1 \
-    --train_file "${TRAIN_FILE}" \
-    --eval_file "${EVAL_FILE}" \
-    --output_dir "${OUTPUT_DIR}" \
-    --wandb_project MiniOneRec \
-    --wandb_run_name "${RUN_NAME}" \
-    --category "${CATEGORY}" \
-    --train_from_scratch False \
-    --seed 42 \
-    --sid_index_path "./data/Amazon/index/${CATEGORY}.index.json" \
-    --item_meta_path "./data/Amazon/index/${CATEGORY}.item.json" \
-    --llm_generated_data_path "./data/Amazon/index/${CATEGORY}.item_enhanced_v2.json" \
-    --llm_generated_sequence_path "./data/Amazon/index/${CATEGORY}.integrated_narrative.csv" \
-    --general_reasoning_path "./data/Amazon/general/sampled_data.arrow" \
-    --mask_assistant True
-} > "${LOG_FILE}" 2>&1
+    echo "==== [Stage-1] START domain=${CATEGORY} -> ${OUTPUT_DIR} (log: ${LOG_FILE}) ===="
+
+    {
+    echo "category=${CATEGORY} | base_model=${BASE_MODEL} (all data pulled from the HF dataset by --category)"
+
+    # Explicit DeepSpeed launch (no HF Trainer): the training loop lives in sft_Qwen3.py::main.
+    CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 deepspeed --num_gpus ${NUM_GPUS} --master_port ${MASTER_PORT} \
+        "$SCRIPT_DIR/sft_Qwen3.py" \
+        --base_model "${BASE_MODEL}" \
+        --micro_batch_size 8 \
+        --num_epochs 5 \
+        --learning_rate 2e-5 \
+        --cutoff_len 1024 \
+        --output_dir "${OUTPUT_DIR}" \
+        --report_to wandb \
+        --wandb_project SIDReasoner_Phase1 \
+        --wandb_run_name "${RUN_NAME}" \
+        --category "${CATEGORY}" \
+        --seed 42 \
+        --mask_assistant True \
+        --zero_stage 2 \
+        --dtype bf16 \
+        --gradient_checkpointing \
+        --deepspeed
+    } > "${LOG_FILE}" 2>&1
+
+    echo "==== [Stage-1] DONE  domain=${CATEGORY} ===="
+done
+
+echo "==== [Stage-1] all domains finished: ${CATEGORIES[*]} ===="
+

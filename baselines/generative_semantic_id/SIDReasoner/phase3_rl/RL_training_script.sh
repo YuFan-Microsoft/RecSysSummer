@@ -15,6 +15,9 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 export PYTHONPATH="$REPO_ROOT${PYTHONPATH:+:$PYTHONPATH}"
 
+# Reuse fragmented "reserved but unallocated" CUDA memory to avoid fragmentation OOM.
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+
 # ================================
 # Note: please change the number of GPUs and nodes according to your setup.
 # ================================
@@ -61,7 +64,7 @@ python3 -m verl.trainer.main_ppo \
     trainer.logger=['console','wandb'] \
     custom_reward_function.path="./verl/utils/reward_score/direct_recommendation_StepRule_Office.py" \
     custom_reward_function.name="rule_base_reward" \
-    trainer.project_name='RecRL_Reasoning' \
+    trainer.project_name='SIDReasoner_Phase3' \
     trainer.experiment_name="${experiment_name}" \
     trainer.n_gpus_per_node=$n_gpus_per_node \
     trainer.nnodes=$nnodes \

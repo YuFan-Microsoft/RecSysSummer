@@ -185,6 +185,24 @@ bash phase3_rl/RL_training_script.sh
 | 2 | Reasoning activation SFT | Stage-1 `final_checkpoint` | 4× GPU, `torchrun` |
 | 3 | GRPO RL (rule-based reward) | Stage-2 `final_checkpoint` | 4× GPU, VERL |
 
+### Stage-1 throughput / memory
+
+Measured on Stage-1 alignment SFT (Qwen3-1.7B, bf16, ZeRO-2). `GC` = gradient
+checkpointing; `bs` = per-GPU micro-batch. Peak memory is per-GPU; throughput is
+global (tokens/s across the run).
+
+| Config | Peak memory | Per step | Global tok/s |
+|---|---|---|---|
+| GC off, bs4 | 70.6 GiB | 5377 ms | 10,922 |
+| GC on, bs4  | 32.5 GiB | 5583 ms | 10,519 |
+| GC on, bs8  | 58.4 GiB | 7457 ms | 19,720 |
+
+- **Gradient checkpointing is nearly free.** At `bs4` it cuts peak memory by more
+  than half (70.6 → 32.5 GiB) for only ~4% slower steps (~4% lower tok/s).
+- **Spend the freed memory on batch size.** With GC on, `bs8` fits in 58.4 GiB
+  (< 80 GB) and nearly doubles throughput (10.5k → 19.7k tok/s) despite longer
+  steps — so **GC on + bs8** is the throughput-optimal setting on an 80 GB GPU.
+
 ### Merge a Stage-3 checkpoint
 
 Thinking-mode evaluation expects a merged HF checkpoint named `actor_merged`.
