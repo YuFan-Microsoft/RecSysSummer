@@ -1,0 +1,2778 @@
+ShopX: A Foundation Model for Intent-to-Item
+Fulfillment in Agentic Shopping
+ShopX Team
+The wave of AI-native applications is moving shopping beyond page- and feed-based browsing
+toward intent-driven experiences orchestrated by LLM agents. A common design wraps an
+LLM around existing search and recommendation pipelines, forcing complex intents through
+low-bandwidth retrieval or ranking interfaces and leaving a gap between language understand-
+ing and item-space fulfillment. Generative recommendation gives LLMs a direct item-space
+interface through semantic IDs (SIDs), but existing models mainly generate candidates for
+retrieval rather than translate flexible intents into item-space outcomes.
+We proposeShopXto address this bottleneck by unifying intent understanding, execution plan-
+ning, and flexible SID-native item-space operations into a single foundation model. We deploy
+ShopX in agentic shopping workflows through a model-native item-fulfillment framework with
+a serving harness that defines a model-facing action protocol and exposes support surfaces for
+context access, catalog grounding, and state management. Within this framework, ShopX plans
+and composes SID-based item-space operations such as SID beam-search retrieval, listwise
+ranking, or product bundling. This model-centric design reduces lossy hand-offs between agent
+orchestration and item-space execution.
+To build ShopX, we design semantically recoverable, LLM-operable SIDs and a training recipe
+that equips a general LLM for flexible multi-turn item-space fulfillment while retaining the
+knowledge and instruction-following abilities needed by a shopping agent. We evaluate the
+ShopX framework against tool-mediated agentic systems on single- and multi-turn fulfillment
+tasks derived from anonymized Taobao production logs, showing that model-native fulfillment
+improves overall framework behavior, especially on complex or ambiguous requests. We further
+assess ShopX through a fine-grained capability breakdown, yielding practices for SID design,
+continued pre-training, and post-training strategies.
+Plan
+ExecuteFulfillUpdate
+Model-native Intent-to-item Fulfillment
+Intent
+Profile/History
+Feed-backHarness SupportContext Access
+SID-to-Item Resolution in Catelog
+State Management
+SID-native operationsRerank
+Bundle SuggestionCompare
+Grounded responseState update
+Next Turn
+Action Protocol Definition
+1 2Beam search retrieval1
+2
+3
+3 4
+5 6
+TerrainCushioningWaterproofWeight
+Road
+VS.
+Trail
+~1280g~720g
+…This lightweight, quick-drying outdoor outfit is perfect for going out for a run. The shoes are ...
+[SID: ...][SID: ...]
+ …SID: ...Preference 
+…
+[SID: ...]
+……
+…
+Running,cheap
+[SID: ...]
+[SID: ...]
+[SID: ...]
+It goes well with [SID: ...], [SID: ...], …, and [SID: ...]
+[SID: ...]Item attr.
+[SID: ...]Item attr.
+[SID: ...]Item attr.
+[SID: ...]Cross-turn & session
+<C787><C2362><C5542>
+<C18923><C20391>…
+…
+<C23220>……
+/uni0000002b/uni00000050/uni00000056/uni00000047/uni00000050/uni00000056/uni00000028/uni00000057/uni0000004e/uni00000048/uni0000004b/uni0000004e/uni0000004e/uni0000004f/uni00000047/uni00000050/uni00000056/uni0000000a/uni00000017/uni00000017/uni0000000f/uni00000019/uni00000017/uni00000007/uni0000000b
+/uni0000002b/uni00000056/uni00000047/uni0000004f/uni00000032/uni00000054/uni00000047/uni00000045/uni0000004b/uni00000055/uni0000004b/uni00000051/uni00000050
+/uni0000000a/uni0000001a/uni0000001a/uni0000000f/uni0000001b/uni00000019/uni00000007/uni0000000b
+/uni00000034/uni00000043/uni00000050/uni0000004d/uni0000004b/uni00000050/uni00000049/uni00000033/uni00000057/uni00000043/uni0000004e/uni0000004b/uni00000056/uni0000005b
+/uni0000000a/uni0000001a/uni0000001a/uni0000000f/uni0000001b/uni00000019/uni00000007/uni0000000b
+/uni00000025/uni00000043/uni00000056/uni00000043/uni0000004e/uni00000051/uni00000049/uni00000025/uni00000051/uni00000058/uni00000047/uni00000054/uni00000043/uni00000049/uni00000047
+/uni0000000a/uni00000019/uni00000017/uni0000000f/uni0000001b/uni00000012/uni00000007/uni0000000b/uni00000032/uni00000047/uni00000054/uni00000055/uni00000051/uni00000050/uni00000043/uni0000004e/uni0000004b/uni0000005c/uni00000043/uni00000056/uni0000004b/uni00000051/uni00000050/uni0000000a/uni00000017/uni0000001a/uni0000000f/uni00000018/uni0000001a/uni00000007/uni0000000b
+/uni00000025/uni00000051/uni00000050/uni00000055/uni00000056/uni00000054/uni00000043/uni0000004b/uni00000050/uni00000056/uni00000029/uni00000054/uni00000051/uni00000057/uni00000050/uni00000046/uni0000004b/uni00000050/uni00000049
+/uni0000000a/uni00000019/uni00000012/uni0000000f/uni0000001a/uni00000014/uni00000007/uni0000000b
+/uni00000028/uni00000047/uni00000047/uni00000046/uni00000044/uni00000043/uni00000045/uni0000004d/uni00000023/uni00000046/uni00000043/uni00000052/uni00000056/uni00000010
+/uni0000000a/uni00000017/uni00000016/uni0000000f/uni00000019/uni00000016/uni00000007/uni0000000b
+/uni00000025/uni00000054/uni00000051/uni00000055/uni00000055/uni0000000f/uni00000056/uni00000057/uni00000054/uni00000050/uni00000034/uni00000047/uni00000048/uni00000047/uni00000054/uni00000047/uni00000050/uni00000045/uni00000047
+/uni0000000a/uni00000015/uni0000001a/uni0000000f/uni00000019/uni00000014/uni00000007/uni0000000b
+/uni00000025/uni0000004a/uni00000043/uni00000056/uni00000034/uni00000047/uni00000045
+/uni0000002b/uni00000050/uni00000056/uni00000047/uni00000034/uni00000047/uni00000045/uni00000023/uni00000049/uni00000047/uni00000050/uni00000056
+/uni00000034/uni00000047/uni00000045/uni0000002f/uni0000004b/uni00000050/uni00000046
+/uni00000035/uni0000004a/uni00000051/uni00000052/uni0000003a/uni00000003/uni0000000a/uni00000031/uni00000057/uni00000054/uni00000055/uni0000000b
+Figure 1| (Left) ShopX is a SID-aware foundation model that serves as the fulfillment core, planning
+SID-native item operations through a harness for context, catalog grounding, and state support. (Right)
+On Taobao-derived complex or ambiguous shopping tasks, the ShopX framework improves system-level
+fulfillment over LLM agents mediated by external tools.
+© 2026 Alibaba Taobao & Tmall Group. All rights reserved
+arXiv:2606.31693v1  [cs.IR]  30 Jun 2026
+Contents
+1 Introduction 4
+2 ShopX: Framework and Serving Patterns 6
+2.1 Serving-Time Responsibilities of ShopX . . . . . . . . . . . . . . . . . . . . . . . . 6
+2.2 Serving Patterns in Agentic Shopping . . . . . . . . . . . . . . . . . . . . . . . . . 8
+3 Evaluation Protocol and Benchmarks 8
+3.1 Framework-Level Evaluation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+3.2 Capability Breakdown Evaluation . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+4 Semantic IDs for Bridging Language and Item Space 12
+4.1 Multimodal Item Representation Learning . . . . . . . . . . . . . . . . . . . . . . 13
+4.2 Hybrid Global–Local SID Tokenization . . . . . . . . . . . . . . . . . . . . . . . . . 15
+4.3 Lightweight Validation of SID Versions . . . . . . . . . . . . . . . . . . . . . . . . 16
+5 Continued Pre-Training 16
+5.1 SID Token Alignment . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+5.2 Domain Continued Pre-training: Data Mixture and Settings . . . . . . . . . . . . 17
+6 Post-Training 18
+6.1 Supervised Fine-tuning . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+6.2 Overview of OPD–RL Joint Training . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+6.3 Multi-teacher On-policy Distillation . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+6.4 Reward Design . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22
+6.5 Joint OPD–RL Objective . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+7 Experiments 24
+7.1 Experimental Implementation Details . . . . . . . . . . . . . . . . . . . . . . . . . 24
+7.2 Framework-Level Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+7.3 Capability Breakdown Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+7.4 Semantic ID Design Ablation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+7.5 Domain Continued Pre-training Data Mixture . . . . . . . . . . . . . . . . . . . . 29
+7.6 Post-training Ablation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+2
+8 Related Work 32
+9 Discussion and Future Work 33
+10 Conclusion 34
+A Author List 41
+B Evaluation Details 41
+B.1 Framework-Level Benchmark Details . . . . . . . . . . . . . . . . . . . . . . . . . 41
+B.2 Framework-Level Overview Metric Protocol . . . . . . . . . . . . . . . . . . . . . 41
+B.3 Capability Diagnostic Metric Protocol . . . . . . . . . . . . . . . . . . . . . . . . . 43
+B.4 SID Design Ablation Metrics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 44
+B.5 Interleaved Text–SID Fulfillment Rubric . . . . . . . . . . . . . . . . . . . . . . . . 45
+B.6 General Capability Evaluation Settings . . . . . . . . . . . . . . . . . . . . . . . . . 46
+C Additional Results and Qualitative Examples 47
+C.1 Qualitative Fulfillment Trace Comparisons . . . . . . . . . . . . . . . . . . . . . . 47
+C.2 Interleaved Text–SID Fulfillment: Detailed Scores and Output Cases . . . . . . . 56
+C.3 General LLM Textualized Recommendation Capability . . . . . . . . . . . . . . . 56
+D Training Details 58
+D.1 OPD/RL Mixture and Ablation Configurations . . . . . . . . . . . . . . . . . . . . 58
+D.2 Sparse SID Reward Attempts . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 60
+D.3 Interleaved Fulfillment Reward Details . . . . . . . . . . . . . . . . . . . . . . . . 61
+D.4 Runtime Reward Prompts . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 62
+3
+1. Introduction
+Frontier LLMs and agentic applications are reshaping product entry points: users increasingly
+express intent in natural language and expect AI systems to reason over context, coordinate
+capabilities, and execute workflows [1–7]. E-commerce follows this shift, moving from fixed
+catalog-browsing surfaces toward AI-native experiences with personal context, item-grounded
+summaries or comparisons, feedback-driven refinement, and catalog-grounded responses. In
+this setting, recommendation is no longer limited to ranked lists or feeds; it must support
+intent-to-item fulfillment: converting flexible shopping intents into catalog-grounded outcomes
+such as item lists, summaries, comparisons, bundles, or follow-up actions. Recent AI shopping
+and search products such as Amazon Rufus, ChatGPT Shopping, and Qwen-Taobao assistants
+reflect this shift [8–14].
+A common implementation wraps an LLM agent around existing search and recommenda-
+tion pipelines, separating the workflow into two roles:
+• Agent-side orchestration.The LLM handles intent understanding, query rewriting, profile
+summarization, dialogue, planning, explanation, and tool orchestration.
+• Tool-side item-space execution.External item-space services receive compact tool inputs
+and return candidates, scores, rankings, or item lists.
+Representative systems include Chat-REC, InteRecAgent, RecMind, RecAI, RA-Rec, and in-
+dustrial systems such as RecGPT [ 15–23]. We refer to this family astool-mediated systems:
+LLM-agent systems in which the model plans and issues tool calls while external retrieval, rank-
+ing, or recommendation services perform item-space execution. This separation brings LLMs’
+language priors and reasoning into recommendation, but the boundary remains low-bandwidth:
+the model must translate rich context into compact tool inputs rather than operate directly
+on items. Fine-grained signals such as multi-turn preferences, scenario constraints, cross-item
+compatibility, and user feedback may therefore be compressed or fragmented before item-space
+execution, since retrieval and ranking services often expose narrow, fixed interfaces. Figure 2
+illustrates this loss in a two-turn shopping scenario: rich intent is squeezed into compact tool
+calls, and follow-up feedback may no longer stay tied to the prior items it is meant to refine.
+This tension motivates a more direct question:how can rich shopping intent be grounded into
+item-space operations with fewer lossy tool hand-offs?
+To reduce such interface loss, we need an item-space interface that models can operate over
+more directly. Generative recommendation provides an important substrate: items are repre-
+sented as discrete semantic IDs (SIDs), and recommendation is formulated as autoregressive
+SID generation [24]. Subsequent work further refines SID construction and item tokenization
+for accuracy, scalability, and deployment [25–28]. The OneRec series further shows that SID
+generation can consolidate conventional retrieval–ranking cascades into end-to-end frameworks
+and extend to recommendation-specific reasoning [29–32]. However, existing generative rec-
+ommenders remain optimized around a narrower contract: given a user history or additional
+reasoning trace, generate SID candidates. This objective does not train the model to carry the
+full fulfillment state of an AI-native shopping session, including action choice, item selection or
+bundling, grounded explanation, clarification, and feedback or preference updates. Therefore,
+even if SID generation reduces the hand-off inside conventional retrieval–ranking pipelines,
+existing generative recommender systems still leave the broader language-to-item fulfillment
+hand-off to an external orchestrator.
+To address this interface-loss problem, we proposeShopX, a foundation model for intent-to-
+item fulfillment in agentic shopping.ShopX retains the knowledge, instruction-following, and
+4
+Profile:afanofpastelcolorsWeather:humid&lightrain
+Tool-mediatedfulfillmentRichcontextpassesthroughanarrowexternaltoolAPI
+I’mgoingtoathemeparkinShanghaithisweekend.Styleacute,comfortableoutfitforphotosandall-daywalking.
+Model-nativefulfillmentContextanditemreferencescarriedacrossturns
+mismatch
+Seedsneakers[SID:C5C9103…]
+softerwalk-friendlyrain-ready
+PasteltopLightskirtSneakers[SID: C5C9103…]CrossbodybagLightrainlayer
+Turn1:SeparateItemPoolsTurn2:GenericSimilarSneakers Turn2:sneakerexpansion
+I’mgoingtoathemeparkinShanghaithisweekend.Styleacute,comfortableoutfitforphotosandall-daywalking.
+The sneaker looks cute. Show me more similar ones, but softer for long walking and okay for light rain.
+ [Need] Photos & all-day walking.
+[Profile] A fan of pastel colors.
+[Weather]Humid&lightrain.
+[Previousitems]Sneakers <SID:C52C9103…>
+I’m going to a theme pa-rk in Shanghai this wee-kend. Style a cute, com-fortable outfit for photo-s and all-day walking. 
+The sneaker looks cute. Show me more similar ones, but softer for long walking and okay for lig-ht rain. 
+Two-turnRichContext
+LLMAgent
+Tool-callAPITheme-parkOutfit
+Pastel Top
+Seed Sneakers
+Softer Walking SneakersSmall Cross-body Bag
+Rain, Sneakers
+Queryonly‘filter’temIDExternal Retrieval & RankingStack
+SearchIndex
+RetrievalModel
+Ranker
+NotaCoordi-natedLookSceneContextWeakened
+TopPoolBottomsPoolSneakersPoolBagPool
+Mismatch
+Comfort/Rain Trade-off Unclear
+Outfit Context Lost
+SeedSneakers[SID:C5C9103…]
+ThemeparkweekendCutephotolookPastelcolors
+All-daywalkingHumid&lightrain Seedsneakers[SID: C5C9103…]
+Cute PhotoLook
+Theme Park, This WeekendAll-dayWalking
+Pastel Colors
+HumidandLightRain
+Seed Sneakers<SID: C5C9103…>
+Update:  Like theme park outing and photo-taking; Prefer pastel colors; Balance between style and practicality; …
+Turn1:Item-TextOutfitSet
+PastelTopLight SkirtSneakersCrossbo-dy BagLightRainLayerRecommend a photo-friendlybundle set:Top<SID:C5C8244…>,Sneakers<SID:C5C9103…>
+Turn 2: Sneaker Expansion
+SofterWalk-FriendlyRain-Ready
+SeedSneakers(SID:C5C9103…)
+ShopXFoundation ModelModel-native & Context-preservingIntent-to-Item Fulfillment
+Find similar sneakers to the seed item, with softer cushioning for all-day walking and light-rain suitability
+Figure 2| Tool-mediated versus model-native fulfillment.In a two-turn shopping scenario,
+tool-mediated fulfillment compresses rich context into external retrieval and ranking calls, while
+ShopX keeps scenario context, item references, and feedback within a model-native item-space
+interface. The example highlights two interface losses: intent details can be dropped as an LLM
+query maps to a rigid tool API, and prior item state can detach during refinement.
+interaction abilities needed by an agentic shopping model while being trained to understand
+e-commerce domain knowledge, operate over SIDs, and translate flexible shopping intents into
+catalog-grounded outcomes. Rather than acting as a conversational LLM wrapped around a
+recommender, or as a SID-based recommender limited to next-item prediction, ShopX serves
+as the central fulfillment layer that decides how the current context should be grounded in the
+item space. Depending on the request and interaction state, ShopX can produce several kinds of
+fulfillment outcomes:
+• Item-space operations.It can retrieve items through SID beam-search retrieval, rerank and
+select items using both SID tokens and textual item information, expand from seed items,
+and compose complementary items into task-specific sets or bundles.
+• Item-grounded responses.It can directly generate item-grounded summaries, comparisons,
+and text–SID interleaved responses, or answer user questions directly.
+• Interaction and state updates.It can ask clarification questions, incorporate feedback, or
+emit context, preference-summary, and preference-memory update signals.
+We deploy ShopX through theShopX serving framework, a model-native fulfillment framework
+that pairs the central model with a lightweight serving harness. The harness defines a model-
+5
+facing action protocol and exposes support surfaces for context access, catalog grounding, and
+state management, while ShopX fills the protocol by selecting and composing model-native
+fulfillment actions rather than following a fixed retrieval–ranking–response chain. This model-
+first design reduces the interface loss between LLM-agent orchestration and recommendation
+execution. It is instantiated through three design choices:
+1. Model–harness boundary.ShopX carries fulfillment decisions, while the serving harness
+defines the action protocol through which the model plans, executes, fulfills, and emits
+updates, and provides the support surfaces through which it requests context, obtains
+catalog-grounded evidence, and writes updates back to serving state.
+2. SIDs for semantic recoverability and LLM operability.We study SIDs that preserve
+recoverable item semantics while remaining operable by an autoregressive foundation
+model, which serve as a coherent bridge between the language and item space.
+3. Training recipe for item-space fulfillment.Starting from a general LLM, we train ShopX
+to acquire SID-native item-space fulfillment abilities while preserving broad instruction-
+following and language capabilities. The recipe combines SID token alignment, domain
+continued pre-training, fulfillment SFT, specialist teacher training, and MOPD with task-
+specific outcome rewards, consolidating item-space specialization without turning the model
+into a narrow SID predictor.
+We evaluate the ShopX framework and training recipe at three levels. First, at the framework
+level, we compare complete agentic fulfillment configurations under a shared serving abstraction:
+the ShopX framework combines the central model with its serving harness, while tool-mediated
+baselines combine an agent model with external retrieval and ranking tools. The benchmark uses
+single- and multi-turn tasks derived from anonymized Taobao production logs, user-context
+signals, and catalog snapshots, and evaluates fulfillment quality, grounding, personalization,
+and feedback adaptation. Second, capability breakdown examines the model abilities that
+support these outcomes, including instruction following and knowledge preservation, shopping
+semantics, context evidence extraction, SID semantic recovery and item mapping, and item-
+space operation quality. Finally, ablations on SID design, continued pre-training mixtures,
+and post-training strategies trace how the SID representation, domain-CPT mixture, and joint
+OPD–RL post-training recipe shape the final model behavior.
+2. ShopX: Framework and Serving Patterns
+The ShopX serving framework is built around the ShopX model and a lightweight harness. The
+harness defines a model-facing action protocol and support surfaces for context access, catalog
+grounding, and state management; Figure 3 illustrates this boundary. This separation lets ShopX
+own fulfillment decisions over the item space, while the harness manages the context, catalog
+evidence, and cross-turn state needed to serve those decisions.
+2.1. Serving-Time Responsibilities of ShopX
+We now focus on the model side of the boundary in Figure 3. The harness plays two distinct
+roles. First, it defines a model-facing action space with four action slots:Plan,Execute,Fulfill, and
+Update. These slots specify the kinds of decisions and outputs the model can produce at serving
+time (through prompts). ShopX fills these slots by inspecting the current request, deciding what
+evidence is needed, determining how the intent should be grounded in the item space, carrying
+out SID-native item-space operations, producing the user-facing response, and emitting update
+signals for subsequent turns. Second, the harness exposes three support surfaces that the model
+6
+1
+Contextual Reasoning & Execution Planning
+2
+Item-Space Operation & Grounded Selection
+3
+Grounded Fulfillment Generation
+4
+Feedback Incorporation & Update Signal Extraction
+- Retrieve Candidate Items- Select & Rerank Items- Generate Items Set or Bundle- Expand from a seed item
+- Understand Behavioral SID Sequence- Model User Profile/Intent/Preference- Decide Item Fulfillment Path - Generate User-Facing Response- Interleave SIDs with Language- Response in Contexts- Interpret User Feedback- Expose Post-Turn Persistent State- Delegate State Updates to Harness
+Candidate ItemsFinal Response
+Fulfillment Plan
+ Update Signals
+ContextCatalogStates- Stores prior interactions- Maintain preferences derived by model- Grounds SIDs into concrete item evidence- Lookup for detailed item information- User profile, behavior sequence- Session information
+HarnessBoundary
+Figure 3| The model-native serving framework of ShopX.The ShopX model serves as the
+fulfillment core of the serving framework, enabling contextual intent understanding, fulfillment
+path planning, SID-native item-space operation, grounded fulfillment generation, feedback
+incorporation and update-signal extraction. Around this core, the surrounding harness defines a
+model-facing action protocol and exposes support surfaces for context access, catalog grounding,
+and state management, which bridge personalization context with the model-native item space
+and maintain evolving interaction state across turns.
+can use while filling these action slots:Contextprovides profile and history behavior;Catalog
+validates SIDs and grounds them in item evidence; andStateexposes prior turns, intermediate
+candidate sets, preference summaries, and write-back of model-emitted updates. The four
+responsibilities below define the model-side action slots, along with their inputs and outputs.
+1. Plan: Contextual Intent Understanding and Execution Planning.ShopX interprets the
+assembled context and decides which fulfillment path is appropriate for the current turn.
+• Input:current natural-language request, explicit constraints, and any model-requested
+ContextorState, including session history, user profile, behavioral SID sequences, previous
+recommendations, preference memory, and feedback signals.
+• Output:a fulfillment plan that specifies which evidence is needed and whether to answer
+directly, perform SID beam-search retrieval, rerank or compare candidate items, expand
+from seed items, compose a bundle, ask for clarification, or emit state-update signals.
+2. Execute: SID-Native Item-Space Operations.ShopX operates over the SID-defined item
+space. When generated SIDs need to be tied to concrete products, the model usesCatalogto
+obtain item evidence and then continues selection, reranking, or comparison over catalog-
+grounded candidates.
+• Input:fulfillment plan, interpreted intent, profile signals, constraints, optional seed items
+or previous candidates fromState, and any item evidence returned byCatalog.
+• Output:candidate SIDs or structured candidate groups produced through SID beam-
+search retrieval, seed expansion, or bundle-oriented generation; afterCataloggrounding,
+a selected, reranked, compared, or bundled set of catalog-grounded items, optionally
+with comparison rationales, rejection signals, or bundle structure for response generation.
+3. Fulfill: Grounded Fulfillment Generation.ShopX turns the executed item-space result into
+the user-facing response, including grounded item presentation and text–SID interleaving.
+• Input:fulfillment plan, selected items, resolvedCatalogevidence, assembledContextor
+State, and user-facing constraints.
+• Output:a recommendation list, product comparison, grounded summary, bundle presen-
+7
+tation, text–SID interleaved answer, direct contextual response, or clarification question.
+4. Update: Feedback Incorporation and Update-Signal Extraction.ShopX exposes what
+should persist after the current turn, while the harness remains responsible for writing the
+updates into the serving state.
+•Input:current request, response, selected items, explicit user feedback, and priorState.
+• Output:preference summaries, preference-memory updates, and task-context updates
+thatStatecan persist and make available in later context assembly.
+2.2. Serving Patterns in Agentic Shopping
+Rather than enumerating isolated task types, we group recurring agentic shopping uses into
+three serving patterns that instantiate the action protocol defined above. The first two patterns
+describesingle-turn fulfillment, while the third shows how the same protocol becomesstateful
+across turnsby reading and writingState. In the diagrams, green nodes denote user-provided
+input, yellow nodes denote harness-side support surfaces, and blue nodes denote action slots
+filled by ShopX.
+1. Intent-to-Item Fulfillment.This pattern covers explicit shopping requests, search-like
+recommendations, grounded comparisons, explanations, and clarification turns that map
+current intent to catalog-grounded item evidence.
+User
+request, constraints
+Plan
+intent & evidence
+Execute
+retrieval & rerank
+Catalog
+item evidence
+Fulfill
+grounded response
+2. Context-Augmented Personalization.This pattern applies when the latest user message
+is vague, context-driven, or underspecified, and ShopX must decide whether profile or
+behavior history is needed before item-space fulfillment.
+User
+vague / context-
+rich request
+Plan
+fetch context,
+then execute
+Context
+profile, history
+behavior, ...
+Execute
+multi-intent retrieval,
+bundle generation, ...
+Catalog
+item evidence
+Fulfill
+personalized
+response
+3. Stateful Multi-T urn Fulfillment.This pattern covers compound requests, product bundling,
+and follow-up refinement. ShopX reads prior turns, preference memory, or intermediate
+candidates fromState, and writes update signals that condition future turns.
+User
+follow-up
+request
+Plan
+fetch state,
+then execute
+State
+memory,
+preference, ...
+Execute
+revise, expand,
+explain, ...
+Catalog
+item evidence
+Fulfill
+reply & updates
+write-back / later turn
+Appendix C collects concrete case-style materials for these patterns, including detailed serving-
+time traces that show how the model fills the action slots and how the harness grounds or carries
+state across the trajectory.
+3. Evaluation Protocol and Benchmarks
+The serving patterns in §2 require an accompanying evaluation suite. This section defines the
+protocols used to compare complete serving frameworks and diagnose the model capabilities
+underlying these outcomes. We organize the evaluation around two complementary views:
+• Framework-level evaluation (§3.1).This is a framework-level comparison of model-native
+and tool-mediated fulfillment paradigms under a shared serving abstraction. The protocol
+uses original user queries from anonymized Taobao production logs, together with profile
+context and catalog snapshots, to test whether each system can carry rich shopping context
+8
+into catalog-grounded outcomes.
+• Capability-breakdown evaluation (§3.2).This protocol breaks down the model-side abilities
+behind those outcomes, using shopping-domain diagnostics together with public general-
+capability benchmarks that can be related back to framework-level behavior.
+3.1. Framework-Level Evaluation
+Framework-level evaluation compares complete fulfillment frameworks under a shared task
+context, catalog-grounding scope, and output contract. We first define the compared paradigms
+and item universe, then describe the two-phase case-construction and interaction-collection
+protocol in Figure 4.
+Compared fulfillment paradigms.The benchmark is designed to evaluate the entire path from
+a user’s shopping intent to catalog-grounded fulfillment outcomes. The evaluation pipeline
+fixes the user request, profile context, behavior history, catalog snapshot, and output format for
+every evaluated system. Within this fixed context, we compare two fulfillment paradigms:
+1. Model-native fulfillment.ShopX performs contextual reasoning, SID-native item-space oper-
+ations, grounded fulfillment generation, and feedback or state updates through a model-
+native interface. This covers retrieval and selection, comparisons or bundles, text–SID
+interleaved responses, and multi-turn follow-up refinement.
+2. Tool-mediated fulfillment.Following prior LLM-agent recommender designs [17–19], we equip
+all baseline agents with a shared LLM-external Taobao item-search tool, backed by a mature
+retrieval and ranking stack. The tool takes keyword queries and optional price filters, returns
+catalog item metadata in search-engine order, and the baseline LLM may then compress,
+rerank, or summarize the returned candidates before producing the final user-visible items.
+Catalog grounding scope.All catalog-grounded evaluations are anchored to a large Taobao
+item snapshot containing approximately 1.2B items, covering a major portion of the production
+item pool. This snapshot defines the evaluation item universe for catalog resolution, item
+evidence lookup, and fulfillment judging.
+Benchmark case construction.Phase 1 in Figure 4,Benchmark Case Construction, constructs
+controlled cases from anonymized Taobao interaction logs, profile and behavior signals, and
+catalog snapshots through single-turn case creation and multi-turn dialogue planning. The seed
+queries are real Taobao user queries in their original form; we do not rewrite, paraphrase, or
+synthetically expand them for framework-level evaluation. Each benchmark case records the
+original query, shopping intent, profile/history context, catalog-grounded target information,
+and task metadata, then passes leakage and quality filters before a human validity audit. The
+resulting framework-level benchmark contains 279 single-turn cases and 80 multi-turn trajecto-
+ries. The single-turn split is stratified by intent type (precise-category,scene-based,multi-category,
+broad semantic, andminimal-query) and difficulty tier (robust,adversarial, andsemantic). The
+multi-turn split is grouped by seed type (vague,constrained,clear,multi-need, andambiguous),
+so trajectory-level scoring can test clarification, constraint persistence, follow-up refinement,
+and ambiguity resolution in addition to direct fulfillment. Appendix B.1 reports the full bench-
+mark composition.
+Interaction trajectory collection.Phase 2 in Figure 4,Single-turn and Multi-turn Interaction Tra-
+jectory Collection, rolls each constructed case into a single-turn response or multi-turn interaction
+trace for evaluation. For multi-turn cases, Claude Sonnet 4.6 acts as a fixed shopper-side simu-
+lator, producing user turns from the profile information, seed query, and the agent’s previous
+9
+InteractionTrajectoryRubric Judge Prompt
+Rubric-basedLLMJudge- ResponseQuality(Single/Multi-turn)- ProcessQuality(Multi-turn)
+Phase1:Benchmark Case ConstructionE-commerce Context
+Logs
+Profile
+Single-turnCase ConstructionLeakage&Quality Filter← revise loopCaseFormatter
+BenchmarkCases- Single/Multi-turn Intent- Profile/History Context- Catalog-grounded Targets- Task MetadataMulti-turnDialogue Planning
+Phase2: Single-turn and  Multi-turnInteraction Trajectory CollectionASingle-turn Response EvaluationShared ActionInterface
+Test A gent
+BMulti-turn Response Evaluation 
+retrieve_items(…)rank_items(…)get_item_info(…)response_to_user(…)profile_search(…)…
+Sure!Irecommendthisleathergiftbag…
+Herearesomecasualp-antsyoumightlike…Item#2ispopularandwell-reviewedbecause...
+Judger:Continue?EndofTrajectoryYes No
+User IntentNext-turnInteraction
+Test A gent
+I’d like a gift bag.
+User Intent
+Multi-dimensionEvaluation(Table 1)
+Catalog
+I’d like casual pants.
+Is #2 worth Buying?
+Figure 4| Framework-level evaluation.Complete ShopX and tool-mediated serving frameworks
+are compared on shared tasks built from original user queries, context, catalog snapshots, and
+output specifications derived from anonymized Taobao production logs. The overview metrics
+summarize intent fulfillment, item precision, ranking quality, category coverage, personalization,
+constraint grounding, feedback adaptation, and cross-turn reference.
+response. Appendix B.1 gives the rollout cap and stopping rule. Across systems, the rollout fixes
+the case context, shared action interface, and final output contract: response text with at most
+five user-visible items. Intermediate retrieval, ranking, item-information lookup, profile search,
+and candidate selection are left to each framework, so the comparison targets the resulting
+catalog-grounded trajectory rather than a common internal pipeline.
+Rubrics-based LLM judge scoring.Following recent LLM-as-judge and rubric-based evalua-
+tion practice [33–36], rubric-based components use task-specific judge prompts rather than a
+single free-form preference question. All framework-level rubric scoring uses Claude Sonnet
+4.6 as a fixed judge, separate from the multi-turn user simulator. The rubric judge prompts
+cover response quality for both single- and multi-turn outputs and process quality for multi-
+turn trajectories. For each recorded response or trajectory, the judge receives the user intent,
+profile/history context, returned items, catalog evidence, and model response, then emits struc-
+tured dimension scores after invalid-response checks for missing items, unsupported claims, or
+mismatched categories. For reporting, we map the single-turn and multi-turn scores into eight
+0–100 overview metrics, using the fixed metric compositions summarized in Table 1. These
+metrics support the framework-level results and capability-breakdown analyses in §7.2 and
+§7.3, as well as the radar visualization in Figure 1. Appendix B.2 gives the corresponding judge
+dimensions and aggregation details.
+3.2. Capability Breakdown Evaluation
+Capability breakdown evaluation diagnoses which model abilities account for framework-level
+outcomes. We split the suite into two scopes: general abilities that remain necessary inside
+agentic shopping, and shopping-specific diagnostics. The resulting tasks, metrics, and results
+10
+Table 1| Framework overview metrics.Eight 0–100 metrics used to summarize framework-level
+fulfillment behavior from single-turn responses and multi-turn trajectories.
+No. Metric Score source / composition What it measures
+1 Intent Fulfillment Mean of single-turn intent served
+rate and multi-turn goal
+achievement
+Successful conversion of the user’s shopping intent into a
+satisfactory catalog-grounded outcome.
+2 Item Precision Single-turn category precision Match between the served item set and the annotated
+shopping category set.
+3 Ranking Quality Single-turn NDCG@5 over the
+displayed item list
+Ordering quality of displayed items under item-level
+relevance labels.
+4 Category Coverage Mean of single-turn and
+multi-turn category coverage
+Coverage of required category facets for multi-facet,
+bundle-style, or complementary-item requests.
+5 Personalization Mean of single-turn and
+multi-turn profile alignment
+Use of profile and behavior evidence in item selection,
+ordering, and recommendation rationale.
+6 Constraint Grounding Mean of single-turn attribute
+accuracy and multi-turn
+constraint-grounding score
+Faithful handling of hard constraints, accumulated
+preferences, clarification needs, and catalog-evidence limits.
+7 Feedback Adaptation Multi-turn feedback-response
+score
+Ability to incorporate user feedback, revise recommendations,
+preserve unaffected preferences, and avoid regressions.
+8 Cross-turn Reference Multi-turn reference-resolution
+score
+Resolution of references to previously discussed items and
+correct application of the requested operation.
+are reported in §7.3; §B.3 gives detailed metric definitions and rubric-based judge details.
+General capabilities for agentic shopping.Agentic shopping still depends on core foundation-
+model abilities: following user instructions and output contracts, applying broad factual and
+domain knowledge, handling multilingual or culturally specific product language, and retaining
+basic reasoning, math, and coding robustness. We therefore use public benchmarks not as
+an unrelated leaderboard, but to verify that shopping specialization keeps the model usable
+as the central agentic interface rather than narrowing it into a pure SID predictor. MMLU-
+Pro [37], CMMLU [ 38], and IFEval [ 39] are the primary checks for broad knowledge and
+instruction following, while BBH [40], GPQA-Diamond [41], MATH-500 [42], GSM8K [43], and
+MBPP+ [44, 45] provide additional probes for reasoning, math, and coding robustness.
+Shopping capability diagnostics.The shopping diagnostics, illustrated in Figure 5, are an-
+chored in Taobao-derived catalog, interaction, and profile signals. When catalog grounding
+is required, the diagnostic cases and candidate items are sampled from the approximately
+1.2B-item Taobao snapshot defined in §3.1. The suite probes four model-facing abilities:
+• Shopping semanticstests whether the model can turn underspecified or noisy shopping
+language into a coherent purchase intent, reason about product relations such as substitutes
+and complements, and recover item semantics from SIDs.
+• Context evidence extractiontests whether it can select the user-profile facts and behavior-history
+signals that are actually relevant to the current request, rather than treating the full context
+as uniformly useful.
+• Textualized recommendation/searchtests catalog-aware preference matching when candidate
+items are exposed only through text, separating semantic shopping judgment from SID
+generation and allowing general LLMs, including GPT and Gemini models without native
+catalog-item representations, to be evaluated on the same decision problems.
+• Item-space fulfillmenttests whether the model can operate over catalog items after the intent is
+11
+Item Description RecoveryInput: <SID:C1824...C16882>. What isthe product category and price?
+Context Evidence Extraction[Shared Input]: query = "electric water kettle"<STATIC_PROFILE>: {job: truck driver, age: 35, gender: male, preference:safety/voltage fit, …}<BEHAVIOR_SEQ>: <SID:C5204...C19573>, ...
+Static-Profile Evidence ExtractionInput: [shared input]+ <STATIC_PROFILE>. Extract relevant profile evidence.Answer: truck driver; value-sensitive; prioritizes practicality and safety ...Metric: Relevant Score (LLM judge)Behavior-Sequence Evidence ExtractionInput: [shared query]+ <BEHAVIOR_SEQ>. Extract behavior.Answer: <SID:C5204...C19573>… <SID:C6938...C20512>Metric: SID overlap Intersect of Union (IoU)
+<STATIC_PROFILE> = static long-term user-profile JSON (~10k chars for active users)<BEHAVIOR_SEQ> = item sequence of user history behavior represented by SIDs<SID:C...C…> = an SID path used as an intermediate code<ITEM:ID> = a catalog item returned/evaluated 
+⋯
+⋯
+Shopping SemanticsIntent SummaryInput: query = "recommend me pure-gold rose for gift to girlfriend …". Output JSON with intent and need.Answer: {"intent": "rec", "summary" : "golden rose suitable as gift"}Metric: LLM Judge ScoreItem AssociationInput: The user purchased <ITEM: ID> and <ITEM: ID>. Explain why.Answer: They have the same brand and similar fabric complementsMetric: LLM Judge Score
+Item-Space Fulfillment
+Contextual-Intent Item RetrievalInput: need = "around $200 Huili waterproof shoes, for professional hiking use". Return item.Answer: <ITEM: ID>Metric: Query-item relevance score (VLM judge)
+Intent+History Item RetrievalInput: summarized user intent = "within-20 arithmetic practice"; User clicked related items: <SID: …>, <SID: …> .Please find outsuitable items.Answer: <ITEM: ID>Metric: HR@4 / HR@64
+Textualized Recommendation/SearchInput: <STATIC_PROFILE> + <BEHAVIOR_SEQ> + query + textual candidates. Order the candidate items above by how likely the user is to click on them, and explain the reason. Output in JSON format..Answer: {“reason”:“…”, “answer”: “<ITEM: ID>,…, <ITEM: ID>”}Metric: Accuracy
+Contextual-Intent Listwise RankingInput: complex need = "cotton fabric for DIY shirt/dress, budget under 15" + indexed candidates. Sort candidates.Answer: 6,4,2,1,3,5Metric: Acc@1 / NDCG@3
+Textualized Recommendation/Search
+Personalized Sequential RecommendationInput: <STATIC_PROFILE> + <BEHAVIOR_SEQ> + optional query. Recommend the next catalog item.Answer: <ITEM: ID>Metric: HR@4 / HR@64
+Text-SID Interleaved FulfillmentInput:query = "Recommend a sky-blue casual daily outfit for a girl. "Answer: Pair <ITEM: ID>, a sky-blue short-sleeve shirt, with <ITEM: ID>, light-wash jeans …Metric: Rubrics-based LLM Judge
+Detailed-Description-to-Item PredictionInput: description = "Elegant red dress, suitable for cocktail parties." Identify the matching catalog item.Answer: <ITEM: ID>Metric: HitRate@4  / HitRate@64, Query-item relevance
+Answer: Shoulder bag, 399$
+Metric: ROUGE-Lscore with respect to the answer
+Figure 5| Shopping capability diagnostics.Representative input–output patterns and primary
+metric types for the four shopping diagnostic blocks used in Table 6: shopping semantics,
+context evidence extraction, textualized recommendation/search, and item-space fulfillment.
+understood, including detailed-description-to-item resolution, next-item prediction, retrieval,
+ranking, and open-ended responses that interleave natural language with resolvable SIDs.
+The Interleaved Text–SID Fulfillment rubric further checks whether generated SIDs are contextu-
+ally appropriate, correctly grounded, and well integrated into the response; Appendix B.5 gives
+the full rubric and penalty rules.
+4. Semantic IDs for Bridging Language and Item Space
+Semantic IDs make item spaces generable by sequence models. We build on FORGE [ 28], a
+collaborative-heavy SID construction framework developed for industrial generative retrieval
+and deployed at full scale in Taobao’s “Guess You Like” scenario. FORGE shows that discrete
+item codes can serve as effective generation targets for candidate retrieval, and that SID quality
+can be diagnosed before costly downstream generative-retrieval training. In ShopX, the SID
+serves a different role: it becomes a model-native item language for connecting natural-language
+12
+Stage1:MultiVector RepresentationStage2: Hybrid Codebook Quantization  
+Qwen3-VL-Embedding-2B
+Item ContextImageTitleAttributes
+Multi-vector Representation
+Contrastive ObjectiveReconstruction Objective 
+Qwen3-4B DecoderCateAttrCaption
+𝑔!Anchor
+𝑔(a). Global Residual Quantization(RQ-VAE) - -z!"z#"
+z$"
+𝑙!(b). Local Vector Quantization
+Hybrid Semantic IDs Coarse global codes + fine local codes
+Global + local vector
+InfoNCE 𝑔𝑙"𝑙#𝑙$𝑙%
+RepresentationLearning Objectives
+𝐶"#
+𝑙$𝑙%
+𝑙&
+𝑧!#
+𝑧$#
+𝑧%#
+𝑧"#+
+ …𝑧"#𝑧!#𝑧!' 𝑧('…
+…
+𝐶%#𝐶$#𝐶!#…
+…
+…
+…
+…
+𝑔𝑙"𝑙#𝑙$𝑙%…
+𝑧$' 𝑧$#
+𝑔&Positive
+𝑔'Negative In Batch𝑔(HardNegatives 
+Figure 6| Semantic ID architecture for bridging language and item space.Multimodal item
+content is encoded into a multi-vector representation with one global embedding and multiple
+local facet embeddings. The global embedding is contrastively organized and residual-quantized
+into autoregressive prefix tokens, while local embeddings are trained with reconstruction
+objectives and vector-quantized into suffix tokens for additional recoverable semantic capacity.
+intents, user context, product semantics, and catalog-grounded fulfillment actions. This role
+shift leads to two design goals:
+• Recoverability.The representation and SID should preserve item semantics, so the model
+can recover or reason about category, attributes, style, function, and visual appearance rather
+than merely memorize opaque codes.
+• LLM operability.The SID should be learnable and stable as an autoregressive generation
+target, with prefix structure that avoids high-entropy next-token choices and keeps related
+items in coherent neighborhoods.
+We therefore redesign the item representation, SID structure, and validation protocol around
+these goals: §4.1 introduces semantic item representations, §4.2 constructs hybrid global/local
+SIDs, and §4.3 describes a lightweight protocol for comparing and selecting candidate SID
+versions before the full training recipe.
+4.1. Multimodal Item Representation Learning
+Figure 6 gives the overall design: multimodal item content is first encoded into continuous
+item representations, which are then discretized into global-prefix and local-suffix SIDs. For
+each catalog item𝑖, we denote its multimodal input as𝑥𝑖 =(𝑣 𝑖,𝑎𝑖,𝑡𝑖), where𝑣𝑖 denotes product
+images, 𝑎𝑖 structured attributes, and 𝑡𝑖 the item title. Let 𝐸𝜃 be the multimodal item encoder
+that maps 𝑥𝑖 into continuous item representations. Starting from the prior collaborative SID
+pipeline, we modify this representation stage along three axes: the encoder backbone, the
+training supervision, and the output representation structure.
+Semantic backbone.We upgrade the representation backbone from a modular multimodal
+encoder to Qwen3-VL-Embedding-2B [46], used as the VLM embedding encoder. The prior
+pipeline encodes modalities separately, using CLIP-style visual encoders and BERT-style text
+encoders [47, 48], before fusing features through a Q-Former-style bridge [ 49]. Qwen3-VL-
+13
+Embedding-2B instead processes the full item input𝑥𝑖 =(𝑣 𝑖,𝑎𝑖,𝑡𝑖) directly, so image evidence,
+structured attributes, and title language cues can interact before SID construction.
+Semantic supervision.Training supervision enters through the positive-pair relation used by
+contrastive learning. LetR be a relation over items, and letPR(𝑖) be the positive items for anchor
+𝑖 under that relation. Collaborative-product supervision instantiates this relation asRCP, whose
+positives are behavior-derived pairs such as items frequently clicked or purchased by the same
+users. These pairs are useful for retrieval, but they are not guaranteed to be semantically similar,
+making CP less ideal for grounding language or user intent to item semantics. We instead use
+equivalent-product supervisionREP, whose positives are different listings that correspond to the
+same underlying product. For the equivalent-product setting, we also add same-category but
+non-equivalent items into each batch as hard negatives. Rather than treating them as ordinary
+negatives, we use a soft-target InfoNCE objective [50, 51]. For a mini-batchB, letH(𝑖) be the
+sampled hard negatives,N(𝑖) the remaining in-batch negatives, andC(𝑖)=P R(𝑖)∪H(𝑖)∪N(𝑖) .
+For normalized global embeddings𝑔𝑖, we define the soft target𝑞𝑖,𝑘 by assigning unnormalized
+weights 1 to 𝑘∈P R(𝑖),𝛼 to 𝑘∈H(𝑖) , and 0 to 𝑘∈N(𝑖) , followed by normalization overC(𝑖) .
+The contrastive loss is
+LCL(R)=− 1
+|B|
+∑︁
+𝑖∈B
+∑︁
+𝑘∈C(𝑖)
+𝑞𝑖,𝑘 log exp(sim(𝑔 𝑖,𝑔 𝑘)/𝜏)Í
+𝑢∈C(𝑖) exp(sim(𝑔 𝑖,𝑔𝑢)/𝜏) . (1)
+Here sim(·,·) is cosine similarity,𝜏 is the temperature, and𝛼∈( 0, 1) controls the hard-negative
+weight. Together, equivalent-product supervision and the graded target make equivalent
+products the strongest positives, give same-category hard negatives a weaker semantic pull, and
+avoid collaborative priors that are not directly recoverable from item content.
+Single- and multi-vector outputs.Single-vector representations compress all item evidence
+into one pooled embedding, which can lose fine-grained matching signals that are useful for item
+semantics [52, 53]. To retain these signals while keeping a global representation for contrastive
+learning and prefix quantization, we compare two output structures: SV uses a single global
+vector, whereas MV augments the global vector with local vectors for finer semantic aspects
+such as attributes and visual details:
+𝐸SV
+𝜃 (𝑥𝑖) :=𝑔 𝑖,𝐸 MV
+𝜃 (𝑥𝑖) :=  
+𝑔𝑖,ℓ𝑖,1,...,ℓ 𝑖,𝑀
+ .
+Here𝑀 is the number of local vectors. The global embedding 𝑔𝑖 is used for contrastive learning
+and later global-prefix quantization. The local embeddings ℓ𝑖,𝑚 are trained through caption and
+attribute reconstruction, which gives them a direct semantic prediction role and discourages
+collapse into redundant copies of the global embedding; 𝑔𝑖 is also supervised by category re-
+construction. For reconstruction training, let 𝐷𝜓 be a frozen LLM decoder and 𝐴𝜂 a trainable
+adapter that maps item representations into decoder-conditioning tokens. Given a represen-
+tation sequence𝑍𝑖, prompt𝑞𝑖, and target text 𝑦𝑖 =(𝑦 𝑖,1,... ,𝑦𝑖,|𝑦 𝑖|), the decoder-side next-token
+prediction loss is
+LNTP(𝑍𝑖,𝑞𝑖,𝑦 𝑖)=−
+|𝑦𝑖|∑︁
+𝑟=1
+log𝑝 𝜓
+ 
+𝑦𝑖,𝑟|𝑦 𝑖,<𝑟,𝑞𝑖,𝐴 𝜂(𝑍𝑖) , (2)
+where 𝑝𝜓 is the decoder next-token distribution;𝜓 is frozen and gradients update the item en-
+coder and adapter. We use three prompt-specific reconstruction targets: category reconstruction
+from𝑍cat
+𝑖 :=(𝑔 𝑖), VLM-caption reconstruction from𝑍cap
+𝑖 :=(𝑔 𝑖,ℓ𝑖,1,... ,ℓ𝑖,𝑀), and facet-attribute
+reconstruction from𝑍attr
+𝑖,𝑚 :=(𝑔 𝑖,ℓ𝑖,𝑚). Let ℓcat
+𝑖 ,ℓcap
+𝑖 , andℓattr
+𝑖,𝑚 denote the correspondingLNTP losses
+14
+with their task-specific prompts and targets. The reconstruction objective averages these losses
+as
+LTR = 1
+|B|
+∑︁
+𝑖∈B
+
+ℓcat
+𝑖 +ℓ cap
+𝑖
+
++ 1
+|B|𝑀
+∑︁
+𝑖∈B
+𝑀∑︁
+𝑚=1
+ℓattr
+𝑖,𝑚 . (3)
+The full representation objective isLrep =L CL(R)+𝜆 TRLTR, with𝜆TR controlling reconstruction.
+Table 7 ablates these representation choices before SID construction, with the corresponding
+results, metrics, and analysis discussed in §7.4.
+4.2. Hybrid Global–Local SID Tokenization
+After item representations are learned, the SID tokenizer converts them into a discrete sequence
+that can be generated by an LLM. We use𝐺𝐾 to denote𝐾 global-prefix tokens produced from the
+global embedding𝑔𝑖, and𝐿𝑀 to denote𝑀 local-suffix tokens produced from the local embeddings
+{ℓ𝑖,𝑚}𝑀
+𝑚=1. A global-only SID and a hybrid global–local SID are written as
+𝐺𝐾(𝑖) :=
+
+𝑧𝐺
+𝑖,1,...,𝑧 𝐺
+𝑖,𝐾
+
+,𝐺 𝐾(𝑖)∥𝐿 𝑀(𝑖) :=
+
+𝑧𝐺
+𝑖,1,...,𝑧 𝐺
+𝑖,𝐾 ,𝑧 𝐿
+𝑖,1,...,𝑧 𝐿
+𝑖,𝑀
+
+.
+Here∥denotes sequence concatenation.
+Global RQ prefix.The global prefix is obtained by residual quantization of 𝑔𝑖, following vector-
+quantized autoencoders (VQ-VAE) and residual-quantized VAE (RQ-VAE) [54–56]. We focus
+on the SID assignment rule used after codebook learning; standard RQ-VAE codebook-training
+details are omitted for brevity. LetC𝐺
+𝑘 ={𝑒 𝐺
+𝑘,𝑐}
+𝑉𝐺
+𝑘
+𝑐=1 be the codebook at global level𝑘, where𝑉𝐺
+𝑘 is
+the number of codewords at that level. Starting from𝑟 𝑖,0 =𝑔 𝑖, each prefix token is selected by
+𝑧𝐺
+𝑖,𝑘 =arg min
+𝑐∈[𝑉 𝐺
+𝑘]
+𝑟𝑖,𝑘−1−𝑒𝐺
+𝑘,𝑐
+
+2
+2
+,𝑟 𝑖,𝑘 =𝑟 𝑖,𝑘−1−𝑒𝐺
+𝑘,𝑧𝐺
+𝑖,𝑘
+. (4)
+Here[𝑉] denotes the index set {1,... ,𝑉}. The reconstructed global vector is ˆ𝑔𝑖 = Í𝐾
+𝑘=1𝑒𝐺
+𝑘,𝑧𝐺
+𝑖,𝑘
+.
+The operability of this prefix comes from the semantic geometry learned in §4.1:equivalent-product
+contrastive learning and same-category hard negatives organize the global space before residual
+quantization turns it into an autoregressive prefix path.
+Local VQ suffix.For MV representations, the local embeddings are quantized separately
+with VQ-style codebooks instead of being folded into the same global residual chain. Let
+C𝐿
+𝑚 ={𝑒 𝐿
+𝑚,𝑐}𝑉𝐿
+𝑚
+𝑐=1 be the codebook for local facet𝑚, where𝑉𝐿
+𝑚 is the number of local codewords. The
+suffix token for that facet is
+𝑧𝐿
+𝑖,𝑚 =arg min
+𝑐∈[𝑉 𝐿
+𝑚]
+ℓ𝑖,𝑚−𝑒 𝐿
+𝑚,𝑐
+2
+2 . (5)
+These local suffix tokens add recoverable semantic capacity for attributes, captions, and visual
+facets, rather than replacing the global prefix as the main routing signal.
+Difference from global-only SIDs.Prior RQ-VAE-style SID construction applies residual
+quantization to one global item representation, so every SID token must serve both semantic
+routing and fine-grained semantic recovery. Our hybrid design separates these roles: 𝐺𝐾
+supports stable LLM generation, while 𝐿𝑀 preserves facet-level information for recoverability. A
+similar separation between hierarchical codes and fine-grained item capacity also appears in
+the RQ-OPQ design of OneSearch [57]. Thus variants such as 𝐺3,𝐺6, and𝐺2+𝐿 4 are not merely
+different SID lengths; they assign different roles to prefix and suffix tokens. Their concrete
+15
+settings, intrinsic diagnostics, and codebook-validation results are discussed in §7.4. The final
+ShopX recipe uses the hybrid 𝐺2+𝐿 4 form, with two global-prefix levels for LLM-operable
+autoregressive generation and four local-suffix levels for finer item evidence.
+4.3. Lightweight Validation of SID Versions
+The representation and SID tokenization steps above define candidate SID versions, but con-
+struction alone does not determine whether a SID is suitable for LLM-based item grounding. We
+evaluate candidate versions at three levels. Representation intrinsics test whether the continuous
+item space is semantically recoverable and neighborhood-stable. Global-prefix intrinsics test
+whether quantization preserves semantic structure, prefix stability, and healthy code usage.
+Lightweight codebook validation then checks the model-facing question: after a small amount of
+alignment, can an LLM use the SID interface to map between item language and catalog items?
+For each candidate codebook, we assign SIDs to the same fixed 25M-item mini catalog and train
+the same 4B LLM with a small validation recipe: a subset of SID-alignment data followed by
+a lightweight SFT pass for task formatting. With the starting checkpoint, catalog, alignment
+budget, and SFT budget held fixed, this validation tests how easily each SID version can be
+learned and used by the model.
+The validation centers on bidirectional language–item grounding. In the forward direction,
+detailed item descriptions are decoded into SID candidates and resolved to catalog items,
+testing whether the SID can serve as a model-operable item target. In the reverse direction,
+SID-conditioned item-description recovery asks the model to answer attribute- or facet-level
+questions about the represented item, testing semantic recoverability under SID conditioning.
+Concrete metric definitions and decoding details are given in §7.4 and §7.1.
+5. Continued Pre-Training
+After defining SIDs as a bridge between language and the item space in §4, we next describe
+how a general LLM is adapted toward SID-aware intent-to-item fulfillment.
+Base model family.Unless otherwise stated, the reported 4B and 8B ShopX checkpoints are
+initialized from Qwen3-family backbones [4] and use the same tokenizer, training recipe, and
+data mixtures; their main difference is model scale.
+This section covers the first half of the training recipe, as summarized in Figure 7. SID token
+alignment makes the SID vocabulary usable by the model, while domain continued pre-training
+adapts the model to catalog structure, item semantics, shopping intents, and behavior-grounded
+signals without eroding the general knowledge, reasoning, and instruction-following abilities
+needed for agentic shopping. These stages establish the model’s item language and shopping-
+domain grounding before task-level workflow learning begins. The post-training stages that
+teach the model to execute the full fulfillment protocol are described separately in §6.
+5.1. SID Token Alignment
+SID alignment establishes the bidirectional interface between natural-language item semantics
+and the SID token space before broader recommendation training. At this stage, the data does not
+yet cover intent-to-item fulfillment examples. Instead, we use catalog-derived item-to-SID and
+SID-to-item reconstruction data to teach the model that SIDs are model-operable item identifiers
+rather than opaque labels. Because all original model parameters are frozen in this stage, the
+16
+Continued Pre-Training Post-TrainingSID AlignmentItem Text Corpus SID Tokens
+…text ↔SID grounding
+Domain CPTAllTokens
+…
+Domain Knowledge injectionGeneral Corpus
+SID-aware Domain Base Model
+Fulfillment SFT
+E-commerce Foundation Model
+Specialist SFTUpdate
+E-commerceCorpusUpdate
+Params
+SID-aware Domain Base Model
+DomainTeacher
+Multi-TeacherOPD+RLJointOptimization
+1
+2
+3
+4
+SelfTeacher
+GeneralTeacher
+Student Rollouts(On-policy)
+Rubrics rewardsTeacher preferences
+Student update
+Figure 7| Training pipeline for ShopX.The recipe starts from a general LLM and proceeds
+through SID token alignment, domain continued pre-training, fulfillment SFT, and joint OPD–RL
+post-training. The final OPD–RL stage is expanded in Figure 8.
+objective only needs to attach the SID token interface to the base LLM rather than rewrite its
+language or reasoning behavior. The stage is therefore centered on broad item coverage and legal
+SID-token exposure rather than on downstream fulfillment supervision. In the final recipe, this
+stage adds the SID vocabulary for the selected𝐺2+𝐿 4 version and trains only the newly added
+token embeddings, keeping the original backbone frozen. This embedding-only stage is trained
+for one epoch over 200B alignment tokens, using 1,024-token sequences, next-token pre-training
+loss on all tokens, and Adam with peak learning rate 1 × 10−4. Additional implementation
+details and the selected𝐺 2+𝐿 4 vocabulary size are summarized in §7.1.
+5.2. Domain Continued Pre-training: Data Mixture and Settings
+Domain continued pre-training prepares the model for catalog–SID grounding, intent- and
+behavior-conditioned item reasoning, user preference understanding, and grounded generation
+by mixing shopping-domain data with general replay. Below, we describe the replay ratio, the
+resulting data mixture, and the training setup used for this stage.
+Replay ratio selection.General replay prevents catastrophic forgetting of instruction following,
+broad knowledge, multilingual ability, and basic reasoning robustness during domain adapta-
+tion [58]. The ratio between domain and replay data controls the specialization–preservation
+trade-off, so we select it through the ablation in §7.5. The final full-scale recipe uses approx-
+imately 70B shopping-domain tokens and 35B general-replay tokens, corresponding to a 2:1
+domain-to-general token ratio. The detailed sweep, source-level accounting, and resulting
+trade-off are analyzed in §7.5.
+Data mixture.Table 2 summarizes the final CPT mixture, which contains 303.0 M examples
+and 113.96 B tokens. The general replay portion accounts for 9.0% of examples and 33.4%
+of tokens, covering knowledge and reasoning, instruction following, and math and coding
+data to preserve broad model capabilities during domain adaptation. The shopping-domain
+17
+Domain CPT Capability Examples Tokens
+Count Share
+(%) Total Share
+(%) Avg.
+General
+Knowledge & Reasoning 20.0 M 6.6 23.82 B 20.9 1,192
+Instruction Following 1.41 M 0.5 2.89 B 2.5 2,043
+Math & Coding 6.03 M 2.0 11.41 B 10.0 1,892
+Subtotal 27.4 M 9.0 38.12 B 33.4 1,390
+Shopping
+Catalog–SID Grounding 240.7 M 79.4 31.33 B 27.5 130
+Intent/Behavior-to-Item Grounding 34.7 M 11.5 40.84 B 35.8 1,177
+User Preference Understanding 200.0 K 0.1 3.67 B 3.2 18,365
+Subtotal 275.6 M 91.0 75.85 B 66.6 275
+Total 303.0 M 100.0 113.96 B 100.0 376
+Table 2| CPT data mixture used for domain continued pre-training, grouped by the capabilities
+injected during the stage. Percentages are computed over the full CPT mixture; average tokens
+are reported per example.
+portion accounts for 91.0% of examples and 66.6% of tokens. We group shopping data by the
+capabilities that domain CPT is intended to inject. Catalog–SID grounding data teaches the
+model to associate SID tokens with product titles, attributes, category structure, and long-form
+item descriptions. Intent/behavior-to-item grounding data connects user queries, histories,
+profiles, and text-described candidates to item-space outcomes, including query–item mapping,
+sequential next-item prediction, intent-conditioned SID retrieval, profile-based recommendation,
+textualized recommendation/search, and interleaved text–SID generation. User preference
+understanding data teaches the model to summarize long behavioral logs into structured
+shopping profiles.
+Training settings.During domain CPT, we update the full model on the mixed training
+stream rather than restricting optimization to SID-specific parameters. Starting from the aligned
+checkpoint, the final recipe trains for one epoch over the CPT mixture. Training uses a 20,480-
+token context length. Optimization uses Adam with peak learning rate 5× 10−5, a 1,000-step
+warmup, and a constant schedule after warmup.
+6. Post-Training
+After SID token alignment and domain continued pre-training establish a SID-aware foundation
+model (Figure 7), post-training teaches the model to follow the ShopX action protocol, perform
+SID-native item-space operations, generate catalog-grounded responses, and emit state-update
+signals for multi-turn interactions. A key challenge is capability imbalance: strengthening SID
+prediction can regress general language and other shopping or workflow abilities, a form of
+the see-saw effect discussed in multi-skill post-training [59]. We address this with a recipe that
+assigns training examples to task families and combines Multi-teacher On-policy Distillation
+(MOPD) [59–61] with task-specific reward optimization.
+Our post-training pipeline consists of three stages.Stage 1: Supervised Fine-tuning (SFT).
+We train on a mixture of general instruction and SID-related data, enabling basic instruction-
+following across both domains.Stage 2: Specialist Preparation.We prepare task-specialized
+18
+Domain SFT Capability
+Group Covered Tasks Examples Tokens
+Count Share
+(%) Total Share
+(%) Avg.
+General
+Knowledge &
+Reasoning
+(1) Broad Knowledge QA;
+(2) General Reasoning; 2.32 M 40.8 2.57 B 25.3 1,104
+Instruction
+Following
+(1) General Instruction Following;
+(2) Multi-Turn Dialogue;
+(3) Tool-Use and Search-Agent Instructions
+1.88 M 33.1 2.65 B 26.1 1,407
+Math &
+Coding
+(1) Mathematical Reasoning;
+(2) Code Generation;
+(3) Code-Agent Tool Use
+416.5 K 7.3 2.40 B 23.6 5,764
+Subtotal 4.62 M 81.2 7.62 B 74.9 1,647
+Shopping
+SID-Native
+Fulfillment
+(1) SID–Text Alignment;
+(2) Textualized Item Ranking;
+(3) SID Retrieval/Ranking;
+(4) Interleaved Text–SID Recommendation
+542.9 K 9.5 1.33 B 13.1 2,454
+User/Context
+Understanding
+(1) Profile/Behavior Summarization;
+(2) Context Evidence Extraction 229.0 K 4.0 1.07 B 10.5 4,658
+Shopping
+Dialogue
+(1) Multi-Turn Shopping Guide;
+(2) Item Comparison;
+(3) Preference and Constraint Refinement
+300.4 K 5.3 148.7 M 1.5 495
+Subtotal 1.07 M 18.8 2.55 B 25.1 2,375
+Total 5.70 M 100.0 10.17 B 100.0 1,784
+Table 3| SFT data mixture grouped by supervised capability and representative covered tasks.
+Percentages are computed over the full SFT mixture; average tokens are reported per example.
+teacher policies used by MOPD in the OPD–RL stage.Stage 3: OPD–RL Joint Optimization.
+We route training examples into five task families with task-dependent combinations of OPD
+teacher supervision and reward feedback.
+6.1. Supervised Fine-tuning
+SFT aligns the domain-adapted model with the task formats required by the ShopX serving
+workflow. The central design question is the task mixture: which capabilities to supervise and
+how to balance SID-generation tasks against broader shopping, workflow, and language tasks.
+Supervision groups.Whereas CPT injects item-space grounding, SFT converts this grounding
+into supervised task formats and workflow behaviors. Table 3 groups the data by capability and
+lists representative tasks. The mixture is intentionally general-heavy: general data accounts for
+81.2% of examples and 74.9% of tokens, while shopping data contributes 18.8% of examples
+and 25.1% of tokens across SID-native fulfillment, user/context understanding, and dialogue
+supervision. Within the general portion, instruction-following data includes general and multi-
+turn dialogue supervision as well as tool-use and search-agent instructions, while the math-
+and-coding group covers mathematical reasoning, code generation, and code-agent tool use.
+These examples are not treated as shopping-domain supervision; rather, they preserve the
+action-format following, search-like decomposition, and procedural reasoning abilities needed
+when the model fills the ShopX action protocol and interacts with harness-provided context,
+catalog, and state surfaces.
+19
+Mixture ratio and balancing.SID generation is a major capability to strengthen for model-
+native item fulfillment, but a SID-only mixture would over-specialize the model and weaken the
+broader task formats required by the serving workflow. We therefore balance SID-native fulfill-
+ment, user/context understanding, dialogue, and general instruction data with capability-group
+weighting and per-task temperature sampling. Table 3 reports the resulting data composition,
+and §7.6 compares this balanced mixture with SID-specialized variants.
+Training settings.SFT uses full-parameter fine-tuning from the domain-CPT checkpoint with
+the Qwen3 chat template. We train for one epoch. Training uses an 81,920-token context length.
+Optimization uses Adam with peak learning rate 5×10−6, a 300-step warmup, and a constant
+schedule.
+6.2. Overview of OPD–RL Joint Training
+SFT provides broad task-format coverage but leaves three gaps:(1)SID prediction requires
+deeper item-token specialization than a balanced SFT mixture can deliver without over-fitting
+to SID-only data;(2)continued exposure to e-commerce-domain CPT and SFT data can weaken
+general instruction-following and open-domain language understanding unless explicit preser-
+vation signals are introduced;(3)tasks such as listwise ranking and text–SID interleaved
+recommendation require outcome-level RL feedback beyond imitation learning. These gaps do
+not admit a single uniform RL objective: SID prediction rewards are sparse in the large item
+space, while aggressive SID-only optimization creates the same specialization–preservation
+trade-off discussed above. We therefore use a joint OPD–RL stage: multi-teacher on-policy distil-
+lation (MOPD) provides dense token-level guidance from specialist teachers to strengthen SID
+prediction while recovering general ability, and reinforcement learning with outcome rewards
+optimizes behavior on tasks where reliable automatic evaluation is available. Both signals are
+optimized in a unified on-policy training run implemented with ROLL [62], a reinforcement-
+learning scaling library for large-scale LLM training.
+Task routing.We route training examples into five task families with task-dependent opti-
+mization signals (Table 4). This routing differs from the supervised data grouping in § 6.1: SFT
+groups examples by capability coverage, whereas OPD–RL routing groups training examples
+by the signal used for policy updates. The following subsections define the OPD and reward
+components, followed by the joint optimization objective and training details.
+Task Family Consumed
+Examples
+Sampling
+Share Rollout OPD Teacher Reward
+General 10,240 20.0% Sampled General Teacher General judge
+SID Prediction 10,240 20.0% Beam search SID Prediction Teacher —
+Ranking 10,240 20.0% Sampled — NDCG reward
+Interleave 10,240 20.0% Sampled — Interleaved Fulfillment Reward
+Other 10,240 20.0% Sampled Self Teacher (frozen) —
+Total 51,200 100.0%— — —
+Table 4| Task routing in the OPD–RL stage. The final run samples five task families uniformly,
+using 200 update steps with rollout batch size 256, for a total of 51,200 consumed prompts. Each
+task family receives a subset of the available training signals: OPD teacher supervision, reward
+feedback, or both.
+20
+Figure 8| Task routing in the OPD–RL stage.The OPD–RL stage assigns training examples to
+five task families with different training signals.Generaltasks use both the General Teacher and
+a general response judge reward;SID PredictionandOthertasks use OPD-only supervision from
+the SID Prediction Teacher and frozen Self Teacher;RankingandInterleavetasks use reward-only
+optimization with ranking and text–SID fulfillment rewards.
+6.3. Multi-teacher On-policy Distillation
+Our MOPD design follows recent multi-skill and multi-domain on-policy distillation recipes [59,
+61], but routes teacher supervision by the task families needed for ShopX.
+Specialist Preparation.MOPD is applied to the task families with OPD supervision:General,
+SID Prediction, andOther. We prepare one teacher policy for each of these families:
+• General Teacher.We use the pre-alignment base checkpoint as the General Teacher, which
+anchors open-domain language understanding after SID alignment, domain continued
+pre-training, and fulfillment-oriented SFT.
+• SID Prediction Teacher.We further fine-tune the post-SFT student on SID prediction data,
+including detailed-description-to-item retrieval, intent-and-history retrieval, and contextual-
+intent retrieval, to obtain a teacher with stronger pure-SID generation. The main teacher-
+training sources include 4.97M detailed-description-to-item retrieval samples and 4.92M
+intent-plus-history retrieval samples; additional source details are provided in Appendix D.1.
+• Self Teacher.For theOthertask family, including Item Description Recovery and Textualized
+Recommendation/Search, we use the frozen post-SFT model as the Self Teacher to preserve
+SFT-acquired task behavior.
+MOPD Objective.Let 𝜋𝜃 denote the student policy, and let𝜙(𝑘) denote the teacher selected
+for task family𝑘∈K OPD, where
+KOPD ={General, SID Prediction, Other}. (6)
+Given a prompt𝑥, the student policy generates a group of𝐺trajectoriesG(𝑥)={𝜏 1,𝜏 2,...,𝜏 𝐺},
+21
+where each trajectory𝜏𝑔 =(𝑦 𝑔,1,𝑦𝑔,2,... ,𝑦𝑔,𝑇𝑔) is a complete response sequence. ForGeneraland
+Othertasks, trajectories are sampled from the student policy using standard stochastic decoding.
+ForSID Predictiontasks, the rollout group is constructed with beam search to match the pure-SID
+generation setting used at evaluation time.
+For a task family𝑘 with OPD supervision, the selected teacher𝜋𝜙(𝑘) provides dense token-
+level guidance by minimizing the on-policy reverse KL from the student policy to the teacher
+policy. For one rollout𝜏𝑔, this trajectory-level objective is
+L𝜙(𝑘)
+RKL(𝜃)=−E 𝜏𝑔∼𝜋𝜃(·|𝑥)
+" 𝑇𝑔∑︁
+𝑡=1
+log
+𝜋𝜙(𝑘)(𝑦𝑔,𝑡|𝑥,𝑦 𝑔,<𝑡)
+𝜋𝜃(𝑦𝑔,𝑡|𝑥,𝑦 𝑔,<𝑡)
+#
+. (7)
+In implementation, we use the local teacher–student log-probability ratio as a stop-gradient
+token-level preference weight:
+ˆ𝐴𝜙(𝑘)
+Teacher,𝑔,𝑡 =sg
+
+log
+𝜋𝜙(𝑘)(𝑦𝑔,𝑡|𝑥,𝑦 𝑔,<𝑡)
+𝜋𝜃(𝑦𝑔,𝑡|𝑥,𝑦 𝑔,<𝑡)
+
+, (8)
+where sg[·] denotes the stop-gradient operator. This means that the log-ratio is treated as a fixed
+teacher-derived weight, and gradients are taken only through the student log-probability in the
+policy-gradient surrogate. The MOPD loss over tasks with OPD supervision is
+LMOPD(𝜃)=−E (𝑥,𝑘)∼D OPD,{𝜏 𝑔}𝐺
+𝑔=1∼𝜋𝜃(·|𝑥)
+
+1
+𝐺
+𝐺∑︁
+𝑔=1
+𝑇𝑔∑︁
+𝑡=1
+ˆ𝐴𝜙(𝑘)
+Teacher,𝑔,𝑡 log𝜋𝜃(𝑦𝑔,𝑡|𝑥,𝑦 𝑔,<𝑡)
+
+. (9)
+HereDOPD is the routed training distribution over prompts and task families that receive
+teacher supervision. This objective only covers the task families that have teacher supervision.
+Reward-only task families are handled by the reward objective defined in the next subsection.
+6.4. Reward Design
+Reward feedback is used for task families where reliable outcome-level signals are available:
+General,Ranking, andInterleave. ForSID Prediction, we avoid sparse exact-hit rewards and rely
+on the SID Prediction Teacher instead; Appendix D.2 discusses the SID-reward attempts that led
+to this choice. ForOthertasks, we use the frozen Self Teacher to preserve SFT-acquired behavior
+without introducing an additional reward.
+General response judge reward.For general tasks, we adopt an LLM-as-a-Judge framework
+to assess the quality of model responses. The judge takes the generated response and the
+corresponding reference answer as input, removes hidden reasoning spans when present, and
+assigns an integer score ranging from 0 to 10 according to the semantic evaluation rubrics.
+The resulting score is subsequently normalized to the range [0, 1] and used as the response-
+level reward. The detailed rubric used for the LLM judge is provided in Appendix D.4.
+Interleaved Fulfillment Reward.For outputs that interleave natural language with SID tokens,
+such as text–SID interleaved recommendation responses, we introduce theInterleaved Fulfillment
+Reward. The reward first extracts the visible answer region after hidden reasoning spans, then
+parses all valid SID tokens from the response and the reference answer. The parsed SIDs are
+resolved through the product catalog index to obtain item metadata such as title, price, brand,
+and seller information. The reward combines three sources of supervision:
+22
+• Rule-based validity and penalty signals.We apply rule-based checks and penalties for
+missing SIDs, unresolved response SIDs, duplicated SIDs, overlong answers, insufficient
+coverage when multiple reference SIDs are available, over-used SIDs within recent batches,
+fabricated item identifiers, and duplicated product listings. Reference SIDs that cannot be
+resolved can be masked according to the runtime configuration.
+• Hierarchical SID matching reward.For valid predicted and reference SIDs, we compute
+an optimal matching between the two SID sets. Each matched pair receives partial credit
+according to the deepest matched SID prefix, with deeper hierarchy matches receiving higher
+credit.
+• Catalog-grounded judge reward.We expand predicted and reference SIDs into catalog
+metadata and pass them, together with the original task and model response, to an LLM
+judge. The judge evaluates multiple dimensions, including aesthetic fit, alignment with the
+reference items, satisfaction of the user intent, response text quality, and consistency between
+the stated rationale and the recommended items. It also flags fabricated item identifiers and
+duplicated product listings. The detailed rubric is in Appendix D.4.
+The response-level reward is computed by combining the normalized catalog-grounded judge
+dimensions with the hierarchical SID matching score, followed by multiplicative rule-based
+penalties. Implementation details and aggregation weights are provided in Appendix D.3.
+Ranking reward.For listwise ranking tasks, the model is provided with a set of candidate
+items and is required to output a ranked permutation according to their relevance to the given
+user intent. We first apply a hard validity check: after extracting the visible answer, the output
+must be a comma-separated list that forms a complete permutation of the ground-truth item set,
+with no missing, duplicated, or extraneous items. Invalid outputs receive zero reward. Valid
+permutations are scored with an NDCG-based reward against the reference ranking.
+6.5. Joint OPD–RL Objective
+Following the task routing defined in § 6.2, the OPD–RL stage optimizes a single student policy
+over the five task families:
+K={General, SID Prediction, Ranking, Interleave, Other}. (10)
+LetKOPD ={General , SID Prediction, Other} denote the task families with teacher supervision,
+and letKR ={General , Ranking, Interleave} denote the task families with reward feedback. For
+a sampled training example, let𝑥 denote the prompt and𝑘 its task family. The student produces
+a rollout group{𝜏𝑔}𝐺
+𝑔=1, where𝑔 indexes a response in the group and𝜏𝑔 =(𝑦 𝑔,1,... ,𝑦𝑔,𝑇𝑔) is the
+generated token sequence. For tasks with reward feedback, the rollout group obtains response-
+level rewards{𝑟1,... ,𝑟𝐺} from the corresponding reward function𝜓(𝑘) , where𝑟𝑔 is the reward
+assigned to trajectory 𝜏𝑔. We follow GRPO [ 63] to compute the group-normalized reward
+advantage:
+ˆ𝐴𝜓(𝑘)
+Reward,𝑔 =
+𝑟𝑔−mean(𝑟 1,...,𝑟 𝐺)
+std(𝑟1,...,𝑟 𝐺) . (11)
+For task families without reward feedback, this reward advantage is set to zero.
+For trajectory𝜏 𝑔 from task family𝑘, the training signal at token𝑡is
+ˆ𝐴𝑘
+𝑔,𝑡 =1[𝑘∈K OPD] ˆ𝐴𝜙(𝑘)
+Teacher,𝑔,𝑡+𝛼𝑘 1[𝑘∈K R] ˆ𝐴𝜓(𝑘)
+Reward,𝑔, (12)
+where1[·] is the indicator function, ˆ𝐴𝜙(𝑘)
+Teacher,𝑔,𝑡 is the token-level MOPD weight defined in
+23
+Equation 8, and𝛼𝑘 controls the reward weight for each task family with reward feedback. This
+matches the task-family signal assignment in Table 4.
+The resulting joint objective is
+LJoint(𝜃)=−E (𝑥,𝑘)∼D,{𝜏 𝑔}𝐺
+𝑔=1∼𝜋𝜃(·|𝑥)
+
+1
+𝐺
+𝐺∑︁
+𝑔=1
+𝑇𝑔∑︁
+𝑡=1
+ˆ𝐴𝑘
+𝑔,𝑡 log𝜋𝜃(𝑦𝑔,𝑡|𝑥,𝑦 𝑔,<𝑡)
+
+. (13)
+HereDis the routed OPD–RL training distribution over all five task families.
+Training settings.The final OPD–RL run follows the task-family allocation in Table 4. We train
+for 200 update steps with a rollout batch of 256 prompts and𝐺= 16 responses per prompt. The
+actor is optimized with Adam using a constant learning rate of 5×10 −7 after 50 warmup steps.
+SID Prediction rollouts use six-level SID generation with beam search.
+7. Experiments
+We first evaluate the complete shopping system, then trace its behavior back to the design choices
+that shape it. Shopping and system-level evaluations follow the Taobao-derived protocols in
+§3, while public benchmarks evaluate the general abilities that remain necessary for agentic
+shopping. This section is organized as follows:
+• Implementation details(§7.1) summarize the shared catalog, decoding, SID resolution, and
+reporting settings used across experiments.
+• Framework-level results(§7.2) compare the ShopX serving framework with tool-mediated
+LLM-agent baselines under the same evaluation protocol. This establishes the complete-
+system effect of model-native fulfillment.
+• Capability breakdown(§7.3) evaluates the model under a fixed harness, linking general
+abilities such as instruction following and broad knowledge, shopping semantics, context
+evidence extraction, SID semantic recovery, item-space retrieval, ranking, and grounded
+generation to end-to-end fulfillment outcomes.
+• SID design(§7.4) isolates how identifier construction affects semantic recoverability and
+LLM operability, beyond retrieval-style candidate-generation accuracy alone.
+• Continued pre-training(§7.5) studies how domain data and general replay balance item-
+space grounding against the general abilities required by the agentic interface.
+• Post-training(§7.6) compares supervised specialization, task-family-specific teacher dis-
+tillation, and RL rewards for consolidating SID-native fulfillment while preserving other
+shopping, workflow, and general capabilities.
+7.1. Experimental Implementation Details
+Unless otherwise stated, full-scale ShopX training and evaluation use the same Taobao item
+snapshot introduced in §3.1, containing approximately 1.2B items. This snapshot defines the
+item universe for catalog grounding, item-evidence lookup, SID resolution, and fulfillment
+judging. The SID beam search for item retrieval tasks in the capability breakdown experiments
+uses a progressive beam-size schedule [8, 32, 64, 64, ...] across SID levels and returns
+at most 64 generated SIDs per query. For framework-level evaluation in §3.1, SID beam search
+uses beam size 30 for the selected six-level 𝐺2+𝐿 4 SID version. We do not use constrained
+decoding or illegal-SID filtering, so invalid SID strings are counted as failed resolutions.
+24
+System Fulfillment Path Model Framework-Level Overview Metrics
+Intent
+Ful.
+Item
+Prec.
+Rank.
+Qual.
+Cat.
+Cov. Pers. Constr.
+Ground.
+Feed.
+Adapt.
+Cross
+turn
+Ref.
+ShopX Model-native
+item-space ops.
+ShopX-4B 65.6 91.1 92.084.765.7 74.7 66.5 60.9
+ShopX-8B 69.2 95.0 95.583.9 65.9 76.4 71.5 68.3
+InteRecAgent [18] Retrieval &
+ranking tools
+Qwen3-8B 59.5 89.8 90.0 77.1 63.4 71.8 55.9 41.8
+Chat-REC [17] Qwen3-8B 72.294.0 93.9 82.866.674.8 59.8 47.5
+RecMind [19] Qwen3-8B 63.6 91.2 90.7 80.0 65.0 75.6 62.9 42.1
+Table 5| Framework-level evaluation results.Complete serving configurations are compared
+using the eight overview metrics defined in §3.1. All numbers are on a 0–100 scale; bold and
+underlined values mark the best and second-best systems in each metric column.
+The𝐺2+𝐿 4 hybrid SID adds one token set for each codebook level, for a total of 6× 8192 new
+SID tokens. Training and evaluation data are strictly deduplicated at the user level. All reported
+bounded metrics are placed on a 0–100 scale unless otherwise noted. Detailed row-level metric
+definitions and reporting details are provided in Appendix B.3.
+7.2. Framework-Level Results
+The framework-level results instantiate the protocol in §3.1. Table 5 compares complete system
+configurations rather than isolated recommenders, reporting the same eight framework-level
+overview metrics used by the radar profile in Figure 1. We reproduce several tool-mediated
+LLM-agent baselines, including InteRecAgent-style [ 18], Chat-REC-style [17], and RecMind-
+style [19] agents, while replacing their original retrieval or ranking components with the same
+LLM-external search and ranking services exposed by our evaluation scaffold. This keeps the
+comparison focused on the fulfillment paradigm rather than on differences between external
+tool implementations.
+Table 5 shows that ShopX improves overall framework-level performance, but not by com-
+paring against a weak retrieval backend. As defined in §3.1, the tool-mediated baselines use a
+strong Taobao item-search tool and may apply LLM-side candidate compression or reranking
+before response generation. These baselines remain competitive on first-pass fulfillment and per-
+sonalization, with Chat-REC even leading the table on those two axes. The main ShopX-8B gains
+instead appear on item precision, ranking quality, constraint grounding, feedback adaptation,
+and cross-turn reference, with the clearest separation on the two stateful multi-turn axes.
+The trace-level pattern behind these gains is the interface-loss problem introduced in §1. In
+tool-mediated systems, the LLM may understand the request, but still has to hand off item-space
+execution through compact keyword queries, filters, or candidate-list operations. This boundary
+is not a problem for many direct requests, which is why the baselines remain strong on first-
+pass matching. It becomes more costly when constraints, item references, and feedback must
+stay attached to the same catalog evidence across turns. ShopX keeps candidate generation,
+grounded selection, response generation, and state updates within a model-facing item-space
+workflow, reducing the need to reconstruct the shopping state after each external tool call.
+Appendix C.1 provides qualitative case-level comparisons that illustrate this pattern in both
+single-turn and multi-turn settings, including examples where tool-mediated baselines retrieve
+plausible products initially but lose category, constraint, or reference state during subsequent
+fulfillment steps.
+25
+ShopX is therefore not uniformly best on every overview axis. Its advantage is concentrated
+where the fulfillment state must remain coherent across planning, item-space execution, evidence
+grounding, and multi-turn updates. This supports the central claim of the report: model-native
+fulfillment reduces the lossy hand-offs that arise when language understanding and item-space
+execution are separated by tool interfaces.
+7.3. Capability Breakdown Results
+The capability breakdown follows the diagnostic protocol in §3.2. Table 6 compares the initial
+Qwen3 instruction-model references, ShopX with FORGE SID, and ShopX with the selected
+𝐺2+𝐿 4 SID at both 4B and 8B. The Qwen3 columns are evaluated only on tasks that do not
+require SID-native item generation; the framework rows are included so capability changes can
+be read together with end-to-end behavior. The main observations are:
+• General abilities are not preserved uniformly after shopping-domain training. The largest
+drops are on the harder knowledge and math rows: at 8B, GPQA-Diamond falls from 47.5
+to 41.4 and MATH-500 from 76.2 to 59.6. The rest of the general suite is less affected. For
+shopping fulfillment, the degraded GPQA/MATH skills are less central than core shopping-
+interface skills, but the gap still shows the cost of domain specialization.
+• Text-conditioned ranking is a case where SID knowledge is not always necessary. When the
+candidate items already come with sufficient textual evidence, the Qwen3 references perform
+strongly on ranking rows. The contextual-intent ranking row also shows a potential downside
+of domain specialization: ShopX with 𝐺2+𝐿 4 SID is below the Qwen3 8B reference, consistent
+with scenario-rich queries depending more on generalization and world knowledge than on
+SID-native retrieval.
+• Scaling from 4B to 8B helps most model families and task groups. The pattern is broad rather
+than tied to one metric family, although a few diagnostics are not monotonic.
+• The selected𝐺2+𝐿 4 SID mainly improves item-space retrieval, especially when user profile
+or behavior history is part of the query. Compared with FORGE SID at 8B, Personalized
+Sequential Recommendation rises from 2.8/6.8 to 7.1/15.7 HR@4/64, and Intent+History Item
+Retrieval rises from 5.6/12.1 to 13.1/27.2. Detailed-Description-to-Item retrieval also becomes
+more relevant to the query: HR@4 improves from 0.8 to 2.2, and VLM-judged query–item
+relevance rises from 34.2 to 46.5. This matches the SID results in §7.4: the 𝐺2+𝐿 4 code is more
+LLM-operable at the prefix and more semantically specific in the suffix.
+• The longer𝐺2+𝐿 4 code is not free. Behavior-Sequence Evidence drops from 58.1 to 52.7 at
+8B relative to FORGE SID, suggesting that exact extraction over longer SID strings is harder
+even when downstream retrieval improves. The Interleaved Text–SID row shows the same
+generation-side cost: the 4B model struggles to emit multiple coordinated SIDs, and the 8B
+model remains slightly below the FORGE-SID 8B variant because the six-level code produces
+more unresolved SID paths during free-form response generation.
+• These diagnostic shifts line up with the framework results. ShopX with 𝐺2+𝐿 4 SID improves
+the most stateful and item-facing framework axes over the FORGE-SID 8B variant, matching
+the stronger shopping capabilities and more stable general abilities above.
+Row-level metric definitions and reporting details are given in Appendix B.3; the Interleaved
+Text–SID Fulfillment row uses the rubric in Appendix B.5. For a broader view of how general-
+purpose models perform on textualized shopping tasks, see Appendix C.3.
+26
+Scope Evaluation Axis Task Qwen3 ShopX
+w/ FORGE SID ShopX
+4B 8B 4B 8B 4B 8B
+General
+Capabilities
+Knowledge &
+Reasoning
+BBH CoT
+3-shot CoT; exact match 69.0 73.2 70.4 75.0 71.3 74.1
+MMLU-Pro
+5-shot; exact match 60.4 62.9 50.3 58.8 52.0 59.3
+GPQA-Diamond
+0-shot; exact match 43.4 47.5 29.8 41.4 36.9 41.4
+CMMLU
+0-shot; accuracy 66.8 74.2 69.1 71.8 70.4 75.8
+Instruction
+Following
+IFEval
+0-shot; strict prompt acc. 79.1 81.9 73.8 75.2 72.3 78.4
+Math &
+Coding
+MATH-500
+0-shot; exact match 77.0 76.2 53.8 62.2 51.8 59.6
+GSM8K
+8-shot exemplars; exact match 84.2 88.2 85.1 88.1 86.7 88.6
+MBPP+
+3-shot; pass@1 73.8 75.1 77.0 81.2 76.5 83.1
+Shopping
+Capabilities
+Shopping
+Semantics
+Intent Summary
+LLM-judge score 72.5 76.6 79.0 80.9 78.0 79.0
+Item Association
+LLM-judge score 26.9 28.3 46.3 46.9 48.5 49.7
+Item Description Recovery
+ROUGE 9.9 10.1 26.0 25.1 31.7 33.2
+Context Evidence
+Extraction
+Static-Profile Evidence
+LLM-judge score 45.6 52.9 75.1 77.7 75.0 76.9
+Behavior-Sequence Evidence
+Overlap IoU 18.9 16.1 54.3 58.1 46.0 52.7
+Textualized
+Rec./Search
+Textualized Rec.
+Multiple Choice Question Score 44.5 48.1 64.9 66.9 64.3 66.0
+Textualized Search
+Multiple Choice Question Score 57.1 56.2 68.1 68.7 66.4 68.7
+Item-Space
+Fulfillment
+Detailed Desc. to Item
+Item HR@4/64 / / 0.6/3.8 0.8/5.2 1.2/3.2 2.2/5.3
+Query–Item Relevance (VLM judge) / / 32.8 34.2 43.8 46.5
+Personalized Seq. Rec.
+Item HR@4/64 / / 2.9/6.4 2.8/6.8 6.2/14.3 7.1/15.7
+Intent+History Item Ret.
+Item HR@4/64 / / 6.5/12.5 5.6/12.1 12.7/24.1 13.1/27.2
+Intent+History Item Rank.
+Acc@1/NDCG@3 34.2/69.9 34.9/69.6 45.3/77.9 43.2/77.1 44.8/78.2 46.5/78.5
+Contextual-Intent Item Ret.
+Query–Item Relevance (VLM judge) / / 57.8 58.7 57.7 59.4
+Contextual-Intent Item Rank.
+Acc@1/NDCG@3 45.4/61.8 48.9/63.3 48.3/63.0 50.0/63.1 42.5/58.9 46.6/60.8
+Interleaved Text–SID
+5-dim detailed rubrics / / 77.9 88.0 60.8 86.9
+End-to-End
+System
+Framework
+Overview
+Intent Fulfillment
+N/A
+62.4 67.8 65.6 69.2
+Item Precision 87.3 92.3 91.1 95.0
+Ranking Quality 90.7 93.8 92.0 95.5
+Category Coverage 85.1 89.7 84.7 83.9
+Personalization 60.6 65.3 65.7 65.9
+Constraint Grounding 71.8 79.0 74.7 76.4
+Feedback Adaptation 55.3 62.0 66.5 71.5
+Cross-turn Reference 38.0 57.8 60.9 68.3
+Table 6| Capability breakdown and framework overview.General, shopping, and framework-
+level metrics for the initial Qwen3 instruction-model references, ShopX with FORGE SID, and
+ShopX with the selected𝐺2+𝐿 4 SID. The Qwen3 columns are direct-evaluation references on
+tasks that a general LLM can answer without SID-native item generation, indicating how well
+different general abilities are preserved after ShopX training. The two ShopX variants use the
+same method family with different SID designs. Scores are on a 0–100 scale, with compact
+setting or metric labels shown beneath task names where applicable.
+27
+7.4. Semantic ID Design Ablation
+We next evaluate whether the SID design realizes the two goals from §4: semantic recoverability
+and LLM operability.
+Table 7 ablates the continuous item representation before SID construction. FORGE is the
+collaborative-heavy baseline; SV/MV denote single- and multi-vector representations; CP/EP
+denote collaborative-product and equivalent-product supervision; and CL/TR denote con-
+trastive learning and text reconstruction. Appendix B.4 gives the metric definitions, equivalent-
+product query pairs, candidate item set, and 25M-item mini catalog used by these diagnostics.
+The main observations are:
+• (Row 1 vs. rows 2–5) For the language-to-item diagnostics studied here, the collaborative-
+heavy FORGE representation is noticeably behind the EP-supervised representations on
+equivalent-product retrieval and category purity, indicating weaker alignment with semantic
+item identity.
+• (Rows 2–3) SV and MV have nearly identical global retrieval scores, so adding local vectors
+alone does not automatically improve the global item embedding.
+• (Rows 4–5) Reconstruction also gives a direct check of what information the representation
+preserves. Row 4 reconstructs attributes from local embeddings and captions from all local
+embeddings, leaving the global embedding supervised only by contrastive learning. Row
+5 uses the full objective from §4.1: global+local embeddings reconstruct captions, while the
+global and local parts are separately tied to category and grouped-attribute reconstruction.
+Its higher caption recovery shows that this design encodes more recoverable multimodal
+information; cosine-similarity diagnostics show lower local-vector redundancy.
+Table 8 fixes the selected representation and ablates SID construction. Here 𝐺𝐾 denotes
+𝐾 global-prefix tokens and 𝐿𝑀 denotes 𝑀 local-suffix tokens, with vocabulary size 8192 per
+codebook level. The row-5 G+L configuration inherits the first two levels from the global-
+only𝐺3 prefix and appends four local VQ suffix tokens. SID intrinsics measure global-prefix
+reconstruction, neighborhood quality, prefix stability, and path-load balance, while codebook
+validation measures bidirectional language–item grounding on the 25M-item mini catalog. Avg.
+Item is the average number of catalog items attached to the beam-search top-1 SID, so lower
+values mean the generated code path is more specific. Gini measures path-load imbalance across
+SID paths; lower Gini indicates more balanced path usage under the same codebook structure.
+We interpret Gini together with Avg. Item: Gini describes the assignment distribution of the
+codebook, while Avg. Item describes the ambiguity of the model’s generated top-1 SID path.
+Bounded scores are reported on a 0–100 scale except Gini, which uses its native 0–1 scale; SNR
+remains in dB and Avg. Item remains an item count. The SID results are:
+• (Rows 1–2) Row 1 inherits the FORGE representation mismatch above. In row 2, adding a
+FORGE-style contrastive auxiliary loss keeps quantized retrieval reasonable, but reconstruc-
+tion fidelity and equivalent-product prefix consistency degrade, and Desc.→Item remains
+weak. This points to the importance of a semantically stable early prefix for autoregressive
+SID generation.
+• (Rows 3–4) Removing the auxiliary loss in row 3 restores prefix consistency and improves
+Desc.→SID, but many generated paths still map to large item clusters. Extending the global
+code to 𝐺6 lowers Gini and improves SID-level recovery, yet Avg. Item remains high; this
+explains why Desc.→Item does not improve over row 3.
+• (Row 5) The selected𝐺2+𝐿 4 keeps an LLM-operable prefix and VQ suffixes, trading lower
+exact SID recovery for lower Gini, smaller buckets, and better Desc.→Item and SID→Desc.
+28
+Together, the representation and SID ablations show that the selected design satisfies the two
+SID goals defined in §4. The local suffix improves item specificity and semantic recoverability,
+while the global prefix remains operable for autoregressive generation.
+Item
+Rep. Data Obj. Encoder Representation Intrinsics
+Lang. ROUGE R@10 NDCG@10 Cat. Purity
+FORGE CP CL CLIP-base – 86.8 78.4 91.1
+SV EP CL Qwen3-VL-2B – 93.2 83.9 94.2
+MV EP CL Qwen3-VL-2B – 93.1 83.7 93.5
+MV EP CL+TR(l)Qwen3-VL-2B 25.6 92.9 82.9 94.5
+MV EP CL+TR(g+l)Qwen3-VL-2B33.5 93.5 84.5 95.1
+Table 7| Representation intrinsic ablation.This table reports representation-side ablations
+before downstream codebook validation. Configuration notation and metric groups are summa-
+rized in §7.4. All bounded metric entries are reported on a 0–100 scale.
+SID
+Input Data Aux.
+Loss
+SID
+Structure
+Global-Prefix Intrinsics Codebook Validation
+Recon. Quant. Structure Desc.→SID Avg.
+Item Desc.→Item SID→Desc.
+SNR
+(dB) NDCG@10 Cat.
+Pur.
+Pref.
+Cons.@3 Gini HR@4 HR@64 #Items HR@4 HR@64 ROUGE
+Score
+FORGE CP CL G3 4.44 45.6 43.0 18.3 0.50 8.8 13.8 99.1 0.6 4.7 24.4
+G EP CL G3 3.03 59.4 96.3 3.8 0.33 9.2 10.6 256.1 0.3 2.8 26.5
+G EP – G3 4.69 54.7 98.9 21.1 0.49 11.5 18.0 126.5 0.9 6.2 25.5
+G EP – G6 5.39 68.6 98.9 22.3 0.10 15.1 23.8 190.7 0.8 6.2 29.5
+G+L EP – G2+L4 inherited𝐺 3 global-prefix intrinsics 0.06 3.1 3.5 13.8 2.3 11.3 31.5
+Table 8| SID design ablation.SID variants built from the best representation in Table 7. G
+uses the global embedding, while G+L adds local facet embeddings. Metrics are defined in §7.4;
+bounded scores use a 0–100 scale except Gini, which uses 0–1; SNR remains in dB and Avg. Item
+remains an item count.
+7.5. Domain Continued Pre-training Data Mixture
+§5 defines the SID-alignment stage and the CPT data mixture. Here we use the ablation only
+to answer two recipe questions: whether SID alignment is needed before CPT, and how much
+general replay to pair with the available shopping-domain CPT data. Because a full 8B sweep is
+expensive, we use the dense 4B mixture grid to choose the replay ratio and apply the selected
+ratio in the final 4B and 8B recipes.
+Table 9 first isolates the stage order. Without CPT, the model preserves general benchmarks
+but remains weak on item retrieval. CPT without SID alignment improves some shopping-
+understanding diagnostics, yet falls behind aligned CPT on item retrieval. We therefore keep
+both stages: SID alignment makes the new tokens usable as generation targets, and CPT supplies
+the broader shopping-domain grounding.
+With alignment enabled, we then choose the replay ratio within the evaluated token budget.
+Under the 70B shopping-domain budget, 35B and 70B general replay are close: 35B replay is
+better for Detailed-Description-to-Item retrieval, while 70B replay is slightly better for sequential
+recommendation and sequence extraction. The mixture grid in Figure 9 leads us to use 70B
+shopping-domain tokens with 35B general replay, a 2:1 domain-to-general ratio, for the final
+full-scale recipe. This is a recipe choice within the available domain data and evaluated grid.
+29
+CPT Configuration Item Retrieval Shopping Understanding General Capability
+SID
+Alignment
+Domain
+Tokens
+General
+Tokens
+Desc.
+→Item
+Seq.
+Rec.
+Intent
+Summary
+Sequence
+Extract
+Profile
+Extract MMLU-Pro IFEval CMMLU
+✓0B 0B 0.3 4.6 77.6 45.0 71.350.1 72.5 72.9
+✗70B 70B 2.4 6.378.753.576.346.9 69.7 66.4
+✓70B 35B3.66.5 78.4 57.0 75.2 46.9 69.1 66.4
+✓70B 70B 3.36.878.158.475.2 46.2 69.3 67.8
+Table 9| CPT stage ablations.Representative 4B configurations isolate the effects of SID
+alignment and domain CPT. Bold marks the best score in each column; all metric entries are
+normalized to a 0–100 scale, with general benchmarks evaluated in non-thinking mode. The
+full CPT grid in Figure 9 averages these three general columns together with GSM8K. Under
+Item Retrieval, Desc.→Item denotes Detailed-Description-to-Item HR@64 and Pers. Seq. Rec.
+denotes Personalized Sequential Recommendation HR@64.
+Figure 9| CPT data-mixture grid.We sweep domain CPT tokens (rows) and general replay
+tokens (columns) on the 4B model. Panels report averaged item retrieval, shopping understand-
+ing, and general capability scores; empty cells indicate configurations not run. All scores are
+shown on the 0–100 scale.
+7.6. Post-training Ablation
+We conduct an ablation study on the proposed post-training pipeline described in §6 by progres-
+sively enabling each training component, including supervised fine-tuning (SFT), single-teacher
+on-policy distillation (OPD), multi-teacher on-policy distillation (MOPD), and RL rewards.
+Table 10 summarizes the results. The analysis is organized into three stages, each examining the
+contribution of a specific component in the training recipe.
+30
+Variant MOPD Teachers Rewards Metrics
+General SID Self LLM
+Judge Ranking IFR CMMLU IFEVal Retr. Prof.
+Ext. Rank Text–
+SID
+General Teacher – – – – – – 74.2 81.9 0.0 52.9 66.5 27.0
+SFT student – – – – – – 70.2 72.5 2.5 77.6 63.9 69.5
+SID Prediction Teacher – – – – – – 68.4 66.4 4.1 0.0 0.0 31.2
+SID-only OPD –✓– – – – 66.7 70.4 3.5 0.8 0.0 35.9
+MOPD-2T✓ ✓– – – – 74.5 77.5 3.6 4.4 57.4 77.0
+MOPD-3T✓ ✓ ✓– – – 73.0 76.9 3.4 78.1 63.1 75.3
++ LLM judge✓ ✓ ✓ ✓– – 72.1 78.6 3.3 77.9 63.5 76.4
++ Ranking✓ ✓ ✓–✓– 73.0 75.6 3.4 77.6 67.3 77.0
++ LLM judge& Ranking✓ ✓ ✓ ✓ ✓– 73.7 76.0 3.4 77.4 68.6 78.2
++ Full rewards✓ ✓ ✓ ✓ ✓ ✓71.8 75.2 3.3 77.7 70.1 88.0
+Table 10| Post-training ablation.We compare SFT, OPD/MOPD, and OPD–RL variants;
+checkmarks mark active task-family teachers and reward terms.
+Stage 1: Effect of the SID prediction teacher.The first stage investigates whether specializing
+the model solely for SID prediction is sufficient to support the overall fulfillment capability.
+• General Teacher.Initialized from the pre-alignment Qwen3 checkpoint, it serves as the
+general-capability reference. It achieves the highest scores on CMMLU (74.2) and IFEval
+(81.9), but is unable to generate valid SIDs (Retr. 0.0).
+• SFT Student.After supervised fine-tuning, it acquires broad shopping capabilities, achieving
+strong performance on Profile Extraction (77.6), Ranking (63.9), and Text–SID (69.5), while
+obtaining a modest retrieval capability (Retr. 2.5). At the same time, its general capabilities
+remain reasonably preserved (CMMLU 70.2, IFEval 72.5).
+• SID Prediction Teacher.Further specializing the SFT Student using only SID prediction
+data yields this teacher. Although Retrieval improves from 2.5 to 4.1, this specialization
+substantially degrades the model’s general capabilities (CMMLU 68.4, IFEval 66.4) and
+completely destroys its ability to perform Profile Extraction and Ranking, both of which
+collapse to zero.
+• SID-only OPD.Applying single-teacher OPD transfers the SID expertise to the student, but
+fails to alleviate this specialization trade-off. Retrieval remains comparable (3.5), whereas
+Profile Extraction drops to 0.8 and Ranking remains unavailable.
+Takeaway.These results indicate that optimizing exclusively for SID prediction improves
+retrieval performance but severely compromises broader agentic-shopping capabilities.
+Stage 2: Effect of multi-teacher distillation.We next examine whether MOPD can restore the
+lost general capabilities while preserving SID specialization.
+• MOPD-2T.This variant incorporates both the General Teacher and the SID Prediction
+Teacher. Compared with SID-only OPD, introducing the General Teacher substantially
+recovers general capabilities, improving CMMLU from 66.7 to 74.5, IFEval from 70.4 to 77.5,
+and Ranking from 0.0 to 57.4. Nevertheless, Profile Extraction remains poor (4.4), since
+neither teacher provides supervision for this task family.
+• MOPD-3T.To address this limitation, this variant further introduces the frozenSelf Teacher
+(the post-SFT student), which supplies supervision for task families not covered by the
+other teachers. Consequently, Profile Extraction increases dramatically from 4.4 to 78.1,
+31
+fully recovering the original SFT capability, while Ranking further improves to 63.1 with
+Retrieval remaining stable (3.4). This demonstrates that the Self Teacher effectively preserves
+behaviors already learned during SFT without interfering with SID specialization.
+Takeaway.Overall, task-family-aware multi-teacher distillation reconciles SID specialization
+with general capability preservation, avoiding the single-teacher distillation trade-off.
+Stage 3: Effect of RL rewards.Starting fromMOPD-3T, we progressively introduce the
+proposed reward functions to evaluate their individual contributions.
+• + LLM Judge.This variant introduces the response-quality reward, primarily improving
+instruction-following ability, as reflected by the increase of IFEval from 76.9 to 78.6, while
+leaving other metrics largely unchanged.
+• + Ranking.This variant adds the NDCG-based ranking reward, leading to a substantial
+improvement in Ranking (63.1→ 67.3) while maintaining comparable Retrieval and Text–SID
+performance.
+• + LLM Judge & Ranking.This variant combines the two rewards, producing the strongest
+Ranking performance (68.6) among all partial-reward variants while preserving high instruction-
+following capability. The two rewards exhibit complementary effects, with one improving
+response quality and the other directly optimizing ranking accuracy.
+• + Full Rewards.This variant further incorporates the proposed Interleaved Fulfillment
+Reward. This significantly boosts Text–SID fulfillment from 78.2 to 88.0 and further improves
+Ranking to the best overall score (70.1), while only introducing a minor reduction in CMMLU
+(73.7→71.8) and IFEval (76.0→75.2).
+Takeaway.These results suggest that each RL reward provides complementary task-specific
+optimization beyond MOPD, yielding consistent improvements with only marginal impact on
+general capabilities.
+Summary.The ablation study reveals a clear progression throughout the proposed post-
+training pipeline. SFT establishes broad task coverage but provides limited SID generation
+capability. Training solely for SID prediction substantially improves retrieval while sacrificing
+general and workflow capabilities. MOPD effectively resolves this conflict by leveraging task-
+family-aware teacher routing, simultaneously preserving SID specialization and recovering
+general behaviors. Finally, the proposed RL rewards further refine task-specific performance
+through complementary optimization objectives. As a result, the complete post-training pipeline
+achieves the strongest fulfillment-oriented performance while maintaining competitive general
+capabilities, demonstrating the effectiveness of progressively combining supervised alignment,
+multi-teacher distillation, and RL-reward optimization.
+8. Related Work
+Existing LLM-augmented and generative recommender systems connect to ShopX in different
+roles: some define the tool-mediated serving paradigm we compare against, while others
+provide the generative item-space substrate that ShopX extends. Below, we focus on how each
+family connects to our serving abstraction and workflow-level evaluation, rather than organizing
+the discussion as a conventional survey.
+Tool-mediated LLM agents for recommendation.LLM-agent recommender systems com-
+monly use the LLM for intent understanding, dialogue management, planning, memory, tool
+orchestration, critique, and response generation, while delegating item-space execution to exter-
+32
+nal retrieval and ranking tools. Representative systems include prompt-based conversational
+recommenders, tool-using recommendation agents, retrieval-augmented conversational rec-
+ommenders, and industrial LLM-plus-retrieval pipelines [ 17–23]. In our terminology, they
+instantiatetool-mediated fulfillment: rich context is compressed into tool plans, filters, queries,
+or candidate-set operations before external modules perform most item-space execution. This
+is a strong and practical baseline family, but it exposes the interface-loss problem studied in
+this report: fine-grained constraints, personalized context, and multi-turn feedback must cross
+low-bandwidth tool boundaries before they can affect item-space fulfillment. ShopX keeps the
+harness-side benefits of context assembly and workflow control, while training a SID-aware
+foundation model to carry contextual reasoning into SID-token retrieval, listwise selection, and
+grounded response generation.
+Post-retrieval LLM reranking methods are a narrower neighbor of this family. RankGPT
+and zero-shot listwise reranking show that prompted LLMs can improve ordering for retrieval
+tasks [64, 65], while recommendation-oriented systems such as LLM4Rerank and CARE adapt
+this idea to multi-objective recommendation reranking and conversational candidate selec-
+tion [66, 67]. These works are relevant to our listwise ranking/selection capability, but they
+assume that an external system has already produced the candidate set. They therefore test post-
+retrieval ordering rather than the full path from context understanding to candidate retrieval,
+catalog grounding, response generation, and feedback handling.
+Generative recommendation and semantic item identifiers.Generative recommendation
+provides a model-operable item-space interface by representing items as discrete tokens or
+Semantic IDs and formulating recommendation as autoregressive item generation [24, 29, 68].
+The OneRec line shows that autoregressive item generation can consolidate conventional multi-
+stage cascaded recommendation pipelines into an end-to-end generative architecture [29, 30];
+recent systems such as OpenOneRec and OneRec-Think further push this direction toward
+larger-scale data, reproducible training, foundation-model-style recommendation ability, and
+recommendation-specific reasoning [ 31, 32]. Thus, instead of using SID generation mainly
+as a candidate-generation or pipeline-compression mechanism, we study how a SID-aware
+foundation model can serve as the central item-space fulfillment layer in agentic e-commerce.
+SID construction has also become a core design problem. Prior work improves identifier
+learning through collaborative-semantic alignment, content-collaboration fusion, learnable tok-
+enizers, order-agnostic or LLM-oriented item tokens, end-to-end tokenizer optimization, transfer
+and multimodal variants, efficient long-SID decoding, and industrial-scale SID formation [24–
+28, 69–74]. These studies show that compactness, discrimination, collision control, codebook
+use, collaborative signal, and deployment efficiency all matter for SID quality. Our setting adds
+a different requirement: SIDs must also be semantically recoverable and easy for a foundation
+model to operate on as an item language. This motivates both our SID design ablation in § 7.4
+and the training recipe that integrates item–SID alignment, retrieval, ranking/selection, response
+generation, and preference-update extraction with broader language and reasoning abilities.
+9. Discussion and Future Work
+Model-native fulfillment as a different serving point.The practical question is not whether
+a production system should use tools, retrieval indexes, ranking models, or serving-side state.
+Industrial recommender systems will continue to use such infrastructure. The question is where
+complex context is carried during fulfillment. Tool-mediated agents place the LLM mainly
+before and after item-space operations. Post-retrieval rerankers place the LLM after candidate
+33
+generation. Generative recommenders place item IDs inside the model output space, but are
+often evaluated mainly as item predictors or candidate generators. ShopX targets a different
+serving point. The serving harness defines the model-facing action protocol and exposes support
+surfaces for context access, catalog grounding, and state management, while the central model
+selects and composes SID-native fulfillment actions. It can use SIDs not only as output labels,
+but as model-operable item representations across retrieval, ranking/selection, and grounded
+response generation. This is why our main evaluation compares complete system configurations:
+the ShopX serving framework versus strong tool-mediated baselines backed by external retrieval
+and ranking tools.
+Toward agentic training.The present training recipe does not yet include task-specific agentic
+reinforcement learning over full shopping trajectories. In the current system, tool registration,
+tool understanding, and tool invocation rely largely on the native tool-use abilities of the
+Qwen3-family instruction models, further adapted through CPT and SFT data that include
+tool-calling examples. This setup lets us evaluate model-native fulfillment under a fixed serving
+framework, but it does not directly optimize long-horizon agentic decisions such as when to
+retrieve, when to ask for clarification, how to revise item choices after feedback, or when to
+update serving-side state. An important next step is trajectory-level reinforcement learning
+over multi-turn model–harness interactions. The workflow-level evaluation dimensions in
+§ 3 provide a natural starting point for reward modeling, since they already measure task
+success, catalog grounding, feedback adaptation, personalization, and state-update quality.
+Going further, a dynamic user-simulation agent could provide interactive reward feedback that
+better approximates real shopping sessions, enabling personalized agentic RL over evolving
+preferences and multi-turn fulfillment outcomes.
+10. Conclusion
+We introduced ShopX, a foundation model for intent-to-item fulfillment in agentic shopping. The
+report argues that AI-native shopping should translate rich intent, personalization context, and
+multi-turn feedback into catalog-grounded outcomes with fewer lossy tool hand-offs. ShopX
+is deployed through a model-native fulfillment framework in which a lightweight serving
+harness defines the model-facing action protocol and support surfaces, while the central model
+selects and composes SID-native fulfillment actions. Across SID design, continued pre-training,
+post-training, and system-level evaluation, the results support model-native fulfillment as a
+practical direction for complex and context-dependent shopping workflows.
+34
+References
+[1] OpenAI. Introducing gpt-5. https://openai.com/index/introducing-gpt-5/ ,
+August 2025. Accessed: 2026-06-08.
+[2] Anthropic. Introducing claude 4. https://www.anthropic.com/news/claude-4 ,
+May 2025. Accessed: 2026-06-08.
+[3] Google. Gemini 3: Introducing the latest gemini ai model from google. https://blog.g
+oogle/products/gemini/gemini-3/, November 2025. Accessed: 2026-06-08.
+[4] Qwen Team. Qwen3 technical report.arXiv preprint arXiv:2505.09388, 2025.
+[5] OpenAI. Introducing codex. https://openai.com/index/introducing-codex/ ,
+May 2025. Accessed: 2026-06-08.
+[6] Anthropic. Claude code. https://docs.anthropic.com/en/docs/claude-code/ge
+tting-started, 2025. Accessed: 2026-06-08.
+[7] OpenClaw. Openclaw.https://docs.openclaw.ai/, 2026. Accessed: 2026-06-08.
+[8] Amazon. Amazon’s rufus ai assistant now available to all u.s. customers. https://ww
+w.aboutamazon.com/news/retail/how-to-use-amazon-rufus , 2024. Accessed:
+2026-05-11.
+[9] OpenAI. Powering product discovery in chatgpt. https://openai.com/index/power
+ing-product-discovery-in-chatgpt/, March 2026. Accessed: 2026-05-11.
+[10] OpenAI. Buy it in chatgpt: Instant checkout and the agentic commerce protocol. https:
+//openai.com/index/buy-it-in-chatgpt/, September 2025. Accessed: 2026-05-11.
+[11] People’s Daily Online. 千问与淘宝打通用ai也能“逛淘宝”了. https://finance.people
+.com.cn/n1/2026/0511/c1004-40717594.html, May 2026. Accessed: 2026-06-01.
+[12] Google. Shop with ai mode, use ai to buy and try clothes on yourself virtually. https:
+//blog.google/products-and-platforms/products/shopping/google-shopp
+ing-ai-mode-virtual-try-on-update/, May 2025. Accessed: 2026-05-11.
+[13] Sina Finance. 淘宝内测 ai搜索，上线两款新品 . https://finance.sina.com.cn/
+tech/it/2025-09-12/doc-infqfwzc7426261.shtml , September 2025. Accessed:
+2026-06-01.
+[14] 3E Life. 小红书站内开测ai搜索功能，并已上线独立 app. https://www.3elife.net/A
+rt/internet/202501/05/100181.html, January 2025. Accessed: 2026-06-01.
+[15] Likang Wu, Zhi Zheng, Zhaopeng Qiu, Hao Wang, Hongchao Gu, Tingjia Shen, Chuan
+Qin, Chen Zhu, Hengshu Zhu, Qi Liu, Hui Xiong, and Enhong Chen. A survey on large
+language models for recommendation.arXiv preprint arXiv:2305.19860, 2023.
+[16] Yizhe Zhang et al. A survey of large language model empowered agents for recommenda-
+tion and search.arXiv preprint arXiv:2503.05659, 2025.
+[17] Yunfan Gao, Tao Sheng, Youlin Xiang, Yun Xiong, Haofen Wang, and Jiawei Zhang. Chat-
+rec: Towards interactive and explainable llms-augmented recommender system.arXiv
+preprint arXiv:2303.14524, 2023.
+35
+[18] Xu Huang, Jianxun Lian, Yuxuan Lei, Jing Yao, Defu Lian, and Xing Xie. Recommender ai
+agent: Integrating large language models for interactive recommendations.arXiv preprint
+arXiv:2308.16505, 2023.
+[19] Yancheng Wang, Ziyan Jiang, Zheng Chen, Fan Yang, Yingxue Zhou, Eunah Cho, Xing Fan,
+Xiaojiang Huang, Yanbin Lu, and Yingzhen Yang. Recmind: Large language model powered
+agent for recommendation. InFindings of the Association for Computational Linguistics:
+NAACL 2024, 2024.
+[20] Jianxun Lian, Yuxuan Lei, Xu Huang, Jing Yao, Wei Xu, and Xing Xie. Recai: Lever-
+aging large language models for next-generation recommender systems.arXiv preprint
+arXiv:2403.06465, 2024.
+[21] Sara Kemper, Justin Cui, Kai Dicarlantonio, Kathy Lin, Danjie Tang, Anton Korikov, and
+Scott Sanner. Retrieval-augmented conversational recommendation with prompt-based
+semi-structured natural language state tracking. InProceedings of the 47th International ACM
+SIGIR Conference on Research and Development in Information Retrieval, 2024.
+[22] Chao Yi et al. Recgpt technical report.arXiv preprint arXiv:2507.22879, 2025.
+[23] Chao Yi et al. Recgpt-v2 technical report.arXiv preprint arXiv:2512.14503, 2025.
+[24] Shashank Rajput, Nikhil Mehta, Anima Singh, Raghunandan H. Keshavan, Trung Vu,
+Lukasz Heldt, Lichan Hong, Yi Tay, Vinh Q. Tran, Jonah Samost, Maciej Kula, Ed H. Chi,
+and Maheswaran Sathiamoorthy. Recommender systems with generative retrieval. In
+Advances in Neural Information Processing Systems, 2023.
+[25] Bowen Zheng, Yupeng Hou, Hongyu Lu, Yu Chen, Wayne Xin Zhao, Ming Chen, and
+Ji-Rong Wen. Adapting large language models by integrating collaborative semantics for
+recommendation. In2024 IEEE 40th International Conference on Data Engineering, pages
+1435–1448, 2024.
+[26] Wenjie Wang, Honghui Bao, Xinyu Lin, Jizhi Zhang, Yongqi Li, Fuli Feng, See-Kiong
+Ng, and Tat-Seng Chua. Learnable item tokenization for generative recommendation. In
+Proceedings of the 33rd ACM International Conference on Information and Knowledge Management,
+pages 2400–2409, 2024.
+[27] Enze Liu, Bowen Zheng, Cheng Ling, Lantao Hu, Han Li, and Wayne Xin Zhao. Generative
+recommender with end-to-end learnable item tokenization. InProceedings of the 48th
+International ACM SIGIR Conference on Research and Development in Information Retrieval,
+pages 729–739, 2025.
+[28] Kairui Fu, Tao Zhang, Shuwen Xiao, Ziyang Wang, Xinming Zhang, Chenchi Zhang,
+Yuliang Yan, Junjun Zheng, Yu Li, Zhihong Chen, Jian Wu, Xiangheng Kong, Shengyu
+Zhang, Kun Kuang, Yuning Jiang, and Bo Zheng. Forge: Forming semantic identifiers for
+generative retrieval in industrial datasets.arXiv preprint arXiv:2509.20904, 2025.
+[29] Guorui Zhou et al. Onerec technical report.arXiv preprint arXiv:2506.13695, 2025.
+[30] Guorui Zhou et al. Onerec-v2 technical report.arXiv preprint arXiv:2508.20900, 2025.
+[31] Guorui Zhou, Honghui Bao, et al. Openonerec technical report.arXiv preprint
+arXiv:2512.24762, 2025.
+36
+[32] Zhanyu Liu, Shiyao Wang, Xingmei Wang, Rongzhou Zhang, Jiaxin Deng, Honghui Bao,
+Jinghao Zhang, Wuchao Li, Pengfei Zheng, Xiangyu Wu, Yifei Hu, Qigen Hu, Xinchen Luo,
+Lejian Ren, Zixing Zhang, Qianqian Wang, Kuo Cai, Yunfan Wu, Hongtao Cheng, Zexuan
+Cheng, Lu Ren, Huanjie Wang, Yi Su, Ruiming Tang, Kun Gai, and Guorui Zhou. Onerec-
+think: In-text reasoning for generative recommendation.arXiv preprint arXiv:2510.11639,
+2025.
+[33] Yang Liu, Dan Iter, Yichong Xu, Shuohang Wang, Ruochen Xu, and Chenguang Zhu. G-eval:
+Nlg evaluation using gpt-4 with better human alignment.arXiv preprint arXiv:2303.16634,
+2023.
+[34] Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, Siyuan Zhuang, Zhanghao Wu, Yonghao
+Zhuang, Zi Lin, Zhuohan Li, Dacheng Li, Eric P . Xing, Hao Zhang, Joseph E. Gonzalez, and
+Ion Stoica. Judging llm-as-a-judge with mt-bench and chatbot arena. InAdvances in Neural
+Information Processing Systems, 2023.
+[35] Seungone Kim, Juyoung Suk, Shayne Longpre, Bill Yuchen Lin, Jamin Shin, Sean Welleck,
+Graham Neubig, Moontae Lee, Kyungjae Lee, and Minjoon Seo. Prometheus 2: An open
+source language model specialized in evaluating other language models. InProceedings of
+the 2024 Conference on Empirical Methods in Natural Language Processing, 2024.
+[36] Anisha Gunjal, Anthony Wang, Elaine Lau, Vaskar Nath, Yunzhong He, Bing Liu, and
+Sean M. Hendryx. Rubrics as rewards: Reinforcement learning beyond verifiable domains.
+InInternational Conference on Learning Representations, 2026. URL https://openreview.n
+et/forum?id=c1bTcrDmt4.
+[37] Yubo Wang, Xueguang Ma, Ge Zhang, Yuansheng Ni, Abhranil Chandra, Shiguang Guo,
+Weiming Ren, Aaran Arulraj, Xuan He, Ziyan Jiang, Tianle Li, Max Ku, Kai Wang, Alex
+Zhuang, Rongqi Fan, Xiang Yue, and Wenhu Chen. Mmlu-pro: A more robust and
+challenging multi-task language understanding benchmark.Advances in Neural Information
+Processing Systems, 2024.
+[38] Haonan Li, Yixuan Zhang, Fajri Koto, Yifei Yang, Hai Zhao, Yeyun Gong, Nan Duan,
+and Timothy Baldwin. Cmmlu: Measuring massive multitask language understanding in
+chinese. InFindings of the Association for Computational Linguistics: ACL 2024, 2024.
+[39] Jeffrey Zhou, Tianjian Lu, Swaroop Mishra, Siddhartha Brahma, Sujoy Basu, Yi Luan,
+Denny Zhou, and Le Hou. Instruction-following evaluation for large language models.
+arXiv preprint arXiv:2311.07911, 2023.
+[40] Mirac Suzgun, Nathan Scales, Nathanael Schärli, Sebastian Gehrmann, Yi Tay, Hyung Won
+Chung, Aakanksha Chowdhery, Quoc V . Le, Ed H. Chi, Denny Zhou, and Jason Wei.
+Challenging big-bench tasks and whether chain-of-thought can solve them.Transactions on
+Machine Learning Research, 2023.
+[41] David Rein, Betty Li Hou, Asa Cooper Stickland, Jackson Petty, Richard Yuanzhe Pang,
+Julien Dirani, Julian Michael, and Samuel R. Bowman. Gpqa: A graduate-level google-proof
+q&a benchmark. InFirst Conference on Language Modeling, 2024.
+[42] Dan Hendrycks, Collin Burns, Saurav Kadavath, Akul Arora, Steven Basart, Eric Tang,
+Dawn Song, and Jacob Steinhardt. Measuring mathematical problem solving with the math
+dataset. InAdvances in Neural Information Processing Systems, 2021.
+37
+[43] Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heewoo Jun, Lukasz
+Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano, Christopher
+Hesse, and John Schulman. Training verifiers to solve math word problems.arXiv preprint
+arXiv:2110.14168, 2021.
+[44] Jacob Austin, Augustus Odena, Maxwell Nye, Maarten Bosma, Henryk Michalewski, David
+Dohan, Ellen Jiang, Carrie Cai, Michael Terry, Quoc V . Le, and Charles Sutton. Program
+synthesis with large language models.arXiv preprint arXiv:2108.07732, 2021.
+[45] Jiawei Liu, Chunqiu Steven Xia, Yuyao Wang, and Lingming Zhang. Is your code generated
+by chatgpt really correct? rigorous evaluation of large language models for code generation.
+InAdvances in Neural Information Processing Systems, 2023.
+[46] Shuai Bai, Yuxuan Cai, Ruizhe Chen, Keqin Chen, Xionghui Chen, Zesen Cheng, Lianghao
+Deng, Wei Ding, Chang Gao, Chunjiang Ge, et al. Qwen3-VL technical report.arXiv preprint
+arXiv:2511.21631, 2025.
+[47] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini
+Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, Gretchen Krueger,
+and Ilya Sutskever. Learning transferable visual models from natural language supervision.
+InProceedings of the 38th International Conference on Machine Learning, 2021.
+[48] Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. BERT: Pre-training
+of deep bidirectional transformers for language understanding. InProceedings of the 2019
+Conference of the North American Chapter of the Association for Computational Linguistics: Human
+Language Technologies, 2019.
+[49] Junnan Li, Dongxu Li, Silvio Savarese, and Steven Hoi. BLIP-2: Bootstrapping language-
+image pre-training with frozen image encoders and large language models. InProceedings
+of the 40th International Conference on Machine Learning, 2023.
+[50] Aaron van den Oord, Yazhe Li, and Oriol Vinyals. Representation learning with contrastive
+predictive coding.arXiv preprint arXiv:1807.03748, 2018.
+[51] Johannes Hugger and Virginie Uhlmann. Towards noise contrastive estimation with soft
+targets for conditional models.arXiv preprint arXiv:2404.14076, 2024.
+[52] Omar Khattab and Matei Zaharia. ColBERT: Efficient and effective passage search via
+contextualized late interaction over BERT. InProceedings of the 43rd International ACM SIGIR
+Conference on Research and Development in Information Retrieval, pages 39–48, 2020.
+[53] Zilin Xiao, Qi Ma, Mengting Gu, Chun-cheng Jason Chen, Xintao Chen, Vicente Ordonez,
+and Vijai Mohan. MetaEmbed: Scaling multimodal retrieval at test-time with flexible late
+interaction.arXiv preprint arXiv:2509.18095, 2025.
+[54] Aaron van den Oord, Oriol Vinyals, and Koray Kavukcuoglu. Neural discrete representa-
+tion learning. InAdvances in Neural Information Processing Systems, 2017.
+[55] Doyup Lee, Chiheon Kim, Saehoon Kim, Minsu Cho, and Wook-Shin Han. Autoregressive
+image generation using residual quantization. InProceedings of the IEEE/CVF Conference on
+Computer Vision and Pattern Recognition, 2022.
+[56] Shicong Liu, Hongtao Lu, and Junru Shao. Improved residual vector quantization for
+high-dimensional approximate nearest neighbor search.arXiv preprint arXiv:1509.05195,
+2015.
+38
+[57] Ben Chen, Xian Guo, Siyuan Wang, Zihan Liang, Yue Lv, Yufei Ma, Xinlong Xiao, Bowen
+Xue, Xuxin Zhang, Ying Yang, Huangyu Dai, Xing Xu, Tong Zhao, Mingcan Peng, XiaoYang
+Zheng, Cong Zhang, Qihang Zhao, Yuqing Ding, Chenyi Lei, Wenwu Ou, and Han Li.
+OneSearch: A preliminary exploration of the unified end-to-end generative framework for
+e-commerce search.arXiv preprint arXiv:2509.03236, 2025.
+[58] Aaron Grattafiori et al. The llama 3 herd of models.arXiv preprint arXiv:2407.21783, 2024.
+[59] Xiaomi MiMo Team. Mimo-v2-flash technical report.arXiv preprint arXiv:2601.02780, 2026.
+[60] DeepSeek-AI. Deepseek-v4 technical report. https://huggingface.co/deepseek-a
+i/DeepSeek-V4-Pro/blob/main/DeepSeek_V4.pdf, 2026. Accessed: 2026-06-03.
+[61] NVIDIA Nemotron Team. Nemotron-cascade 2: Post-training llms with cascade rl and
+multi-domain on-policy distillation.arXiv preprint arXiv:2603.19220, 2026.
+[62] Weixun Wang, Shaopan Xiong, Gengru Chen, Wei Gao, Sheng Guo, Yancheng He, Ju Huang,
+Jiaheng Liu, Zhendong Li, Xiaoyang Li, et al. Reinforcement learning optimization for large-
+scale learning: An efficient and user-friendly scaling library.arXiv preprint arXiv:2506.06122,
+2025.
+[63] Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Peiyi Wang, Qihao Zhu, Runxin Xu,
+Ruoyu Zhang, Shirong Ma, Xiao Bi, et al. Deepseek-r1: Incentivizing reasoning capability
+in llms via reinforcement learning.arXiv preprint arXiv:2501.12948, 2025.
+[64] Weiwei Sun, Lingyong Yan, Xinyu Ma, Shuaiqiang Wang, Pengjie Ren, Zhumin Chen,
+Dawei Yin, and Zhaochun Ren. Is chatgpt good at search? investigating large language
+models as re-ranking agents. InProceedings of the 2023 Conference on Empirical Methods in
+Natural Language Processing, 2023.
+[65] Xueguang Ma, Xinyu Zhang, Ronak Pradeep, and Jimmy Lin. Zero-shot listwise document
+reranking with a large language model.arXiv preprint arXiv:2305.02156, 2023.
+[66] Jingtong Gao, Bo Chen, Weiwen Liu, Xiangyang Li, Yichao Wang, Wanyu Wang, Huifeng
+Guo, Ruiming Tang, and Xiangyu Zhao. Llm4rerank: Llm-based auto-reranking framework
+for recommendations.arXiv preprint arXiv:2406.12433, 2024.
+[67] Chuang Li, Yang Deng, Hengchang Hu, See-Kiong Ng, Min-Yen Kan, and Haizhou Li. Care:
+Contextual adaptation of recommenders for llm-based conversational recommendation.
+arXiv preprint arXiv:2508.13889, 2025.
+[68] Teng Shi, Chenglei Shen, Weijie Yu, Shen Nie, Chongxuan Li, Xiao Zhang, Ming He, Yan
+Han, and Jun Xu. Llada-rec: Discrete diffusion for parallel semantic id generation in
+generative recommendation.arXiv preprint arXiv:2511.06254, 2025.
+[69] Yidan Wang, Zhaochun Ren, Weiwei Sun, Jiyuan Yang, Zhixiang Liang, Xin Chen, Ruobing
+Xie, Su Yan, Xu Zhang, Pengjie Ren, Zhumin Chen, and Xin Xin. Content-based collabo-
+rative generation for recommender systems. InProceedings of the 33rd ACM International
+Conference on Information and Knowledge Management, pages 2420–2430, 2024.
+[70] Haohao Qu, Wenqi Fan, Zihuai Zhao, and Qing Li. Tokenrec: Learning to tokenize id for llm-
+based generative recommendations.IEEE Transactions on Knowledge and Data Engineering,
+2025.
+39
+[71] Xinyu Lin, Haihan Shi, Wenjie Wang, Fuli Feng, Qifan Wang, See-Kiong Ng, and Tat-Seng
+Chua. Order-agnostic identifier for large language model-based generative recommenda-
+tion. InProceedings of the 48th International ACM SIGIR Conference on Research and Development
+in Information Retrieval, pages 1923–1933, 2025.
+[72] Bowen Zheng, Hongyu Lu, Yu Chen, Wayne Xin Zhao, and Ji-Rong Wen. Universal item
+tokenization for transferable generative recommendation.arXiv preprint arXiv:2504.04405,
+2025.
+[73] Kaiyuan Li, Rui Xiang, Yong Bai, Yongxiang Tang, Yanhua Cheng, Xialong Liu, Peng
+Jiang, and Kun Gai. Bbqrec: Behavior-bind quantization for multi-modal sequential
+recommendation.arXiv preprint arXiv:2504.06636, 2025.
+[74] Yupeng Hou, Jiacheng Li, Ashley Shin, Jinsung Jeon, Abhishek Santhanam, Wei Shao,
+Kaveh Hassani, Ning Yao, and Julian McAuley. Generating long semantic ids in parallel for
+recommendation. InProceedings of the 31st ACM SIGKDD Conference on Knowledge Discovery
+and Data Mining, pages 956–966, 2025.
+40
+Appendix
+A. Author List
+Core Contributors
+Jiacheng Chen∗
+Tao Zhang∗
+Manxi Lin∗
+Dunxian Huang∗
+Teng Shi
+Honghao Fu1
+Mengyan Li
+Xinming Zhang
+Chenchi Zhang
+Xuan Lu2
+Xiaoxiong Du
+Junjun Zheng†
+Xiangheng Kong
+Yuning Jiang
+Contributors
+Haibin Chen
+Shaolin Ye
+Hao Chang
+Xiaoqi Li
+Shuwen Xiao
+Yujin Yuan
+Jingxuan Feng
+Shaopan Xiong
+Huimin Yi
+Ju Huang
+Qiu Shen3
+Ying Chen
+∗Equal contribution.
+1University of Queensland.
+2Shanghai Jiao Tong University.
+3Nanjing University.
+†Corresponding contributor. Contact:fangcheng.zjj@alibaba-inc.com.
+B. Evaluation Details
+B.1. Framework-Level Benchmark Details
+Benchmark composition.
+Table 11 gives the detailed composition of the framework-level benchmark described in §3.1.
+These counts are used to make the evaluation taxonomy explicit without interrupting the main
+protocol narrative.
+Multi-turn rollout protocol.
+For multi-turn framework-level cases, Claude Sonnet 4.6 is used as a fixed shopper-side
+simulator. At each turn, the simulator receives the user’s profile information, the seed query,
+and the agent’s previous response, then either produces the next user message or ends the
+interaction once it determines that the request has been satisfied. Rollouts are capped at five
+user turns. The simulator and rubric judge use separate prompts and roles; the judge only reads
+the stored trajectory after the interaction is complete.
+B.2. Framework-Level Overview Metric Protocol
+The eight overview metrics in Table 1 are derived from stored single-turn responses and multi-
+turn trajectories. All judge calls use Claude Sonnet 4.6 as a fixed rubric judge. The judge is
+41
+Single-turn intent type Description Adversarial Robust Semantic Total
+narrow_category Precise category requests, e.g.,
+toothbrush heads
+65 0 0 65
+multi_category Multi-category or bundle-style needs 36 29 0 65
+scene_based Scenario-driven requests, e.g.,
+camping use
+0 27 38 65
+general_semantic Broad semantic needs, e.g., stylish
+and durable accessories
+0 23 36 59
+minimal Minimal or underspecified queries 0 25 0 25
+Single-turn totalFull single-turn split101 104 74 279
+Constraint/profile signal Count Coverage
+User profile available 279 100.0%
+Expected category annotated 279 100.0%
+Soft constraints 278 99.6%
+Hard constraints 193 69.2%
+Target population specified 63 22.6%
+Brand specified 45 16.1%
+Negation expression 35 12.5%
+Price budget 27 9.7%
+Multi-turn
+seed
+Description Count
+vague Vague query requiring clarification 25
+constrained Multi-constraint request requiring
+persistence 20
+clear Clear shopping intent 15
+multi_need Multi-category need 15
+ambiguous Ambiguous query 5
+Total Full multi-turn split 80
+Table 11| Framework-level benchmark composition.The single-turn split contains 279 cases,
+stratified by intent type and difficulty tier. Coverage denotes the fraction of single-turn cases
+containing the corresponding profile, annotation, or constraint signal. The multi-turn split con-
+tains 80 trajectories, grouped by seed type to cover clarification, persistent-constraint following,
+explicit fulfillment, multi-need requests, and ambiguity resolution.
+separate from the multi-turn shopper simulator, and all rubric scores are normalized to a 0–100
+scale before aggregation.
+Single-turn judge dimensions.For each single-turn response, the judge receives the original
+query, annotated shopping intent, profile summary, response text, and the returned catalog
+items. It emits four structured outputs.Item relevancelabels each displayed item as served,
+partially_served, or not_served; these labels define intent served rate, category precision,
+and NDCG@5 using relevance gains 2, 1, and 0.Attribute consistencyextracts explicit item-
+attribute claims from the response and marks each claim as consistent, conflicting, or not
+verifiable against catalog evidence; attribute accuracy is computed as consistent claims divided
+by consistent plus conflicting claims.Profile utilizationis a 1–5 rubric score measuring whether
+item choice, ordering, or explanation reflects profile evidence not already stated in the query;
+the overview metric uses the average score divided by 5 and multiplied by 100, while the stricter
+score-≥4 rate is kept only as a diagnostic.Naturalnessis a 1–5 response-quality rubric and is
+reported in detailed single-turn diagnostics but is not one of the eight overview axes. Single-turn
+category coverage measures how many annotated expected category facets are covered by the
+relevant returned items.
+Multi-turn judge dimensions.For each multi-turn trajectory, the judge receives the full dia-
+logue, profile context, final returned items, and catalog evidence. The result-quality judge reports
+final goal achievement, per-item served labels, category coverage, and a 1–5 profile-match score.
+The process-quality judge reports three trajectory dimensions used in the overview metrics. The
+constraint-grounding dimension combines clarification behavior, information gain from clarifica-
+tion, preservation of accumulated constraints, candidate evidence for hard constraints, honesty
+when catalog evidence is missing, and turn efficiency. The feedback-response dimension com-
+bines feedback understanding, effectiveness of the revised recommendations, preservation of
+42
+unrelated preferences, correction speed, and absence of later regression; correction-style signals
+are merged into this dimension. The cross-turn-reference dimension combines entity-reference
+accuracy and operation correctness when the user refers to a previously shown item.
+Process-dimension normalization.The multi-turn process dimensions are weighted averages
+of normalized rubric fields:
+• Constraint grounding:clarification necessity and information gain (0.15 each), constraint
+preservation and candidate coverage (0.25 each), grounding honesty and turn efficiency (0.10
+each).
+• Feedback response:feedback accuracy and adjustment effectiveness (0.25 each), preference
+preservation (0.20), correction speed and no-regression behavior (0.15 each).
+•Cross-turn reference:entity accuracy and requested-operation correctness (0.50 each).
+Binary rubric fields are mapped to 0 or 100; 1–5 rubric fields are multiplied by 20; turn efficiency
+uses max(0,(5−𝑡)/4)×100, where𝑡is the number of turns.
+Overview aggregation.Let ST denote single-turn metrics and MT denote multi-turn metrics.
+The eight framework-level axes are computed as:
+Intent Fulfillment=mean(ST intent served rate, MT goal achievement),
+Item Precision=ST category precision,
+Ranking Quality=ST NDCG@5,
+Category Coverage=mean(ST category coverage, MT category coverage),
+Personalization=mean(ST profile-utilization average, MT profile match),
+Constraint Grounding=mean(ST attribute accuracy, MT constraint-grounding score),
+Feedback Adaptation=MT feedback-response score,
+Cross-turn Reference=MT cross-turn-reference score.
+This aggregation is used both by the main framework table and by the radar visualization.
+B.3. Capability Diagnostic Metric Protocol
+Each task in Table 6 reports the primary metric shown in parentheses in the task column.
+For target-item retrieval rows, the main diagnostic table reports item-level HR@4 and HR@64
+together so short-list hit quality and broader candidate coverage can be read side by side. For
+open-ended contextual-intent retrieval, where a broad query can admit multiple valid catalog
+items, the main table reports VLM-judged query–item relevance instead of strict hit rate. We
+use the benchmark’s standard primary metric for general capabilities and a fixed task-level
+metric for each remaining shopping diagnostic. The main diagnostic table reports these primary
+metrics on a 0–100 scale.
+Metric definitions.Accuracy and Acc@1 measure exact top-1 correctness after answer extrac-
+tion or item-id resolution. HR@K measures whether any annotated target item appears in the
+top-𝐾 generated or resolved catalog items. NDCG@K measures listwise ranking quality with
+graded item relevance, normalized by the ideal ordering. Relevant-unit F1 computes set-level F1
+over annotated profile facts or behavior SIDs selected as relevant to the current context. Judge
+Score denotes the mean scalar score from Claude Sonnet 4.6 under the task-specific rubric after
+catalog-grounding checks.
+General capabilities.BBH CoT, MMLU-Pro, GPQA-Diamond, CMMLU, MATH-500, and
+43
+GSM8K Flex report accuracy under their standard answer-extraction protocols. IFEval reports
+strict prompt-level instruction-following accuracy. MBPP+ reports pass@1.
+Shopping semantics.Intent Summary reports a judge-based summary-quality score. Item
+Association reports Judge Score. Item Description Recovery reports ROUGE.
+Context evidence extraction.Static-Profile Evidence Extraction reports an LLM-judge relevance
+score, while Behavior-Sequence Evidence Extraction reports sequence-overlap IoU.
+Textualized recommendation/search.Textualized Recommendation and Textualized Search
+report a Multiple Choice Question Score that gives partial credit when the selected hard negative
+is semantically close to the target.
+Item-space fulfillment.Detailed-Description-to-Item retrieval reports item-level HR@4 and
+HR@64 in the main diagnostic table after resolving the intermediate SID generation output to
+catalog items. For Detailed-Description-to-Item retrieval, Query–Item Relevance is reported as
+a supplementary sub-metric under the same task and is scored by a VLM judge. After beam
+search, we take the top five predicted SIDs, resolve two catalog items for each SID, and provide
+the VLM judge with the input text, the target item metadata, and the same metadata for each
+candidate item. The item metadata includes the main image, long title, short title, category,
+seller, brand, and price; the resulting relevance score is normalized to a 0–100 scale. Personalized
+Sequential Recommendation and Intent+History Item Retrieval report HR@4 and HR@64 after
+resolving generated SIDs to catalog items. Personalized Sequential Recommendation conditions
+on the static profile, the behavior sequence, and, for a subset of examples, an optional query.
+Intent+History Item Retrieval uses the current intent or query together with selected relevant his-
+torical items rather than the full behavior sequence, while Contextual-Intent Item Retrieval uses
+underspecified, ambiguous, or scenario-rich intent queries without personal history evidence.
+Because such contextual-intent queries often have multiple acceptable answers, Contextual-
+Intent Item Retrieval uses VLM-judged query–item relevance as its main-table metric; strict
+exact-target HR@K is treated only as an auxiliary diagnostic and omitted from the main table.
+Intent+History Item Ranking and Contextual-Intent Item Ranking jointly report Acc@1 and
+NDCG@3.
+End-to-end system outcomes.System outcomes reuse the framework-level overview metrics
+from §3.1. The main diagnostic table carries the same overview dimensions so model-facing
+capability changes can be related back to complete-system behavior under the fixed harness.
+B.4. SID Design Ablation Metrics
+Table 7 and Table 8 use three groups of diagnostics. All bounded scores are reported on a 0–100
+scale in the main tables, except Gini, which is reported on its native 0–1 scale; SNR remains in
+dB and Avg. Item remains an item count.
+Representation intrinsics.These diagnostics evaluate the continuous item representation
+before SID construction. Lang. ROUGE is ROUGE-L between the decoder-reconstructed caption
+and the reference item caption generated by Qwen3-VL-235B-A3B. R@10 and NDCG@10 use
+the global vector 𝑔 for nearest-neighbor retrieval over a fixed evaluation pool with 80,036
+equivalent-product query pairs and 1,088,790 candidate items; the query item is excluded from
+the candidate pool, and the paired equivalent product is the positive item. Cat. Purity uses the
+same catalog and KNN@100 neighbors, reporting the largest fraction of neighbors that share the
+same leaf-category path.
+Global-prefix intrinsics.These diagnostics evaluate the discretized global-prefix codebook
+44
+before lightweight validation. SNR measures how well the quantized reconstruction ˆ𝑔preserves
+the original global embedding 𝑔. Quantized NDCG@10 and Cat. Purity repeat the retrieval
+and neighborhood-coherence tests above using ˆ𝑔. Prefix Cons.@3 is computed on equivalent-
+product pairs as the pairwise exact-match rate of the first three global SID tokens. Gini measures
+path-load imbalance in the SID assignment, i.e., whether catalog items are spread evenly across
+available SID paths or concentrated in a small subset of paths. Lower Gini indicates more
+balanced path usage under the same codebook structure, while higher Gini indicates more
+concentrated assignments. For G+L variants, global-prefix reconstruction, retrieval, category
+purity, and prefix consistency inherit the corresponding global-prefix diagnostics, while Gini
+and the lightweight codebook-validation metrics reflect the evaluated SID path.
+Codebook validation.These diagnostics are model-facing evaluations after the lightweight
+validation protocol in §4.3. Desc.→SID HR@K measures whether the gold SID appears among
+the top-𝐾 SID candidates under the fixed beam-search setting; invalid SID strings are not filtered
+before scoring. Desc.→Item HR@K resolves generated SIDs against the 25M-item mini catalog
+and checks whether the target item is recovered. When one generated SID maps to multiple
+items, resolved items follow a fixed random order for metric computation. Avg. Item reports
+the average number of catalog items attached to the beam-search top-1 SID, measuring the
+ambiguity of the first generated code path; lower values indicate a more specific top-1 SID.
+SID→Desc. ROUGE evaluates SID-conditioned item-information recovery by comparing the
+model’s facet-level answer against the corresponding reference item information.
+B.5. Interleaved Text–SID Fulfillment Rubric
+Interleaved Text–SID Fulfillment is a shopping item-space fulfillment diagnostic in which a
+model must produce a natural-language shopping recommendation while interleaving semantic
+item identifiers (SIDs). Because there is no single canonical answer, we evaluate it with a
+rubric-based LLM judge under the same fixed judging setup used for the capability-breakdown
+evaluation. For each case, the judge receives the user query, the generated response with hidden
+reasoning spans stripped, and the catalog records resolved from all predicted SIDs through
+IGraph lookup. The judge scores the response along five dimensions on a 0–4 scale:
+• Intent satisfactionmeasures whether the recommended items and text address the user’s
+scenario, constraints, and shopping goal.
+• Resolved item qualitymeasures whether predicted SIDs resolve to valid catalog items whose
+categories, attributes, and complementary roles match the query.
+• Interleaving validitymeasures whether SIDs are correctly embedded alongside descriptive
+text, each with a clear role, and free of malformed, unresolved, or duplicated identifiers.
+• Grounded rationalemeasures whether the stated recommendation reasons are supported by
+resolved item attributes rather than fabricated claims.
+• Response qualitymeasures fluency, informativeness, and whether the answer is actionable
+for shopping.
+The five dimensions are weighted and normalized to a 0–100 composite score. Three boolean
+penalty flags further discount the score: fabricated identifiers (−20%), missing SIDs for explicitly
+recommended items (−10%), and duplicate listings (−5%).
+45
+B.6. General Capability Evaluation Settings
+The general-capability rows in Table 6 are evaluated with lm-evaluation-harness using a vLLM
+backend. Unless otherwise specified by the benchmark task, we run inference in bfloat16 with
+tensor parallelism over 8 GPUs, apply the model chat template, disable thinking mode, and use
+greedy decoding with temperature=0 and do_sample=false. Model maximum length is set
+between 16K and 32K tokens according to the run configuration, with GPU memory utilization
+in the 0.80–0.85 range. For MBPP+, code execution is enabled through the harness unsafe-code
+confirmation flag.
+Benchmark lm-eval task Shots Primary metric Data and scope
+BBH CoTbbh_cot_fewshot3 exact match after get-answer
+extraction
+27 BIG-Bench Hard subtasks;
+about 6.5K examples.
+MMLU-Prommlu_pro5 exact match after custom
+answer extraction
+14 subjects and about 12K
+10-choice questions.
+GPQA-Diamond gpqa_diamond
+_generative_n_shot 0 exact match after flexible
+option extraction
+Diamond subset of GPQA with 198
+graduate-level science questions.
+CMMLUcmmlu0 multiple-choice accuracy by
+log likelihood
+67 Chinese subject areas;
+Parquet-converted CMMLU split
+for currentdatasets
+compatibility.
+IFEvalleaderboard_ifeval0 prompt-level strict accuracy
+541 instruction-following prompts;
+loose and instruction-level
+variants are logged but not
+reported as the main score.
+MATH-500hendrycks_math5000 exact match
+500 held-out MATH problems
+covering seven difficulty levels
+and multiple math branches.
+GSM8K Flexgsm8k_cot8 exact match after flexible
+numeric extraction
+1,319 grade-school math word
+problems; few-shot examples use
+the first-𝑛sampler.
+MBPP+mbpp_plus3 pass@1 after code extraction
+and execution
+399 Python programming tasks
+from EvalPlus MBPP+.
+Table 12| General-capability benchmark settings.This table expands the compact setting labels
+shown under the general-capability task names in Table 6.
+Prompting, extraction, and generation details.BBH CoT uses each subtask’s three chain-of-
+thought few-shot examples and stops generation at </s>, Q:, or <|im_end|> with a 1024-token
+generation cap; answers are extracted from final-answer style spans and compared with case
+and punctuation normalization. MMLU-Pro uses five validation-shot examples, a 10-option
+question format, a 2048-token cap, and stops at the next Question:; the reported score is the
+weighted average over subjects. GPQA-Diamond is run as a 0-shot generative multiple-choice
+task with options A–D, a 4096-token cap, and flexible extraction of the final parenthesized option.
+CMMLU is evaluated as a log-likelihood multiple-choice task with a Chinese answer prompt,
+using the highest-probability option as the prediction and averaging accuracy across subtasks.
+IFEval directly uses the dataset prompt field and allows generation up to 1280 tokens without
+an early stop sequence; we report prompt_level_strict_acc. MATH-500 uses the Problem:
+... Answer: format with an 8192-token cap and stops on the next problem marker or chat
+end token. GSM8K uses eight few-shot exemplars, a 2048-token cap, and flexible extraction
+of the last numeric answer after stripping commas, dollar signs, and the #### answer marker.
+MBPP+ follows the MBPP-style expert-Python prompt with three visible tests, a 2048-token cap,
+stops at [DONE] or the chat end token, and reports pass@1 after executing the extracted code
+against EvalPlus tests.
+46
+C. Additional Results and Qualitative Examples
+This section groups supplementary results that are easier to read as qualitative examples or
+focused auxiliary analyses. We place fulfillment trace comparisons first because they directly
+support the framework-level results in §7.2, followed by generated-output cases and a broader
+textualized recommendation analysis for general LLMs.
+C.1. Qualitative Fulfillment Trace Comparisons
+The case-level figures in this subsection are qualitative samples for the framework-level compar-
+ison in §7.2. Each figure keeps the original Chinese request, dialogue, and catalog item titles as
+evidence, and adds an English intent summary for non-Chinese readers. The upper trace panel
+shows how ShopX fills thePlan,Execute,Fulfill, andUpdatemodel-action slots from §2, while
+distinguishing harness-sideContext,State, andCatalogsupport surfaces. The lower panel com-
+pares ShopX with a tool-mediated baseline on the same case, including final catalog-grounded
+items and the observed failure mode.
+The examples are intended as reading aids rather than an additional benchmark table. To-
+gether they cover single-turn problem-to-product inference, hard constraint grounding, bundle-
+style category coverage, negated-style filtering, stateful refinement, active category preservation,
+and cross-turn item references. For multi-turn cases, the shopper simulator may terminate a
+method’s trajectory as soon as it judges the user’s request to be satisfied; therefore, a multi-turn
+benchmark case can show only one ShopX turn when first-pass fulfillment is accepted. Within
+each figure, score chips summarize the applicable judge outputs for that case; process-oriented
+chips are shown only when the corresponding multi-turn dimension is applicable, and the figure
+body gives the case-specific mechanism takeaway.
+47
+Figure 10| Qualitative fulfillment trace comparison, Case 1. Although this is a multi-turn
+benchmark case, the shopper simulator terminates the ShopX trajectory after the first response
+because it judges the request to be satisfied; the baseline trajectory continues until satisfaction or
+the turn limit.
+48
+Figure 11| Qualitative fulfillment trace comparison, Case 2. Although this is a multi-turn
+benchmark case, the shopper simulator terminates the ShopX trajectory after the first response
+because it judges the request to be satisfied; the baseline trajectory continues until satisfaction or
+the turn limit.
+49
+Figure 12| Qualitative fulfillment trace comparison, Case 3. The case title, intent summary,
+method outputs, and mechanism takeaway are shown inside the figure.
+50
+Figure 13| Qualitative fulfillment trace comparison, Case 4. The case title, intent summary,
+method outputs, and mechanism takeaway are shown inside the figure.
+51
+Figure 14| Qualitative fulfillment trace comparison, Case 5. The case title, intent summary,
+method outputs, and mechanism takeaway are shown inside the figure.
+52
+Figure 15| Qualitative fulfillment trace comparison, Case 6. The case title, intent summary,
+method outputs, and mechanism takeaway are shown inside the figure.
+53
+Figure 16| Qualitative fulfillment trace comparisons, Cases 7 and 8. Case 7 illustrates Problem-
+to-product inference from a practical pain point. Case 8 illustrates Safety-aware retrieval under a
+traffic-awareness constraint. The case titles, intent summaries, method outputs, and mechanism
+takeaways are shown inside the figures.
+54
+Figure 17| Qualitative fulfillment trace comparisons, Cases 9 and 10. Case 9 illustrates Single-
+turn bundle coverage for helmet plus riding gloves. Case 10 illustrates Negated-style filtering
+for non-duckbill black hats. The case titles, intent summaries, method outputs, and mechanism
+takeaways are shown inside the figures.
+55
+C.2. Interleaved Text–SID Fulfillment: Detailed Scores and Output Cases
+For each evaluated response, the overall score is computed from the rubric dimensions scored on
+the 0–4 scale. We first take a weighted sum of the dimension scores using fixed rubric weights,
+and then map the result to the 0–100 scale. Boolean penalty flags are applied as multiplicative
+discounts: fabricated SIDs incur a 20% discount, missing SIDs incur a 10% discount, and
+duplicate listings incur a 5% discount. Formally, if𝑠𝑑 denotes the score of dimension𝑑 and𝑤𝑑
+its fixed rubric weight, the final score is computed as
+score=25·
+∑︁
+𝑑
+𝑤𝑑𝑠𝑑·(1−0.20·I fab)·(1−0.10·I miss)·(1−0.05·I dup),
+where Ifab, Imiss, and Idup indicate whether the response triggers fabricated-SID, missing-SID, or
+duplicate-listing penalties. The penalty-trigger rates are also reported separately as diagnostic
+indicators.
+Table 13 reports the full dimension-level scores for the Interleaved Text–SID Fulfillment row
+in Table 6. The breakdown shows that interleaved text–SID generation is sensitive to both model
+scale and SID granularity: 8B models consistently outperform their 4B counterparts across
+format compliance, grounding, bundle coherence, and text quality. While ShopX (w/ FORGE
+SID)-8B achieves the highest overall score, the final ShopX-8B remains close and shows stronger
+role coverage, more recommended items on average, and no fabricated SIDs or duplicate listings.
+Figure 18 provides examples of ShopX’s text-SID interleaved output across three diverse
+shopping intents, illustrating how the model grounds natural-language responses in the item
+space by embedding semantic IDs inline alongside explanatory text for each recommended item.
+C.3. General LLM Textualized Recommendation Capability
+We assess whether general-purpose foundation models already exhibit meaningful recommenda-
+tion capability when items and user profiles are presented entirely as natural-language text, and
+how ShopX compares on the same tasks. We evaluate models from four families—Qwen3 (0.6B
+to Qwen3-max), GPT-5.4, Gemini-3.1-pro, and GLM-5—alongside ShopX-8B on two textualized
+benchmarks constructed from real shopping interaction data: a personalization benchmark
+that tests preference-aware item selection given user profiles and behavior histories, and an
+instruction-following benchmark that tests constraint-aware item selection given explicit shop-
+ping instructions. The dashed reference lines in Figure 19 mark two random baselines: uniform
+random over all candidates (0.22), and random within positive plus page-view candidates after
+excluding easy negatives (0.50).
+Figure 19 shows that general-purpose model performance scales consistently with model
+size and that models above∼8B parameters generally exceed the harder random-within-positive-
+and-PV baseline (0.50), reaching average scores of 0.56–0.67 for the largest models. This confirms
+that pre-training on broad text corpora endows foundation models with non-trivial shopping
+understanding and preference reasoning. ShopX-8B achieves 0.646 on the personalization
+benchmark and 0.684 on the instruction-following benchmark, matching or exceeding general-
+purpose models with orders-of-magnitude more parameters. This demonstrates that our domain-
+specific training recipe (§2) effectively amplifies inherent recommendation capability while
+preserving it in the item-space generation regime. The textualized tasks in Table 6 (Textualized
+Recommendation and Textualized Search) track the same textualized recommendation/search
+diagnostic axis for our own model variants.
+56
+1
+QueryOutdoor fishing sun-protection outfit recommendation
+Output
+<SID: Cxxxx>
+This ice-silk quick-dry fishing jacket features lightweight breathable fabric with UPF50+ sun protection, effectively blocking UV radiation. The hooded design with adjustable cuffs and hem enhances wind and sun resistance, ideal for extended outdoor fishing sessions.
+< SID: Cxxxx >
+This wide-brim fishing hat is crafted from high-density polyester fiber. The oversized brim fully covers the face and neck for excellent shade. An inner sweat band enhances comfort, while the detachable face mask enables multi-scenario use.
+< SID: Cxxxx >
+These men's ice-feel UV-protective arm sleeves are made of elastic knitted fabric that fits arm contours without tightness, delivering instant cooling and staying securely in place. Specially treated to reach SPF40 protection for hot summer outdoor use.
+2
+QueryBeginner tennis starter kit for community courts —lightweight and easy to carry
+Output
+< SID: Cxxxx >
+This carbon-integrated tennis racket is designed for beginners with a balanced weight and comfortable grip. Bundled with durabletraining balls and a compact carry bag, it is perfect for casual rallying on community courts without heavy gear.
+< SID: Cxxxx >
+This solo rebound training base features a thickened anti-slip grip and adjustable height settings, simulating real ball-return feedback. The affordable all-in-one set is ideal for female beginners who want to build fundamentals quickly without a partner.
+3
+QuerySleep-aid essentials for frequent business travelers dealing with jet lag
+Output
+< SID: Cxxxx >
+Crafted from silk with a 3D contoured cut, this sleep mask fits the eye area precisely for effective light blocking. The built-in cooling layer rapidly reduces eye fatigue after long-haul flights, helping travelers transition into deep sleep quickly.
+< SID: Cxxxx >
+These active noise-cancelling earplugs are featherlight and pressure-free, significantly reducing cabin noise. The compact carrying case makes them easy to pack, ensuring consistent rest quality across frequent cross-time-zone trips.
+< SID: Cxxxx >
+This U-shaped travel pillow is filled with high-resilience memory foam that provides firm neck support and absorbs turbulence-induced discomfort. Its foldable structure compresses into a compact pouch, making it an ideal companion for long-haul flights.
+Figure 18| Illustrative examples of text-SID interleaved output generated by ShopX across
+diverse shopping intents.Each example shows a natural-language query paired with the
+model’s grounded response, where recommended items are expressed as inline semantic IDs
+(<ITEM: CxxxxCxxxxCxxxx>) interleaved with explanatory text.
+57
+ShopX w/ FORGE SID ShopX
+4B 8B 4B 8B
+Overall Score (0–100) 77.988.060.8 86.9
+Avg. Items Recommended 2.77 2.11 1.372.87
+Format Compliance 3.473.761.893.76
+SID Validity 3.703.793.65 3.69
+SID-Text Alignment 3.303.633.19 3.57
+Query Satisfaction 2.903.392.20 3.34
+Constraint Compliance 3.363.593.20 3.50
+Role Coverage 2.38 3.02 1.133.14
+Bundle Coherence 2.423.261.16 3.18
+Grounded Rationale 3.073.532.55 3.40
+Text Quality 3.443.812.85 3.78
+Fabricated SIDs (%)0.00.4 3.00.0
+Missing SIDs (%) 1.00.02.0 0.4
+Duplicate Listings (%)0.00.4 1.20.0
+Table 13| Evaluation breakdown for Text–SID Interleaved Fulfillment across model sizes and
+SID granularities. ShopX with FORGE SID uses the FORGE-style three-level SID codebook
+used in the comparison setting, whereas ShopX uses the selected six-level 𝐺2+𝐿4 hybrid SID
+codebook. Rubric dimensions are scored on a 0–4 scale; the overall score is computed as a
+fixed-weight composite mapped to a 0–100 scale. Penalty flags are reported as trigger rates (%).
+D. Training Details
+This appendix records post-training details that complement the main method section: OPD–RL
+mixture construction, ablation configurations, reward-design failure cases, and runtime judge
+prompts.
+D.1. OPD/RL Mixture and Ablation Configurations
+This appendix expands the data-construction details behind the OPD–RL task routing described
+in § 6.3. The OPD–RL stage uses a heterogeneous rollout pool with explicit task tags correspond-
+ing to the five task families in the main text:General,SID Prediction,Ranking,Interleave, and
+Other. Each raw example is converted into a unified schema containing a prompt, reference
+response, chat-formatted messages, source name, difficulty flag, and routing tag. We filter out
+examples whose reference response exceeds 4,096 characters or whose chat-formatted message
+sequence exceeds 8,192 characters.
+General replay.TheGeneralbucket is constructed from the general SFT sources used to preserve
+open-domain instruction following and language understanding. It includes general instruction-
+following, dialogue, Chinese web-text, open-domain QA, and general reasoning data. After
+length filtering, we randomly sample up to 100K examples with a fixed seed.
+SID Prediction.TheSID Predictionbucket is constructed from item-text-to-SID supervision.
+Each prompt is augmented with an explicit SID-only constraint, asking the model to directly
+return the SID and forbidding any non-SID text. We randomly sample up to 100K examples
+from the property-text-to-SID data.
+58
+100 101 102 103
+Model Total Parameters (Billions)
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7Average Score
+Gemini-3.1-pro
+Qwen3.5-plus
+Qwen3.5-35A3B
+GLM-5 GPT-5.4
+Qwen3-Next-80A3B
+Qwen3-max
+Qwen3-8B
+Qwen3-4B
+Qwen3.1-1.7B
+Qwen3-0.6B
+ShopX-8B
+GPT
+Gemini
+Qwen3
+GLM
+ShopX
+Random Baseline (0.22)
+Random within Positive and PV (0.50)
+Evaluation Results on Personalization Benchmark
+(a) Personalization benchmark
+100 101 102 103
+Model Total Parameters (Billions)
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7Average Score
+Gemini-3.1-proQwen3.5-plus
+GPT-5.4GLM-5Qwen3-max
+Qwen3.5-35A3B
+Qwen3-14B Qwen3-Next-80A3B
+Qwen3-8B
+Qwen3-1.7B
+Qwen3-0.6B
+ShopX-8B
+GPT
+Gemini
+Qwen3
+GLM
+ShopX
+Random Baseline (0.22)
+Random within Positive and PV (0.50)
+Evaluation Results on Instruction-Following Benchmark (b) Instruction-following benchmark
+Figure 19| Textualized recommendation benchmark results.General-purpose models and
+ShopX-8B are evaluated on personalization and instruction-following tasks where items and
+user profiles are represented as natural-language text.
+Ranking.TheRankingbucket is constructed from listwise shopping-ranking examples aligned
+with the ranking capability in SFT. Each prompt asks the model to rank candidate products
+according to the user’s semantic relevance criterion and output only the ordered candidate
+identifiers. After length filtering, we randomly sample up to 20K examples.
+Interleave.TheInterleavebucket contains text–SID interleaved fulfillment examples, where the
+model must produce a natural-language recommendation or search response while ground-
+ing recommended items with SIDs. It is constructed from two sources. First, we extend the
+interleaved text–SID recommendation data from the SID-native fulfillment group by generating
+additional examples in the same response format, while filtering out examples that already
+appear in the SFT mixture. We sample 100k examples from this source. Second, we adapt
+preference- and constraint-refinement examples from the shopping-dialogue group into inter-
+leaved recommendation tasks. Specifically, we revise the prompts with a system instruction
+that defines SIDs as model-native product identifiers and requires each recommended item to
+include both its SID and a brief rationale. We sample 27k samples from this source.
+Other / self-teacher replay.TheOtherbucket is designed to preserve SFT-acquired recommen-
+dation and shopping behaviors not fully covered by the General Teacher or SID Prediction
+Teacher. It is routed to the frozen post-SFT Self Teacher. This bucket aggregates several SFT capa-
+bility groups: SID and text recommendation benchmarks, textualized recommendation/search,
+SID-to-text recovery, item-pair association, structured item-attribute reasoning, multi-turn
+shopping-guide traces, intent extraction, profile and behavior evidence extraction, complex-
+query recall with reasoning traces, and query–profile–behavior recall/ranking tasks. Large
+sources are randomly capped, including 5K shopping-guide examples, 10K intent examples, 20K
+SID-to-text recovery examples, 5K item-pair examples, and 10K structured-attribute reasoning
+examples. Small benchmark and hard-query sources are retained after filtering.
+Training-time sampling.The raw pool sizes are not used directly as training proportions. For
+the final full-reward configuration, we train for 200 update steps with a rollout batch size of
+256 prompts and 16 sampled responses per prompt, yielding 51,200 sampled prompts and
+approximately 0.82M generated trajectories. The final run configures the five task families
+uniformly. Due to batch construction and divisibility constraints, a 256-prompt batch is realized
+approximately as 64 General prompts, 38 Interleave prompts, 64 SID Prediction prompts, 64
+59
+Other/self-teacher prompts, and 26 Ranking prompts, corresponding to about 25/15/25/25/10.
+For the SID prediction samples, we use a progressive num_beams schedule [8, 16, 16, 16,
+...] across SID levels and return at most 16 generated SIDs per query. This is to align the
+number of responses from other buckets.
+This routed sampling prevents large SID or interleaved-fulfillment sources from dominating
+the joint OPD–RL stage and keeps the preservation, ranking, and fulfillment signals balanced.
+The external rewards are attached only to the corresponding buckets: the general response judge
+reward for General responses, the ranking reward for Ranking, and the Interleaved Fulfillment
+Reward for Interleave. The SID Prediction and Other/self-teacher buckets remain OPD-only.
+Ablation configurations.Table 10 presents the post-training ablation results. The variants
+include direct SID-specialist supervised fine-tuning, SID-only OPD, two- and three-teacher
+MOPD, and MOPD with RL rewards. For reward ablations, we keep the total RL training
+budget aligned with the full run: all OPD–RL variants are trained for 200 update steps with a
+rollout batch size of 256 prompts, corresponding to 51,200 consumed prompts. When a reward
+bucket is removed, we change the bucket sampling mixture rather than changing the number of
+training steps.
+The full OPD–RL run is configured with five routed buckets, General / SID Prediction /
+Other / Ranking / Interleave, with weights 20/20/20/20/20. When the Interleave bucket is
+removed, we use four-bucket routing over General, SID Prediction, Other, and Ranking with
+weights 30/30/30/10; depending on the exact run configuration, a 256-prompt batch is realized as
+roughly 76–78 prompts for each of the first three buckets and 26–28 Ranking prompts. When the
+Ranking bucket is removed, we use General, SID Prediction, and Other with weights 40/30/30.
+These mixtures keep the overall number of consumed prompts fixed while varying only
+the reward source under study, allowing us to isolate the effects of the general response judge
+reward, ranking reward, and Interleaved Fulfillment Reward.
+D.2. Sparse SID Reward Attempts
+This subsection summarizes the reward-design path that motivated the MOPD-centered recipe
+in §7.6. The starting point was a retrieval-style RL objective aligned with SID-token beam-search
+recall. For each prompt, the student generated a SID beam; if the beam contained the target
+item, the rollout received reward 1, and otherwise it received reward 0. This binary reward
+directly optimizes hit rate, and is therefore well matched to candidate-generation evaluation
+protocols used in generative recommendation. However, it is too sparse and too narrow for post-
+training ShopX. Most sampled trajectories receive no positive feedback, including trajectories
+that generate semantically related items, satisfy part of the shopping intent, or preserve useful
+response behavior but miss the exact held-out target. The reward also does not distinguish why
+a beam fails: invalid SID formatting, correct category but wrong item, poor beam ordering, and
+weak response grounding are all collapsed into the same zero signal. In our experiments, direct
+optimization of this 0/1 beam-search reward led to unstable specialization rather than robust
+fulfillment improvement. The model was pushed toward a narrow candidate-generation metric
+without enough pressure to preserve text–SID interleaving, non-SID recommendation behavior,
+or general instruction-following quality.
+We next tried to make the reward less sparse with level-weighted SID rewards. Instead
+of rewarding only exact item hits, this reward assigned partial credit when the generated SID
+matched higher-level SID prefixes, so near misses in the hierarchy could still receive feedback.
+This made the signal denser than the 0/1 hit reward, but it still optimized a proxy for item
+60
+recovery rather than the final retrieval or fulfillment metric. We then augmented this level-
+weighted reward with catalog-lookup semantic constraints over generated SIDs. After SID
+resolution, the same reward retrieved catalog-side item metadata and added credit according
+to semantic compatibility signals, such as whether the resolved item matched the intended
+category, attributes, or user-facing shopping semantics. This made the reward denser and easier
+to optimize, but the held-out retrieval and fulfillment metrics did not improve accordingly. The
+failure mode was different from the binary-reward collapse but pointed to the same underlying
+problem: the model learned to optimize a surrogate semantic reward, not the true hit-rate or
+end-to-end fulfillment objective. If we return to exact hit-rate optimization, the reward again
+becomes too sparse; if we densify the reward through level weights or semantic lookup, the
+objective becomes easier to optimize but less faithful to the evaluation target. This tension made
+reward design alone an unsatisfactory solution and motivated the OPD-centered design in the
+main text.
+D.3. Interleaved Fulfillment Reward Details
+For text–SID recommendation responses, we use an Interleaved Fulfillment Reward rather than
+a single hit-rate signal. The goal is to evaluate whether the model can use SID-based item
+references inside a coherent, catalog-grounded recommendation response.
+SID extraction and validity checks.The reward worker first extracts the visible answer
+region and parses all valid SID tokens from the model response. It applies rule-based penalties
+for missing SIDs, duplicated SIDs, predicted SIDs that cannot be resolved through catalog
+lookup, fabricated item identifiers, and overlong answers. When multiple reference SIDs are
+available, it also encourages the response to cover enough valid SIDs instead of collapsing to a
+single item.
+Catalog grounding.Both predicted and reference SIDs are resolved through the SID-to-item
+catalog lookup table. The lookup returns representative catalog items for each SID, including
+fields such as item title, price, brand, and seller or shop name. This lookup is a grounding
+step, not an independent semantic scorer: unresolved predicted SIDs are treated as invalid
+recommendations, unresolved reference SIDs are treated as data issues, and resolved item
+attributes are passed to the judge as evidence for what each SID denotes.
+Hierarchical SID matching.The reward also computes a level-aware SID matching score
+between the predicted and reference SID sets. It performs optimal matching between the two
+sets and gives partial credit according to the deepest matched SID prefix. Thus, a prediction can
+receive partial credit when it shares higher-level semantic codes with the reference, even if the
+full SID does not exactly match.
+Catalog-grounded judge reward.An LLM judge evaluates the interleaved response using
+the original user request, the model response, and the catalog metadata resolved from the
+predicted and reference SIDs. The judge scores independent rubric dimensions: user-query
+correctness, reference-space correctness, aesthetic or outfit coherence, text quality, and whether
+the explanation actually matches the resolved item attributes. Therefore, the semantic correctness
+of a predicted SID is not read directly from the lookup table; it is estimated by judging the
+resolved catalog evidence against the user request and the reference item space.
+Soft score extraction.For each 0–4 rubric dimension, the judge is asked to emit a JSON
+integer. When token-level probabilities are available, the reward worker does not simply trust
+the decoded integer. Instead, it locates the generated score token for each JSON field, collects
+the top log probabilities over score tokens{0, 1, 2, 3, 4}, applies a softmax over these logits, and
+61
+uses the expected score under this distribution. If log probabilities are unavailable, it falls back
+to the parsed integer score.
+Aggregation and penalties.For interleaved SID responses, the worker first constructs a
+base score from normalized catalog-grounded judge dimensions and the SID-level matching
+score. The current configuration uses weights 0.10, 0.10, 0.35, 0.05, 0.30, and 0.10 for aesthetic
+coherence, reference-space correctness, query correctness, text quality, reason–item consistency,
+and SID-level matching, respectively. Each catalog-grounded judge dimension is normalized
+from the 0–4 scale to[0, 1], while the SID-level score is already in[0, 1]. The SID-level score is
+computed by optimal matching between predicted and reference SID sets; each matched pair
+receives prefix-level credit according to the configured level scores[0.1, 0.2, 0.3, 0.4, 0.5, 1.0].
+After the weighted base score is computed, the worker applies rule-based adjustments. If the
+judge flags duplicated product listings, the score is capped at 0.25. Fabricated item identifiers
+are handled by a multiplicative count penalty rather than a cap. Additional multiplicative
+penalties are applied for missing SIDs, unresolved predicted SIDs, duplicate SID tokens, and
+excessive answer length. In the final full-reward configuration, missing all SIDs multiplies the
+score by 0.1; each unresolved predicted SID uses a penalty of the form 1/(1+𝑛) ; each duplicate
+SID uses 1/(1+ 0.5𝑛); and fabricated identifiers use 1/(1+𝑛) . Reference SIDs that cannot be
+resolved through catalog lookup are treated as invalid data and masked according to the runtime
+configuration.
+D.4. Runtime Reward Prompts
+We include the runtime prompts used by the general response judge reward and the catalog-
+grounded judge reward for reproducibility. The general response judge parses a single integer
+in[0, 10] and normalizes it by 10. The catalog-grounded judge reward in the Interleaved
+Fulfillment Reward parses the JSON object below; for its 0–4 rubric fields, the implementation
+further uses score-token log probabilities to compute expected rubric scores when they are
+available, as described in Appendix D.3.
+General response judge prompt.
+General Response Judge Prompt
+Please evaluate the semantic matching quality between the model response and the reference answer, and give an overall
+integer score from 0 to 10 based on content accuracy and expression quality.
+[Model response]{response}
+[Reference answer]{reference}
+[Scoring criteria]Design intent: this score measures the overall semantic quality of the model response relative to the reference
+answer. Exact word matching is not required, but the response must cover the core facts, conclusions, and intent of the
+reference answer. Content accuracy: first judge whether the key information is correct, whether important constraints are
+missing, and whether the response introduces new facts that conflict with the reference answer. Expression quality: only after
+the content is correct, consider whether the expression is complete, clear, and natural. Fluent writing cannot compensate for
+factual errors or missing key information. Degeneration detection: this dimension explicitly penalizes repetition, truncation,
+garbled text, off-topic continuation, and templated repetition, so that long text or a few correct fragments do not hide poor
+overall quality. 9–10: highly semantically consistent; covers all key information in the reference answer; clear, fluent, and
+stylistically appropriate. 7–8: mostly semantically consistent; covers most key information; fluent expression; may miss minor
+details or have slight stylistic mismatch. 5–6: partially matches the reference, but has clear omissions or deviations; expression
+is acceptable. 3–4: only a small amount of information is relevant; the main view or conclusion differs from the reference. 1–2:
+almost irrelevant; the information seriously deviates from the reference. 0: completely irrelevant, blank, or clearly degenerate,
+such as repetitive output or garbled text.
+[Penalty rules for degenerate output]If the response begins with relevant content but then continues with long off-topic text,
+punctuation-free strings, obvious templated repetition, unfinished continuation, “[omitted]”, or placeholder-like ellipses, the
+maximum score is 4. If the response is truncated, does not end properly, or its latter half is clearly degraded, the maximum
+score is 5; in severe cases, give 0–2. Do not give a high score just because the response is long, essay-like, or contains a few
+correct fragments. It must be accurate, sufficiently complete, well expressed, and free of obvious degeneration.
+Strictly output one integer from 0 to 10 and nothing else.
+62
+Interleaved Fulfillment Reward judge prompt.
+Interleaved Fulfillment Reward Judge Prompt
+You are a quality evaluation expert for an e-commerce search and recommendation system. Please evaluate the model’s
+text–SID recommendation response according to the rubrics. Directly output the JSON result without reasoning.
+[Important notes]Each SID represents a product cluster. The [model-recommended product list] and the [reference product
+list] show representative products under each SID. Multiple correct answers may exist in recommendation scenarios. The
+model prediction does not need to exactly match the reference answer, but it must be a reasonable substitute under the user
+request. [Unknown product] means that the SID cannot be found through catalog lookup and should be treated as an invalid
+recommendation. Validity has already been checked by the rule system; focus only on non-standard fabricated IDs. Ignore
+self-evaluative statements in the [full model response], such as “the above products are very suitable” or “carefully selected”.
+Judge independently based only on the actual match among product attributes, user needs, and recommendation reasons.
+Be conservative: do not give a high score just because the response is long, adjective-heavy, or looks like recommendation
+copy. The product, user request, and recommendation reason must be consistent. If the user asks for “a full outfit / complete
+outfit / styling plan” but the model only recommends a single category among tops, bottoms, shoes, or bags, clearly lower
+query_correctness; because it does not form a complete outfit, also lower aesthetic_score. Score all dimensions
+independently. Fluent text cannot improve product correctness; closeness to the reference answer cannot improve text quality;
+good aesthetics cannot hide failure to satisfy the query. If the original task explicitly asks for Xiaohongshu, social-media,
+or seeding-style copywriting, natural platform-style expressions and a small number of relevant topic tags are allowed. If
+the original task does not ask for such a style, the response should not proactively add platform-style wording or topic tags.
+Regardless of whether the original task asks for Xiaohongshu-style writing, the response must not contain platform-publishing
+residue or template noise, such as “@Xiaohongshu Creative Assistant”, “[topic]” placeholders, HTML/XML fragments, special
+end markers, or scraped-template remnants.
+[Original task]{prompt}
+[Full model response]{response}
+[Model-recommended product list]{sid_response}
+[Reference product list]{gt_sid_response}
+[Evaluation dimensions]Rubric design intent: these dimensions separately constrain the product itself, the user need, the
+recommendation text, and the recommendation reason, preventing the model from relying only on fluent copywriting, only
+outputting SIDs, or only staying close to the reference while ignoring the real user need. Product aesthetics:aesthetic_score
+measures only whether the recommended product or combination is coherent in style, scenario, and outfit matching. Reference-
+answer direction: reference_correctness measures whether the predicted product lies in the reasonable substitute space
+of the reference product. User-query direction: query_correctness measures whether the predicted product directly
+satisfies the key needs in the user query. Text-expression direction:text_quality only evaluates whether the response is
+clear, concise, complete, and non-degenerate. Fluent expression cannot improve product correctness. If the original task does
+not ask for platform-style writing, proactively adding platform tags should lower text_quality; publishing or scraped-
+template residue should always lower text_quality. Reason-matching direction: reason_match measures whether the
+recommendation reason is truthfully grounded in the recommended product attributes and explains why they satisfy the user
+need. If the response mainly consists of platform tags, photo check-in copy, or template tails without grounding in real product
+attributes, lower reason_match. If the original task explicitly asks for Xiaohongshu or seeding-style writing, natural stylistic
+expression itself should not be penalized. Identifier reliability: fabricated_id_count and has_duplicate_listings
+capture structural problems such as fabricated product codes and repeatedly listing the same product.
+The seven output fields are aesthetic_score, reference_correctness, query_correctness, text_quality,
+reason_match, fabricated_id_count, and has_duplicate_listings. The first five fields are integer scores from
+0 to 4,fabricated_id_countis a non-negative integer, andhas_duplicate_listingsis a boolean.
+Strictly output the following JSON and nothing else: {{"aesthetic_score": integer from 0 to
+4, "reference_correctness": integer from 0 to 4, "query_correctness": integer from
+0 to 4, "text_quality": integer from 0 to 4, "reason_match": integer from 0 to 4,
+"fabricated_id_count": integer >= 0, "has_duplicate_listings": true/false}}
+63
