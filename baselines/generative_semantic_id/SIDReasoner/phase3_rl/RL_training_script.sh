@@ -39,6 +39,10 @@ n_gpus_per_node=8
 nnodes=1
 experiment_name="Video_Games_stage3_rl_Qwen3-1.7B"
 stage2_checkpoint="./output_dir/Video_Games_stage2_reasoning_activation_Qwen3-1.7B/final_checkpoint"
+# Keep Phase-3 checkpoints alongside Phase-1/2 under ./output_dir. verl otherwise
+# defaults to ./checkpoints/${project_name}/${experiment_name}; overriding
+# trainer.default_local_dir below unifies all three stages under output_dir/.
+checkpoint_dir="./output_dir/${experiment_name}"
 log_file="./logs/${experiment_name}.log"
 # ================================
 
@@ -80,6 +84,7 @@ python3 -m verl.trainer.main_ppo \
     custom_reward_function.name="rule_base_reward" \
     trainer.project_name='SIDReasoner_Phase3' \
     trainer.experiment_name="${experiment_name}" \
+    trainer.default_local_dir="${checkpoint_dir}" \
     trainer.n_gpus_per_node=$n_gpus_per_node \
     trainer.nnodes=$nnodes \
     trainer.save_freq=100 \

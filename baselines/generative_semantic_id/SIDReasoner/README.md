@@ -210,8 +210,8 @@ If RL produced raw FSDP `actor/` shards, merge them first:
 
 ```bash
 python3 ./phase3_rl/merge_fsdp_checkpoint.py \
-  --checkpoint ./checkpoints/RecRL_Reasoning/<run>/global_step_<N>/actor \
-  --output-dir ./checkpoints/RecRL_Reasoning/<run>/global_step_<N>/actor_merged
+  --checkpoint ./output_dir/<run>/global_step_<N>/actor \
+  --output-dir ./output_dir/<run>/global_step_<N>/actor_merged
 ```
 
 ---

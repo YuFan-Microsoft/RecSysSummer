@@ -39,7 +39,7 @@ def set_seed(seed):
     # torch.backends.cudnn.benchmark = False
     
 def main(
-    base_model: str = "/home/yingzhi/rec/verl/checkpoints/RecRL_with_Reasoning/Qwen3-1.7B_Mix2-50K_Games/global_step_440/actor_merged",
+    base_model: str = "./output_dir/Video_Games_stage2_reasoning_activation_Qwen3-1.7B/final_checkpoint",
     info_file: str = "./data/Amazon_Games/info/Video_Games_5_2016-10-2018-11.txt",
     category: str = "Video_Games",
     test_data_path: str = "./data/Amazon_Games/test/Video_Games_5_2016-10-2018-11.csv",

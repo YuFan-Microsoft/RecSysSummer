@@ -4,7 +4,7 @@
 #   CKPT_ROOT     -> experiment root containing global_step_xx folders
 #   EVAL_INTERVAL -> merge checkpoints every N steps
 # Example root:
-#   ./checkpoints/RecRL/Qwen3-1.7B_Mix2-50K_BeamReason_Games
+#   ./output_dir/Video_Games_stage3_rl_Qwen3-1.7B
 #
 # Uses verl v0.6.0: `verl` is a top-level package dir at the repo root, so
 # `from verl.model_merger ...` (with PYTHONPATH=$REPO_ROOT) resolves to it.
@@ -16,7 +16,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 export PYTHONPATH="$REPO_ROOT${PYTHONPATH:+:$PYTHONPATH}"
 
-CKPT_ROOT="./checkpoints/RecRL/Qwen3-1.7B_Mix2-50K_BeamReason_Games"
+CKPT_ROOT="./output_dir/Video_Games_stage3_rl_Qwen3-1.7B"
 EVAL_INTERVAL=100
 
 if [ -z "$CKPT_ROOT" ]; then

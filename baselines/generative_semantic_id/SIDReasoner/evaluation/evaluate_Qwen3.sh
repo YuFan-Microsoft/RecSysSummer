@@ -7,15 +7,12 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 export PYTHONPATH="$REPO_ROOT${PYTHONPATH:+:$PYTHONPATH}"
 
-# Reuse fragmented "reserved but unallocated" CUDA memory to avoid fragmentation OOM.
-export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-
 CATEGORY="Office_Products"
 EXP_NAME="./output_dir/Office_Products_stage1_sft_Qwen3-1.7B/final_checkpoint"
 TEST_FILE="./data/Amazon/test/Office_Products_5_2016-10-2018-11.csv"
 INFO_FILE="./data/Amazon/info/Office_Products_5_2016-10-2018-11.txt"
-CUDA_LIST="0 1"
-CUDA_LIST_CSV="0,1"
+CUDA_LIST="0 1 2 3 4 5 6 7"
+CUDA_LIST_CSV="0,1,2,3,4,5,6,7"
 
 dir1=$(basename "$(dirname "$EXP_NAME")")
 dir2=$(basename "$EXP_NAME")
@@ -44,7 +41,15 @@ for i in ${CUDA_LIST}
 do
     if [[ -f "${temp_dir}/${i}.csv" ]]; then
         echo "Starting evaluation on GPU ${i} for category ${CATEGORY}"
-        CUDA_VISIBLE_DEVICES=${i} python -u "$SCRIPT_DIR/evaluate_Qwen3.py" \
+        # Per-GPU compile caches: parallel GPU procs must NOT share one torch
+        # inductor / triton (flash-attn) cache dir, or concurrent compiles race
+        # (FileNotFoundError / AssertionError: os.path.exists(subdir)) and crash.
+        mkdir -p "${temp_dir}/.cache/gpu${i}"
+        CUDA_VISIBLE_DEVICES=${i} \
+        TRITON_CACHE_DIR="${temp_dir}/.cache/gpu${i}/triton" \
+        TORCHINDUCTOR_CACHE_DIR="${temp_dir}/.cache/gpu${i}/inductor" \
+        VLLM_CACHE_ROOT="${temp_dir}/.cache/gpu${i}/vllm" \
+        python -u "$SCRIPT_DIR/evaluate_Qwen3.py" \
             --base_model "${EXP_NAME}" \
             --info_file "${INFO_FILE}" \
             --category "${CATEGORY}" \

@@ -41,16 +41,69 @@ then recommend*. The resulting checkpoint initializes Phase‑3 (RL / GRPO).
 6. **Use the model's built‑in Qwen3 chat template.** Do not override `tokenizer.chat_template`.
 7. Run from the repo root (`SIDReasoner/`). The launcher already `cd`s there and sets `PYTHONPATH`.
 
-## 3. Where the training data comes from
+## 3. Where the training data comes from (HF config & column map)
 
-Phase‑2 trains on the **`<cat>_reasoning`** HF config (train split), reading its
-**`reasoning_path`** column (the step‑by‑step trace). It also loads `<cat>_catalog` for the
-SID↔title maps. Evaluation probes (loss only) use `<cat>_seqrec` (validation) for next‑item
-SID prediction plus `<cat>_catalog` for title2sid / sid2title.
+**What this is.** The authoritative provenance of Phase‑2, mirroring Phase‑1's §1.1 — for
+the single training set and the three eval probes built by
+`sft_reasoning_activation.py::build_datasets`, *which HF config ("category")* and *which
+column(s)* each actually reads. Nothing lives on disk: `derive_hf_locators` turns
+`--category` into fake file paths that `hf_data.py` resolves to
+`load_dataset("yufan/recsys-genrec-dataset", <config>, split=...)`.
 
-> Note: `<cat>_reasoning` also holds an `integrated_narrative` column, but that column is a
-> **Phase‑1** input (sequence‑level SID‑text interleaving). Phase‑2 uses `reasoning_path`, not
-> `integrated_narrative`.
+**Only 3 configs are touched** (`<cat>` = the single domain being trained; no
+`general_reasoning` here, unlike Phase‑1):
+
+- **`<cat>_reasoning`** — rec samples + their step‑by‑step reasoning trace (train)
+- **`<cat>_seqrec`** — user next‑item sequences (validation split only, for a loss probe)
+- **`<cat>_catalog`** — item universe: titles + SID tokens (for the translation loss probes)
+
+#### A · Training set → config & columns
+
+Exactly **one** training dataset (no mixture, unlike Phase‑1's 8):
+
+| Dataset class | What it learns | HF config | Column(s) actually used |
+| --- | --- | --- | --- |
+| `ReasoningActivationDataset` | reason over SID history in `<think>…</think>`, then emit the target SID | `<cat>_reasoning` (train) | `history_item_sid`, `item_sid`, `reasoning_path` |
+
+Per‑sample construction (`get_history` / `pre`): prompt = the `history_item_sid` sequence;
+assistant target = `<think>\n{reasoning_path}\n</think>\n\n{item_sid}`. Rows with an empty /
+unclosed `reasoning_path` are dropped. Loss is completion‑only (`mask_eos=False`).
+
+> **Caveat — catalog is loaded but not consumed by the training sample.**
+> `build_datasets` also passes `item_meta_path` (`<cat>_catalog`) + `sid_index_path` into
+> `ReasoningActivationDataset`, which builds `sid2title` / `sid2description` maps. But the
+> current `pre()` uses only `history_item_sid`, `item_sid`, `reasoning_path` — the catalog
+> maps do **not** enter the Phase‑2 training example. (Catalog is genuinely used only by the
+> eval probes below.)
+
+> **Trap — `integrated_narrative` vs `reasoning_path`.** The training locator is literally
+> named `{cat}.integrated_narrative.csv`, and its filename routes `load_df` to the
+> `<cat>_reasoning` config — **but Phase‑2 reads the `reasoning_path` column, not
+> `integrated_narrative`.** The `integrated_narrative` column of the same config is a
+> **Phase‑1** input (sequence‑level SID‑text interleaving, see Phase‑1 §1.1 row 7).
+
+#### B · Eval probes → config & columns (loss only)
+
+These three compute eval loss only (no checkpoint selection — Phase‑2 is 1 epoch):
+
+| Probe | Dataset class | HF config | Column(s) used |
+| --- | --- | --- | --- |
+| `val_sid` (next‑item SID) | `SidHistory2SidSFTDataset` | `<cat>_seqrec` **(validation)** | `history_item_sid`, `item_sid` |
+| `val_t2s` (title → SID) | `TitleSidTranslationDataset` | `<cat>_catalog` (train) | `item_id`, `title`, `sid_tokens` |
+| `val_s2t` (SID → title) | `TitleSidTranslationDataset` | `<cat>_catalog` (train) | `item_id`, `title`, `sid_tokens` |
+
+#### C · Locator → loader (how the fake paths resolve)
+
+| Locator (from `derive_hf_locators`) | `hf_data` loader | Resolves to |
+| --- | --- | --- |
+| `reasoning_train_file` — `{cat}.integrated_narrative.csv` | `load_df` | `<cat>_reasoning` (train) |
+| `eval_file` — `{cat}_5_2016-10-2018-11.csv` under `valid/` | `load_df` | `<cat>_seqrec` (validation) |
+| `item_meta_path` — `{cat}.item.json` | `load_item_feat` | `<cat>_catalog` (train) |
+| `sid_index_path` — `{cat}.index.json` | `load_indices` | `<cat>_catalog` (train) |
+
+**Resolution rules** (`hf_data.py`): `load_df` special‑cases any filename containing
+`integrated_narrative` → the `<cat>_reasoning` config; the `valid` parent dir selects the
+validation split; the leading `<cat>.` keys the catalog files.
 
 ## 4. The 3 domains
 

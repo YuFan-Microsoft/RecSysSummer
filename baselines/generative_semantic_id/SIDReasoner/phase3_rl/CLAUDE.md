@@ -59,16 +59,64 @@ nohup bash phase3_rl/RL_training_script.sh \
 (The Games reward reads `./data/Amazon_Games/info/Video_Games_5_2016-10-2018-11.txt`,
 resolved relative to the repo root — the RL script `cd`s there.)
 
-## Data source (Hugging Face, NOT local)
+## Data source (Hugging Face, NOT local) — HF config & column map
 
-Like Phase‑1/2, **all Phase‑3 data comes from your Hugging Face dataset
-`yufan/recsys-genrec-dataset`, never from local disk.** The verl parquet files the RL
-script reads (`./data/Amazon/rec_reasoning_verl/<domain>/{train,test}.parquet`) are a
-one‑time **materialization from HF**: [`create_reasoning_rl_data.py`](create_reasoning_rl_data.py)
-loads the source splits with `hf_data.load_df(...)` and writes them out in verl format.
+Like Phase‑1/2, **all Phase‑3 data comes from `yufan/recsys-genrec-dataset`, never from
+local disk.** But Phase‑3 has **two data stages**, so the provenance has two halves:
+
+1. **Offline materialization** — [`create_reasoning_rl_data.py`](create_reasoning_rl_data.py)
+   pulls from HF (`hf_data.load_df(...)`) and writes verl parquet
+   (`./data/Amazon/rec_reasoning_verl/<domain>/{train,test}.parquet`).
+2. **RL training** — `RL_training_script.sh` feeds those parquet to verl GRPO; the
+   **reward function** then scores rollouts online, itself reading one more HF config.
+
 The `./data/...` strings are just locators / output targets, **not** tracked local data —
-run that script (which pulls from HF) once per domain before launching RL; do not create
-or hand‑edit local data files.
+run the materialization once per domain before launching RL; do not hand‑edit local files.
+
+### A · Materialization → which HF config / columns feed the parquet
+
+`Reasoning_RL_Dataset` builds each `(prompt, ground‑truth)` pair from:
+
+| verl split | HF config | Column(s) actually used |
+| --- | --- | --- |
+| `train.parquet` | `<cat>_reasoning` (train) | `history_item_sid`, `item_sid` |
+| `test.parquet` | `<cat>_seqrec` (test) | `history_item_sid`, `item_sid` |
+
+- The **train locator** is `{cat}.integrated_narrative.csv` → `load_df` routes it to the
+  `<cat>_reasoning` config; the **test locator** sits under `test/` → `<cat>_seqrec` (test).
+- **RL reads only `history_item_sid` + `item_sid`.** Unlike Phase‑2 it does **not** read
+  `reasoning_path` / `integrated_narrative` — GRPO makes the model generate its *own*
+  reasoning, so no teacher trace is kept; only the target SID becomes the ground truth.
+- **Catalog is loaded but not consumed** (same trap as Phase‑2): `Reasoning_RL_Dataset`
+  also loads `<cat>_catalog` (`item.json` + `index.json`) into a `sid2title` map, but
+  `pre()` never uses it — the prompt is the SID history, the ground truth is the raw
+  `item_sid`.
+
+### B · verl parquet schema (what RL actually trains on)
+
+`convert_to_verl_format` writes one row per sample:
+
+| Column | Content |
+| --- | --- |
+| `prompt` | chat `messages` = system instruction + "user interacted with {SID history}…" |
+| `reward_model.ground_truth` | the target `item_sid` (raw 3‑token SID string) |
+| `data_source` · `ability` · `extra_info` | routing / bookkeeping (split, index, echoed Q/A) |
+
+### C · Reward function → which HF config / columns it reads
+
+The custom reward (`verl/utils/reward_score/direct_recommendation_StepRule_<Domain>.py`)
+builds a **SID prefix tree** for its format check:
+
+| Loads | HF config | Column(s) used |
+| --- | --- | --- |
+| `construct_prefix_allowed_hashmap` → `hf_data.load_info_lines(...)` | `<cat>_catalog` (train) | `sid` (from the rebuilt `sid⇥title⇥item_id` line map) |
+
+- The info‑file locator (e.g. `Video_Games_5_2016-10-2018-11.txt`) carries the `_5_` marker,
+  so `infer_category` keys the right `<cat>_catalog`.
+- Reward = **hit reward** (0.25, then ×2, then ×2 as SID tokens *a → b → c* match
+  `ground_truth`) **+ 0.1 × format reward** (is the emitted 3‑token SID a valid path in the
+  catalog prefix tree). Only the catalog `sid` column matters; `title` / `item_id` are read
+  by `load_info_lines` but unused by the reward.
 
 ## Environment
 

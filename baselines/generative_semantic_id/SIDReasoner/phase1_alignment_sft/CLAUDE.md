@@ -27,6 +27,88 @@ The resulting checkpoint later initializes Phase‑2 (reasoning activation) and 
   checkpointing are all visible).
 - Launcher: `phase1_alignment_sft/sft_Qwen3_enrich.sh`.
 
+### 1.1 · The 8 training datasets ↔ Hugging Face config & column map
+
+**What this is.** The authoritative provenance of the Phase‑1 mixture — for each of the
+8 datasets built by `sft_Qwen3.py::build_datasets`, *which HF config ("category")* and
+*which column(s)* it actually reads. Nothing lives on disk: `derive_hf_locators` turns
+`--category` into fake file paths, and `hf_data.py` parses those locators and calls
+`load_dataset("yufan/recsys-genrec-dataset", <config>, split=...)`.
+
+**Only 4 configs are ever touched per run.** `<cat>` is one of `Video_Games` /
+`Office_Products` / `Industrial_and_Scientific` (each an independent SID codebook):
+
+- **`<cat>_seqrec`** — user next‑item sequences (train / validation / test splits)
+- **`<cat>_catalog`** — the item universe: titles, descriptions, SID tokens, narratives
+- **`<cat>_reasoning`** — one reasoning narrative per user sequence
+- **`general_reasoning`** — domain‑independent general SFT (shared, used in Phase‑1 only)
+
+#### A · Dataset → config (build order)
+
+| # | Dataset class | What it learns | HF config(s) |
+| :-: | --- | --- | --- |
+| 1 | `SidHistory2SidSFTDataset` | SID history → next SID | `<cat>_seqrec` |
+| 2 | `TitleSidTranslationDataset` | Title ⇄ SID translation | `<cat>_catalog` |
+| 3 | `SidHistory2TitleSFTDataset` | SID history → next Title | `<cat>_seqrec` + `<cat>_catalog` |
+| 4 | `TitleHistory2TitleSFTDataset` | Title history → next Title | `<cat>_seqrec` |
+| 5 | `TitleHistory2SidSFTDataset` | Title history → next SID | `<cat>_seqrec` + `<cat>_catalog` |
+| 6 | `SidTextInterleaveItemDataset` | item‑level SID⇄text narrative (plain‑LM) | `<cat>_catalog` |
+| 7 | `SidTextInterleaveSequenceDataset` | sequence‑level SID⇄text narrative (plain‑LM) | `<cat>_reasoning` |
+| 8 | `GeneralReasoningSFTDataset` | general reasoning | `general_reasoning` |
+
+#### B · Which columns each dataset reads
+
+1. **`SidHistory2SidSFTDataset`**
+   - `<cat>_seqrec` → `history_item_sid`, `item_sid`
+
+2. **`TitleSidTranslationDataset`**
+   - `<cat>_catalog` → `item_id`, `title`, `sid_tokens`  *(builds the title ⇄ SID map)*
+
+3. **`SidHistory2TitleSFTDataset`**
+   - `<cat>_seqrec` → `history_item_sid`, `item_sid`
+   - `<cat>_catalog` → `item_id`, `title`, `sid_tokens`
+   - *(also loads `description`, but the current sample builder does not use it)*
+
+4. **`TitleHistory2TitleSFTDataset`**
+   - `<cat>_seqrec` → `history_item_title`, `item_title`
+
+5. **`TitleHistory2SidSFTDataset`**
+   - `<cat>_seqrec` → `history_item_title`, `item_id`
+   - `<cat>_catalog` → `item_id`, `sid_tokens`
+   - *(also loads `item.json`, but only `sid_tokens` from `index.json` is used)*
+
+6. **`SidTextInterleaveItemDataset`**
+   - `<cat>_catalog` → `sid_interleaved_narrative`  *(keyed by `item_id`)*
+
+7. **`SidTextInterleaveSequenceDataset`**
+   - `<cat>_reasoning` → `integrated_narrative`
+
+8. **`GeneralReasoningSFTDataset`**
+   - `general_reasoning` → `messages`
+
+#### C · Locator → loader (how the fake paths resolve)
+
+| Locator (from `derive_hf_locators`) | `hf_data` loader | Resolves to |
+| --- | --- | --- |
+| `train_file` — `{cat}_5_2016-10-2018-11.csv` under `train/` | `load_df` | `<cat>_seqrec` (train) |
+| `eval_file` — same stem under `valid/` | `load_df` | `<cat>_seqrec` (validation) |
+| `item_meta_path` — `{cat}.item.json` | `load_item_feat` | `<cat>_catalog` (train) |
+| `sid_index_path` — `{cat}.index.json` | `load_indices` | `<cat>_catalog` (train) |
+| `llm_generated_data_path` — `{cat}.item_enhanced_v2.json` | `load_enhanced` | `<cat>_catalog` (train) |
+| `llm_generated_sequence_path` — `{cat}.integrated_narrative.csv` | `load_df` | `<cat>_reasoning` (train) |
+| `general_reasoning_path` — `general/sampled_data.arrow` | `load_general` | `general_reasoning` (train) |
+
+**Resolution rules** (`hf_data.py`):
+
+- `infer_category` keys off the `_5_` marker (seqrec files) and the leading `<cat>.`
+  (catalog files).
+- `_seqrec_split` maps the `train` / `valid` parent dir (and `test`) to the split.
+- `load_df` special‑cases any filename containing `integrated_narrative` → the
+  `<cat>_reasoning` config.
+
+**Validation sets.** The 3 eval sets (`val_sid`, `val_t2s`, `val_s2t`) reuse the classes
+from rows 1–2 on `<cat>_seqrec` **(validation split)** + `<cat>_catalog`.
+
 ## 2. Golden rules (do not violate)
 
 1. **Data is NEVER on local disk.** It is always pulled from Hugging Face

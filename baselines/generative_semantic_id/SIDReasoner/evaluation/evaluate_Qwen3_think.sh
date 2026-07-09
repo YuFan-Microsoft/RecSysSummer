@@ -7,19 +7,20 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 export PYTHONPATH="$REPO_ROOT${PYTHONPATH:+:$PYTHONPATH}"
 
-# Reuse fragmented "reserved but unallocated" CUDA memory to avoid fragmentation OOM.
-export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-
 CATEGORY="Office_Products"
 TEST_FILE="./data/Amazon/test/Office_Products_5_2016-10-2018-11.csv"
 INFO_FILE="./data/Amazon/info/Office_Products_5_2016-10-2018-11.txt"
 ITEM_FILE="./data/Amazon/index/Office_Products.item.json"
 INDEX_FILE="./data/Amazon/index/Office_Products.index.json"
-CUDA_LIST="0 1"
-CUDA_LIST_CSV="0,1"
+CUDA_LIST="0 1 2 3 4 5 6 7"
+CUDA_LIST_CSV="0,1,2,3,4,5,6,7"
 
 STAGE2_MODEL="./output_dir/Office_Products_stage2_reasoning_activation_Qwen3-1.7B/final_checkpoint"
-STAGE3_EXPERIMENT_ROOT="./checkpoints/RecRL_Reasoning/Office_Products_stage3_rl_Qwen3-1.7B"
+# Stage-3 RL checkpoint to evaluate. Point this at a merged actor_merged/ dir, e.g.
+#   ./output_dir/Office_Products_stage3_rl_Qwen3-1.7B/global_step_300/actor_merged
+# (merge raw actor/ shards first via phase3_rl/merge_fsdp_ckpt_ALL.sh).
+# Leave empty to skip Stage-3 and evaluate only Stage-2.
+STAGE3_MODEL=""
 
 exp_list=()
 
@@ -29,19 +30,12 @@ else
     echo "Warning: Stage 2 checkpoint not found at ${STAGE2_MODEL}"
 fi
 
-stage3_model=""
-if [[ -d "${STAGE3_EXPERIMENT_ROOT}" ]]; then
-    stage3_model=$(find "${STAGE3_EXPERIMENT_ROOT}" -maxdepth 2 -type d -name 'actor_merged' -path '*/global_step_*/*' | sort -V | tail -n 1)
-    if [[ -z "${stage3_model}" ]]; then
-        echo "Warning: No merged Stage 3 actor checkpoint found under ${STAGE3_EXPERIMENT_ROOT}"
-        echo "Hint: merge the latest actor checkpoint before running this evaluation script."
+if [[ -n "${STAGE3_MODEL}" ]]; then
+    if [[ -d "${STAGE3_MODEL}" ]]; then
+        exp_list+=("${STAGE3_MODEL}")
+    else
+        echo "Warning: Stage 3 checkpoint not found at ${STAGE3_MODEL}"
     fi
-else
-    echo "Warning: Stage 3 experiment root not found at ${STAGE3_EXPERIMENT_ROOT}"
-fi
-
-if [[ -n "${stage3_model}" ]]; then
-    exp_list+=("${stage3_model}")
 fi
 
 if [[ ${#exp_list[@]} -eq 0 ]]; then
@@ -79,7 +73,15 @@ do
     do
         if [[ -f "${temp_dir}/${i}.csv" ]]; then
             echo "Starting evaluation on GPU ${i} for category ${CATEGORY}"
-            CUDA_VISIBLE_DEVICES=${i} python -u "$SCRIPT_DIR/evaluate_Qwen3_think.py" \
+            # Per-GPU compile caches: parallel GPU procs must NOT share one torch
+            # inductor / triton (flash-attn) cache dir, or concurrent compiles race
+            # (FileNotFoundError / AssertionError: os.path.exists(subdir)) and crash.
+            mkdir -p "${temp_dir}/.cache/gpu${i}"
+            CUDA_VISIBLE_DEVICES=${i} \
+            TRITON_CACHE_DIR="${temp_dir}/.cache/gpu${i}/triton" \
+            TORCHINDUCTOR_CACHE_DIR="${temp_dir}/.cache/gpu${i}/inductor" \
+            VLLM_CACHE_ROOT="${temp_dir}/.cache/gpu${i}/vllm" \
+            python -u "$SCRIPT_DIR/evaluate_Qwen3_think.py" \
                 --base_model "${exp_name}" \
                 --info_file "${INFO_FILE}" \
                 --category "${CATEGORY}" \

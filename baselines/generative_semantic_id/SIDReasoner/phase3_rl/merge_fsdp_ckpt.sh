@@ -14,7 +14,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 export PYTHONPATH="$REPO_ROOT${PYTHONPATH:+:$PYTHONPATH}"
 
-CKPT_DIR="./checkpoints/RecRL/Qwen3-1.7B_Mix2-50K_BeamReason_Games/global_step_50/actor"
+CKPT_DIR="./output_dir/Video_Games_stage3_rl_Qwen3-1.7B/global_step_100/actor"
 
 if [ -z "$CKPT_DIR" ]; then
     echo "❌ ERROR: Please provide a verl checkpoint directory."
