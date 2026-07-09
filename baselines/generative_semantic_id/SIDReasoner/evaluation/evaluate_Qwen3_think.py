@@ -66,7 +66,7 @@ def main(
         category = "items"
     print(category)
 
-    model = AutoModelForCausalLM.from_pretrained(base_model, dtype=torch.bfloat16, device_map="auto")
+    model = AutoModelForCausalLM.from_pretrained(base_model, torch_dtype=torch.bfloat16, device_map="auto")
     model.config.use_cache = True
     # model.config.attention_mode = "flash" 
     model.eval()

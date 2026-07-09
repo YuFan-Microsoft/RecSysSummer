@@ -954,7 +954,11 @@ class SidTextInterleaveItemDataset(Dataset):
         random.seed(seed)
 
         if sample > 0:
-            self.json_data = self.json_data.sample(sample, random_state=seed)
+            # ``load_enhanced`` returns a dict {id: {...}}, which has no
+            # ``.sample()`` (that is a pandas method). Sample by key instead.
+            keys = list(self.json_data.keys())
+            keys = random.sample(keys, min(sample, len(keys)))
+            self.json_data = {k: self.json_data[k] for k in keys}
 
         # ``sid_interleaved_narrative`` is the item-level SID/text narrative (a HF
         # column of the same name). Its legacy field name was ``llm_stage2``, where

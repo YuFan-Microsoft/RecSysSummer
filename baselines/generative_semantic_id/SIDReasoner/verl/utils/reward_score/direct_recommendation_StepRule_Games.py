@@ -104,8 +104,17 @@ def construct_prefix_allowed_hashmap(item_info_path):
     sid_pattern = re.compile(r"<[^>]+>")
     prefix_map = defaultdict(set)
 
-    with open(item_info_path, "r") as f:
-        lines = f.readlines()
+    # ``item_info_path`` is a locator, not a local file: load the SID map from
+    # Hugging Face (hf_data parses the category out of the filename). Fall back
+    # to putting the repo root on sys.path in case verl imports this reward
+    # module without the repo root already on PYTHONPATH.
+    try:
+        import hf_data
+    except ModuleNotFoundError:
+        import os as _os, sys as _sys
+        _sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", "..", "..")))
+        import hf_data
+    lines = hf_data.load_info_lines(item_info_path)
 
     for line in lines:
         semantic_id = line.split("\t")[0].strip()
