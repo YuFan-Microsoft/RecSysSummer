@@ -54,6 +54,7 @@ RUN pip install --no-cache-dir \
 #   deepspeed : Stage-1/2 SFT (phase1_alignment_sft / phase2_reasoning_activation)
 #   fire      : evaluation scripts + SFT launchers
 RUN pip install --no-cache-dir deepspeed fire
+RUN pip uninstall -y nvtx || true
 
 # --- Sanity check: torch must remain 2.8.0 and vllm must be 0.10.2 ---
 RUN python -c "from importlib.metadata import version as v; \
