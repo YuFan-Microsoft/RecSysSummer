@@ -1,7 +1,14 @@
 #!/bin/bash
 
-# Tested successfully on the hiyouga/verl:ngc-th2.6.0-cu126-vllm0.8.4-flashinfer0.2.2-cxx11abi0 image.
-# It outperforms the Qwen2 7B base model by two percentage points on the test set of GSM8K.
+# ============================================================================
+# Phase-3 RL training — uses verl v0.6.0 (+ SID Reasoner patches).
+#
+# Referencing model:
+#   `verl` is a top-level package dir at the repo root, so the standard
+#   `cd $REPO_ROOT` + `python -m verl.trainer.main_ppo` picks it up.
+# ============================================================================
+
+# Tested target image family: verlai/verl:base-verl0.6-cu128-...-torch2.8.0 + vllm 0.10.2
 # export NCCL_P2P_DISABLE=1       # 禁用 NVLink
 # export NCCL_IB_DISABLE=1        # 禁用 InfiniBand
 # export NCCL_NET_GDR_LEVEL=0     # 禁用 GDR（GPU直连）
@@ -15,16 +22,23 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 export PYTHONPATH="$REPO_ROOT${PYTHONPATH:+:$PYTHONPATH}"
 
-# Reuse fragmented "reserved but unallocated" CUDA memory to avoid fragmentation OOM.
-export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+# NOTE: do NOT set PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True here.
+# vLLM's sleep/wake (free_cache_engine=True) uses the CuMemAllocator (CUDA VMM),
+# which is incompatible with expandable_segments and crashes rollout. Leave the
+# default caching allocator for the vLLM-backed training.
+
+# W&B auth. Use the env var (NOT `wandb.login(key=...)`): verl runs rollout in
+# Ray workers / subprocesses, so a main-process wandb.login() won't propagate.
+# WANDB_API_KEY is auto-picked-up by wandb and forwarded to workers by Ray.
+export WANDB_API_KEY=3f14084582ffbf0986b305f813aea34ca59c77c5
 
 # ================================
 # Note: please change the number of GPUs and nodes according to your setup.
 # ================================
 n_gpus_per_node=4
 nnodes=1
-experiment_name="Office_Products_stage3_rl_Qwen3-1.7B"
-stage2_checkpoint="./output_dir/Office_Products_stage2_reasoning_activation_Qwen3-1.7B/final_checkpoint"
+experiment_name="Video_Games_stage3_rl_Qwen3-1.7B"
+stage2_checkpoint="./output_dir/Video_Games_stage2_reasoning_activation_Qwen3-1.7B/final_checkpoint"
 log_file="./logs/${experiment_name}.log"
 # ================================
 
@@ -33,8 +47,8 @@ mkdir -p ./logs
 {
 python3 -m verl.trainer.main_ppo \
     algorithm.adv_estimator=grpo \
-    data.train_files=./data/Amazon/rec_reasoning_verl/Office_Products/train.parquet \
-    data.val_files=./data/Amazon/rec_reasoning_verl/Office_Products/test.parquet \
+    data.train_files=./data/Amazon/rec_reasoning_verl/Video_Games/train.parquet \
+    data.val_files=./data/Amazon/rec_reasoning_verl/Video_Games/test.parquet \
     data.train_batch_size=256 \
     data.max_prompt_length=1024 \
     data.max_response_length=1024 \
@@ -62,7 +76,7 @@ python3 -m verl.trainer.main_ppo \
     algorithm.use_kl_in_reward=False \
     trainer.critic_warmup=0 \
     trainer.logger=['console','wandb'] \
-    custom_reward_function.path="./verl/utils/reward_score/direct_recommendation_StepRule_Office.py" \
+    custom_reward_function.path="./verl/utils/reward_score/direct_recommendation_StepRule_Games.py" \
     custom_reward_function.name="rule_base_reward" \
     trainer.project_name='SIDReasoner_Phase3' \
     trainer.experiment_name="${experiment_name}" \
@@ -72,3 +86,11 @@ python3 -m verl.trainer.main_ppo \
     trainer.test_freq=50 \
     trainer.total_epochs=10 "$@"
 } > "${log_file}" 2>&1
+
+# ----------------------------------------------------------------------------
+# To enable SID beam search (verl B.1 port), add these overrides above:
+#     +actor_rollout_ref.rollout.sid_beam_size=<N> \
+#     +actor_rollout_ref.rollout.sid_length=<L> \
+# (both required, sid_beam_size > 1). They are declared fields on RolloutConfig
+# in verl, so the `+` CLI override lands correctly.
+# ----------------------------------------------------------------------------

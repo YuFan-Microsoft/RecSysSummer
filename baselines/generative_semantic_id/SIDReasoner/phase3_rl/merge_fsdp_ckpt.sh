@@ -1,10 +1,11 @@
 #!/bin/bash
 
 # === Usage ===
-# bash merge_verl_ckpt.sh /path/to/verl/checkpoint/actor
+# bash merge_fsdp_ckpt.sh   (edit CKPT_DIR below, or adapt to take $1)
 #
-# Example:
-# bash merge_verl_ckpt.sh ./RecRL_with_Reasoning/Qwen3-1.7B_Mix2-50K_Games/global_step_10/actor
+# Uses verl v0.6.0: `verl` is a top-level package dir at the repo root, so
+# merge_fsdp_checkpoint.py's `from verl.model_merger ...` (with
+# PYTHONPATH=$REPO_ROOT) resolves to it.
 
 set -e
 
@@ -17,7 +18,7 @@ CKPT_DIR="./checkpoints/RecRL/Qwen3-1.7B_Mix2-50K_BeamReason_Games/global_step_5
 
 if [ -z "$CKPT_DIR" ]; then
     echo "❌ ERROR: Please provide a verl checkpoint directory."
-    echo "Usage: bash merge_verl_ckpt.sh /path/to/actor"
+    echo "Usage: bash merge_fsdp_ckpt.sh /path/to/actor"
     exit 1
 fi
 
@@ -35,7 +36,7 @@ echo ""
 MERGE_PY="$SCRIPT_DIR/merge_fsdp_checkpoint.py"
 
 if [ ! -f "$MERGE_PY" ]; then
-    echo "❌ ERROR: Cannot find merge_fsdp_ckpt.py in Verl installation."
+    echo "❌ ERROR: Cannot find merge_fsdp_checkpoint.py."
     echo "Expected at: $MERGE_PY"
     exit 1
 fi

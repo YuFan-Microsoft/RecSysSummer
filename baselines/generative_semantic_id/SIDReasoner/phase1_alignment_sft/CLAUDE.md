@@ -82,14 +82,19 @@ the category, so you do **not** edit the script.
 
 ```bash
 cd baselines/generative_semantic_id/SIDReasoner
+mkdir -p logs   # nohup's redirect target must exist before launch
 
-# All 3 domains, back to back (default):
-bash phase1_alignment_sft/sft_Qwen3_enrich.sh
+# All 3 domains, back to back (default). ALWAYS launch with `nohup … &` so the long
+# multi-domain run survives SSH disconnects / terminal hangups:
+nohup bash phase1_alignment_sft/sft_Qwen3_enrich.sh > logs/phase1_launch.out 2>&1 &
 
-# Or train a subset — pass category names as args:
-bash phase1_alignment_sft/sft_Qwen3_enrich.sh Video_Games
-bash phase1_alignment_sft/sft_Qwen3_enrich.sh Office_Products Industrial_and_Scientific
+# Or train a subset — pass category names as args (still under nohup):
+nohup bash phase1_alignment_sft/sft_Qwen3_enrich.sh Video_Games > logs/phase1_launch.out 2>&1 &
+nohup bash phase1_alignment_sft/sft_Qwen3_enrich.sh Office_Products Industrial_and_Scientific > logs/phase1_launch.out 2>&1 &
 ```
+
+Follow progress with `tail -f logs/<CATEGORY>_stage1_sft_Qwen3-1.7B.txt` — the script
+writes each domain's full training log there.
 
 The loop is **fail-fast** (`set -euo pipefail`): if one domain errors, the remaining
 domains do not run. Per-domain outputs:

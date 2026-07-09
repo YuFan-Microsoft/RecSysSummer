@@ -85,11 +85,14 @@ OUTPUT_DIR="./output_dir/${CATEGORY}_stage2_reasoning_activation_Qwen3-1.7B"
 RUN_NAME="${CATEGORY}_stage2_reasoning_activation_Qwen3-1.7B"
 ```
 
-Then launch from the repo root:
+Then launch from the repo root. **Always launch with `nohup … &`** so the run survives
+SSH disconnects / terminal hangups (the script writes its own training log to
+`./logs/<RUN_NAME>.txt`):
 
 ```bash
 cd baselines/generative_semantic_id/SIDReasoner
-bash phase2_reasoning_activation/sft_reasoning_activation.sh
+mkdir -p logs   # nohup's redirect target must exist before launch
+nohup bash phase2_reasoning_activation/sft_reasoning_activation.sh > logs/phase2_launch.out 2>&1 &
 ```
 
 - Training log → `./logs/<RUN_NAME>.txt`

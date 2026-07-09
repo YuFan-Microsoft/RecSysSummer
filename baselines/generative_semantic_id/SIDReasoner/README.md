@@ -62,7 +62,7 @@ SIDReasoner/
 ├── phase2_reasoning_activation/   # Stage 2 — reasoning activation SFT
 │   ├── sft_reasoning_activation.py
 │   └── sft_reasoning_activation.sh
-├── phase3_rl/                     # Stage 3 — GRPO RL (built on VERL)
+├── phase3_rl/                     # Stage 3 — GRPO RL (verl 0.6.0)
 │   ├── RL_training_script.sh
 │   ├── create_reasoning_rl_data.py
 │   └── merge_fsdp_checkpoint.py   # FSDP shards → HF `actor_merged`
@@ -176,7 +176,7 @@ bash phase1_alignment_sft/sft_Qwen3_enrich.sh
 bash phase2_reasoning_activation/sft_reasoning_activation.sh
 
 # Stage 3 — GRPO RL via VERL                  (resumes from Stage 2)
-bash phase3_rl/RL_training_script.sh
+bash phase3_rl/RL_training_script.sh          # verl 0.6.0 (torch2.8 + vllm0.10.2)
 ```
 
 | Stage | Objective | Backbone / resume | Default hardware |

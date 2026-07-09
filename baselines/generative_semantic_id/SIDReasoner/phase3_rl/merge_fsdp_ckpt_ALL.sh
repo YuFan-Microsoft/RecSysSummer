@@ -1,10 +1,13 @@
 #!/bin/bash
 
 # Configure paths here:
-#   CKPT_ROOT    -> experiment root containing global_step_xx folders
+#   CKPT_ROOT     -> experiment root containing global_step_xx folders
 #   EVAL_INTERVAL -> merge checkpoints every N steps
 # Example root:
 #   ./checkpoints/RecRL/Qwen3-1.7B_Mix2-50K_BeamReason_Games
+#
+# Uses verl v0.6.0: `verl` is a top-level package dir at the repo root, so
+# `from verl.model_merger ...` (with PYTHONPATH=$REPO_ROOT) resolves to it.
 
 set -euo pipefail
 

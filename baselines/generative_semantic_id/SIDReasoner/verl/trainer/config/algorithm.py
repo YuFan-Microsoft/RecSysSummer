@@ -13,9 +13,11 @@
 # limitations under the License.
 
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Any, Optional
 
 from verl.base_config import BaseConfig
+
+__all__ = ["AlgoConfig", "FilterGroupsConfig", "KLControlConfig"]
 
 
 @dataclass
@@ -31,27 +33,10 @@ class KLControlConfig(BaseConfig):
         target_kl (float): Target KL divergence for adaptive controller.
     """
 
-    _frozen_fields = ["type", "kl_coef", "horizon", "target_kl"]
     type: str = "fixed"
     kl_coef: float = 0.001
     horizon: int = 10000
     target_kl: float = 0.1
-
-
-@dataclass
-class PFPPOConfig(BaseConfig):
-    """Configuration for preference feedback PPO.
-
-    The inheritance from BaseConfig provides omegaconf.DictConfig-like interface for a dataclass config.
-
-    Args:
-        reweight_method (str): Method for reweighting samples. Can be "pow", "max_min", or "max_random".
-        weight_pow (float): Power used for weight scaling in "pow" method.
-    """
-
-    _frozen_fields = ["reweight_method", "weight_pow"]
-    reweight_method: str = "pow"
-    weight_pow: float = 2.0
 
 
 @dataclass
@@ -65,8 +50,6 @@ class FilterGroupsConfig(BaseConfig):
         metric (Optional[str]): Metric to use for filtering: "acc", "score", "seq_reward", "seq_final_reward", etc.
         max_num_gen_batches (int): Non-positive values mean no upper limit.
     """
-
-    _frozen_fields = ["enable", "metric", "max_num_gen_batches"]
 
     enable: bool = False
     metric: Optional[str] = None
@@ -88,19 +71,17 @@ class AlgoConfig(BaseConfig):
         kl_penalty (str): How to estimate KL divergence: "kl", "abs", "mse", "low_var_kl", or "full".
         kl_ctrl (KLControlConfig): KL control configuration.
         use_pf_ppo (bool): Whether to enable preference feedback PPO.
-        pf_ppo (Optional[PFPPOConfig]): Preference feedback PPO settings.
+        pf_ppo (dict[str, Any]): Preference feedback PPO settings.
         filter_groups (Optional[FilterGroupsConfig]): Filter groups configuration, used in DAPO and Entropy
+        rollout_is_threshold (Optional[float]): Upper threshold for IS weights. null = disabled,
+            float value = enabled (compute weights and metrics). This is the main on/off switch.
+        rollout_is_threshold_lower (Optional[float]): Lower threshold for IS weights. If None, defaults to 1/upper.
+        rollout_is_level (str): Aggregation level: "token", "sequence", or "geometric".
+        rollout_is_mode (str): Bounding mode: "truncate" (cap upper only) or "mask" (zero outside bounds).
+        rollout_is_veto_threshold (float): Per-token veto threshold for catastrophic outliers.
+        rollout_is (bool): Whether to apply IS weights to policy loss. True = apply weights,
+            False = compute metrics only (useful for monitoring before enabling correction). Default: False.
     """
-
-    _frozen_fields = [
-        "gamma",
-        "lam",
-        "adv_estimator",
-        "norm_adv_by_std_in_grpo",
-        "use_kl_in_reward",
-        "kl_penalty",
-        "use_pf_ppo",
-    ]
 
     gamma: float = 1.0
     lam: float = 1.0
@@ -110,5 +91,15 @@ class AlgoConfig(BaseConfig):
     kl_penalty: str = "kl"
     kl_ctrl: KLControlConfig = field(default_factory=KLControlConfig)
     use_pf_ppo: bool = False
-    pf_ppo: Optional[PFPPOConfig] = None
+    pf_ppo: dict[str, Any] = field(default_factory=dict)
     filter_groups: Optional[FilterGroupsConfig] = None
+    # Rollout Importance Sampling (replaces legacy tis_imp_ratio_cap)
+    # Controls computation of IS weights and mismatch metrics
+    rollout_is_threshold: Optional[float] = None  # null = disabled, float = enabled
+    rollout_is_threshold_lower: Optional[float] = None
+    rollout_is_level: str = "token"
+    rollout_is_mode: str = "truncate"
+    rollout_is_veto_threshold: Optional[float] = 1e-4
+    # Controls whether to apply IS weights to policy loss (only if rollout_is_threshold is set)
+    # True = apply weights to loss, False = compute metrics only (no weight application)
+    rollout_is: bool = False
