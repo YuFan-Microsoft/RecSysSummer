@@ -89,16 +89,31 @@ years:
 embedding_model_path: "/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-4B"
 reranker_model_path: "/yufan/open_source_models/Ranker_Model/Qwen3-Reranker-8B"
 
-# NOTE: GPUs 0 and 1 are reserved / unavailable. Only 2-7 may be used.
+# --- GPU selection (dynamic) --------------------------------------------
+# GPUs are chosen at runtime by probing which ones are currently IDLE (little
+# used memory) via nvidia-smi, instead of hard-coding ids. See gpu_utils.py.
 #
-# Inference (search.py + the web app) keeps the two models on two GPUs so both
-# can be held at once:
-embedding_device: "cuda:2"
-reranker_device: "cuda:3"
+# reserved_gpus: never use these, even if idle (e.g. cards other people rely on).
+#                Empty [] means EVERY idle GPU may be used.
+# A GPU counts as "free"/idle only when BOTH hold:
+#   - used memory  < gpu_free_mem_max_pct  percent of its total memory, and
+#   - utilisation  < gpu_free_util_max_pct percent.
+reserved_gpus: []
+gpu_free_mem_max_pct: 1
+gpu_free_util_max_pct: 10
 
-# Index building fans the embedding model out across ALL of these GPUs (one
-# worker process per GPU) to build the index much faster. Uses 2-7 by default.
-index_gpus: [2, 3, 4, 5, 6, 7]
+# Inference (search.py + the web app) pins the two models on TWO idle GPUs, one
+# each: embedding on the first free GPU, reranker on the second.
+#   "auto"   -> auto-pick idle GPUs (recommended)
+#   "cuda:N" -> force a specific GPU
+embedding_device: "auto"
+reranker_device: "auto"
+
+# Index building fans the embedding model out across ALL currently-idle GPUs
+# (one worker process per GPU) to build the index much faster.
+#   "auto"         -> use every idle GPU
+#   [2, 3, 4, ...] -> force a specific list
+index_gpus: "auto"
 
 # torch dtype for inference. "bfloat16" is recommended on A100.
 dtype: "bfloat16"

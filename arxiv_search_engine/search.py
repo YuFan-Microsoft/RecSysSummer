@@ -23,6 +23,7 @@ import numpy as np
 
 from common import ArxivPaper, load_config
 from embedder import Qwen3Embedder
+from gpu_utils import describe_gpus, free_gpus
 from reranker import Qwen3Reranker
 
 # Accepted values for the ``sort_by`` argument.
@@ -69,10 +70,12 @@ class SearchEngine:
         self.index_dir = Path(self.cfg["index_dir"]).expanduser()
         self._shards: dict[str, _DomainShard] = {}  # domain -> shard (lazy cache)
 
+        emb_device, rr_device = self._resolve_devices()
+
         print(f"[search] loading embedding model: {self.cfg['embedding_model_path']}")
         self.embedder = Qwen3Embedder(
             model_path=self.cfg["embedding_model_path"],
-            device=self.cfg["embedding_device"],
+            device=emb_device,
             dtype=self.cfg["dtype"],
             max_length=self.cfg["embedding_max_length"],
             use_flash_attention=self.cfg["use_flash_attention"],
@@ -81,12 +84,71 @@ class SearchEngine:
         print(f"[search] loading reranker model: {self.cfg['reranker_model_path']}")
         self.reranker = Qwen3Reranker(
             model_path=self.cfg["reranker_model_path"],
-            device=self.cfg["reranker_device"],
+            device=rr_device,
             dtype=self.cfg["dtype"],
             max_length=self.cfg["reranker_max_length"],
             use_flash_attention=self.cfg["use_flash_attention"],
         )
         print("[search] ready.")
+
+    # ------------------------------------------------------------------ devices
+    def _resolve_devices(self) -> tuple[str, str]:
+        """Pick the two GPUs for the embedder and reranker.
+
+        ``embedding_device`` / ``reranker_device`` may each be an explicit
+        ``"cuda:N"`` or ``"auto"``. When either is ``"auto"`` we probe idle GPUs
+        (via nvidia-smi) and assign one each -- the embedder to the first free
+        GPU, the reranker to the second -- never reusing a GPU that the other
+        model has pinned explicitly. Falls back to the same GPU only if a single
+        idle GPU is available.
+        """
+        emb_cfg = str(self.cfg.get("embedding_device", "auto")).strip()
+        rr_cfg = str(self.cfg.get("reranker_device", "auto")).strip()
+        if emb_cfg.lower() != "auto" and rr_cfg.lower() != "auto":
+            return emb_cfg, rr_cfg
+
+        reserved = [int(x) for x in self.cfg.get("reserved_gpus", [])]
+        mem_max_pct = float(self.cfg.get("gpu_free_mem_max_pct", 1))
+        util_max_pct = float(self.cfg.get("gpu_free_util_max_pct", 10))
+        print(f"[search] gpu status: {describe_gpus(reserved)}")
+        try:
+            idle = free_gpus(
+                reserved=reserved,
+                mem_used_max_pct=mem_max_pct,
+                util_max_pct=util_max_pct,
+            )
+        except RuntimeError as exc:
+            raise SystemExit(
+                f"[search] auto GPU selection failed: {exc}. Set embedding_device / "
+                f"reranker_device to explicit cuda:N ids in the config."
+            )
+
+        # Don't hand an auto model a GPU the other model already pins explicitly.
+        pinned = {
+            int(c.split(":")[1])
+            for c in (emb_cfg, rr_cfg)
+            if c.lower() != "auto" and c.startswith("cuda:")
+        }
+        pool = [g for g in idle if g not in pinned]
+        if not pool:
+            raise SystemExit(
+                "[search] no idle GPUs available (all in use). Wait for one to free "
+                "up, loosen gpu_free_mem_max_pct / gpu_free_util_max_pct, or set the "
+                "devices explicitly."
+            )
+
+        emb_device = emb_cfg
+        rr_device = rr_cfg
+        if emb_cfg.lower() == "auto":
+            emb_device = f"cuda:{pool.pop(0)}"
+        if rr_cfg.lower() == "auto":
+            rr_device = f"cuda:{pool.pop(0)}" if pool else emb_device
+        print(
+            f"[search] auto GPU selection (idle: {idle}) -> "
+            f"embedding={emb_device}, reranker={rr_device}"
+        )
+        return emb_device, rr_device
+
 
     # ------------------------------------------------------------------ shards
     def _load_shard(self, domain: str) -> _DomainShard:

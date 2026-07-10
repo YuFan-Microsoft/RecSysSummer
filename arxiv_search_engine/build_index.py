@@ -11,17 +11,19 @@ Sharding by domain matters because the domain filter is single-select: a search
 only ever loads the one shard it needs, so even the large domains
 (Computer_Science has ~650k papers) stay fast to query.
 
-Multi-GPU: index building fans the embedding model out across every GPU listed
-in ``index_gpus`` (2-7 by default). Each GPU runs one worker process on its own
-contiguous slice of the papers; the main process then stitches the slices back
-together in order. This makes the heavy embedding step several times faster.
+Multi-GPU: with ``index_gpus: auto`` (the default) the build probes which GPUs
+are currently IDLE (via nvidia-smi) and fans the embedding model out across ALL
+of them; you can still force an explicit list in the config or with ``--gpus``.
+Each GPU runs one worker process on its own contiguous slice of the papers; the
+main process then stitches the slices back together in order. This makes the
+heavy embedding step several times faster.
 
 Examples::
 
     python build_index.py                       # build every configured domain
     python build_index.py --domain Physics      # build just one domain
     python build_index.py --domain Medicine --limit 500   # quick smoke test
-    python build_index.py --gpus 2 3            # override the GPUs to use
+    python build_index.py --gpus 2 3            # override the idle-GPU autodetect
 """
 
 from __future__ import annotations
@@ -36,6 +38,7 @@ import numpy as np
 
 from common import iter_domain_papers, load_config
 from download_data import domain_has_data, download
+from gpu_utils import describe_gpus, free_gpus
 
 
 # --------------------------------------------------------------------------
@@ -185,6 +188,42 @@ def build_domain(
     return len(papers)
 
 
+def _resolve_index_gpus(args, cfg: dict) -> list[int]:
+    """Decide which GPUs to fan out over: explicit ``--gpus`` wins; otherwise
+    ``index_gpus: auto`` autodetects every idle GPU, or an explicit config list
+    is used verbatim."""
+    if args.gpus:
+        return [int(g) for g in args.gpus]
+
+    reserved = [int(x) for x in cfg.get("reserved_gpus", [])]
+    mem_max_pct = float(cfg.get("gpu_free_mem_max_pct", 1))
+    util_max_pct = float(cfg.get("gpu_free_util_max_pct", 10))
+    setting = cfg.get("index_gpus", "auto")
+
+    if isinstance(setting, str) and setting.strip().lower() == "auto":
+        print(f"[index] gpu status: {describe_gpus(reserved)}")
+        try:
+            gpus = free_gpus(
+                reserved=reserved,
+                mem_used_max_pct=mem_max_pct,
+                util_max_pct=util_max_pct,
+            )
+        except RuntimeError as exc:
+            raise SystemExit(
+                f"[index] auto GPU detection failed: {exc}. Set index_gpus to an "
+                f"explicit list in the config or pass --gpus."
+            )
+        if not gpus:
+            raise SystemExit(
+                "[index] no idle GPUs found (all in use). Wait for one to free up, "
+                "loosen gpu_free_mem_max_pct / gpu_free_util_max_pct, or pass --gpus."
+            )
+        print(f"[index] auto-selected idle GPUs: {gpus}")
+        return gpus
+
+    return [int(g) for g in setting]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build the arXiv search index.")
     parser.add_argument("--config", default=None, help="Path to config.yaml")
@@ -198,7 +237,7 @@ def main() -> None:
         nargs="*",
         type=int,
         default=None,
-        help="GPU ids to fan out over (default: index_gpus from config).",
+        help="GPU ids to fan out over (default: autodetect idle GPUs / index_gpus).",
     )
     parser.add_argument(
         "--limit",
@@ -216,9 +255,7 @@ def main() -> None:
     cfg = load_config(args.config)
     index_dir = Path(cfg["index_dir"]).expanduser()
     years = [int(y) for y in cfg["years"]]
-    gpus = args.gpus if args.gpus else [int(g) for g in cfg.get("index_gpus", [2])]
-    if not gpus:
-        raise SystemExit("No GPUs configured. Set index_gpus in config or pass --gpus.")
+    gpus = _resolve_index_gpus(args, cfg)
 
     all_domains = list(cfg["domains"])
     if args.domain:

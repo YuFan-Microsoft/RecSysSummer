@@ -82,11 +82,16 @@ Edit [`config.yaml`](config.yaml):
 - `index_dir` — where the built shards are written.
 - `embedding_model_path` / `reranker_model_path` — local paths to the
   `Qwen3-Embedding-4B` and `Qwen3-Reranker-8B` models.
-- **GPUs** (0 and 1 are reserved — only 2–7 may be used):
-  - `index_gpus: [2, 3, 4, 5, 6, 7]` — index building fans out over all of
-    these (one worker process per GPU).
-  - `embedding_device: cuda:2` / `reranker_device: cuda:3` — inference (search +
-    web app) uses just these two so both models can be held at once.
+- **GPUs** are chosen **dynamically** at runtime by probing which cards are
+  currently idle (via `nvidia-smi`); no fixed ids are baked in:
+  - `index_gpus: auto` — index building fans out over **every idle GPU** (one
+    worker process per GPU). Set an explicit list (e.g. `[2, 3, 4]`) to force it.
+  - `embedding_device: auto` / `reranker_device: auto` — inference (search + web
+    app) pins the two models on **two idle GPUs**, one each (embedder on the
+    first free GPU, reranker on the second). Set explicit `cuda:N` to force it.
+  - `reserved_gpus: []` — never use these even if idle (empty = allow all). A GPU
+    counts as free only when BOTH `gpu_free_mem_max_pct: 1` (used memory < 1% of
+    total) and `gpu_free_util_max_pct: 10` (utilisation < 10%) hold.
 
 ## Download the data (Hugging Face)
 
@@ -102,22 +107,22 @@ python download_data.py --domain Medicine --years 2024 2025
 ## Build the index
 
 Building embeds the title + abstract of every paper, so it is the heavy step
-(run it on the GPU box). It fans out across every GPU in `index_gpus` (2–7 by
-default) — one worker process per GPU — so a domain is split into equal slices
-and embedded in parallel. It builds **all** domains by default; build one at a
-time or all at once:
+(run it on the GPU box). By default (`index_gpus: auto`) it detects every
+**idle** GPU and fans out — one worker process per GPU — so a domain is split
+into equal slices and embedded in parallel. It builds **all** domains by
+default; build one at a time or all at once:
 
 ```bash
 # quick smoke test — index the first 500 papers of one domain
 python build_index.py --domain Medicine --limit 500
 
-# build a single domain (fans out over index_gpus)
+# build a single domain (fans out over all idle GPUs)
 python build_index.py --domain Physics
 
 # build every domain in config.yaml
 python build_index.py
 
-# override which GPUs to use for this run
+# override the idle-GPU autodetect for this run
 python build_index.py --domain Physics --gpus 2 3 4 5 6 7
 ```
 
