@@ -21,6 +21,7 @@
 #     sentencepiece, einops, scipy, fastapi, pydantic, opencv-python-headless.
 #   - deepspeed     (Stage-1/2 SFT: phase1/phase2 use an explicit DeepSpeed loop)
 #   - fire          (evaluation + SFT launcher CLIs)
+#   - pdsh + openssh (Stage-1/2 DeepSpeed MULTI-NODE launch over ssh; base has neither)
 #
 # NOTE: verl itself is NOT pip-installed. We run the vendored ./verl from
 #       source (see phase3_rl/, which launches `python -m verl.trainer.main_ppo`).
@@ -37,11 +38,24 @@ FROM verlai/verl:base-verl0.6-cu128-cudnn9.8-torch2.8.0-fa2.7.4
 ENV PIP_INDEX_URL=https://pypi.org/simple
 ENV PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu128
 
-# (optional) git-lfs for pulling HuggingFace checkpoints + a couple of shell tools
+# git-lfs for pulling HuggingFace checkpoints + shell tools, PLUS the multi-node
+# launch stack for Stage-1/2 DeepSpeed. phase1/phase2 use `deepspeed --hostfile`,
+# which spawns workers on remote nodes over pdsh/ssh — NEITHER ships in the verl
+# base image, so single-node runs work but multi-node launch would fail without these.
+#   - pdsh                  : DeepSpeed's default multi-node launcher backend
+#   - openssh-server/client : passwordless SSH between nodes (run sshd on each node)
+# NOTE: we deliberately do NOT apt-install rdma-core / libibverbs / ibverbs-providers.
+#   The NGC-derived verl base already ships the full MLNX OFED user-space + NCCL-IB
+#   stack; layering distro rdma-core on top can shadow/break MLNX OFED and disable IB.
 RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends git-lfs tmux vim && \
+    apt-get install -y --no-install-recommends \
+        git-lfs tmux vim \
+        pdsh openssh-server openssh-client && \
     git lfs install && \
     rm -rf /var/lib/apt/lists/*
+
+# DeepSpeed's pdsh launcher must use ssh (not the default rsh) to reach other nodes.
+ENV PDSH_RCMD_TYPE=ssh
 
 # --- Inference engine: vLLM 0.10.2 (exact match for the base torch 2.8.0) ---
 # torch==2.8.0 is already present and stays untouched; torchvision/torchaudio
