@@ -26,9 +26,9 @@ then recommend*. The resulting checkpoint initializes Phase‑3 (RL / GRPO).
    already contains the SID tokens + trained embeddings; do not start from the raw base LLM.
 2. **Data is NEVER on local disk.** It is pulled from Hugging Face
    `yufan/recsys-genrec-dataset` via `hf_data.py`. `--category` is the **single data knob** —
-   `derive_hf_locators()` turns it into the reasoning / eval / catalog locators. The
-   `./data/Amazon/...` strings are just locators, not files. Do **not** create, download, or
-   preprocess local data.
+  eval datasets use explicit category/split APIs, while `derive_hf_locators()` still
+  supplies the reasoning/catalog adapters used by the Phase-2 training dataset. The
+  `./data/Amazon/...` strings are not files. Do **not** create or preprocess local data.
 3. **Train ONE domain at a time.** 3 independent domains, each with its own SID codebook and
    its own Phase‑1 checkpoint. Never mix domains, and never point `--base_model` at a
    different domain's checkpoint than `--category`.
@@ -46,9 +46,8 @@ then recommend*. The resulting checkpoint initializes Phase‑3 (RL / GRPO).
 **What this is.** The authoritative provenance of Phase‑2, mirroring Phase‑1's §1.1 — for
 the single training set and the three eval probes built by
 `sft_reasoning_activation.py::build_datasets`, *which HF config ("category")* and *which
-column(s)* each actually reads. Nothing lives on disk: `derive_hf_locators` turns
-`--category` into fake file paths that `hf_data.py` resolves to
-`load_dataset("yufan/recsys-genrec-dataset", <config>, split=...)`.
+column(s)* each actually reads. Nothing lives on disk: training still uses the legacy
+HF adapters, while eval passes category/split directly to `hf_data.py`.
 
 **Only 3 configs are touched** (`<cat>` = the single domain being trained; no
 `general_reasoning` here, unlike Phase‑1):
@@ -92,18 +91,18 @@ These three compute eval loss only (no checkpoint selection — Phase‑2 is 1 e
 | `val_t2s` (title → SID) | `TitleSidTranslationDataset` | `<cat>_catalog` (train) | `item_id`, `title`, `sid_tokens` |
 | `val_s2t` (SID → title) | `TitleSidTranslationDataset` | `<cat>_catalog` (train) | `item_id`, `title`, `sid_tokens` |
 
-#### C · Locator → loader (how the fake paths resolve)
+#### C · Loader → HF config
 
-| Locator (from `derive_hf_locators`) | `hf_data` loader | Resolves to |
+| Input | `hf_data` loader | Resolves to |
 | --- | --- | --- |
 | `reasoning_train_file` — `{cat}.integrated_narrative.csv` | `load_df` | `<cat>_reasoning` (train) |
-| `eval_file` — `{cat}_5_2016-10-2018-11.csv` under `valid/` | `load_df` | `<cat>_seqrec` (validation) |
+| `category` + `split="validation"` | `load_seqrec` | `<cat>_seqrec` (validation) |
 | `item_meta_path` — `{cat}.item.json` | `load_item_feat` | `<cat>_catalog` (train) |
 | `sid_index_path` — `{cat}.index.json` | `load_indices` | `<cat>_catalog` (train) |
 
 **Resolution rules** (`hf_data.py`): `load_df` special‑cases any filename containing
-`integrated_narrative` → the `<cat>_reasoning` config; the `valid` parent dir selects the
-validation split; the leading `<cat>.` keys the catalog files.
+`integrated_narrative` → the `<cat>_reasoning` config; the leading `<cat>.` keys the
+catalog files. Evaluation no longer relies on these filename rules.
 
 ## 4. The 3 domains
 

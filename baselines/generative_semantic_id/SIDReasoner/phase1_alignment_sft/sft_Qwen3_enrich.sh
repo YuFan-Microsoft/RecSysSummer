@@ -21,8 +21,8 @@ NUM_GPUS=8
 MASTER_PORT=12340
 
 # The three independent domains, each with its own SID codebook. --category is the
-# single data knob: train/eval/catalog/reasoning are all pulled from the HF dataset
-# for that category via derive_hf_locators(). Train ONE domain at a time.
+# single data knob: train/eval/catalog/reasoning are loaded directly from the matching
+# Hugging Face configs. Train ONE domain at a time.
 #
 # Default: run all three, in sequence. To train a subset, pass category names, e.g.
 #   bash phase1_alignment_sft/sft_Qwen3_enrich.sh Video_Games
@@ -52,6 +52,7 @@ for CATEGORY in "${CATEGORIES[@]}"; do
         --base_model "${BASE_MODEL}" \
         --micro_batch_size 8 \
         --num_epochs 5 \
+        --early_stopping_patience 2 \
         --learning_rate 2e-5 \
         --cutoff_len 1024 \
         --output_dir "${OUTPUT_DIR}" \

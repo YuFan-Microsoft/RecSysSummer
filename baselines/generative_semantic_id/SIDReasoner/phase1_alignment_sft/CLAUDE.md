@@ -31,9 +31,9 @@ The resulting checkpoint later initializes Phase‑2 (reasoning activation) and 
 
 **What this is.** The authoritative provenance of the Phase‑1 mixture — for each of the
 8 datasets built by `sft_Qwen3.py::build_datasets`, *which HF config ("category")* and
-*which column(s)* it actually reads. Nothing lives on disk: `derive_hf_locators` turns
-`--category` into fake file paths, and `hf_data.py` parses those locators and calls
-`load_dataset("yufan/recsys-genrec-dataset", <config>, split=...)`.
+*which column(s)* it actually reads. Nothing lives on disk: `--category` and an explicit
+split are passed to `hf_data.py`, which calls
+`load_dataset("yufan/recsys-genrec-dataset", <config>, split=...)` directly.
 
 **Only 4 configs are ever touched per run.** `<cat>` is one of `Video_Games` /
 `Office_Products` / `Industrial_and_Scientific` (each an independent SID codebook):
@@ -86,25 +86,17 @@ The resulting checkpoint later initializes Phase‑2 (reasoning activation) and 
 8. **`GeneralReasoningSFTDataset`**
    - `general_reasoning` → `messages`
 
-#### C · Locator → loader (how the fake paths resolve)
+#### C · Explicit loader → HF config
 
-| Locator (from `derive_hf_locators`) | `hf_data` loader | Resolves to |
-| --- | --- | --- |
-| `train_file` — `{cat}_5_2016-10-2018-11.csv` under `train/` | `load_df` | `<cat>_seqrec` (train) |
-| `eval_file` — same stem under `valid/` | `load_df` | `<cat>_seqrec` (validation) |
-| `item_meta_path` — `{cat}.item.json` | `load_item_feat` | `<cat>_catalog` (train) |
-| `sid_index_path` — `{cat}.index.json` | `load_indices` | `<cat>_catalog` (train) |
-| `llm_generated_data_path` — `{cat}.item_enhanced_v2.json` | `load_enhanced` | `<cat>_catalog` (train) |
-| `llm_generated_sequence_path` — `{cat}.integrated_narrative.csv` | `load_df` | `<cat>_reasoning` (train) |
-| `general_reasoning_path` — `general/sampled_data.arrow` | `load_general` | `general_reasoning` (train) |
-
-**Resolution rules** (`hf_data.py`):
-
-- `infer_category` keys off the `_5_` marker (seqrec files) and the leading `<cat>.`
-  (catalog files).
-- `_seqrec_split` maps the `train` / `valid` parent dir (and `test`) to the split.
-- `load_df` special‑cases any filename containing `integrated_narrative` → the
-  `<cat>_reasoning` config.
+| `hf_data` API | Resolves to |
+| --- | --- |
+| `load_seqrec(cat, "train")` | `<cat>_seqrec` (train) |
+| `load_seqrec(cat, "validation")` | `<cat>_seqrec` (validation) |
+| `load_item_features(cat)` | `<cat>_catalog` (train) |
+| `load_sid_indices(cat)` / `load_sid_tokens(cat)` | `<cat>_catalog` (train) |
+| `load_item_narratives(cat)` | `<cat>_catalog` (train) |
+| `load_sequence_narratives(cat)` | `<cat>_reasoning` (train) |
+| `load_general_reasoning()` | `general_reasoning` (train) |
 
 **Validation sets.** The 3 eval sets (`val_sid`, `val_t2s`, `val_s2t`) reuse the classes
 from rows 1–2 on `<cat>_seqrec` **(validation split)** + `<cat>_catalog`.
@@ -112,10 +104,8 @@ from rows 1–2 on `<cat>_seqrec` **(validation split)** + `<cat>_catalog`.
 ## 2. Golden rules (do not violate)
 
 1. **Data is NEVER on local disk.** It is always pulled from Hugging Face
-   `yufan/recsys-genrec-dataset` through `hf_data.py`. The file paths in the shell
-   script (`./data/Amazon/...`) are just **locators** — `hf_data` parses the category
-   (and split) out of the path and calls `datasets.load_dataset(...)`. Do **not** try to
-   create, download, or preprocess local data files.
+  `yufan/recsys-genrec-dataset` through the explicit category/split APIs in
+  `hf_data.py`. Do **not** create, download, or preprocess local data files.
 2. **Train ONE domain at a time.** There are **3 independent domains**, each with its own
    SID codebook. Never mix domains in a single run.
 3. **SFT loss is computed on the assistant response only** (`--mask_assistant True`);
@@ -130,14 +120,11 @@ from rows 1–2 on `<cat>_seqrec` **(validation split)** + `<cat>_catalog`.
 ## 3. The 3 domains
 
 The launcher trains these three in sequence by default (one training run per domain,
-never mixed — see §5). You normally only pass the `CATEGORY`; the file stem below is the
-internal seqrec filename `derive_hf_locators` builds and is shown only for reference.
+never mixed — see §5). You only pass the `CATEGORY`:
 
-| `CATEGORY`                    | file stem (`STEM`)                          |
-| ----------------------------- | ------------------------------------------- |
-| `Video_Games`                 | `Video_Games_5_2016-10-2018-11`             |
-| `Office_Products`             | `Office_Products_5_2016-10-2018-11`         |
-| `Industrial_and_Scientific`   | `Industrial_and_Scientific_5_2016-10-2018-11` |
+- `Video_Games`
+- `Office_Products`
+- `Industrial_and_Scientific`
 
 ## 4. Environment / prerequisites
 
@@ -152,10 +139,8 @@ internal seqrec filename `derive_hf_locators` builds and is shown only for refer
 
 ## 5. How to train (all 3 domains, or a subset)
 
-`--category` is the **single data knob**: every data locator (`train_file`, `eval_file`,
-`sid_index_path`, `item_meta_path`, `llm_generated_data_path`,
-`llm_generated_sequence_path`) is derived from it inside
-`sft_Qwen3.py::derive_hf_locators`. The launcher has **no** per-file path variables.
+`--category` is the **single data knob**. `sft_Qwen3.py::build_datasets` passes it
+directly to the explicit `hf_data` APIs, and the launcher has no file-path variables.
 
 `sft_Qwen3_enrich.sh` **defaults to training all 3 domains in sequence**
 (`Video_Games → Office_Products → Industrial_and_Scientific`), one domain per run —
@@ -192,7 +177,7 @@ domains do not run. Per-domain outputs:
 | `grad_accum` | 1 | **hardcoded** in code |
 | world size | 8 | → global batch = `8 × 1 × 8 = 64` |
 | `learning_rate` | 2e‑5 | scaled from the base (batch 1024 ↔ LR 3e‑4) |
-| `num_epochs` | 5 | every epoch is saved; early stopping off by default |
+| `num_epochs` | 5 | maximum; stop after 2 consecutive non-improving eval epochs |
 | `cutoff_len` | 1024 | general‑reasoning subset uses 3072 |
 | `zero_stage` | 2 | not 3 |
 | precision | bf16 | + gradient checkpointing |
@@ -207,7 +192,8 @@ Tuning notes:
 **The final checkpoint MUST be chosen by recsys metrics, per domain.**
 
 - Training saves **every epoch** to `./output_dir/<CATEGORY>_stage1_sft_Qwen3-1.7B/epoch_<N>`
-  (early stopping is **off by default**, so all `num_epochs` are produced). It also copies
+  until either `num_epochs` is reached or `sid_pred` eval loss fails to improve for 2
+  consecutive epochs. It also copies
   the lowest‑val‑loss epoch to `.../final_checkpoint` as a convenience pointer — but
   val loss is only a **proxy**, not the selection criterion.
 - **Selection = evaluate each `epoch_<N>` with the recsys pipeline and keep the best.**

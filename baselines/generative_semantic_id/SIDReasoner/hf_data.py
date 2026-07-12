@@ -1,19 +1,11 @@
 """Central Hugging Face data loader for SIDReasoner.
 
-All dataset classes / scripts used to read local files
-(``*_5_2016-10-2018-11.csv``, ``<cat>.item.json``, ``<cat>.index.json``,
-``<cat>.item_enhanced_v2.json``, ``<cat>.integrated_narrative.csv``,
-``general/sampled_data.arrow`` and the ``info/*.txt`` maps).
+The explicit APIs (``load_seqrec``, ``load_item_features``, and friends) map a
+category and split directly to ``yufan/recsys-genrec-dataset``. Override the
+repository with ``$SIDR_HF_REPO``.
 
-Those files no longer need to exist on disk: this module fetches the
-equivalent data straight from the Hugging Face dataset
-``yufan/recsys-genrec-dataset`` (override with ``$SIDR_HF_REPO``) via
-``datasets.load_dataset`` and returns the *exact* in-memory structures the
-existing code expects, so the call sites only change by one line.
-
-Legacy file-path arguments are kept as *locators*: we parse the category
-(and, for the sequence data, the split) out of the path string, so the
-training / evaluation shell scripts do not need to change.
+Legacy path-based adapters remain for pipelines that have not migrated yet;
+new training code should use the explicit APIs.
 
 Config <-> legacy-file mapping
 ------------------------------
@@ -93,7 +85,84 @@ def _stringify_list_columns(df):
 
 
 # --------------------------------------------------------------------------- #
-# public API — drop-in replacements for the old reads                         #
+# explicit Hugging Face APIs                                                   #
+# --------------------------------------------------------------------------- #
+def load_seqrec(category, split="train"):
+    """Load a category's sequential-recommendation split."""
+    if split not in {"train", "validation", "test"}:
+        raise ValueError(f"Unsupported seqrec split: {split}")
+    return _stringify_list_columns(_load_split(f"{category}_seqrec", split))
+
+
+def load_sequence_narratives(category):
+    """Load the category-level reasoning narratives used by sequence tasks."""
+    return _stringify_list_columns(_load_split(f"{category}_reasoning", "train"))
+
+
+def load_item_features(category):
+    """Return catalog item metadata keyed by item ID."""
+    df = _catalog(category)
+    features = {}
+    for row in df.itertuples(index=False):
+        features[str(row.item_id)] = {
+            "title": row.title,
+            "description": row.description,
+            "brand": getattr(row, "brand", None),
+            "categories": "",
+        }
+    return features
+
+
+def load_sid_indices(category):
+    """Return each catalog item's ordered SID-token sequence."""
+    df = _catalog(category)
+    return {
+        str(row.item_id): list(row.sid_tokens)
+        for row in df.itertuples(index=False)
+    }
+
+
+def load_sid_tokens(category):
+    """Return the sorted, unique SID tokens that extend the model vocabulary."""
+    return sorted({
+        token
+        for sid_tokens in load_sid_indices(category).values()
+        for token in sid_tokens
+    })
+
+
+def load_item_narratives(category):
+    """Return item-level SID/text narratives keyed by item ID."""
+    df = _catalog(category)
+    narratives = {}
+    for row in df.itertuples(index=False):
+        narrative = row.sid_interleaved_narrative
+        if narrative is not None and not (
+            isinstance(narrative, float) and np.isnan(narrative)
+        ):
+            narratives[str(row.item_id)] = {
+                "sid_interleaved_narrative": narrative
+            }
+    return narratives
+
+
+def load_general_reasoning():
+    """Return decoded role/content messages for general-reasoning SFT."""
+    df = _load_split("general_reasoning", "train")
+    output = []
+    for messages in df["messages"].tolist():
+        # The column may contain nested JSON strings; decode to the actual list.
+        for _ in range(3):
+            if isinstance(messages, str):
+                messages = json.loads(messages)
+            else:
+                break
+        output.append(messages)
+    return output
+
+
+# --------------------------------------------------------------------------- #
+# legacy path-based adapters                                                   #
 # --------------------------------------------------------------------------- #
 def load_df(path):
     """Replacement for ``pd.read_csv(path)`` on seqrec / reasoning CSVs.
@@ -108,33 +177,18 @@ def load_df(path):
     category = infer_category(path)
     name = os.path.basename(str(path)).lower()
     if "integrated_narrative" in name:
-        df = _load_split(f"{category}_reasoning", "train")
-    else:
-        df = _load_split(f"{category}_seqrec", _seqrec_split(path))
-    return _stringify_list_columns(df)
+        return load_sequence_narratives(category)
+    return load_seqrec(category, _seqrec_split(path))
 
 
 def load_item_feat(item_file):
     """Replacement for ``json.load(open(<cat>.item.json))`` -> {id: {..}} dict."""
-    df = _catalog(infer_category(item_file))
-    feat = {}
-    for r in df.itertuples(index=False):
-        feat[str(r.item_id)] = {
-            "title": r.title,
-            "description": r.description,
-            "brand": getattr(r, "brand", None),
-            "categories": "",
-        }
-    return feat
+    return load_item_features(infer_category(item_file))
 
 
 def load_indices(index_file):
     """Replacement for ``json.load(open(<cat>.index.json))`` -> {id: [sids]} dict."""
-    df = _catalog(infer_category(index_file))
-    idx = {}
-    for r in df.itertuples(index=False):
-        idx[str(r.item_id)] = list(r.sid_tokens)
-    return idx
+    return load_sid_indices(infer_category(index_file))
 
 
 def load_enhanced(json_file):
@@ -144,13 +198,7 @@ def load_enhanced(json_file):
     ``SidTextInterleaveItemDataset`` consumes. (The legacy field name was
     ``llm_stage2``; "stage2" was the data-generation step, not training Phase-2.)
     """
-    df = _catalog(infer_category(json_file))
-    out = {}
-    for r in df.itertuples(index=False):
-        narrative = r.sid_interleaved_narrative
-        if narrative is not None and not (isinstance(narrative, float) and np.isnan(narrative)):
-            out[str(r.item_id)] = {"sid_interleaved_narrative": narrative}
-    return out
+    return load_item_narratives(infer_category(json_file))
 
 
 def load_general(path=None):
@@ -159,19 +207,7 @@ def load_general(path=None):
     Returns a list where each element is the parsed ``messages`` object
     (list of role/content dicts), matching ``eval(sample["messages"])``.
     """
-    df = _load_split("general_reasoning", "train")
-    out = []
-    for messages in df["messages"].tolist():
-        # ``messages`` is stored double-encoded (a JSON string wrapping the
-        # inner messages-JSON string that the original code ``eval``-decoded);
-        # decode until we get the actual list of role/content dicts.
-        for _ in range(3):
-            if isinstance(messages, str):
-                messages = json.loads(messages)
-            else:
-                break
-        out.append(messages)
-    return out
+    return load_general_reasoning()
 
 
 def load_info_lines(info_file):

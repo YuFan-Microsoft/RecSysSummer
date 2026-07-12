@@ -259,9 +259,8 @@ def parse_args():
                         default="./output_dir/Office_Products_stage2_reasoning_activation_Qwen3-1.7B")
     parser.add_argument("--sample", type=int, default=-1)
     parser.add_argument("--seed", type=int, default=42)
-    # --category is the single source of truth for the data: the reasoning /
-    # eval / catalog components are all pulled from the matching config of the HF
-    # dataset (see derive_hf_locators / hf_data.py). No per-file path flags.
+    # --category is the single source of truth for the HF reasoning, eval, and
+    # catalog data. No per-file path flags are exposed.
     parser.add_argument("--category", type=str, default="Office_Products")
 
     # training hyperparams
@@ -308,19 +307,14 @@ CATEGORY_DICT = {
 
 
 def derive_hf_locators(args):
-    """Populate every data locator from ``--category`` (the single data knob).
+    """Populate the remaining legacy training locators from ``--category``.
 
     The strings only *look* like file paths; ``hf_data.py`` parses the category
-    (and split) out of them and loads the matching config from the Hugging Face
-    dataset. Stage-2 trains on the ``<cat>_reasoning`` narratives and evaluates on
-    the ``<cat>_seqrec`` validation split plus the ``<cat>_catalog`` translations.
-    Their exact shape is load-bearing: ``integrated_narrative`` routes to the
-    reasoning config, the ``valid`` parent dir selects the validation split, and
-    the leading ``<cat>.`` keys the catalog files.
+    out of them and loads the matching config from the Hugging Face dataset.
+    Stage-2 evaluation uses explicit category/split APIs instead.
     """
     cat = args.category
     args.reasoning_train_file = f"./data/Amazon/index/{cat}.integrated_narrative.csv"
-    args.eval_file = f"./data/Amazon/valid/{cat}_5_2016-10-2018-11.csv"
     args.sid_index_path = f"./data/Amazon/index/{cat}.index.json"
     args.item_meta_path = f"./data/Amazon/index/{cat}.item.json"
 
@@ -341,14 +335,15 @@ def build_datasets(args, tokenizer, category):
         _preview_dataset(train_data, "ReasoningActivationDataset", tokenizer)
 
     val_sid = SidHistory2SidSFTDataset(
-        train_file=args.eval_file, tokenizer=tokenizer, max_len=args.cutoff_len,
+        hf_category=args.category, split="validation", tokenizer=tokenizer,
+        max_len=args.cutoff_len,
         sample=args.sample, seed=args.seed, category=category, test=False, mask_assistant=True)
     val_t2s = TitleSidTranslationDataset(
-        item_file=args.item_meta_path, index_file=args.sid_index_path, tokenizer=tokenizer,
+        hf_category=args.category, tokenizer=tokenizer,
         max_len=args.cutoff_len, sample=args.sample, seed=args.seed, category=category,
         task_type='title2sid', test=False, mask_assistant=True)
     val_s2t = TitleSidTranslationDataset(
-        item_file=args.item_meta_path, index_file=args.sid_index_path, tokenizer=tokenizer,
+        hf_category=args.category, tokenizer=tokenizer,
         max_len=args.cutoff_len, sample=args.sample, seed=args.seed, category=category,
         task_type='sid2title', test=False, mask_assistant=True)
 

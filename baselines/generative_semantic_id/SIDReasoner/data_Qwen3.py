@@ -85,8 +85,9 @@ class TitleHistory2TitleSFTDataset(Dataset):
 
     def __init__(
         self,
-        train_file,
+        hf_category,
         tokenizer,
+        split="train",
         max_len=2048,
         sample=-1,
         test=False,
@@ -94,7 +95,7 @@ class TitleHistory2TitleSFTDataset(Dataset):
         category="",
         mask_assistant: bool = True,
     ):
-        self.data = hf_data.load_df(train_file)
+        self.data = hf_data.load_seqrec(hf_category, split)
         random.seed(seed)
         if sample > 0:
             self.data = self.data.sample(sample, random_state=seed)
@@ -179,8 +180,9 @@ class TitleHistory2TitleSFTDataset(Dataset):
 class SidHistory2SidSFTDataset(Dataset):
     def __init__(
         self,
-        train_file,
+        hf_category,
         tokenizer,
+        split="train",
         max_len=2048,
         sample=-1,
         test=False,
@@ -190,7 +192,7 @@ class SidHistory2SidSFTDataset(Dataset):
         dedup=False,
         mask_assistant: bool = True,
     ):
-        self.data = hf_data.load_df(train_file)
+        self.data = hf_data.load_seqrec(hf_category, split)
         random.seed(seed)
         
         if sample > 0:
@@ -401,8 +403,7 @@ Can you predict the next possible item that the user may expect?
 class TitleSidTranslationDataset(Dataset):
     def __init__(
         self,
-        item_file,
-        index_file,
+        hf_category,
         tokenizer=None,
         max_len=2048,
         sample=-1,
@@ -416,8 +417,7 @@ class TitleSidTranslationDataset(Dataset):
         Dataset for sid2title and title2sid tasks.
         
         Args:
-            item_file: Path to .item.json file with item features
-            index_file: Path to .index.json file with item indices  
+            hf_category: Hugging Face dataset category/config prefix
             tokenizer: Tokenizer for encoding text
             max_len: Maximum sequence length
             sample: Number of samples to use (-1 for all)
@@ -428,8 +428,8 @@ class TitleSidTranslationDataset(Dataset):
         random.seed(seed)
         
         # Load item features and indices
-        self.item_feat = hf_data.load_item_feat(item_file)
-        self.indices = hf_data.load_indices(index_file)
+        self.item_feat = hf_data.load_item_features(hf_category)
+        self.indices = hf_data.load_sid_indices(hf_category)
         
         self.tokenizer = tokenizer
         self.test = test
@@ -553,10 +553,9 @@ Answer the question about item identification.
 class SidHistory2TitleSFTDataset(Dataset):
     def __init__(
         self,
-        train_file,
-        item_file,
-        index_file,
+        hf_category,
         tokenizer,
+        split="train",
         max_len=2048,
         sample=-1,
         test=False,
@@ -570,9 +569,8 @@ class SidHistory2TitleSFTDataset(Dataset):
         Uses semantic IDs for user history, outputs item titles or descriptions.
         
         Args:
-            train_file: Path to CSV file with sequence data
-            item_file: Path to .item.json file with item features
-            index_file: Path to .index.json file with item indices
+            hf_category: Hugging Face dataset category/config prefix
+            split: Sequential-recommendation split to load
             tokenizer: Tokenizer for encoding text
             max_len: Maximum sequence length
             sample: Number of samples to use (-1 for all)
@@ -584,13 +582,13 @@ class SidHistory2TitleSFTDataset(Dataset):
         random.seed(seed)
         
         # Load sequence data
-        self.data = hf_data.load_df(train_file)
+        self.data = hf_data.load_seqrec(hf_category, split)
         if sample > 0:
             self.data = self.data.sample(sample, random_state=seed)
         
         # Load item features and indices
-        self.item_feat = hf_data.load_item_feat(item_file)
-        self.indices = hf_data.load_indices(index_file)
+        self.item_feat = hf_data.load_item_features(hf_category)
+        self.indices = hf_data.load_sid_indices(hf_category)
         
         self.tokenizer = tokenizer
         self.test = test
@@ -782,10 +780,9 @@ Can you recommend the next item for the user based on their interaction history?
 class TitleHistory2SidSFTDataset(Dataset):
     def __init__(
         self,
-        train_file,
-        item_file,
-        index_file,
+        hf_category,
         tokenizer,
+        split="train",
         max_len=2048,
         sample=-1,
         test=False,
@@ -798,9 +795,8 @@ class TitleHistory2SidSFTDataset(Dataset):
         SFT dataset that uses item titles in user history to predict next item's semantic ID.
         
         Args:
-            train_file: Path to CSV file with sequence data (must have history_item_title and item_id columns)
-            item_file: Path to .item.json file with item features
-            index_file: Path to .index.json file with item indices
+            hf_category: Hugging Face dataset category/config prefix
+            split: Sequential-recommendation split to load
             tokenizer: Tokenizer for encoding text
             max_len: Maximum sequence length
             sample: Number of samples to use (-1 for all)
@@ -812,13 +808,13 @@ class TitleHistory2SidSFTDataset(Dataset):
         random.seed(seed)
         
         # Load sequence data
-        self.data = hf_data.load_df(train_file)
+        self.data = hf_data.load_seqrec(hf_category, split)
         if sample > 0:
             self.data = self.data.sample(sample, random_state=seed)
         
         # Load item features and indices
-        self.item_feat = hf_data.load_item_feat(item_file)
-        self.indices = hf_data.load_indices(index_file)
+        self.item_feat = hf_data.load_item_features(hf_category)
+        self.indices = hf_data.load_sid_indices(hf_category)
         
         self.tokenizer = tokenizer
         self.test = test
@@ -944,13 +940,13 @@ Based on the user's historical interaction with item titles, predict the semanti
 class SidTextInterleaveItemDataset(Dataset):
     def __init__(
         self,
-        json_file,
+        hf_category,
         tokenizer,
         max_len=2048,
         sample=-1,
         seed=0,
     ):
-        self.json_data = hf_data.load_enhanced(json_file)
+        self.json_data = hf_data.load_item_narratives(hf_category)
         random.seed(seed)
 
         if sample > 0:
@@ -1014,13 +1010,13 @@ class SidTextInterleaveItemDataset(Dataset):
 class SidTextInterleaveSequenceDataset(Dataset):
     def __init__(
         self,
-        csv_file,
+        hf_category,
         tokenizer,
         max_len=2048,
         sample=-1,
         seed=0,
     ):
-        self.csv_data = hf_data.load_df(csv_file)
+        self.csv_data = hf_data.load_sequence_narratives(hf_category)
         random.seed(seed)
 
         if sample > 0:
@@ -1459,8 +1455,8 @@ Can you recommend the next item for the user based on their interaction history?
 
 
 class GeneralReasoningSFTDataset(Dataset):
-    def __init__(self, train_file, tokenizer, max_len=2048, sample=-1, test=False, seed=0, category="", dedup=False):
-        self.data = hf_data.load_general(train_file)
+    def __init__(self, tokenizer, max_len=2048, sample=-1, test=False, seed=0, category="", dedup=False):
+        self.data = hf_data.load_general_reasoning()
         random.seed(seed)
         if sample > 0:
             self.data = random.sample(self.data, sample)

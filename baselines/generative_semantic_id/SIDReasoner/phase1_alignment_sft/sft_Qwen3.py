@@ -23,6 +23,7 @@ import argparse
 import numpy as np
 import torch
 import deepspeed
+import hf_data
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
@@ -182,34 +183,6 @@ def save_hf_checkpoint(model, tokenizer, save_dir):
         torch.distributed.barrier()
 
 
-class TokenExtender:
-    def __init__(self, data_path, dataset, index_file=".index.json"):
-        self.data_path = data_path
-        self.dataset = dataset
-        self.index_file = index_file
-        self.indices = None
-        self.new_tokens = None
-        
-    def _load_data(self):
-        import hf_data
-        self.indices = hf_data.load_indices(os.path.join(self.data_path, self.dataset + self.index_file))
-    
-    def get_new_tokens(self):
-        if self.new_tokens is not None:
-            return self.new_tokens
-            
-        if self.indices is None:
-            self._load_data()
-        
-        self.new_tokens = set()
-        for index in self.indices.values():
-            for token in index:
-                self.new_tokens.add(token)
-        self.new_tokens = sorted(list(self.new_tokens))
-        
-        return self.new_tokens
-
-
 def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
@@ -269,10 +242,7 @@ def parse_args():
                         default="./output_dir/Office_Products_stage1_sft_Qwen3-1.7B")
     parser.add_argument("--sample", type=int, default=-1)
     parser.add_argument("--seed", type=int, default=42)
-    # --category is the single source of truth for the data: every Stage-1
-    # component is pulled from the matching config of the HF dataset
-    # (see derive_hf_locators / hf_data.py). There are deliberately no per-file
-    # path flags to keep the CLI honest about where the data comes from.
+    # --category is the single source of truth for all Hugging Face data.
     parser.add_argument("--category", type=str, default="Office_Products")
     parser.add_argument("--general_reasoning_sample", type=int, default=60000)
     parser.add_argument("--general_reasoning_max_len", type=int, default=3072)
@@ -288,9 +258,9 @@ def parse_args():
     parser.add_argument("--lr_scheduler_type", type=SchedulerType, default="linear",
                         choices=["linear", "cosine", "cosine_with_restarts",
                                  "polynomial", "constant", "constant_with_warmup"])
-    parser.add_argument("--early_stopping_patience", type=int, default=-1,
-                        help="Stop if eval loss does not improve for N epochs. <=0 disables it "
-                             "(default: run all epochs and save every one for recsys-metric selection).")
+    parser.add_argument("--early_stopping_patience", type=int, default=2,
+                        help="Stop after N consecutive epochs without a lower sid-prediction "
+                             "eval loss. <=0 disables it (default: 2).")
     parser.add_argument("--logging_steps", type=int, default=1)
 
     parser.add_argument("--mask_assistant", type=str2bool, default=True,
@@ -322,71 +292,54 @@ CATEGORY_DICT = {
 }
 
 
-def derive_hf_locators(args):
-    """Populate every data locator from ``--category`` (the single data knob).
-
-    ``sft_Qwen3.py`` exposes no per-file CLI paths: all Stage-1 components live in
-    one HF dataset, so the category alone determines them. The strings below only
-    *look* like file paths — ``hf_data.py`` parses the category (and split) out of
-    them and loads the matching config from the Hugging Face dataset. Their exact
-    shape is load-bearing: ``infer_category`` keys off ``_5_`` for the seqrec CSVs
-    and the leading ``<cat>.`` for the catalog files, and ``_seqrec_split`` keys
-    off the ``train``/``valid`` parent directory.
-    """
-    cat = args.category
-    args.train_file = f"./data/Amazon/train/{cat}_5_2016-10-2018-11.csv"
-    args.eval_file = f"./data/Amazon/valid/{cat}_5_2016-10-2018-11.csv"
-    args.sid_index_path = f"./data/Amazon/index/{cat}.index.json"
-    args.item_meta_path = f"./data/Amazon/index/{cat}.item.json"
-    args.llm_generated_data_path = f"./data/Amazon/index/{cat}.item_enhanced_v2.json"
-    args.llm_generated_sequence_path = f"./data/Amazon/index/{cat}.integrated_narrative.csv"
-    args.general_reasoning_path = "./data/Amazon/general/sampled_data.arrow"
-
-
 def build_datasets(args, tokenizer, category):
     """Construct the concatenated training set plus the three eval sets.
 
     This mirrors the original mixture exactly; nothing is hidden inside a
     Trainer, so it is easy to see (and reorder / drop) each component.
     """
-    train_datasets = []
-    train_datasets.append(SidHistory2SidSFTDataset(
-        train_file=args.train_file, tokenizer=tokenizer, max_len=args.cutoff_len,
-        sample=args.sample, seed=args.seed, category=category, mask_assistant=args.mask_assistant))
-    train_datasets.append(TitleSidTranslationDataset(
-        item_file=args.item_meta_path, index_file=args.sid_index_path, tokenizer=tokenizer,
-        max_len=args.cutoff_len, sample=args.sample, seed=args.seed, category=category,
-        mask_assistant=args.mask_assistant))
-    train_datasets.append(SidHistory2TitleSFTDataset(
-        train_file=args.train_file, item_file=args.item_meta_path, index_file=args.sid_index_path,
-        tokenizer=tokenizer, max_len=args.cutoff_len, sample=args.sample, seed=args.seed,
-        category=category, mask_assistant=args.mask_assistant))
-    train_datasets.append(TitleHistory2TitleSFTDataset(
-        train_file=args.train_file, tokenizer=tokenizer, max_len=args.cutoff_len,
-        sample=args.sample, seed=args.seed, category=category, mask_assistant=args.mask_assistant))
-    train_datasets.append(TitleHistory2SidSFTDataset(
-        train_file=args.train_file, item_file=args.item_meta_path, index_file=args.sid_index_path,
-        tokenizer=tokenizer, max_len=args.cutoff_len, sample=args.sample, seed=args.seed,
-        category=category, mask_assistant=args.mask_assistant))
-    names = ["SidHistory2SidSFTDataset", "TitleSidTranslationDataset", "SidHistory2TitleSFTDataset",
-             "TitleHistory2TitleSFTDataset", "TitleHistory2SidSFTDataset"]
-
-    if args.llm_generated_data_path is not None:
-        train_datasets.append(SidTextInterleaveItemDataset(
-            json_file=args.llm_generated_data_path, tokenizer=tokenizer,
-            max_len=args.cutoff_len, sample=args.sample, seed=args.seed))
-        names.append("SidTextInterleaveItemDataset")
-    if args.llm_generated_sequence_path is not None:
-        train_datasets.append(SidTextInterleaveSequenceDataset(
-            csv_file=args.llm_generated_sequence_path, tokenizer=tokenizer,
-            max_len=args.cutoff_len, sample=args.sample, seed=args.seed))
-        names.append("SidTextInterleaveSequenceDataset")
-    if args.general_reasoning_path is not None:
-        train_datasets.append(GeneralReasoningSFTDataset(
-            train_file=args.general_reasoning_path, tokenizer=tokenizer,
-            max_len=args.general_reasoning_max_len, sample=args.general_reasoning_sample,
-            seed=args.seed))
-        names.append("GeneralReasoningSFTDataset")
+    hf_category = args.category
+    train_datasets = [
+        SidHistory2SidSFTDataset(
+            hf_category=hf_category, split="train", tokenizer=tokenizer,
+            max_len=args.cutoff_len, sample=args.sample, seed=args.seed,
+            category=category, mask_assistant=args.mask_assistant),
+        TitleSidTranslationDataset(
+            hf_category=hf_category, tokenizer=tokenizer, max_len=args.cutoff_len,
+            sample=args.sample, seed=args.seed, category=category,
+            mask_assistant=args.mask_assistant),
+        SidHistory2TitleSFTDataset(
+            hf_category=hf_category, split="train", tokenizer=tokenizer,
+            max_len=args.cutoff_len, sample=args.sample, seed=args.seed,
+            category=category, mask_assistant=args.mask_assistant),
+        TitleHistory2TitleSFTDataset(
+            hf_category=hf_category, split="train", tokenizer=tokenizer,
+            max_len=args.cutoff_len, sample=args.sample, seed=args.seed,
+            category=category, mask_assistant=args.mask_assistant),
+        TitleHistory2SidSFTDataset(
+            hf_category=hf_category, split="train", tokenizer=tokenizer,
+            max_len=args.cutoff_len, sample=args.sample, seed=args.seed,
+            category=category, mask_assistant=args.mask_assistant),
+        SidTextInterleaveItemDataset(
+            hf_category=hf_category, tokenizer=tokenizer, max_len=args.cutoff_len,
+            sample=args.sample, seed=args.seed),
+        SidTextInterleaveSequenceDataset(
+            hf_category=hf_category, tokenizer=tokenizer, max_len=args.cutoff_len,
+            sample=args.sample, seed=args.seed),
+        GeneralReasoningSFTDataset(
+            tokenizer=tokenizer, max_len=args.general_reasoning_max_len,
+            sample=args.general_reasoning_sample, seed=args.seed),
+    ]
+    names = [
+        "SidHistory2SidSFTDataset",
+        "TitleSidTranslationDataset",
+        "SidHistory2TitleSFTDataset",
+        "TitleHistory2TitleSFTDataset",
+        "TitleHistory2SidSFTDataset",
+        "SidTextInterleaveItemDataset",
+        "SidTextInterleaveSequenceDataset",
+        "GeneralReasoningSFTDataset",
+    ]
 
     if is_rank_0():
         for ds, name in zip(train_datasets, names):
@@ -395,14 +348,15 @@ def build_datasets(args, tokenizer, category):
     train_data = ConcatDataset(train_datasets)
 
     val_sid = SidHistory2SidSFTDataset(
-        train_file=args.eval_file, tokenizer=tokenizer, max_len=args.cutoff_len,
+        hf_category=hf_category, split="validation", tokenizer=tokenizer,
+        max_len=args.cutoff_len,
         sample=args.sample, seed=args.seed, category=category, test=False, mask_assistant=True)
     val_t2s = TitleSidTranslationDataset(
-        item_file=args.item_meta_path, index_file=args.sid_index_path, tokenizer=tokenizer,
+        hf_category=hf_category, tokenizer=tokenizer,
         max_len=args.cutoff_len, sample=args.sample, seed=args.seed, category=category,
         task_type='title2sid', test=False, mask_assistant=True)
     val_s2t = TitleSidTranslationDataset(
-        item_file=args.item_meta_path, index_file=args.sid_index_path, tokenizer=tokenizer,
+        hf_category=hf_category, tokenizer=tokenizer,
         max_len=args.cutoff_len, sample=args.sample, seed=args.seed, category=category,
         task_type='sid2title', test=False, mask_assistant=True)
 
@@ -411,7 +365,6 @@ def build_datasets(args, tokenizer, category):
 
 def main():
     args = parse_args()
-    derive_hf_locators(args)
     set_seed(args.seed)
 
     # --- distributed / device set-up (explicit, no wrapper) ---
@@ -457,24 +410,16 @@ def main():
     print_rank_0(f"Tokenizer length: {len(tokenizer)}")
 
     # --- extend the vocabulary with the semantic-ID (SID) tokens ---
-    num_new_tokens = 0
-    if args.sid_index_path:
-        print_rank_0(f"Loading index from {args.sid_index_path}")
-        token_extender = TokenExtender(
-            data_path=os.path.dirname(args.sid_index_path),
-            dataset=os.path.basename(args.sid_index_path).split('.')[0],
-        )
-        new_tokens = token_extender.get_new_tokens()
-        if new_tokens:
-            existing_vocab = set(tokenizer.get_vocab().keys())
-            tokens_to_add = [tok for tok in new_tokens if tok not in existing_vocab]
-            if tokens_to_add:
-                print_rank_0(f"Adding {len(tokens_to_add)} new tokens to tokenizer")
-                tokenizer.add_tokens(tokens_to_add)
-                model.resize_token_embeddings(len(tokenizer))
-                num_new_tokens = len(tokens_to_add)
-            else:
-                print_rank_0("All candidate tokens already exist in the tokenizer; skipping addition.")
+    print_rank_0(f"Loading SID vocabulary from HF category {args.category}")
+    new_tokens = hf_data.load_sid_tokens(args.category)
+    existing_vocab = set(tokenizer.get_vocab().keys())
+    tokens_to_add = [token for token in new_tokens if token not in existing_vocab]
+    if tokens_to_add:
+        print_rank_0(f"Adding {len(tokens_to_add)} new tokens to tokenizer")
+        tokenizer.add_tokens(tokens_to_add)
+        model.resize_token_embeddings(len(tokenizer))
+    else:
+        print_rank_0("All candidate tokens already exist in the tokenizer; skipping addition.")
 
     # Full-parameter fine-tuning: attention blocks, FFNs, and embeddings are all trainable.
     print_rank_0("Full fine-tuning enabled: attention blocks, FFNs, and embeddings remain trainable.")
@@ -636,8 +581,9 @@ def main():
                     print_rank_0("Early stopping triggered.")
                     break
 
-    # Guarantee a final checkpoint even if the loss never improved after epoch 1.
-    if not os.path.isdir(final_dir):
+    # Keep every rank on the same branch: worker-local filesystems do not contain
+    # the rank-0 checkpoint directory, but all ranks share the same best_epoch.
+    if best_epoch == 0:
         save_hf_checkpoint(model, tokenizer, final_dir)
 
     print_rank_0(
