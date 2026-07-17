@@ -99,6 +99,15 @@ Read *with* the user — the loop that worked:
    creates problem Z"), not a vague summary.
 3. Surface the questions the body must settle, and record them in the note.
 
+**The user leads; do not lecture (hard rule).** Even when you already understand
+the paper well, do **not** proactively present, explain, summarize, or "walk
+through" a section on your own initiative. The user guides the reading: for each
+section they state their own understanding *first*, and only then do you verify,
+sharpen, and record it. Never open a turn by delivering an unprompted exposition
+of a section's content. If the user has not yet shared their reading of the
+current section, hand the floor back and wait — do not fill the silence with your
+own summary. (The user asked for this explicitly: "我来引导你，你别主动给我讲".)
+
 The user drives the reading order and pace. Do **not** end a turn by asking which
 section to read next — wait for the user to share their own reading of the next
 part, then verify it, sharpen it, and record it.
@@ -121,10 +130,8 @@ PY
 
 If a claim is surprising, or the user challenges one, verify it against the PDF
 text (grep the extracted file) before asserting it — do not over-correct the user
-from a lossy source. For a non-arXiv or non-PDF source, fall back to extracting
-the page's HTML text directly (for example with the `paper-to-email` skill's
-`fetch_paper.py` helper, if that skill happens to be installed). The PDF path
-above needs only `curl` and `pymupdf` and is self-contained.
+from a lossy source. The `fetch_paper.py` HTML helper in the paper-to-email skill
+is a fallback only, e.g. for non-arXiv or non-PDF sources.
 
 Read the intro, method, and experiments (and appendix when it matters), then
 write into the `<!-- Reflections / reading notes go here -->` placeholder.
@@ -177,7 +184,8 @@ fragments:
 - End an unfinished note with a `<!-- To be continued: ... -->` marker so a later
   session knows where to resume.
 
-A fully worked example of this structure and style lives in this repo at
+A fully worked example of this structure and style lives in the user's
+`RecSysSummer` repo at
 `paper_reading_notes/Reasoning over Semantic IDs Enhances Generative Recommendation.md`.
 
 ## Notes
@@ -187,6 +195,21 @@ A fully worked example of this structure and style lives in this repo at
 - Write math as **GitHub-flavored LaTeX** (`$...$` inline, `$$...$$` display), not
   plain Unicode — the user reads these notes on GitHub (MathJax renders it), and
   plain-text subscripts like `r_{l-1}` otherwise risk breaking into italics.
+  - **Inline `$...$` on GitHub is fragile — check two things.** (a) *Flanking:* a
+    delimiter glued to a parenthesis, bracket, or alphanumeric does not render —
+    `($x$)` and `word$x$` fail; write ` $x$ ` with spaces around it, drop the outer
+    parens ("…, as $x$."), or move the parens inside the math. (b) *No `\ `:* never
+    put a backslash-space or other fragile TeX inside inline `$...$`. Either failure
+    *cascades* — every later `$...$` in that paragraph shows as raw source and its
+    bare `_` subscripts get eaten by Markdown italics (tell-tale: `\mathbf{h}T`,
+    `\sum{v'`). Keep inline math short and space-separated; move any long or
+    multi-symbol formula into a `$$...$$` display block on its own line, with a
+    blank line before and after.
+  - **Lint the math before finishing.** Run
+    `python3 "$HOME/.copilot/skills/paper-reading-notes/lint_math.py" "<note>.md"`;
+    it checks balanced `$`/`$$`, display blocks isolated by blank lines, no `\ `,
+    no `$` glued to `()`/`[]`/alphanumerics, and no inline formula spanning a line
+    break. A manual read missed the flanking case twice — run the linter.
 - After writing the reflection, give the user a short (<100 word) Chinese
   summary in chat and the path to the note file.
 - If beautifulsoup4 is missing for the fetcher: `python3 -m pip install
