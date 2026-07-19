@@ -30,6 +30,21 @@ TokenMinds (Google DeepMind / YouTube) represents each user with **discrete Sema
 
 **Lineage:** keep PLUM's recipe (SID vocabulary + CPT + task post-training), change the tokenized object from items to users.
 
+## What a *user* SID represents — interest regions, not the next click
+
+A natural first confusion: is the generated user-token sequence a **summary of the user's interests**, or a **prediction of the items the user will click next**? And if it is the latter, how is this any different from generative recommendation?
+
+The paper answers this directly in Related Work (§2, "Generative Recommendations"). Generative *retrieval* models such as PLUM, GenRank, and GPR are "constrained to predict immediate next items." TokenMinds deliberately diverges on two axes:
+
+- **Granularity and horizon.** User modeling here "captures a broader spectrum of intents over longer time windows" and "leverages coarser semantic granularity to identify distinct areas of interest, avoiding the strict need to map back to specific individual items." This is exactly why the decoder emits only the **coarse prefix-$L$ SID** (with $L < L_{full} = 8$, see §3.1): a coarse prefix names an *interest region* in content space, not one exact video. The output is therefore best read as a **predicted, multi-interest profile**, not a next-item guess.
+- **Coupling to the downstream objective.** "Unlike GPR, which aligns user representation with downstream task metrics and policy optimization, we decouple the learning of user representations from specific downstream training objectives to provide a general purpose understanding of user interests." TokenMinds is a *general-purpose* representation, trained once and reused across many downstream models; GPR bakes the representation into one task's objective.
+
+So it is neither a pure "interest summary" nor a "next-click predictor" in the retrieval sense: it is **generative in mechanism** (the decoder autoregressively produces the tokens) but **interest-level in semantics** (coarse regions over a long window, decoupled from any one task).
+
+The "if it is a summary, how is it consumed?" half is answered in §3.4 (below): beam search produces $B$ SID sequences — $B$ distinct predicted interest areas — each is projected back to a dense vector (Prefix Embedding Mapping / N-gram / SPM), the $B$ vectors are pooled, and the result feeds the ranker as input features or cross-attention key-values.
+
+*(my read)* This also settles a fair skepticism about the intro's "multi-stage → end-to-end" narrative: TokenMinds itself is **not** end-to-end. It generates the user representation **asynchronously** and feeds a **separate** ranker (§3.5), so it sits firmly in the decoupled, multi-stage camp — the decoupling is a feature, not an omission.
+
 ## Core design
 
 - **Dual output is deliberate.** The dense embedding preserves **backward compatibility** with downstream models that already eat dense user vectors; the SID tokens add a discrete, grounded representation. This backward-compat story is the key deployment argument.
@@ -59,6 +74,16 @@ Mechanically the reading is right: item content embedding → RQ-VAE (with $L_{f
 **Why SID (over random VIDs), per the paper:** (1) **generalization** across head/tail via meaningful collisions; (2) **temporal stability** — random VIDs suffer vocabulary churn as the corpus evolves (worst over long histories), while SID codebooks are trained once and new items quantize into the *same* vocabulary. *(the "trained once / reused" framing is my inference from the stability claim; no retraining cadence given.)*
 
 **Aside — does RQ-VAE explicitly push same-level centroids apart?** No. The loss is the VQ-VAE objective per level on the residual (reconstruction + codebook + $\beta$·commitment), with **no pairwise repulsion term**. Separation is *implicit*: the codebook term is k-means-like (each code pulled to the mean of its assigned residuals), so competing codes drift to distinct centroids. Redundancy *can* still happen, especially with an oversized codebook; in practice it is fought with *utilization* tricks (dead-code reset, EMA updates, k-means init, cosine/normalized codes), which target under-use/collapse rather than forbidding overlap. *(general RQ-VAE knowledge; not in this paper.)*
+
+## Clarifier — what the RQ-VAE tokenizes, and what it does *not*
+
+A tempting misreading is that one unified RQ-VAE discretizes *everything* — short-video embeddings, long-video embeddings, and search-query embeddings alike. That is not the design. Three different objects are handled three different ways:
+
+- **Videos → RQ-VAE → SID.** The RQ-VAE (inherited from PLUM) is an *item / content* tokenizer: it maps a video's content embedding to a hierarchical SID. Both LFV and SFV videos are represented in a **single shared SID vocabulary** — which is precisely what lets their code usage *overlap* (about 40% on the first two prefixes); disjoint vocabularies could not overlap. So the "unified tokenizer across LFV and SFV" intuition is right *for videos*.
+- **Search queries → native text tokens, not RQ-VAE.** A query is text, so it enters through the LLM's *existing text vocabulary* (the "shared token space inherited from a pre-trained LLM"), marked with a `<Search>` token and interleaved into the input. There is no "query embedding → RQ-VAE → SID" path; being able to use text *as text* is the whole point of reusing the LLM vocabulary, and quantizing the query would throw that away.
+- **The user is never RQ-VAE'd at all.** There is no user-side autoencoder. A "user SID token" is simply a **coarse video-SID prefix that the decoder *generates*** for a predicted future watch (the training loss is defined over the *target watch's* SID codes). The user is discretized *by generation over the video-SID vocabulary*, not by quantizing a user embedding.
+
+So "shared" has two nested meanings: the **RQ-VAE SID vocabulary** (videos only) sits *inside* the broader **shared LLM token space**, which also holds text tokens (search), scenario condition tokens (`<LFV>`/`<SFV>`), and bucketed/soft feature tokens. Only the first is an RQ-VAE.
 
 ## Method — how a user's SID tokens are consumed downstream (§3.4)
 
