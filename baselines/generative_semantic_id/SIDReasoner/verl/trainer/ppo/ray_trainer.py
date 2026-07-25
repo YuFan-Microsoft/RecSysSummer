@@ -62,6 +62,37 @@ from verl.utils.torch_functional import masked_mean
 from verl.utils.tracking import ValidationGenerationsLogger
 
 
+def _compute_core_metrics(batch, metrics):
+    core_metrics = {}
+
+    reward_extra_metrics = {
+        "sid_match_reward": "core_metrics/train_sid_match_reward_mean",
+        "valid_sid_reward": "core_metrics/train_valid_sid_reward_mean",
+        "exact_match": "core_metrics/train_exact_match_rate",
+    }
+    for batch_key, metric_key in reward_extra_metrics.items():
+        if batch_key in batch.non_tensor_batch:
+            core_metrics[metric_key] = float(np.asarray(batch.non_tensor_batch[batch_key], dtype=float).mean())
+
+    if "uid" in batch.non_tensor_batch:
+        sequence_scores = batch.batch["token_level_scores"].sum(-1).detach().cpu().tolist()
+        grouped_scores = defaultdict(list)
+        for sample_uid, score in zip(batch.non_tensor_batch["uid"], sequence_scores, strict=True):
+            grouped_scores[sample_uid].append(score)
+        active_groups = [max(scores) > min(scores) for scores in grouped_scores.values()]
+        core_metrics["core_metrics/train_active_group_rate"] = float(np.mean(active_groups))
+
+    metric_aliases = {
+        "actor/entropy": "core_metrics/entropy",
+        "response_length/clip_ratio": "core_metrics/response_clip_ratio",
+    }
+    for source_key, metric_key in metric_aliases.items():
+        if source_key in metrics:
+            core_metrics[metric_key] = metrics[source_key]
+
+    return core_metrics
+
+
 @dataclass
 class ResourcePoolManager:
     """
@@ -635,6 +666,14 @@ class RayPPOTrainer:
 
         data_src2var2metric2val = process_validation_metrics(data_sources, sample_uids, reward_extra_infos_dict)
         metric_dict = {}
+        validation_core_metrics = {
+            "sid_match_reward": "core_metrics/val_sid_match_reward_mean",
+            "valid_sid_reward": "core_metrics/val_valid_sid_reward_mean",
+            "exact_match": "core_metrics/val_exact_match_rate",
+        }
+        for reward_key, metric_key in validation_core_metrics.items():
+            if reward_key in reward_extra_infos_dict:
+                metric_dict[metric_key] = float(np.mean(reward_extra_infos_dict[reward_key]))
         for data_source, var2metric2val in data_src2var2metric2val.items():
             core_var = "acc" if "acc" in var2metric2val else "reward"
             for var_name, metric2val in var2metric2val.items():
@@ -1252,6 +1291,7 @@ class RayPPOTrainer:
                 )
                 # collect metrics
                 metrics.update(compute_data_metrics(batch=batch, use_critic=self.use_critic))
+                metrics.update(_compute_core_metrics(batch=batch, metrics=metrics))
                 metrics.update(compute_timing_metrics(batch=batch, timing_raw=timing_raw))
                 # TODO: implement actual tflpo and theoretical tflpo
                 n_gpus = self.resource_pool_manager.get_n_gpus()

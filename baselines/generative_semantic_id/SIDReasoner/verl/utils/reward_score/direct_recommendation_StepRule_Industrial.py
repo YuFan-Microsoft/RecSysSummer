@@ -148,15 +148,30 @@ class MyRewardComputer:
         solution_str: str,
         ground_truth: str,
         extra_info: dict | None = None,
-    ) -> float:
+    ) -> dict[str, float]:
         # breakpoint()
         answer = extract_solution(solution_str=solution_str)
         ground_truth = extract_sid_tokens(ground_truth)[:3]
 
         if answer is None:
-            return 0
-        else:
-            return calculate_reward(answer, ground_truth) + 0.1 * calculate_format_reward(answer, self.sid_hash)
+            return {
+                "score": 0.0,
+                "sid_match_reward": 0.0,
+                "valid_sid_reward": 0.0,
+                "exact_match": 0.0,
+                "valid_sid": 0.0,
+            }
+
+        valid_sid = float(calculate_format_reward(answer, self.sid_hash))
+        sid_match_reward = calculate_reward(answer, ground_truth)
+        valid_sid_reward = 0.1 * valid_sid
+        return {
+            "score": sid_match_reward + valid_sid_reward,
+            "sid_match_reward": sid_match_reward,
+            "valid_sid_reward": valid_sid_reward,
+            "exact_match": float(answer == ground_truth),
+            "valid_sid": valid_sid,
+        }
 
 
 
