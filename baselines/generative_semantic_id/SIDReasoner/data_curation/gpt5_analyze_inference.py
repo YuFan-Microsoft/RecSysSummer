@@ -45,8 +45,9 @@ THROUGHPUT
   so total concurrency = #endpoints * per-endpoint, auto load-balanced through one queue.
 
 RESUME (crash-safe)
-  Each finished row is streamed to <out-dir>/<config>.<domain>.analysis.jsonl immediately
-  (keyed by row_key). Re-run the SAME command to resume: done rows are skipped, failures retried.
+  Each finished row is streamed to <out-dir>/<config>.<domain>.analysis.jsonl immediately.
+  Rows are identified by their content (target_sid + history_sid), so re-running the SAME
+  command resumes: done rows are skipped, failures retried.
 
 OUTPUT
   <out-dir>/<config>.<domain>.analysis.jsonl   (raw, one JSON object per row)
@@ -298,13 +299,18 @@ def chat_json(client, system, user, reasoning_effort):
     return parse_json(resp.choices[0].message.content or "")
 
 
-def load_done_keys(path, key="row_key"):
+def row_key(row):
+    """Content-derived id used only for resume/dedup (config/domain are implied by the file)."""
+    return json.dumps([row["target_sid"], as_list(row["history_sid"])], ensure_ascii=False)
+
+
+def load_done_keys(path):
     done = set()
     if os.path.exists(path):
         with open(path, "r", encoding="utf-8") as fh:
             for line in fh:
                 try:
-                    done.add(json.loads(line)[key])
+                    done.add(row_key(json.loads(line)))
                 except (json.JSONDecodeError, KeyError):
                     continue
     return done
@@ -431,23 +437,22 @@ def main():
 
     tasks = []
     for i in idx:
-        row_key = f"{args.config}/{args.domain}/{i}"
-        if row_key not in done:
-            tasks.append((row_key, i, ds[i]))
+        row = ds[i]
+        if row_key(row) not in done:
+            tasks.append(row)
     print(f"[{args.config}/{args.domain}] {len(tasks)} to analyze "
           f"({len(done)} already done, {len(idx)} selected of {len(ds)})")
 
-    def process(task, client):
-        row_key, i, row = task
+    def process(row, client):
         user, rank = build_context(row, args.domain)
         labels = chat_json(client, SYSTEM_PROMPT, user, args.reasoning_effort)
         return {
-            "row_key": row_key,
-            "config": args.config,
-            "domain": args.domain,
-            "row_index": i,
+            "history_sid": as_list(row["history_sid"]),
+            "history_title": as_list(row["history_title"]),
             "target_sid": row["target_sid"],
             "target_title": row["target_title"],
+            "predict_sid": as_list(row["predict_sid"]),
+            "predict_title": as_list(row["predict_title"]),
             "exact_hit_rank": rank,          # 0 = miss (computed ground truth)
             "n_history": len(as_list(row["history_sid"])),
             **labels,                        # all GPT-5.6-sol judgments
