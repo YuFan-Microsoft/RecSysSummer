@@ -2,13 +2,12 @@
 LLM-based analysis of SID generative-rec inference results, to mine RL-training insights.
 
 WHAT IT DOES
-  Loads the per-example inference dump `yufan/rec_inference_results` (history, ground-truth
-  target, top-10 constrained beam, native greedy decode, chain-of-thought) and asks
+    Loads the per-example inference dump `yufan/rec_inference_results` (history, ground-truth
+    target, top-10 constrained beam, chain-of-thought) and asks
   GPT-5.6-sol to label each example along dimensions that a rule-based / numeric pass cannot
-  judge -- the SEMANTIC gap between our beam-10 and the target, what KIND of next-item the
-  target is (continuation vs exploration ...), slate diversity, and CoT reasoning quality.
-  Each labelled example carries a suggested `rl_signal` so the aggregate tells us how to
-  reshape the Phase-3 GRPO reward / curriculum.
+    judge -- whether the target is inferable, whether beam diversity matches the user's interest
+    structure, whether the CoT contains decision-relevant reasoning, and where the pipeline fails.
+    Each labelled example carries one primary intervention so the aggregate tells us what to fix.
 
   Each example is scored against an anchored RUBRIC (every 1-5 level and every category is
   defined in SYSTEM_PROMPT) and, crucially, the judge first writes three GROUNDED PROSE
@@ -17,31 +16,32 @@ WHAT IT DOES
     prose  : target_analysis (what the target is & how it relates to history),
              prediction_analysis (what the beam-10 bet on & how/why it hit or missed),
              cot_analysis (whether the reasoning found the right interest & is consistent)
-    A. Target characterization  : target_relation, predictability, history_coherence
-    B. Beam-10 <-> target gap   : beam_captured_intent, best_beam_relation, n_beams_satisfying,
-                                  target_recoverable, failure_mode
-    C. Beam-10 slate quality    : beam_interest_coverage, beam_relevance_count, beam_redundancy,
-                                  beam_explore_exploit, beam_personalization
-    D. CoT reasoning quality    : cot_grounded, cot_identified_target_interest,
-                                  cot_answer_consistency, cot_hallucination, cot_quality
-    E. Rollup                   : key_insight, rl_signal
+    A. History and target       : history_interest_structure, target_relation, predictability
+    B. Beam-10 slate            : best_beam_relation, beam_interest_coverage,
+                                  beam_relevance_count, beam_redundancy, diversity_calibration
+    C. CoT decision value       : cot_value, cot_identified_target_interest,
+                                  cot_answer_consistency, cot_failure_mode
+    D. Diagnosis                : pipeline_bottleneck, key_insight, primary_intervention
 
 HOW TO RUN
   Prereq: `az login` (gpt5_endpoint_test.get_GPT5_client uses DefaultAzureCredential).
 
+        # full baseline run: all 3 domains sequentially
+        python gpt5_analyze_inference.py
+
     # pilot: 200 rows of one config/domain, all 3 endpoints, 8 workers/endpoint
-    python analyze_inference_gpt5.py --config reproduced --domain Video_Games --limit 200
+        python gpt5_analyze_inference.py --domain Video_Games --limit 200
 
     # full run of one split
-    python analyze_inference_gpt5.py --config reproduced --domain Office_Products
+        python gpt5_analyze_inference.py --domain Office_Products
 
-    # push throughput / restrict endpoints / stronger reasoning
-    python analyze_inference_gpt5.py --config baseline --domain Industrial_and_Scientific \
-        --per-endpoint 12 --reasoning-effort medium \
+    # push throughput / restrict endpoints / highest reasoning effort
+        python gpt5_analyze_inference.py --domain Industrial_and_Scientific \
+        --per-endpoint 12 --reasoning-effort high \
         --endpoints feedscopilot-azureopenai-au feedscopilot-azureopenai-sweden
 
 THROUGHPUT
-  Every endpoint runs in parallel; each drives --per-endpoint client-bound worker threads,
+    Every endpoint runs in parallel; each drives --per-endpoint client-bound worker processes,
   so total concurrency = #endpoints * per-endpoint, auto load-balanced through one queue.
 
 RESUME (crash-safe)
@@ -56,10 +56,10 @@ OUTPUT
 
 import argparse
 import json
+import multiprocessing as mp
 import os
 import queue
 import re
-import threading
 import time
 
 import pandas as pd
@@ -71,7 +71,7 @@ from gpt5_endpoint_test import ENDPOINTS, get_GPT5_client
 # Config
 # --------------------------------------------------------------------------------------
 HF_REPO = "yufan/rec_inference_results"
-CONFIGS = ["baseline", "reproduced"]
+CONFIGS = ["baseline"]
 DOMAINS = ["Video_Games", "Office_Products", "Industrial_and_Scientific"]
 
 MODEL = "gpt-5.6-sol"                     # judge model; deployed on the 3 endpoints below
@@ -81,103 +81,100 @@ DEFAULT_ENDPOINTS = [                     # only these carry gpt-5.6-sol
     "feedscopilot-azureopenai-sweden",
 ]
 
-DEFAULT_PER_ENDPOINT = 8                  # worker threads per endpoint (total = #ep * this)
-MAX_COMPLETION_TOKENS = 2600             # room for 3 prose analyses + all rubric scores
-DEFAULT_REASONING_EFFORT = "low"         # minimal|low|medium|high
+DEFAULT_PER_ENDPOINT = 8                  # worker processes per endpoint (total = #ep * this)
+MAX_COMPLETION_TOKENS = 6000             # high-effort reasoning + prose analyses + JSON scores
+DEFAULT_REASONING_EFFORT = "high"        # minimal|low|medium|high
 MAX_TITLE_CHARS = 90                      # truncate each item title
 MAX_HISTORY_ITEMS = 25                    # cap history length shown to the judge
 MAX_COT_CHARS = 2000                      # truncate the chain-of-thought
 LOG_EVERY_SEC = 10
 
 SID_RE = re.compile(r"<[^>]+>")
-_write_lock = threading.Lock()
 
 
 # --------------------------------------------------------------------------------------
 # Prompt: rubric-style judge. First force three GROUNDED PROSE analyses, then anchored
 # scores derived from them. Single system + user; returns one strict-JSON object.
 # --------------------------------------------------------------------------------------
-SYSTEM_PROMPT = """You are a meticulous recommender-systems research analyst auditing a SID-based generative recommendation model. Your labels drive reward redesign, so they must be consistent and defensible.
+SYSTEM_PROMPT = """You are a meticulous recommender-systems research analyst auditing a SID-based generative recommendation model. Keep the diagnosis minimal: every label must distinguish a concrete failure source or intervention.
 
-SETUP. The model reads a user's chronological interaction history and predicts the next item as a semantic ID (SID, format <a_XX><b_YY><c_ZZ>). It writes a chain-of-thought (CoT), then decodes the next item with constrained beam search (top-10). For ONE user you receive: the history, the ground-truth next item (target), the model's top-10 beam predictions, its unconstrained greedy prediction (native), `exact_hit_rank` (ground-truth: the 1-based rank at which the target appears in the beam list, or 0 if absent), and the CoT.
+SETUP. The model reads a user's chronological interaction history and predicts the next item as a semantic ID (SID, format <a_XX><b_YY><c_ZZ>). It first writes one chain-of-thought (CoT), then conditions on that fixed CoT to decode the top-10 SIDs with constrained beam search. For ONE user you receive the history, ground-truth next item (target), top-10 beams, `exact_hit_rank` (the target's 1-based beam rank, or 0 if absent), and CoT.
 
 GROUNDING RULES.
 - Judge SEMANTICS from item TITLES; SIDs are opaque codes, use them ONLY to check exact identity or shared prefixes.
 - Base every judgment ONLY on the provided history and titles. NEVER invent facts about an item beyond what its title implies.
-- `exact_hit_rank` is authoritative for whether the model hit; use it for `failure_mode` and `best_beam_relation=exact`, but judge every SEMANTIC dimension independently of it.
+- `exact_hit_rank` is authoritative for exact identity. If it is positive, `best_beam_relation` must be `exact`; judge semantic quality independently.
+- Do not infer item popularity from titles. Do not claim that CoT causally improves accuracy; `cot_value` only measures whether its text contains supported, decision-relevant reasoning.
 
-METHOD. Work in two passes. PASS 1 - write the three prose analyses below, quoting specific titles and giving the reasoning (what, and WHY). PASS 2 - assign every rubric score so it is justified by what you wrote; obey the anchors exactly and stay internally consistent (e.g. if failure_mode='right_interest_wrong_item' then beam_captured_intent must be true).
+METHOD. Work in two passes. PASS 1 - write the three concise prose analyses below, quoting specific titles and explaining WHY. PASS 2 - assign the minimal diagnostic labels, each justified by the prose and internally consistent.
 
-PROSE FIELDS (2-4 grounded sentences each; name real items).
-- target_analysis: What is the target item? Which specific history items / interest does it connect to (or not)? Is it a natural continuation, a complement, or a jump, and is it fairly inferable from the history? Explain the logic.
-- prediction_analysis: What did the 10 beams collectively bet on (name the dominant items/interests)? Did they capture the target's need? If they missed, state the precise reason (which interest was over- or under-weighted, whether the slate collapsed onto one interest, whether any beam is a viable substitute for the target).
-- cot_analysis: Did the reasoning identify the user's real interest and the target's interest? Is it grounded in specific history items or generic? Is its stated conclusion consistent with the beams the model actually emitted?
+PROSE FIELDS (2-3 grounded sentences each; name real items).
+- target_analysis: What interest does the target represent, what history evidence supports it, and how inferable is it?
+- prediction_analysis: What interests did the beams allocate capacity to, what useful target relation did the closest beam have, and was the slate too narrow, appropriate, or too broad for this history?
+- cot_analysis: Did CoT add a concrete decision beyond restating history, select the right interest, and agree with the emitted beams?
 
 RUBRIC (anchors are binding).
 
-[A. TARGET CHARACTERIZATION]
+[A. HISTORY AND TARGET]
+history_interest_structure - the demand-side breadth that a good slate should reflect:
+    concentrated = one clear interest dominates; extra unrelated breadth is not useful.
+    dominant_with_secondary = one primary interest plus one or more credible secondary interests.
+    multi_interest = multiple comparably supported, coherent interests.
+    scattered = no stable interest structure; apparent breadth is mostly noise.
 target_relation - single best fit of target vs history:
   repeat = target is (near-)identical to an item already in history (replenishment / re-engagement).
   same_subcategory = same fine-grained type/genre as recent items, different specific item.
-  same_brand_or_series = same franchise/brand/sequel, or a direct accessory for a device in history.
+    same_brand_or_series = same franchise, brand, series, or sequel.
   complementary = different type but functionally complements history (console->game, printer->ink, microscope->slides).
   broadening = a related but NEW sub-interest within the same broad domain.
   exploration = a genuine jump to an unrelated domain/interest.
 predictability (1-5): 5 = history points almost directly at this item (next in series / obvious accessory / consumable refill). 4 = same sub-genre or brand as recent items; strong natural continuation. 3 = tied to a broad interest in history but many equally likely alternatives. 2 = weak, indirect link; a stretch. 1 = essentially unpredictable, no signal in history points to it.
-history_coherence (1-5): 5 = all items reflect one clear consistent interest. 4 = one dominant interest with minor detours. 3 = 2-3 distinct but readable interests. 2 = mostly scattered, weak thread. 1 = no discernible pattern.
 
-[B. BEAM-10 vs TARGET]
-beam_captured_intent (bool): true if ANY beam is in the target's interest/category (even if not the exact item).
+[B. BEAM-10 SLATE]
 best_beam_relation - the SINGLE closest beam to the target: exact = a beam equals the target SID. substitute = a near-interchangeable item that satisfies the SAME need (e.g. same title on another platform, same product different pack size). same_category = in the target's category but not a true substitute. complementary = complements the target but isn't it. unrelated = nothing close.
-n_beams_satisfying (0-10): STRICT count of beams that would genuinely satisfy the same need as the target (true substitutes). Count only items a user seeking the target would actually accept.
-target_recoverable: yes = a well-trained model should rank target in top-10 from this history. borderline = reasonable but not obvious; hinges on tie-breaking among many candidates. no = not fairly recoverable; target is noise/unpredictable given the history.
-failure_mode - set 'none' IFF exact_hit_rank > 0; otherwise the single dominant cause of the miss: right_interest_wrong_item = beams found the correct interest but wrong specific items. wrong_interest_selected = beams committed to a different interest than the target's. too_conservative = beams over-repeat history / stay too close, missing a natural next step. too_popular_generic = beams default to broadly popular items over personalized ones. hallucinated_unrelated = beams are largely irrelevant to the history. target_unpredictable = the miss is unavoidable, the target is not inferable.
-
-[C. BEAM-10 SLATE QUALITY]
-beam_interest_coverage (int, >=1): number of DISTINCT user interests represented across the 10 beams (1 = all beams collapse to one interest).
+beam_interest_coverage (1-10): number of semantically distinct interests represented across the 10 beams, including off-profile interests.
 beam_relevance_count (0-10): how many of the 10 beams are plausible next items given the history.
 beam_redundancy (1-5): 1 = 10 clearly distinct items. 3 = a few near-duplicates (same title different platform, etc.). 5 = heavily redundant, most beams are minor variants of one item.
-beam_explore_exploit: mostly_exploit = nearly all beams reinforce existing history interests. balanced = a mix. mostly_explore = many beams venture into new interests.
-beam_personalization (1-5): 5 = clearly tailored to this user's specific history. 3 = partly tailored, partly generic. 1 = generic / popularity-driven, ignores this user.
+diversity_calibration - compare slate breadth against `history_interest_structure`, not against a universal preference for diversity:
+    under_diversified = the slate collapses onto too few interests and misses a target/history-supported interest.
+    calibrated = the slate's breadth and allocation match the supported interest structure.
+    over_diversified = the slate spends capacity on weak or unsupported interests despite concentrated demand, reducing relevance.
 
-[D. CoT REASONING QUALITY]
-cot_grounded (1-5): 5 = explicitly references concrete history items/attributes. 3 = references general themes but vague. 1 = generic boilerplate unrelated to this user.
+[C. CoT DECISION VALUE]
+cot_value - textual decision value, NOT a causal performance claim:
+    useful = supported, specific reasoning selects an appropriate interest and informs the recommendation.
+    partly_useful = identifies a relevant theme but remains generic, incomplete, or weakly discriminative.
+    no_added_value = mostly paraphrases history or gives generic boilerplate without making a useful decision.
+    harmful = selects the wrong interest, relies on unsupported claims, or materially misleads the recommendation.
 cot_identified_target_interest (bool): did the reasoning name/derive the interest the target belongs to?
 cot_answer_consistency (1-5): 5 = the reasoning's conclusion matches the emitted beams. 3 = partial alignment. 1 = concludes one thing, predicts another.
-cot_hallucination (bool): does the reasoning assert facts about items/user not supported by the history?
-cot_quality (1-5): overall soundness and usefulness of the reasoning toward a correct recommendation.
+cot_failure_mode - single dominant defect: none, generic_restatement, no_decision, wrong_interest, unsupported_claim, or answer_mismatch.
 
-[E. ROLLUP]
-key_insight: ONE sentence - the single most useful takeaway for improving TRAINING on this example.
-rl_signal - the single most impactful lever for this example: reward_soft_hit = beams contain good substitutes, so exact-match reward is too harsh (give graded/semantic credit). downweight_noise = target is unpredictable/unrecoverable, reduce this example's training weight. reward_exploration = target is a valid exploration the model was too conservative to reach. process_reward_cot = reasoning quality (grounding/consistency) is the main lever here. add_diversity_reward = beams collapse onto one interest while other valid interests exist. keep_as_is = exact hit or already well handled.
+[D. DIAGNOSIS]
+pipeline_bottleneck - the SINGLE dominant bottleneck: target_noise = target is not fairly inferable. reasoning = CoT selects/motivates the wrong interest. beam_retrieval = CoT finds the right interest but beams fail to include it. beam_ranking = a strong candidate exists but is ranked poorly. slate_calibration = under/over-diversity is the main defect. exact_match_objective = semantically satisfactory substitutes exist but exact-match evaluation/reward treats them as total failures. none = no material defect.
+key_insight: ONE sentence stating the most useful, evidence-backed takeaway from this example.
+primary_intervention - the SINGLE best next action: downweight_noise, improve_reasoning, improve_beam_search, semantic_reward, increase_relevant_diversity, reduce_irrelevant_diversity, or keep_as_is.
 
 OUTPUT. Return ONLY one JSON object (no markdown, no code fences, no text before/after), with EXACTLY these keys in this order:
 {
   "target_analysis": string,
   "prediction_analysis": string,
   "cot_analysis": string,
-  "dominant_interest": string,
-  "target_interest": string,
+    "history_interest_structure": string,
   "target_relation": string,
   "predictability": integer,
-  "history_coherence": integer,
-  "beam_captured_intent": boolean,
   "best_beam_relation": string,
-  "n_beams_satisfying": integer,
-  "target_recoverable": string,
-  "failure_mode": string,
   "beam_interest_coverage": integer,
   "beam_relevance_count": integer,
   "beam_redundancy": integer,
-  "beam_explore_exploit": string,
-  "beam_personalization": integer,
-  "cot_grounded": integer,
+    "diversity_calibration": string,
+    "cot_value": string,
   "cot_identified_target_interest": boolean,
   "cot_answer_consistency": integer,
-  "cot_hallucination": boolean,
-  "cot_quality": integer,
+    "cot_failure_mode": string,
+    "pipeline_bottleneck": string,
   "key_insight": string,
-  "rl_signal": string
+    "primary_intervention": string
 }"""
 
 USER_TEMPLATE = """DOMAIN: {domain}
@@ -190,9 +187,6 @@ GROUND-TRUTH NEXT ITEM (target):
 
 MODEL TOP-10 BEAM PREDICTIONS (rank. title [sid]):
 {beam_block}
-
-NATIVE (unconstrained greedy) PREDICTION:
-{native_line}
 
 EXACT-MATCH INFO: exact_hit_rank = {exact_hit_rank}   (0 = target NOT in the beam list; otherwise its 1-based rank)
 
@@ -257,7 +251,6 @@ def build_context(row, domain):
     ) or "(empty)"
 
     target_line = _item_line(row["target_title"], row["target_sid"])
-    native_line = _item_line(row.get("native_title", ""), row.get("native_sid", ""))
     rank = exact_hit_rank(row["target_sid"], pred_sids)
 
     user = USER_TEMPLATE.format(
@@ -265,7 +258,6 @@ def build_context(row, domain):
         history_block=history_block,
         target_line=target_line,
         beam_block=beam_block,
-        native_line=native_line,
         exact_hit_rank=rank,
         cot=_clip(row.get("cot", ""), MAX_COT_CHARS) or "(none)",
     )
@@ -318,11 +310,10 @@ def load_done_keys(path):
 
 def append_jsonl(path, obj):
     line = json.dumps(obj, ensure_ascii=False) + "\n"
-    with _write_lock:
-        with open(path, "a", encoding="utf-8") as fh:
-            fh.write(line)
-            fh.flush()
-            os.fsync(fh.fileno())
+    with open(path, "a", encoding="utf-8") as fh:
+        fh.write(line)
+        fh.flush()
+        os.fsync(fh.fileno())
 
 
 def jsonl_to_csv(jsonl_path, csv_path):
@@ -334,87 +325,175 @@ def jsonl_to_csv(jsonl_path, csv_path):
 
 
 # --------------------------------------------------------------------------------------
-# Concurrency engine (client-bound workers over a shared queue)
+# Concurrency engine (spawned client-bound processes over shared queues)
 # --------------------------------------------------------------------------------------
-def run_pool(tasks, process_fn, out_path, endpoints, per_endpoint, label):
+def process_row(row, domain, reasoning_effort, client):
+    user, rank = build_context(row, domain)
+    labels = chat_json(client, SYSTEM_PROMPT, user, reasoning_effort)
+    return {
+        "history_sid": as_list(row["history_sid"]),
+        "history_title": as_list(row["history_title"]),
+        "target_sid": row["target_sid"],
+        "target_title": row["target_title"],
+        "predict_sid": as_list(row["predict_sid"]),
+        "predict_title": as_list(row["predict_title"]),
+        "exact_hit_rank": rank,
+        "n_history": len(as_list(row["history_sid"])),
+        **labels,
+    }
+
+
+def process_worker(task_queue, result_queue, endpoint, domain, reasoning_effort):
+    try:
+        client = get_GPT5_client(endpoint)
+    except Exception as err:
+        result_queue.put(("worker_error", endpoint, str(err)[:500]))
+        return
+
+    while True:
+        task = task_queue.get()
+        if task is None:
+            return
+        try:
+            result_queue.put(("ok", process_row(task, domain, reasoning_effort, client)))
+        except Exception as err:
+            result_queue.put(("fail", endpoint, str(err)[:500]))
+
+
+def run_pool(tasks, out_path, endpoints, per_endpoint, label, domain, reasoning_effort):
     total = len(tasks)
     if total == 0:
         print(f"  [{label}] nothing to do")
         return
 
-    q = queue.Queue()
-    for t in tasks:
-        q.put(t)
-    counter = {"done": 0, "fail": 0}
-    clock = threading.Lock()
+    ctx = mp.get_context("spawn")
+    task_queue = ctx.Queue()
+    result_queue = ctx.Queue()
+    worker_specs = [endpoint for endpoint in endpoints for _ in range(per_endpoint)]
+    workers = [
+        ctx.Process(
+            target=process_worker,
+            args=(task_queue, result_queue, endpoint, domain, reasoning_effort),
+            daemon=True,
+        )
+        for endpoint in worker_specs
+    ]
+    for worker in workers:
+        worker.start()
+    for task in tasks:
+        task_queue.put(task)
+    for _ in workers:
+        task_queue.put(None)
 
     t0 = time.time()
-    last_log = {"t": 0.0}
-    log_lock = threading.Lock()
+    last_log = 0.0
+    done = 0
+    failed = 0
 
-    def emit(d, force=False):
+    def emit(force=False):
+        nonlocal last_log
         now = time.time()
-        with log_lock:
-            if not force and now - last_log["t"] < LOG_EVERY_SEC:
-                return
-            last_log["t"] = now
+        if not force and now - last_log < LOG_EVERY_SEC:
+            return
+        last_log = now
+        finished = done + failed
         elapsed = now - t0
-        rate = d / elapsed if elapsed > 0 else 0.0
-        eta = (total - d) / rate if rate > 0 else 0.0
-        print(f"  [{label}] {d}/{total} ({d / total * 100:.1f}%) | "
+        rate = finished / elapsed if elapsed > 0 else 0.0
+        eta = (total - finished) / rate if rate > 0 else 0.0
+        print(f"  [{label}] {finished}/{total} ({finished / total * 100:.1f}%) | "
               f"{rate:.2f} rows/s | elapsed {_fmt(elapsed)} | ETA {_fmt(eta)} | "
-              f"{counter['fail']} failed", flush=True)
+              f"{failed} failed", flush=True)
 
-    def worker(endpoint):
-        client = get_GPT5_client(endpoint)
-        while True:
-            try:
-                task = q.get_nowait()
-            except queue.Empty:
-                return
-            try:
-                append_jsonl(out_path, process_fn(task, client))
-                with clock:
-                    counter["done"] += 1
-                    d = counter["done"]
-                emit(d, force=(d == total))
-            except Exception as err:  # keep the pool alive; re-run resumes/retries
-                with clock:
-                    counter["fail"] += 1
-                print(f"  [{label}] FAIL: {str(err)[:150]}", flush=True)
-            finally:
-                q.task_done()
-
-    threads = []
-    for ep in endpoints:
-        for _ in range(per_endpoint):
-            th = threading.Thread(target=worker, args=(ep,), daemon=True)
-            th.start()
-            threads.append(th)
     print(f"  [{label}] {total} tasks / {len(endpoints)} endpoints x {per_endpoint} "
-          f"= {len(threads)} workers")
-    for th in threads:
-        th.join()
-    print(f"  [{label}] finished: {counter['done']} ok, {counter['fail']} failed "
+          f"= {len(workers)} processes")
+    try:
+        while done + failed < total:
+            try:
+                result = result_queue.get(timeout=1)
+            except queue.Empty:
+                if not any(worker.is_alive() for worker in workers):
+                    raise RuntimeError(
+                        f"all worker processes exited with {total - done - failed} tasks unfinished"
+                    )
+                continue
+
+            kind = result[0]
+            if kind == "ok":
+                append_jsonl(out_path, result[1])
+                done += 1
+            elif kind == "fail":
+                failed += 1
+                print(f"  [{label}] FAIL on {result[1]}: {result[2][:150]}", flush=True)
+            else:
+                print(f"  [{label}] WORKER FAIL on {result[1]}: {result[2][:150]}", flush=True)
+            emit(force=(done + failed == total))
+    finally:
+        for worker in workers:
+            worker.join(timeout=5)
+            if worker.is_alive():
+                worker.terminate()
+        task_queue.close()
+        result_queue.close()
+
+    print(f"  [{label}] finished: {done} ok, {failed} failed "
           f"in {_fmt(time.time() - t0)}")
 
 
 # --------------------------------------------------------------------------------------
-# Entry point
+# Per-domain analysis and entry point
 # --------------------------------------------------------------------------------------
+def analyze_domain(args, endpoints, domain):
+    ds = load_dataset(HF_REPO, args.config, split=domain)
+    idx = list(range(len(ds)))
+    if args.shuffle:
+        import random
+        random.Random(args.seed).shuffle(idx)
+    if args.limit > 0:
+        idx = idx[:args.limit]
+
+    out_path = os.path.join(args.out_dir, f"{args.config}.{domain}.analysis.jsonl")
+    done = load_done_keys(out_path)
+
+    tasks = []
+    for i in idx:
+        row = ds[i]
+        if row_key(row) not in done:
+            tasks.append(row)
+    print(f"[{args.config}/{domain}] {len(tasks)} to analyze "
+          f"({len(done)} already done, {len(idx)} selected of {len(ds)})")
+
+    run_pool(
+        tasks,
+        out_path,
+        endpoints,
+        args.per_endpoint,
+        f"{args.config}/{domain}",
+        domain,
+        args.reasoning_effort,
+    )
+    jsonl_to_csv(out_path, out_path.replace(".jsonl", ".csv"))
+
+
 def main():
     ap = argparse.ArgumentParser(description="LLM-analyze rec inference results with GPT-5.6-sol.")
-    ap.add_argument("--config", default="reproduced", choices=CONFIGS)
-    ap.add_argument("--domain", default="Video_Games", choices=DOMAINS)
+    ap.add_argument("--config", default="baseline", choices=CONFIGS)
+    ap.add_argument(
+        "--domain",
+        dest="domains",
+        nargs="+",
+        default=list(DOMAINS),
+        choices=DOMAINS,
+        help="one or more domains (default: all three)",
+    )
     ap.add_argument("--out-dir", default="./inference_analysis")
     ap.add_argument("--per-endpoint", type=int, default=DEFAULT_PER_ENDPOINT,
-                    help="worker threads PER endpoint (total concurrency = #endpoints * this)")
+                    help="worker processes PER endpoint (total concurrency = #endpoints * this)")
     ap.add_argument("--endpoints", nargs="*", default=None,
                     help=f"subset of endpoints (default: {DEFAULT_ENDPOINTS})")
     ap.add_argument("--reasoning-effort", default=DEFAULT_REASONING_EFFORT,
                     choices=["minimal", "low", "medium", "high"])
-    ap.add_argument("--limit", type=int, default=-1, help="cap #rows (pilot); <=0 = all")
-    ap.add_argument("--shuffle", action="store_true", help="shuffle before applying --limit")
+    ap.add_argument("--limit", type=int, default=-1, help="cap #rows per domain (pilot); <=0 = all")
+    ap.add_argument("--shuffle", action="store_true", help="shuffle each domain before applying --limit")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
 
@@ -424,43 +503,8 @@ def main():
         ap.error(f"unknown endpoint(s): {bad}")
     os.makedirs(args.out_dir, exist_ok=True)
 
-    ds = load_dataset(HF_REPO, args.config, split=args.domain)
-    idx = list(range(len(ds)))
-    if args.shuffle:
-        import random
-        random.Random(args.seed).shuffle(idx)
-    if args.limit > 0:
-        idx = idx[:args.limit]
-
-    out_path = os.path.join(args.out_dir, f"{args.config}.{args.domain}.analysis.jsonl")
-    done = load_done_keys(out_path)
-
-    tasks = []
-    for i in idx:
-        row = ds[i]
-        if row_key(row) not in done:
-            tasks.append(row)
-    print(f"[{args.config}/{args.domain}] {len(tasks)} to analyze "
-          f"({len(done)} already done, {len(idx)} selected of {len(ds)})")
-
-    def process(row, client):
-        user, rank = build_context(row, args.domain)
-        labels = chat_json(client, SYSTEM_PROMPT, user, args.reasoning_effort)
-        return {
-            "history_sid": as_list(row["history_sid"]),
-            "history_title": as_list(row["history_title"]),
-            "target_sid": row["target_sid"],
-            "target_title": row["target_title"],
-            "predict_sid": as_list(row["predict_sid"]),
-            "predict_title": as_list(row["predict_title"]),
-            "exact_hit_rank": rank,          # 0 = miss (computed ground truth)
-            "n_history": len(as_list(row["history_sid"])),
-            **labels,                        # all GPT-5.6-sol judgments
-        }
-
-    run_pool(tasks, process, out_path,
-             endpoints, args.per_endpoint, f"{args.config}/{args.domain}")
-    jsonl_to_csv(out_path, out_path.replace(".jsonl", ".csv"))
+    for domain in args.domains:
+        analyze_domain(args, endpoints, domain)
 
 
 if __name__ == "__main__":
