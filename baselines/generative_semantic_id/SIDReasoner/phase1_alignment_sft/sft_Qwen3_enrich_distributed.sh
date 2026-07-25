@@ -7,7 +7,8 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
 BASE_MODEL="${BASE_MODEL:-Qwen/Qwen3-1.7B}"
-SIDR_HF_REPO="${SIDR_HF_REPO:-yufan/recsys-genrec-dataset}"
+# TEMP: point Phase-1 at the refreshed GPT-5.4 dataset (revert to yufan/recsys-genrec-dataset).
+SIDR_HF_REPO="${SIDR_HF_REPO:-yufan/recsys-genrec-dataset-refresh-gpt5.4}"
 HOSTFILE="${HOSTFILE:-$HOME/hostfile}"
 DIST_MASTER_PORT="${DIST_MASTER_PORT:-29500}"
 GPUS_PER_NODE="${GPUS_PER_NODE:-8}"

@@ -16,6 +16,9 @@ export NCCL_NET_GDR_LEVEL=0
 # general-reasoning batches without touching micro_batch_size / LR / global batch.
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
+# TEMP: point Phase-1 at the refreshed GPT-5.4 dataset (revert to yufan/recsys-genrec-dataset).
+export SIDR_HF_REPO="${SIDR_HF_REPO:-yufan/recsys-genrec-dataset-refresh-gpt5.4}"
+
 BASE_MODEL="Qwen/Qwen3-1.7B"
 NUM_GPUS=8
 MASTER_PORT=12340
