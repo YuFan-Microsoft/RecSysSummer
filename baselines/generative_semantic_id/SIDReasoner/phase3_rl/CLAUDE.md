@@ -74,7 +74,7 @@ ablation.
 The script **defaults to the `Video_Games` domain end‑to‑end** — data, reward, and the
 **wandb run name** all match the Games checkpoint above. Concretely the script sets
 `trainer.experiment_name=Video_Games_stage3_rl_no_kl_Qwen3-1.7B` (this is the wandb run
-name, under project `SIDReasoner_Phase3`), `data.*=.../Video_Games/*.parquet`, and
+name, under project `SIDReasoner_Phase3_MetricsV2`), `data.*=.../Video_Games/*.parquet`, and
 `custom_reward_function.path=.../direct_recommendation_StepRule_Games.py`. So the
 launch command above is all you need — you do **not** have to override data / reward /
 wandb.

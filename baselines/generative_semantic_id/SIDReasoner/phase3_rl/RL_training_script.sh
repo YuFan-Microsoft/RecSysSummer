@@ -82,7 +82,7 @@ python3 -m verl.trainer.main_ppo \
     trainer.logger=['console','wandb'] \
     custom_reward_function.path="./verl/utils/reward_score/direct_recommendation_StepRule_Games.py" \
     custom_reward_function.name="rule_base_reward" \
-    trainer.project_name='SIDReasoner_Phase3' \
+    trainer.project_name='SIDReasoner_Phase3_MetricsV2' \
     trainer.experiment_name="${experiment_name}" \
     trainer.default_local_dir="${checkpoint_dir}" \
     trainer.n_gpus_per_node=$n_gpus_per_node \
