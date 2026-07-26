@@ -158,6 +158,8 @@ class MyRewardComputer:
                 "score": 0.0,
                 "sid_match_reward": 0.0,
                 "valid_sid_reward": 0.0,
+                "prefix_1_match": 0.0,
+                "prefix_2_match": 0.0,
                 "exact_match": 0.0,
                 "valid_sid": 0.0,
             }
@@ -169,6 +171,8 @@ class MyRewardComputer:
             "score": sid_match_reward + valid_sid_reward,
             "sid_match_reward": sid_match_reward,
             "valid_sid_reward": valid_sid_reward,
+            "prefix_1_match": float(answer[0] == ground_truth[0]),
+            "prefix_2_match": float(answer[:2] == ground_truth[:2]),
             "exact_match": float(answer == ground_truth),
             "valid_sid": valid_sid,
         }

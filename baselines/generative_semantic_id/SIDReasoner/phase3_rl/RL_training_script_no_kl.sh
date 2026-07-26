@@ -66,6 +66,7 @@ python3 -m verl.trainer.main_ppo \
     algorithm.use_kl_in_reward=False \
     trainer.critic_warmup=0 \
     trainer.logger=['console','wandb'] \
+    +trainer.wandb_exclude_prefixes='["val-core/","val-aux/","training/","timing_s/","timing_per_token_ms/","response_length_non_aborted/","global_seqlen/","perf/","critic/","actor/"]' \
     custom_reward_function.path="./verl/utils/reward_score/direct_recommendation_StepRule_Games.py" \
     custom_reward_function.name="rule_base_reward" \
     trainer.project_name='SIDReasoner_Phase3' \

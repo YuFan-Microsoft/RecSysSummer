@@ -62,29 +62,52 @@ from verl.utils.torch_functional import masked_mean
 from verl.utils.tracking import ValidationGenerationsLogger
 
 
+def _log_metrics(logger, data, step, configured_backends, wandb_exclude_prefixes=None):
+    if not wandb_exclude_prefixes or "wandb" not in configured_backends:
+        logger.log(data=data, step=step)
+        return
+
+    other_backends = [backend for backend in configured_backends if backend != "wandb"]
+    if other_backends:
+        logger.log(data=data, step=step, backend=other_backends)
+
+    excluded_prefixes = tuple(wandb_exclude_prefixes)
+    wandb_data = {key: value for key, value in data.items() if not key.startswith(excluded_prefixes)}
+    logger.log(data=wandb_data, step=step, backend=["wandb"])
+
+
 def _compute_core_metrics(batch, metrics):
     core_metrics = {}
 
     reward_extra_metrics = {
-        "sid_match_reward": "core_metrics/train_sid_match_reward_mean",
-        "valid_sid_reward": "core_metrics/train_valid_sid_reward_mean",
-        "exact_match": "core_metrics/train_exact_match_rate",
+        "sid_match_reward": "core_metrics_train/sid_match_reward_mean",
+        "valid_sid_reward": "core_metrics_train/valid_sid_reward_mean",
+        "prefix_1_match": "core_metrics_train/prefix_1_match_rate",
+        "prefix_2_match": "core_metrics_train/prefix_2_match_rate",
+        "exact_match": "core_metrics_train/exact_match_rate",
     }
     for batch_key, metric_key in reward_extra_metrics.items():
         if batch_key in batch.non_tensor_batch:
             core_metrics[metric_key] = float(np.asarray(batch.non_tensor_batch[batch_key], dtype=float).mean())
 
+    active_group_metrics = {
+        "sid_match_reward": "core_metrics_train/sid_match_active_group_rate",
+        "valid_sid_reward": "core_metrics_train/valid_sid_active_group_rate",
+    }
     if "uid" in batch.non_tensor_batch:
-        sequence_scores = batch.batch["token_level_scores"].sum(-1).detach().cpu().tolist()
-        grouped_scores = defaultdict(list)
-        for sample_uid, score in zip(batch.non_tensor_batch["uid"], sequence_scores, strict=True):
-            grouped_scores[sample_uid].append(score)
-        active_groups = [max(scores) > min(scores) for scores in grouped_scores.values()]
-        core_metrics["core_metrics/train_active_group_rate"] = float(np.mean(active_groups))
+        sample_uids = batch.non_tensor_batch["uid"]
+        for batch_key, metric_key in active_group_metrics.items():
+            if batch_key not in batch.non_tensor_batch:
+                continue
+            grouped_rewards = defaultdict(list)
+            for sample_uid, reward in zip(sample_uids, batch.non_tensor_batch[batch_key], strict=True):
+                grouped_rewards[sample_uid].append(reward)
+            active_groups = [max(rewards) > min(rewards) for rewards in grouped_rewards.values()]
+            core_metrics[metric_key] = float(np.mean(active_groups))
 
     metric_aliases = {
-        "actor/entropy": "core_metrics/entropy",
-        "response_length/clip_ratio": "core_metrics/response_clip_ratio",
+        "actor/entropy": "core_metrics_train/entropy",
+        "response_length/clip_ratio": "core_metrics_train/response_clip_ratio",
     }
     for source_key, metric_key in metric_aliases.items():
         if source_key in metrics:
@@ -667,9 +690,11 @@ class RayPPOTrainer:
         data_src2var2metric2val = process_validation_metrics(data_sources, sample_uids, reward_extra_infos_dict)
         metric_dict = {}
         validation_core_metrics = {
-            "sid_match_reward": "core_metrics/val_sid_match_reward_mean",
-            "valid_sid_reward": "core_metrics/val_valid_sid_reward_mean",
-            "exact_match": "core_metrics/val_exact_match_rate",
+            "sid_match_reward": "core_metrics_val/sid_match_reward_mean",
+            "valid_sid_reward": "core_metrics_val/valid_sid_reward_mean",
+            "prefix_1_match": "core_metrics_val/prefix_1_match_rate",
+            "prefix_2_match": "core_metrics_val/prefix_2_match_rate",
+            "exact_match": "core_metrics_val/exact_match_rate",
         }
         for reward_key, metric_key in validation_core_metrics.items():
             if reward_key in reward_extra_infos_dict:
@@ -1030,7 +1055,13 @@ class RayPPOTrainer:
             val_metrics = self._validate()
             assert val_metrics, f"{val_metrics=}"
             pprint(f"Initial validation metrics: {val_metrics}")
-            logger.log(data=val_metrics, step=self.global_steps)
+            _log_metrics(
+                logger=logger,
+                data=val_metrics,
+                step=self.global_steps,
+                configured_backends=self.config.trainer.logger,
+                wandb_exclude_prefixes=self.config.trainer.get("wandb_exclude_prefixes"),
+            )
             if self.config.trainer.get("val_only", False):
                 return
 
@@ -1303,7 +1334,13 @@ class RayPPOTrainer:
                     self.train_dataloader.sampler.update(batch=batch)
 
                 # TODO: make a canonical logger that supports various backend
-                logger.log(data=metrics, step=self.global_steps)
+                _log_metrics(
+                    logger=logger,
+                    data=metrics,
+                    step=self.global_steps,
+                    configured_backends=self.config.trainer.logger,
+                    wandb_exclude_prefixes=self.config.trainer.get("wandb_exclude_prefixes"),
+                )
 
                 progress_bar.update(1)
                 self.global_steps += 1
