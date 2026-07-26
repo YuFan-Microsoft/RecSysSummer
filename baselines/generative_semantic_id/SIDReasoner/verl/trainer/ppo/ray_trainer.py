@@ -62,6 +62,36 @@ from verl.utils.torch_functional import masked_mean
 from verl.utils.tracking import ValidationGenerationsLogger
 
 
+_WANDB_METRIC_ORDER = (
+    "core_metrics_train/sid_match_reward_mean",
+    "core_metrics_train/prefix_1_match_rate",
+    "core_metrics_train/prefix_2_match_rate",
+    "core_metrics_train/exact_match_rate",
+    "core_metrics_train/sid_match_active_group_rate",
+    "core_metrics_train/sid_match_all_wrong_group_rate",
+    "core_metrics_train/sid_match_uniform_partial_group_rate",
+    "core_metrics_train/sid_match_all_correct_group_rate",
+    "core_metrics_train/valid_sid_reward_mean",
+    "core_metrics_train/valid_sid_active_group_rate",
+    "core_metrics_train/entropy",
+    "core_metrics_train/response_clip_ratio",
+    "core_metrics_val/sid_match_reward_mean",
+    "core_metrics_val/prefix_1_match_rate",
+    "core_metrics_val/prefix_2_match_rate",
+    "core_metrics_val/exact_match_rate",
+    "core_metrics_val/valid_sid_reward_mean",
+    "response_length/mean",
+    "response_length/max",
+    "response_length/min",
+    "response_length/clip_ratio",
+    "response/aborted_ratio",
+    "prompt_length/mean",
+    "prompt_length/max",
+    "prompt_length/min",
+    "prompt_length/clip_ratio",
+)
+
+
 def _log_metrics(logger, data, step, configured_backends, wandb_exclude_prefixes=None):
     if not wandb_exclude_prefixes or "wandb" not in configured_backends:
         logger.log(data=data, step=step)
@@ -72,7 +102,9 @@ def _log_metrics(logger, data, step, configured_backends, wandb_exclude_prefixes
         logger.log(data=data, step=step, backend=other_backends)
 
     excluded_prefixes = tuple(wandb_exclude_prefixes)
-    wandb_data = {key: value for key, value in data.items() if not key.startswith(excluded_prefixes)}
+    filtered_data = {key: value for key, value in data.items() if not key.startswith(excluded_prefixes)}
+    wandb_data = {key: filtered_data.pop(key) for key in _WANDB_METRIC_ORDER if key in filtered_data}
+    wandb_data.update(filtered_data)
     logger.log(data=wandb_data, step=step, backend=["wandb"])
 
 
@@ -104,6 +136,23 @@ def _compute_core_metrics(batch, metrics):
                 grouped_rewards[sample_uid].append(reward)
             active_groups = [max(rewards) > min(rewards) for rewards in grouped_rewards.values()]
             core_metrics[metric_key] = float(np.mean(active_groups))
+
+            if batch_key == "sid_match_reward":
+                group_rewards = list(grouped_rewards.values())
+                core_metrics["core_metrics_train/sid_match_all_wrong_group_rate"] = float(
+                    np.mean([max(rewards) == 0.0 for rewards in group_rewards])
+                )
+                core_metrics["core_metrics_train/sid_match_uniform_partial_group_rate"] = float(
+                    np.mean(
+                        [
+                            min(rewards) == max(rewards) and 0.0 < rewards[0] < 1.0
+                            for rewards in group_rewards
+                        ]
+                    )
+                )
+                core_metrics["core_metrics_train/sid_match_all_correct_group_rate"] = float(
+                    np.mean([min(rewards) == 1.0 for rewards in group_rewards])
+                )
 
     metric_aliases = {
         "actor/entropy": "core_metrics_train/entropy",
