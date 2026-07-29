@@ -677,13 +677,22 @@ class vLLMRollout(BaseRollout):
                     lora_requests=lora_requests,
                 )
                 constrained_sids = [sid_beam[0] for sid_beam in constrained_sid_beams]
-                non_tensor_batch["sid_beam_predictions"] = np.array(
-                    [
-                        [self.tokenizer.decode(sid_ids, skip_special_tokens=False) for sid_ids in sid_beam]
-                        for sid_beam in constrained_sid_beams
-                    ],
-                    dtype=object,
-                )
+                # Build a 1-D object array of length batch_size where each cell is
+                # itself a numpy array of decoded SID strings. A per-sample beam can
+                # be shorter than beam_width when the catalog trie runs out of valid
+                # continuations; building a plain np.array([[...], ...]) then yields a
+                # ragged->1-D array on some ranks and a rectangular 2-D array on others,
+                # so DataProto.concat's np.concatenate across data-parallel workers
+                # crashes with mismatched ndim. Forcing a 1-D outer array keeps the
+                # shape identical on every rank while `.tolist()` in the reward manager
+                # still works (each cell is an ndarray).
+                sid_beam_predictions = np.empty(batch_size, dtype=object)
+                for _j, sid_beam in enumerate(constrained_sid_beams):
+                    sid_beam_predictions[_j] = np.array(
+                        [self.tokenizer.decode(sid_ids, skip_special_tokens=False) for sid_ids in sid_beam],
+                        dtype=object,
+                    )
+                non_tensor_batch["sid_beam_predictions"] = sid_beam_predictions
                 response = [
                     reasoning_ids + sid_ids + [primary_eos_token_id]
                     for reasoning_ids, sid_ids in zip(response_reasonings, constrained_sids)
