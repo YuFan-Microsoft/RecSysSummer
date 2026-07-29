@@ -182,7 +182,7 @@ class RolloutConfig(BaseConfig):
     # Both must be provided (and sid_beam_size > 1) to activate beam search.
     sid_beam_size: Optional[int] = None
     sid_length: Optional[int] = None
-    sid_constrained_greedy: bool = False
+    sid_constrained_beam_size: Optional[int] = None
     sid_category: Optional[str] = None
 
     skip_tokenizer_init: bool = False

@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import math
 import re
+from typing import Optional
 _SOLUTION_CLIP_CHARS = 50
 
 
@@ -42,16 +44,11 @@ def extract_solution(solution_str, method="strict"):
     return None
     
 
-def calculate_reward(answer_sids, ground_truth_sids):
-    current_score = 0.0
-    if answer_sids[0] == ground_truth_sids[0]:
-        current_score += 0.25
-        if answer_sids[1] == ground_truth_sids[1]:
-            current_score *= 2
-            if answer_sids[2] == ground_truth_sids[2]:
-                current_score *= 2
-        
-    return current_score
+def calculate_ndcg_at_10(beam_predictions: list[str], ground_truth_sids: list[str]) -> tuple[float, int]:
+    for rank, prediction in enumerate(beam_predictions[:10], start=1):
+        if extract_sid_tokens(prediction)[:3] == ground_truth_sids:
+            return 1.0 / math.log2(rank + 1), rank
+    return 0.0, 0
 
 
 
@@ -61,34 +58,33 @@ class MyRewardComputer:
         data_source: str,
         solution_str: str,
         ground_truth: str,
-        extra_info: dict | None = None,
+        extra_info: Optional[dict] = None,
     ) -> dict[str, float]:
-        # breakpoint()
         answer = extract_solution(solution_str=solution_str)
         ground_truth = extract_sid_tokens(ground_truth)[:3]
+        beam_predictions = (extra_info or {}).get("sid_beam_predictions")
+        if not beam_predictions:
+            raise ValueError("sid_beam_predictions are required for NDCG@10 reward")
 
-        if answer is None:
-            return {
-                "score": 0.0,
-                "sid_match_reward": 0.0,
-                "prefix_1_match": 0.0,
-                "prefix_2_match": 0.0,
-                "exact_match": 0.0,
-            }
-
-        sid_match_reward = calculate_reward(answer, ground_truth)
+        ndcg_at_10, beam_rank = calculate_ndcg_at_10(beam_predictions, ground_truth)
         return {
-            "score": sid_match_reward,
-            "sid_match_reward": sid_match_reward,
-            "prefix_1_match": float(answer[0] == ground_truth[0]),
-            "prefix_2_match": float(answer[:2] == ground_truth[:2]),
-            "exact_match": float(answer == ground_truth),
+            "score": ndcg_at_10,
+            "sid_match_reward": ndcg_at_10,
+            "ndcg_at_10": ndcg_at_10,
+            "beam_rank": float(beam_rank),
+            "hit_at_1": float(beam_rank == 1),
+            "hit_at_3": float(0 < beam_rank <= 3),
+            "hit_at_5": float(0 < beam_rank <= 5),
+            "hit_at_10": float(beam_rank > 0),
+            "prefix_1_match": float(answer is not None and answer[0] == ground_truth[0]),
+            "prefix_2_match": float(answer is not None and answer[:2] == ground_truth[:2]),
+            "exact_match": float(beam_rank == 1),
         }
 
 
 
 # ---- 模块级单例（懒加载） ----
-_reward_computer: MyRewardComputer | None = None
+_reward_computer: Optional[MyRewardComputer] = None
 
 def _get_reward_computer() -> MyRewardComputer:
     global _reward_computer
