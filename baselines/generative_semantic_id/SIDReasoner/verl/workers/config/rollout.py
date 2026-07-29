@@ -183,6 +183,7 @@ class RolloutConfig(BaseConfig):
     sid_beam_size: Optional[int] = None
     sid_length: Optional[int] = None
     sid_constrained_greedy: bool = False
+    sid_validation_beam_size: Optional[int] = None
     sid_category: Optional[str] = None
 
     skip_tokenizer_init: bool = False

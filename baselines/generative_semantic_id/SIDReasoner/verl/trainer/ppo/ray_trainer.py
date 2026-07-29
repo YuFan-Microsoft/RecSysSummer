@@ -19,7 +19,9 @@ This trainer supports model-agonistic model initialization with huggingface
 """
 
 import json
+import math
 import os
+import re
 import uuid
 from collections import defaultdict
 from copy import deepcopy
@@ -77,6 +79,14 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_val/prefix_1_match_rate",
     "core_metrics_val/prefix_2_match_rate",
     "core_metrics_val/exact_match_rate",
+    "core_metrics_val/hr_at_1",
+    "core_metrics_val/hr_at_3",
+    "core_metrics_val/hr_at_5",
+    "core_metrics_val/hr_at_10",
+    "core_metrics_val/ndcg_at_1",
+    "core_metrics_val/ndcg_at_3",
+    "core_metrics_val/ndcg_at_5",
+    "core_metrics_val/ndcg_at_10",
     "response_length/mean",
     "response_length/max",
     "response_length/min",
@@ -87,6 +97,39 @@ _WANDB_METRIC_ORDER = (
     "prompt_length/min",
     "prompt_length/clip_ratio",
 )
+
+_SID_TOKEN_PATTERN = re.compile(r"<[^>]+>")
+_SID_RANKING_CUTOFFS = (1, 3, 5, 10)
+
+
+def _compute_sid_ranking_metrics(beam_predictions, ground_truths):
+    metrics = {
+        **{f"sid_eval_hr_at_{cutoff}": [] for cutoff in _SID_RANKING_CUTOFFS},
+        **{f"sid_eval_ndcg_at_{cutoff}": [] for cutoff in _SID_RANKING_CUTOFFS},
+    }
+
+    if len(beam_predictions) != len(ground_truths):
+        raise ValueError("SID beam predictions and ground truths must have the same length")
+
+    for beam, ground_truth in zip(beam_predictions, ground_truths):
+        target_sid = _SID_TOKEN_PATTERN.findall(str(ground_truth))[:3]
+        if len(target_sid) != 3:
+            raise ValueError(f"Expected a three-token ground-truth SID, got {ground_truth!r}")
+
+        rank = 0
+        for candidate_rank, prediction in enumerate(list(beam)[:10], start=1):
+            if _SID_TOKEN_PATTERN.findall(str(prediction))[:3] == target_sid:
+                rank = candidate_rank
+                break
+
+        for cutoff in _SID_RANKING_CUTOFFS:
+            hit = 0 < rank <= cutoff
+            metrics[f"sid_eval_hr_at_{cutoff}"].append(float(hit))
+            metrics[f"sid_eval_ndcg_at_{cutoff}"].append(
+                1.0 / math.log2(rank + 1) if hit else 0.0
+            )
+
+    return metrics
 
 
 def _log_metrics(logger, data, step, configured_backends, wandb_exclude_prefixes=None):
@@ -688,6 +731,13 @@ class RayPPOTrainer:
             output_texts = [self.tokenizer.decode(ids, skip_special_tokens=True) for ids in output_ids]
             sample_outputs.extend(output_texts)
 
+            sid_beam_predictions = test_output_gen_batch.non_tensor_batch.get("sid_beam_predictions")
+            if sid_beam_predictions is None:
+                raise ValueError("Validation requires catalog-constrained SID beam predictions")
+            sid_ranking_metrics = _compute_sid_ranking_metrics(sid_beam_predictions, ground_truths)
+            for key, values in sid_ranking_metrics.items():
+                reward_extra_infos_dict[key].extend(values)
+
             test_batch = test_batch.union(test_output_gen_batch)
             test_batch.meta_info["validate"] = True
 
@@ -738,6 +788,14 @@ class RayPPOTrainer:
             "prefix_1_match": "core_metrics_val/prefix_1_match_rate",
             "prefix_2_match": "core_metrics_val/prefix_2_match_rate",
             "exact_match": "core_metrics_val/exact_match_rate",
+            "sid_eval_hr_at_1": "core_metrics_val/hr_at_1",
+            "sid_eval_hr_at_3": "core_metrics_val/hr_at_3",
+            "sid_eval_hr_at_5": "core_metrics_val/hr_at_5",
+            "sid_eval_hr_at_10": "core_metrics_val/hr_at_10",
+            "sid_eval_ndcg_at_1": "core_metrics_val/ndcg_at_1",
+            "sid_eval_ndcg_at_3": "core_metrics_val/ndcg_at_3",
+            "sid_eval_ndcg_at_5": "core_metrics_val/ndcg_at_5",
+            "sid_eval_ndcg_at_10": "core_metrics_val/ndcg_at_10",
         }
         for reward_key, metric_key in validation_core_metrics.items():
             if reward_key in reward_extra_infos_dict:

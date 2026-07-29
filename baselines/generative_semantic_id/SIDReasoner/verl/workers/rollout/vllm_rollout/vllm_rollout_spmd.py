@@ -230,6 +230,88 @@ def vllm_constrained_greedy(
     return generated
 
 
+def vllm_constrained_beam_search(
+    llm,
+    prompts_ids: list[list[int]],
+    sid_token_trie: dict[tuple[int, ...], list[int]],
+    depth: int,
+    beam_width: int,
+    lora_requests=None,
+) -> list[list[list[int]]]:
+    """Decode ordered SID beams within catalog constraints."""
+    if beam_width < 2:
+        raise ValueError("Constrained SID beam width must be at least 2")
+    if isinstance(lora_requests, list) and len(lora_requests) != len(prompts_ids):
+        raise ValueError("Expected one LoRA request per prompt")
+
+    beams = [[([], 0.0)] for _ in prompts_ids]
+
+    for _position in range(depth):
+        allowed_token_ids = []
+        sampling_params = []
+        step_prompts = []
+        beam_origins = []
+
+        for prompt_index, (prompt_ids, prompt_beams) in enumerate(zip(prompts_ids, beams)):
+            for sid_prefix, cumulative_logprob in prompt_beams:
+                allowed = sid_token_trie.get(tuple(sid_prefix))
+                if not allowed:
+                    raise RuntimeError(f"No valid SID continuation for token prefix {sid_prefix}")
+                allowed_token_ids.append(set(allowed))
+                sampling_params.append(
+                    SamplingParams(
+                        n=1,
+                        max_tokens=1,
+                        temperature=0.0,
+                        logprobs=min(beam_width, len(allowed)),
+                        detokenize=False,
+                        allowed_token_ids=allowed,
+                    )
+                )
+                step_prompts.append({"prompt_token_ids": prompt_ids + sid_prefix})
+                beam_origins.append((prompt_index, sid_prefix, cumulative_logprob))
+
+        step_lora_requests = lora_requests
+        if isinstance(lora_requests, list):
+            step_lora_requests = [lora_requests[prompt_index] for prompt_index, _, _ in beam_origins]
+
+        step_outputs = llm.generate(
+            prompts=step_prompts,
+            sampling_params=sampling_params,
+            lora_request=step_lora_requests,
+            use_tqdm=False,
+        )
+        if len(step_outputs) != len(step_prompts):
+            raise RuntimeError("vLLM returned an unexpected constrained-beam batch size")
+
+        candidates = [[] for _ in prompts_ids]
+        for index, output in enumerate(step_outputs):
+            sample = output.outputs[0]
+            token_ids = sample.token_ids
+            if len(token_ids) != 1 or token_ids[0] not in allowed_token_ids[index]:
+                raise RuntimeError("vLLM emitted a token outside the SID catalog constraint")
+            if not sample.logprobs or len(sample.logprobs) != 1:
+                raise RuntimeError("vLLM did not return token log probabilities for constrained beam search")
+
+            prompt_index, sid_prefix, cumulative_logprob = beam_origins[index]
+            for token_id, token_logprob in sample.logprobs[0].items():
+                if token_id in allowed_token_ids[index]:
+                    candidates[prompt_index].append(
+                        (sid_prefix + [token_id], cumulative_logprob + token_logprob.logprob)
+                    )
+
+        for prompt_index, prompt_candidates in enumerate(candidates):
+            if not prompt_candidates:
+                raise RuntimeError(f"Constrained beam search produced no candidates for prompt {prompt_index}")
+            beams[prompt_index] = sorted(
+                prompt_candidates,
+                key=lambda candidate: candidate[1],
+                reverse=True,
+            )[:beam_width]
+
+    return [[sid_tokens for sid_tokens, _score in prompt_beams] for prompt_beams in beams]
+
+
 _SOLUTION_CLIP_CHARS = 100
 
 
@@ -442,19 +524,24 @@ class vLLMRollout(BaseRollout):
             self.num_sid_tokens = _sid_length
 
         self.activate_constrained_greedy = config.get("sid_constrained_greedy", False)
-        if self.activate_constrained_greedy:
+        _sid_validation_beam_size = config.get("sid_validation_beam_size", None)
+        self.activate_validation_beam_search = _sid_validation_beam_size is not None
+        if self.activate_constrained_greedy or self.activate_validation_beam_search:
             if self.activate_beam_search:
                 raise ValueError("SID beam search and constrained greedy cannot be enabled together")
+            if self.activate_validation_beam_search and _sid_validation_beam_size < 2:
+                raise ValueError("sid_validation_beam_size must be at least 2")
             if _sid_length is None or _sid_length < 1:
-                raise ValueError("sid_length must be set when constrained greedy is enabled")
+                raise ValueError("sid_length must be set when constrained SID decoding is enabled")
             sid_category = config.get("sid_category", None)
             if not sid_category:
-                raise ValueError("sid_category must be set when constrained greedy is enabled")
+                raise ValueError("sid_category must be set when constrained SID decoding is enabled")
             if self.config.calculate_log_probs:
-                raise ValueError("Constrained greedy requires actor-side log-probability recomputation")
+                raise ValueError("Constrained SID decoding requires actor-side log-probability recomputation")
 
             import hf_data
 
+            self.sid_validation_beam_size = _sid_validation_beam_size
             self.num_sid_tokens = _sid_length
             self.end_think_marker = self.tokenizer.encode("</think>", add_special_tokens=False)
             if self.truncate_marker[: len(self.end_think_marker)] != self.end_think_marker:
@@ -549,6 +636,9 @@ class vLLMRollout(BaseRollout):
 
         do_sample = prompts.meta_info.get("do_sample", True)
         is_validate = prompts.meta_info.get("validate", False)
+        use_validation_beam_search = is_validate and self.activate_validation_beam_search
+        use_constrained_greedy = self.activate_constrained_greedy and not use_validation_beam_search
+        use_constrained_sid_decoding = use_validation_beam_search or use_constrained_greedy
         if not do_sample:
             kwargs = {
                 "best_of": 1,
@@ -567,7 +657,7 @@ class vLLMRollout(BaseRollout):
                 "n": 1,  # if validate, already repeat in ray_trainer
             }
 
-        if self.activate_constrained_greedy:
+        if use_constrained_sid_decoding:
             reserved_tokens = self.num_sid_tokens + len(self.truncate_marker) + 1
             max_reasoning_tokens = self.config.response_length - reserved_tokens
             if max_reasoning_tokens < 1:
@@ -604,7 +694,7 @@ class vLLMRollout(BaseRollout):
                 for sample_id in range(len(output.outputs)):
                     response_ids = output.outputs[sample_id].token_ids
                     response.append(response_ids)
-                    if self.activate_constrained_greedy:
+                    if use_constrained_sid_decoding:
                         reasoning_ids, sampled_length = prepare_reasoning_prefix(
                             response_ids,
                             end_think_marker=self.end_think_marker,
@@ -626,8 +716,33 @@ class vLLMRollout(BaseRollout):
                             curr_log_prob.append(logprob[response_ids[i]].logprob)
                         rollout_log_probs.append(curr_log_prob)
 
+            if use_validation_beam_search:
+                input_prompt_ids = [
+                    vllm_inputs[i]["prompt_token_ids"] + response_reasonings[i] for i in range(batch_size)
+                ]
+                constrained_sid_beams = vllm_constrained_beam_search(
+                    self.inference_engine,
+                    prompts_ids=input_prompt_ids,
+                    sid_token_trie=self.sid_token_trie,
+                    depth=self.num_sid_tokens,
+                    beam_width=self.sid_validation_beam_size,
+                    lora_requests=lora_requests,
+                )
+                constrained_sids = [sid_beam[0] for sid_beam in constrained_sid_beams]
+                sid_beam_predictions = np.empty(batch_size, dtype=object)
+                for index, sid_beam in enumerate(constrained_sid_beams):
+                    sid_beam_predictions[index] = np.array(
+                        [self.tokenizer.decode(sid_ids, skip_special_tokens=False) for sid_ids in sid_beam],
+                        dtype=object,
+                    )
+                non_tensor_batch["sid_beam_predictions"] = sid_beam_predictions
+                response = [
+                    reasoning_ids + sid_ids + [primary_eos_token_id]
+                    for reasoning_ids, sid_ids in zip(response_reasonings, constrained_sids)
+                ]
+
             # === SID Reasoner: constrained greedy over catalog SID paths ===
-            if self.activate_constrained_greedy:
+            elif use_constrained_greedy:
                 input_prompt_ids = [
                     vllm_inputs[i]["prompt_token_ids"] + response_reasonings[i] for i in range(batch_size)
                 ]
@@ -661,7 +776,7 @@ class vLLMRollout(BaseRollout):
             response = pad_2d_list_to_length(response, self.pad_token_id, max_length=self.config.response_length).to(
                 idx.device
             )
-            if self.activate_constrained_greedy:
+            if use_constrained_sid_decoding:
                 response_mask = torch.zeros_like(response, dtype=attention_mask.dtype)
                 for index, sampled_length in enumerate(sampled_reasoning_lengths):
                     response_mask[index, :sampled_length] = 1
@@ -701,7 +816,7 @@ class vLLMRollout(BaseRollout):
             },
             batch_size=batch_size,
         )
-        if self.activate_constrained_greedy:
+        if use_constrained_sid_decoding:
             batch["response_mask"] = response_mask
         if self.config.calculate_log_probs:
             # we will recompute old log prob with actor
