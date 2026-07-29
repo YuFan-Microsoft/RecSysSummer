@@ -16,6 +16,8 @@ import math
 import re
 from typing import Optional
 _SOLUTION_CLIP_CHARS = 50
+_PREFIX_2_WEIGHT = 0.2
+_PREFIX_1_WEIGHT = 0.05
 
 
 
@@ -51,6 +53,31 @@ def calculate_ndcg_at_10(beam_predictions: list[str], ground_truth_sids: list[st
     return 0.0, 0
 
 
+def find_prefix_rank(beam_predictions: list[str], ground_truth_sids: list[str], prefix_length: int) -> int:
+    for rank, prediction in enumerate(beam_predictions[:10], start=1):
+        if extract_sid_tokens(prediction)[:prefix_length] == ground_truth_sids[:prefix_length]:
+            return rank
+    return 0
+
+
+def calculate_hierarchical_reward(
+    beam_predictions: list[str], ground_truth_sids: list[str]
+) -> tuple[float, float, int, int, int, int]:
+    exact_ndcg, exact_rank = calculate_ndcg_at_10(beam_predictions, ground_truth_sids)
+    prefix_2_rank = find_prefix_rank(beam_predictions, ground_truth_sids, prefix_length=2)
+    prefix_1_rank = find_prefix_rank(beam_predictions, ground_truth_sids, prefix_length=1)
+
+    if exact_rank:
+        return exact_ndcg, exact_ndcg, exact_rank, prefix_2_rank, prefix_1_rank, 3
+    if prefix_2_rank:
+        reward = _PREFIX_2_WEIGHT / math.log2(prefix_2_rank + 1)
+        return reward, exact_ndcg, exact_rank, prefix_2_rank, prefix_1_rank, 2
+    if prefix_1_rank:
+        reward = _PREFIX_1_WEIGHT / math.log2(prefix_1_rank + 1)
+        return reward, exact_ndcg, exact_rank, prefix_2_rank, prefix_1_rank, 1
+    return 0.0, exact_ndcg, exact_rank, prefix_2_rank, prefix_1_rank, 0
+
+
 
 class MyRewardComputer:
     def compute(
@@ -60,24 +87,28 @@ class MyRewardComputer:
         ground_truth: str,
         extra_info: Optional[dict] = None,
     ) -> dict[str, float]:
-        answer = extract_solution(solution_str=solution_str)
         ground_truth = extract_sid_tokens(ground_truth)[:3]
         beam_predictions = (extra_info or {}).get("sid_beam_predictions")
         if not beam_predictions:
             raise ValueError("sid_beam_predictions are required for NDCG@10 reward")
 
-        ndcg_at_10, beam_rank = calculate_ndcg_at_10(beam_predictions, ground_truth)
+        reward, ndcg_at_10, beam_rank, prefix_2_rank, prefix_1_rank, match_level = (
+            calculate_hierarchical_reward(beam_predictions, ground_truth)
+        )
         return {
-            "score": ndcg_at_10,
-            "sid_match_reward": ndcg_at_10,
+            "score": reward,
+            "sid_match_reward": reward,
             "ndcg_at_10": ndcg_at_10,
             "beam_rank": float(beam_rank),
+            "prefix_2_rank": float(prefix_2_rank),
+            "prefix_1_rank": float(prefix_1_rank),
+            "reward_match_level": float(match_level),
             "hit_at_1": float(beam_rank == 1),
             "hit_at_3": float(0 < beam_rank <= 3),
             "hit_at_5": float(0 < beam_rank <= 5),
             "hit_at_10": float(beam_rank > 0),
-            "prefix_1_match": float(answer is not None and answer[0] == ground_truth[0]),
-            "prefix_2_match": float(answer is not None and answer[:2] == ground_truth[:2]),
+            "prefix_1_match": float(prefix_1_rank > 0),
+            "prefix_2_match": float(prefix_2_rank > 0),
             "exact_match": float(beam_rank == 1),
         }
 
