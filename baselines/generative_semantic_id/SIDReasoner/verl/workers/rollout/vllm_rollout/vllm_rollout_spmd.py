@@ -512,6 +512,9 @@ class vLLMRollout(BaseRollout):
 
         # used to construct attention_mask
         eos_token_id = prompts.meta_info["eos_token_id"]
+        # generation_config may expose eos_token_id as a list (e.g. Qwen3 -> [151645, 151643]);
+        # the constrained-greedy path needs a single scalar id to append as the terminal token.
+        primary_eos_token_id = eos_token_id[0] if isinstance(eos_token_id, (list, tuple)) else eos_token_id
 
         batch_size = idx.size(0)
 
@@ -606,7 +609,7 @@ class vLLMRollout(BaseRollout):
                             response_ids,
                             end_think_marker=self.end_think_marker,
                             reasoning_separator=self.truncate_marker,
-                            eos_token_id=eos_token_id,
+                            eos_token_id=primary_eos_token_id,
                             max_length=self.config.response_length - self.num_sid_tokens - 1,
                         )
                         response_reasonings.append(reasoning_ids)
@@ -636,7 +639,7 @@ class vLLMRollout(BaseRollout):
                     lora_requests=lora_requests,
                 )
                 response = [
-                    reasoning_ids + sid_ids + [eos_token_id]
+                    reasoning_ids + sid_ids + [primary_eos_token_id]
                     for reasoning_ids, sid_ids in zip(response_reasonings, constrained_sids)
                 ]
 
