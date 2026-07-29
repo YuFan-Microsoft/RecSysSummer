@@ -476,11 +476,15 @@ class vLLMRollout(BaseRollout):
 
         _sid_constrained_beam_size = config.get("sid_constrained_beam_size", None)
         self.activate_constrained_beam_search = _sid_constrained_beam_size is not None
-        if self.activate_constrained_beam_search:
+        _sid_validation_beam_size = config.get("sid_validation_beam_size", None)
+        self.activate_validation_beam_search = _sid_validation_beam_size is not None
+        if self.activate_constrained_beam_search or self.activate_validation_beam_search:
             if self.activate_beam_search:
                 raise ValueError("SID beam search modes cannot be enabled together")
-            if _sid_constrained_beam_size < 2:
+            if self.activate_constrained_beam_search and _sid_constrained_beam_size < 2:
                 raise ValueError("sid_constrained_beam_size must be at least 2")
+            if self.activate_validation_beam_search and _sid_validation_beam_size < 2:
+                raise ValueError("sid_validation_beam_size must be at least 2")
             if _sid_length is None or _sid_length < 1:
                 raise ValueError("sid_length must be set when constrained beam search is enabled")
             sid_category = config.get("sid_category", None)
@@ -492,6 +496,7 @@ class vLLMRollout(BaseRollout):
             import hf_data
 
             self.sid_constrained_beam_size = _sid_constrained_beam_size
+            self.sid_validation_beam_size = _sid_validation_beam_size
             self.num_sid_tokens = _sid_length
             self.end_think_marker = self.tokenizer.encode("</think>", add_special_tokens=False)
             if self.truncate_marker[: len(self.end_think_marker)] != self.end_think_marker:
@@ -586,6 +591,11 @@ class vLLMRollout(BaseRollout):
 
         do_sample = prompts.meta_info.get("do_sample", True)
         is_validate = prompts.meta_info.get("validate", False)
+        use_constrained_beam_search = self.activate_constrained_beam_search
+        constrained_beam_size = getattr(self, "sid_constrained_beam_size", None)
+        if is_validate and self.activate_validation_beam_search:
+            use_constrained_beam_search = True
+            constrained_beam_size = self.sid_validation_beam_size
         if not do_sample:
             kwargs = {
                 "best_of": 1,
@@ -604,7 +614,7 @@ class vLLMRollout(BaseRollout):
                 "n": 1,  # if validate, already repeat in ray_trainer
             }
 
-        if self.activate_constrained_beam_search:
+        if use_constrained_beam_search:
             reserved_tokens = self.num_sid_tokens + len(self.truncate_marker) + 1
             max_reasoning_tokens = self.config.response_length - reserved_tokens
             if max_reasoning_tokens < 1:
@@ -641,7 +651,7 @@ class vLLMRollout(BaseRollout):
                 for sample_id in range(len(output.outputs)):
                     response_ids = output.outputs[sample_id].token_ids
                     response.append(response_ids)
-                    if self.activate_constrained_beam_search:
+                    if use_constrained_beam_search:
                         reasoning_ids, sampled_length = prepare_reasoning_prefix(
                             response_ids,
                             end_think_marker=self.end_think_marker,
@@ -664,7 +674,7 @@ class vLLMRollout(BaseRollout):
                         rollout_log_probs.append(curr_log_prob)
 
             # === SID Reasoner: constrained beam search over catalog SID paths ===
-            if self.activate_constrained_beam_search:
+            if use_constrained_beam_search:
                 input_prompt_ids = [
                     vllm_inputs[i]["prompt_token_ids"] + response_reasonings[i] for i in range(batch_size)
                 ]
@@ -673,7 +683,7 @@ class vLLMRollout(BaseRollout):
                     prompts_ids=input_prompt_ids,
                     sid_token_trie=self.sid_token_trie,
                     depth=self.num_sid_tokens,
-                    beam_width=self.sid_constrained_beam_size,
+                    beam_width=constrained_beam_size,
                     lora_requests=lora_requests,
                 )
                 constrained_sids = [sid_beam[0] for sid_beam in constrained_sid_beams]
@@ -716,7 +726,7 @@ class vLLMRollout(BaseRollout):
             response = pad_2d_list_to_length(response, self.pad_token_id, max_length=self.config.response_length).to(
                 idx.device
             )
-            if self.activate_constrained_beam_search:
+            if use_constrained_beam_search:
                 response_mask = torch.zeros_like(response, dtype=attention_mask.dtype)
                 for index, sampled_length in enumerate(sampled_reasoning_lengths):
                     response_mask[index, :sampled_length] = 1
@@ -756,7 +766,7 @@ class vLLMRollout(BaseRollout):
             },
             batch_size=batch_size,
         )
-        if self.activate_constrained_beam_search:
+        if use_constrained_beam_search:
             batch["response_mask"] = response_mask
         if self.config.calculate_log_probs:
             # we will recompute old log prob with actor
