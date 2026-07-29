@@ -71,15 +71,12 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_train/sid_match_all_wrong_group_rate",
     "core_metrics_train/sid_match_uniform_partial_group_rate",
     "core_metrics_train/sid_match_all_correct_group_rate",
-    "core_metrics_train/valid_sid_reward_mean",
-    "core_metrics_train/valid_sid_active_group_rate",
     "core_metrics_train/entropy",
     "core_metrics_train/response_clip_ratio",
     "core_metrics_val/sid_match_reward_mean",
     "core_metrics_val/prefix_1_match_rate",
     "core_metrics_val/prefix_2_match_rate",
     "core_metrics_val/exact_match_rate",
-    "core_metrics_val/valid_sid_reward_mean",
     "response_length/mean",
     "response_length/max",
     "response_length/min",
@@ -113,7 +110,6 @@ def _compute_core_metrics(batch, metrics):
 
     reward_extra_metrics = {
         "sid_match_reward": "core_metrics_train/sid_match_reward_mean",
-        "valid_sid_reward": "core_metrics_train/valid_sid_reward_mean",
         "prefix_1_match": "core_metrics_train/prefix_1_match_rate",
         "prefix_2_match": "core_metrics_train/prefix_2_match_rate",
         "exact_match": "core_metrics_train/exact_match_rate",
@@ -124,7 +120,6 @@ def _compute_core_metrics(batch, metrics):
 
     active_group_metrics = {
         "sid_match_reward": "core_metrics_train/sid_match_active_group_rate",
-        "valid_sid_reward": "core_metrics_train/valid_sid_active_group_rate",
     }
     if "uid" in batch.non_tensor_batch:
         sample_uids = batch.non_tensor_batch["uid"]
@@ -740,7 +735,6 @@ class RayPPOTrainer:
         metric_dict = {}
         validation_core_metrics = {
             "sid_match_reward": "core_metrics_val/sid_match_reward_mean",
-            "valid_sid_reward": "core_metrics_val/valid_sid_reward_mean",
             "prefix_1_match": "core_metrics_val/prefix_1_match_rate",
             "prefix_2_match": "core_metrics_val/prefix_2_match_rate",
             "exact_match": "core_metrics_val/exact_match_rate",

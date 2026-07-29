@@ -139,21 +139,22 @@ run the materialization once per domain before launching RL; do not hand‑edit 
 | `reward_model.ground_truth` | the target `item_sid` (raw 3‑token SID string) |
 | `data_source` · `ability` · `extra_info` | routing / bookkeeping (split, index, echoed Q/A) |
 
-### C · Reward function → which HF config / columns it reads
+### C · Constrained SID rollout and reward
 
-The custom reward (`verl/utils/reward_score/direct_recommendation_StepRule_<Domain>.py`)
-builds a **SID prefix tree** for its format check:
+The vLLM rollout worker loads the selected domain's catalog and builds a token-level
+**SID prefix trie**:
 
 | Loads | HF config | Column(s) used |
 | --- | --- | --- |
-| `construct_prefix_allowed_hashmap` → `hf_data.load_info_lines(...)` | `<cat>_catalog` (train) | `sid` (from the rebuilt `sid⇥title⇥item_id` line map) |
+| `hf_data.load_sid_indices(sid_category)` | `<cat>_catalog` (train) | `sid_tokens` |
 
-- The info‑file locator (e.g. `Video_Games_5_2016-10-2018-11.txt`) carries the `_5_` marker,
-  so `infer_category` keys the right `<cat>_catalog`.
-- Reward = **hit reward** (0.25, then ×2, then ×2 as SID tokens *a → b → c* match
-  `ground_truth`) **+ 0.1 × format reward** (is the emitted 3‑token SID a valid path in the
-  catalog prefix tree). Only the catalog `sid` column matters; `title` / `item_id` are read
-  by `load_info_lines` but unused by the reward.
+- Each rollout first samples reasoning, discards the sampled suffix after `</think>`, then
+  greedily generates three SID tokens. At each position, `allowed_token_ids` contains only
+  catalog-valid continuations, so the final SID is always a real catalog path.
+- The PPO `response_mask` covers only the sampled reasoning. The deterministic SID and EOS
+  remain visible to the reward parser but are excluded from actor, entropy, and KL losses.
+- Reward is only the **hit reward**: 0.25, then ×2, then ×2 as SID tokens *a → b → c*
+  match `ground_truth`. There is no separate valid-SID reward.
 
 ## Environment
 

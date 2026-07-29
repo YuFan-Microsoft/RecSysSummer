@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import re
-from collections import defaultdict
 _SOLUTION_CLIP_CHARS = 50
 
 
@@ -56,92 +55,7 @@ def calculate_reward(answer_sids, ground_truth_sids):
 
 
 
-def calculate_format_reward(answer_sids, prefix_map):
-    def is_valid_sid_sequence(sid_list):
-        """
-        Check if a SID sequence is valid according to prefix_map.
-        No root/terminal nodes are used.
-        """
-        if len(sid_list) < 3:
-            return False
-
-        a, b, c = sid_list[:3]
-
-        # Check prefix (a,) → next: b
-        if (a,) not in prefix_map:
-            return False
-        if b not in prefix_map[(a,)]:
-            return False
-
-        # Check prefix (a, b) → next: c
-        if (a, b) not in prefix_map:
-            return False
-        if c not in prefix_map[(a, b)]:
-            return False
-
-        return True
-
-    format_scores = is_valid_sid_sequence(answer_sids)
-    return format_scores
-
-
-
-
-# def rule_base_reward(data_source, solution_str, ground_truth, extra_info=None):
-#     answer = extract_solution(solution_str=solution_str)
-#     ground_truth = extract_sid_tokens(ground_truth)[:3]
-
-#     format_score = 0.1
-
-#     if answer is None:
-#         return 0
-#     else:
-#         return calculate_reward(answer, ground_truth) + format_score
-
-
-
-def construct_prefix_allowed_hashmap(item_info_path):
-    sid_pattern = re.compile(r"<[^>]+>")
-    prefix_map = defaultdict(set)
-
-    # ``item_info_path`` is a locator, not a local file: load the SID map from
-    # Hugging Face (hf_data parses the category out of the filename). Fall back
-    # to putting the repo root on sys.path in case verl imports this reward
-    # module without the repo root already on PYTHONPATH.
-    try:
-        import hf_data
-    except ModuleNotFoundError:
-        import os as _os, sys as _sys
-        _sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", "..", "..")))
-        import hf_data
-    lines = hf_data.load_info_lines(item_info_path)
-
-    for line in lines:
-        semantic_id = line.split("\t")[0].strip()
-        sid_list = sid_pattern.findall(semantic_id)
-
-        # sid_list should be length 3: [a, b, c]
-        if len(sid_list) != 3:
-            continue  # skip malformed rows
-
-        a, b, c = sid_list
-        # prefix: ("a",) → next: b
-        prefix_map[(a,)].add(b)
-        # prefix: ("a", "b") → next: c
-        prefix_map[(a, b)].add(c)
-
-    # Convert sets to lists for consistency
-    prefix_map = {prefix: list(next_tokens) for prefix, next_tokens in prefix_map.items()}
-    return prefix_map
-
-
-
 class MyRewardComputer:
-    def __init__(self):
-        self.sid_hash = construct_prefix_allowed_hashmap(
-            "./data/Amazon_Games/info/Video_Games_5_2016-10-2018-11.txt"
-        )
-
     def compute(
         self,
         data_source: str,
@@ -157,24 +71,18 @@ class MyRewardComputer:
             return {
                 "score": 0.0,
                 "sid_match_reward": 0.0,
-                "valid_sid_reward": 0.0,
                 "prefix_1_match": 0.0,
                 "prefix_2_match": 0.0,
                 "exact_match": 0.0,
-                "valid_sid": 0.0,
             }
 
-        valid_sid = float(calculate_format_reward(answer, self.sid_hash))
         sid_match_reward = calculate_reward(answer, ground_truth)
-        valid_sid_reward = 0.1 * valid_sid
         return {
-            "score": sid_match_reward + valid_sid_reward,
+            "score": sid_match_reward,
             "sid_match_reward": sid_match_reward,
-            "valid_sid_reward": valid_sid_reward,
             "prefix_1_match": float(answer[0] == ground_truth[0]),
             "prefix_2_match": float(answer[:2] == ground_truth[:2]),
             "exact_match": float(answer == ground_truth),
-            "valid_sid": valid_sid,
         }
 
 

@@ -123,6 +123,113 @@ def truncate_at_end_think(tokens, marker=[151668, 271], clip_chars=20):
     return tokens
 
 
+def prepare_reasoning_prefix(
+    tokens: list[int],
+    end_think_marker: list[int],
+    reasoning_separator: list[int],
+    eos_token_id: int,
+    max_length: int,
+) -> tuple[list[int], int]:
+    """Keep sampled reasoning, normalize its separator, and report sampled length."""
+    marker_length = len(end_think_marker)
+    for start in range(len(tokens) - marker_length + 1):
+        if tokens[start : start + marker_length] == end_think_marker:
+            reasoning = tokens[: start + marker_length]
+            break
+    else:
+        reasoning = list(tokens)
+        while reasoning and reasoning[-1] == eos_token_id:
+            reasoning.pop()
+        reasoning = reasoning[: max_length - len(reasoning_separator)]
+        if not reasoning:
+            raise RuntimeError("Reasoning rollout ended before producing any trainable token")
+        return reasoning + reasoning_separator, len(reasoning)
+
+    separator_suffix = reasoning_separator[marker_length:]
+    normalized = reasoning + separator_suffix
+    if len(normalized) > max_length:
+        raise ValueError("Sampled reasoning leaves no room for the constrained SID")
+    return normalized, len(reasoning)
+
+
+def build_sid_token_trie(tokenizer, sid_sequences, depth: int) -> dict[tuple[int, ...], list[int]]:
+    """Build token-ID prefix constraints from catalog SID paths."""
+    trie: dict[tuple[int, ...], set[int]] = {}
+    sequence_count = 0
+
+    for sid_sequence in sid_sequences:
+        if len(sid_sequence) != depth:
+            raise ValueError(f"Expected {depth} SID tokens, got {sid_sequence}")
+
+        token_ids = []
+        for sid_token in sid_sequence:
+            encoded = tokenizer.encode(sid_token, add_special_tokens=False)
+            if len(encoded) != 1:
+                raise ValueError(f"SID token {sid_token!r} maps to {len(encoded)} tokenizer tokens")
+            token_ids.append(encoded[0])
+
+        if tokenizer.encode("".join(sid_sequence), add_special_tokens=False) != token_ids:
+            raise ValueError(f"SID path does not tokenize atomically: {sid_sequence}")
+
+        for position, token_id in enumerate(token_ids):
+            trie.setdefault(tuple(token_ids[:position]), set()).add(token_id)
+        sequence_count += 1
+
+    if sequence_count == 0:
+        raise ValueError("Cannot build constrained decoding trie from an empty SID catalog")
+
+    return {prefix: sorted(token_ids) for prefix, token_ids in trie.items()}
+
+
+def vllm_constrained_greedy(
+    llm,
+    prompts_ids: list[list[int]],
+    sid_token_trie: dict[tuple[int, ...], list[int]],
+    depth: int,
+    lora_requests=None,
+) -> list[list[int]]:
+    """Greedily decode one SID token at a time within catalog constraints."""
+    generated = [[] for _ in prompts_ids]
+
+    for _position in range(depth):
+        allowed_token_ids = []
+        sampling_params = []
+        step_prompts = []
+
+        for prompt_ids, sid_prefix in zip(prompts_ids, generated):
+            allowed = sid_token_trie.get(tuple(sid_prefix))
+            if not allowed:
+                raise RuntimeError(f"No valid SID continuation for token prefix {sid_prefix}")
+            allowed_token_ids.append(allowed)
+            sampling_params.append(
+                SamplingParams(
+                    n=1,
+                    max_tokens=1,
+                    temperature=0.0,
+                    detokenize=False,
+                    allowed_token_ids=allowed,
+                )
+            )
+            step_prompts.append({"prompt_token_ids": prompt_ids + sid_prefix})
+
+        step_outputs = llm.generate(
+            prompts=step_prompts,
+            sampling_params=sampling_params,
+            lora_request=lora_requests,
+            use_tqdm=False,
+        )
+        if len(step_outputs) != len(generated):
+            raise RuntimeError("vLLM returned an unexpected constrained-greedy batch size")
+
+        for index, output in enumerate(step_outputs):
+            token_ids = output.outputs[0].token_ids
+            if len(token_ids) != 1 or token_ids[0] not in allowed_token_ids[index]:
+                raise RuntimeError("vLLM emitted a token outside the SID catalog constraint")
+            generated[index].append(token_ids[0])
+
+    return generated
+
+
 _SOLUTION_CLIP_CHARS = 100
 
 
@@ -324,7 +431,7 @@ class vLLMRollout(BaseRollout):
         # (set via CLI override). Read with .get() to stay safe on the
         # structured BaseConfig (where `in` raises AttributeError).
         self.tokenizer = tokenizer
-        self.truncate_marker = self.tokenizer.encode("</think>\n\n")
+        self.truncate_marker = self.tokenizer.encode("</think>\n\n", add_special_tokens=False)
         _sid_beam_size = config.get("sid_beam_size", None)
         _sid_length = config.get("sid_length", None)
         self.activate_beam_search = (
@@ -333,6 +440,31 @@ class vLLMRollout(BaseRollout):
         if self.activate_beam_search:
             self.sid_beam_size = _sid_beam_size
             self.num_sid_tokens = _sid_length
+
+        self.activate_constrained_greedy = config.get("sid_constrained_greedy", False)
+        if self.activate_constrained_greedy:
+            if self.activate_beam_search:
+                raise ValueError("SID beam search and constrained greedy cannot be enabled together")
+            if _sid_length is None or _sid_length < 1:
+                raise ValueError("sid_length must be set when constrained greedy is enabled")
+            sid_category = config.get("sid_category", None)
+            if not sid_category:
+                raise ValueError("sid_category must be set when constrained greedy is enabled")
+            if self.config.calculate_log_probs:
+                raise ValueError("Constrained greedy requires actor-side log-probability recomputation")
+
+            import hf_data
+
+            self.num_sid_tokens = _sid_length
+            self.end_think_marker = self.tokenizer.encode("</think>", add_special_tokens=False)
+            if self.truncate_marker[: len(self.end_think_marker)] != self.end_think_marker:
+                raise ValueError("The </think> separator does not extend the tokenizer's </think> marker")
+            sid_sequences = hf_data.load_sid_indices(sid_category).values()
+            self.sid_token_trie = build_sid_token_trie(
+                self.tokenizer,
+                sid_sequences,
+                depth=self.num_sid_tokens,
+            )
 
     @contextmanager
     def update_sampling_params(self, **kwargs):
@@ -432,6 +564,14 @@ class vLLMRollout(BaseRollout):
                 "n": 1,  # if validate, already repeat in ray_trainer
             }
 
+        if self.activate_constrained_greedy:
+            reserved_tokens = self.num_sid_tokens + len(self.truncate_marker) + 1
+            max_reasoning_tokens = self.config.response_length - reserved_tokens
+            if max_reasoning_tokens < 1:
+                raise ValueError("response_length is too short for reasoning plus constrained SID")
+            kwargs["max_tokens"] = max_reasoning_tokens
+            kwargs["min_tokens"] = 1
+
         lora_requests = None
         if self.lora_kwargs:
             lora_int_ids = list(self.inference_engine.llm_engine.list_loras())
@@ -455,12 +595,23 @@ class vLLMRollout(BaseRollout):
 
             response = []
             response_reasonings = []
+            sampled_reasoning_lengths = []
             rollout_log_probs = []
             for output in outputs:
                 for sample_id in range(len(output.outputs)):
                     response_ids = output.outputs[sample_id].token_ids
                     response.append(response_ids)
-                    if self.activate_beam_search:
+                    if self.activate_constrained_greedy:
+                        reasoning_ids, sampled_length = prepare_reasoning_prefix(
+                            response_ids,
+                            end_think_marker=self.end_think_marker,
+                            reasoning_separator=self.truncate_marker,
+                            eos_token_id=eos_token_id,
+                            max_length=self.config.response_length - self.num_sid_tokens - 1,
+                        )
+                        response_reasonings.append(reasoning_ids)
+                        sampled_reasoning_lengths.append(sampled_length)
+                    elif self.activate_beam_search:
                         # keep only the reasoning span (up to and including </think>)
                         response_ids_truncated = truncate_at_end_think(
                             response_ids, marker=self.truncate_marker, clip_chars=20
@@ -472,8 +623,25 @@ class vLLMRollout(BaseRollout):
                             curr_log_prob.append(logprob[response_ids[i]].logprob)
                         rollout_log_probs.append(curr_log_prob)
 
+            # === SID Reasoner: constrained greedy over catalog SID paths ===
+            if self.activate_constrained_greedy:
+                input_prompt_ids = [
+                    vllm_inputs[i]["prompt_token_ids"] + response_reasonings[i] for i in range(batch_size)
+                ]
+                constrained_sids = vllm_constrained_greedy(
+                    self.inference_engine,
+                    prompts_ids=input_prompt_ids,
+                    sid_token_trie=self.sid_token_trie,
+                    depth=self.num_sid_tokens,
+                    lora_requests=lora_requests,
+                )
+                response = [
+                    reasoning_ids + sid_ids + [eos_token_id]
+                    for reasoning_ids, sid_ids in zip(response_reasonings, constrained_sids)
+                ]
+
             # === SID Reasoner: beam search over semantic-ID tokens after reasoning ===
-            if self.activate_beam_search:
+            elif self.activate_beam_search:
                 input_prompt_ids = [
                     vllm_inputs[i]["prompt_token_ids"] + response_reasonings[i] for i in range(batch_size)
                 ]
@@ -490,6 +658,10 @@ class vLLMRollout(BaseRollout):
             response = pad_2d_list_to_length(response, self.pad_token_id, max_length=self.config.response_length).to(
                 idx.device
             )
+            if self.activate_constrained_greedy:
+                response_mask = torch.zeros_like(response, dtype=attention_mask.dtype)
+                for index, sampled_length in enumerate(sampled_reasoning_lengths):
+                    response_mask[index, :sampled_length] = 1
             if self.config.calculate_log_probs:
                 rollout_log_probs = pad_2d_list_to_length(
                     rollout_log_probs, -1, max_length=self.config.response_length
@@ -526,6 +698,8 @@ class vLLMRollout(BaseRollout):
             },
             batch_size=batch_size,
         )
+        if self.activate_constrained_greedy:
+            batch["response_mask"] = response_mask
         if self.config.calculate_log_probs:
             # we will recompute old log prob with actor
             batch["rollout_log_probs"] = rollout_log_probs
