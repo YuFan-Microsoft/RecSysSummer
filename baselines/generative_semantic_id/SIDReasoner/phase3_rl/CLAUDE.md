@@ -149,12 +149,30 @@ The vLLM rollout worker loads the selected domain's catalog and builds a token-l
 | `hf_data.load_sid_indices(sid_category)` | `<cat>_catalog` (train) | `sid_tokens` |
 
 - Each rollout first samples reasoning, discards the sampled suffix after `</think>`, then
-  greedily generates three SID tokens. At each position, `allowed_token_ids` contains only
-  catalog-valid continuations, so the final SID is always a real catalog path.
+  runs catalog-constrained beam search (width 10) over three SID tokens. The top-ranked
+  path becomes the training response, while the complete beam is passed to the reward.
 - The PPO `response_mask` covers only the sampled reasoning. The deterministic SID and EOS
   remain visible to the reward parser but are excluded from actor, entropy, and KL losses.
-- Reward is only the **hit reward**: 0.25, then ×2, then ×2 as SID tokens *a → b → c*
-  match `ground_truth`. There is no separate valid-SID reward.
+- Reward is exact-match NDCG@10 over the constrained beam: a ground-truth SID at rank
+  `r` receives `1 / log2(r + 1)`; a miss receives 0. There is no prefix-match or separate
+  valid-SID reward.
+
+### D · Dynamic active-group sampling
+
+The no-KL launcher enables DAPO-style group filtering with `sid_match_reward`, which is
+the exact-match NDCG@10 beam reward above.
+Each candidate prompt receives `rollout.n=16` responses; groups whose 16 rewards are
+uniform are discarded before old-log-probability and actor computation. The trainer
+repeats generation on the candidate prompt batch until it accumulates
+`data.train_batch_size=256` active groups, then truncates by complete UID groups.
+`max_num_gen_batches=10` prevents an infinite refill loop when rewards are too sparse.
+
+W&B logs `dynamic_sampling/generated_batches`, `generated_prompt_groups`,
+`active_prompt_groups`, `candidate_active_group_rate`, `discarded_prompt_groups`, and
+`discarded_surplus_active_groups`, plus candidate `all_zero`, `all_one`, and
+`uniform_other` group rates. The regular `sid_match_active_group_rate` is computed after
+filtering and is therefore 1; use `candidate_active_group_rate` to compare against an
+unfiltered baseline.
 
 ## Environment
 

@@ -113,6 +113,21 @@ algorithm:
     # Power used for weight scaling in "pow" method
     weight_pow: 2.0
 
+  # Group filtering configuration used by DAPO-style dynamic sampling
+  filter_groups:
+
+    # Required when using verl.utils.omega_conf_to_dataclass to instantiate dataclass configs
+    _target_: verl.trainer.config.FilterGroupsConfig
+
+    # Whether to discard groups whose metric values are uniform
+    enable: False
+
+    # Reward extra-info key used to compare trajectories in each UID group
+    metric: null
+
+    # Maximum candidate generation batches per optimizer step; non-positive means unlimited
+    max_num_gen_batches: 0
+
   # Rollout Importance Sampling: corrects distribution mismatch between rollout and training policies
   # Main control: Upper threshold for IS weights (null = disabled, float = enabled)
   # When enabled, computes IS weights and mismatch metrics (KL, PPL, etc.)
