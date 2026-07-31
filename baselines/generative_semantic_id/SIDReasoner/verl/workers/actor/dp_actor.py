@@ -28,7 +28,7 @@ from torch.distributed.tensor import DTensor
 import verl.utils.torch_functional as verl_F
 from verl import DataProto
 from verl.trainer.ppo.core_algos import agg_loss, get_policy_loss_fn, kl_penalty
-from verl.trainer.ppo.sid_hierarchical import apply_constrained_sid_log_probs
+from verl.trainer.ppo.sid_constrained import apply_constrained_sid_log_probs
 from verl.utils.attention_utils import index_first_axis, pad_input, rearrange, unpad_input
 from verl.utils.device import get_device_id, get_device_name
 from verl.utils.fsdp_utils import FSDPModule, fsdp2_clip_grad_norm_
@@ -432,16 +432,9 @@ class DataParallelPPOActor(BasePPOActor):
             "old_log_probs",
             "advantages",
         ]
-        hierarchical_sid_loss = "sid_advantages" in data.batch
-        if hierarchical_sid_loss:
-            select_keys.extend(
-                [
-                    "reasoning_token_mask",
-                    "sid_token_mask",
-                    "reasoning_advantages",
-                    "sid_advantages",
-                ]
-            )
+        has_sid_constraints = "sid_allowed_token_ids" in data.non_tensor_batch
+        if has_sid_constraints:
+            select_keys.append("sid_token_mask")
         if self.config.use_kl_loss:
             select_keys.append("ref_log_prob")
         # Include pre-computed IS weights if present in batch
@@ -451,7 +444,7 @@ class DataParallelPPOActor(BasePPOActor):
 
         has_multi_modal_inputs = "multi_modal_inputs" in data.non_tensor_batch.keys()
         non_tensor_select_keys = ["multi_modal_inputs"] if has_multi_modal_inputs else []
-        if hierarchical_sid_loss:
+        if has_sid_constraints:
             non_tensor_select_keys.append("sid_allowed_token_ids")
 
         data = data.select(batch_keys=select_keys, non_tensor_batch_keys=non_tensor_select_keys)
@@ -521,48 +514,16 @@ class DataParallelPPOActor(BasePPOActor):
                     # clip_cov -> verl.trainer.ppo.core_algos.compute_policy_loss_clip_cov
                     policy_loss_fn = get_policy_loss_fn(loss_mode)
 
-                    if hierarchical_sid_loss:
-                        if entropy_coeff != 0:
-                            raise ValueError("Hierarchical SID sampling currently requires entropy_coeff=0")
-                        reasoning_pg_loss, reasoning_clipfrac, reasoning_kl, reasoning_clipfrac_lower = policy_loss_fn(
-                            old_log_prob=old_log_prob,
-                            log_prob=log_prob,
-                            advantages=model_inputs["reasoning_advantages"],
-                            response_mask=model_inputs["reasoning_token_mask"],
-                            loss_agg_mode=loss_agg_mode,
-                            config=self.config,
-                            rollout_is_weights=rollout_is_weights,
-                        )
-                        sid_pg_loss, sid_clipfrac, sid_kl, sid_clipfrac_lower = policy_loss_fn(
-                            old_log_prob=old_log_prob,
-                            log_prob=log_prob,
-                            advantages=model_inputs["sid_advantages"],
-                            response_mask=model_inputs["sid_token_mask"],
-                            loss_agg_mode=loss_agg_mode,
-                            config=self.config,
-                            rollout_is_weights=rollout_is_weights,
-                        )
-                        pg_loss = reasoning_pg_loss + sid_pg_loss
-                        pg_clipfrac = (reasoning_clipfrac + sid_clipfrac) / 2
-                        ppo_kl = (reasoning_kl + sid_kl) / 2
-                        pg_clipfrac_lower = (reasoning_clipfrac_lower + sid_clipfrac_lower) / 2
-                        micro_batch_metrics.update(
-                            {
-                                "actor/pg_loss_reasoning": reasoning_pg_loss.detach().item() * loss_scale_factor,
-                                "actor/pg_loss_sid": sid_pg_loss.detach().item() * loss_scale_factor,
-                            }
-                        )
-                    else:
-                        # Compute policy loss (all functions return 4 values)
-                        pg_loss, pg_clipfrac, ppo_kl, pg_clipfrac_lower = policy_loss_fn(
-                            old_log_prob=old_log_prob,
-                            log_prob=log_prob,
-                            advantages=advantages,
-                            response_mask=response_mask,
-                            loss_agg_mode=loss_agg_mode,
-                            config=self.config,
-                            rollout_is_weights=rollout_is_weights,
-                        )
+                    # Compute policy loss (all functions return 4 values)
+                    pg_loss, pg_clipfrac, ppo_kl, pg_clipfrac_lower = policy_loss_fn(
+                        old_log_prob=old_log_prob,
+                        log_prob=log_prob,
+                        advantages=advantages,
+                        response_mask=response_mask,
+                        loss_agg_mode=loss_agg_mode,
+                        config=self.config,
+                        rollout_is_weights=rollout_is_weights,
+                    )
 
                     if entropy_coeff != 0:
                         entropy_loss = agg_loss(loss_mat=entropy, loss_mask=response_mask, loss_agg_mode=loss_agg_mode)

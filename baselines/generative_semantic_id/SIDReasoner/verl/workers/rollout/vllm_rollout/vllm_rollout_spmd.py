@@ -186,49 +186,45 @@ def vllm_constrained_sid_sampling(
     prompts_ids: list[list[int]],
     sid_token_trie: dict[tuple[int, ...], list[int]],
     depth: int,
-    sample_size: int,
     temperature: float,
     lora_requests=None,
-) -> tuple[list[list[list[int]]], list[list[list[list[int]]]]]:
-    """Independently sample catalog-valid SID paths for each fixed reasoning."""
-    if sample_size < 2:
-        raise ValueError("Constrained SID sample size must be at least 2")
+) -> tuple[list[list[int]], list[list[list[int]]]]:
+    """Sample one catalog-valid SID path for each fixed reasoning."""
     if temperature <= 0:
         raise ValueError("Constrained SID sampling temperature must be positive")
     if isinstance(lora_requests, list) and len(lora_requests) != len(prompts_ids):
         raise ValueError("Expected one LoRA request per prompt")
 
-    sampled_paths = [[[] for _ in range(sample_size)] for _ in prompts_ids]
-    allowed_paths = [[[] for _ in range(sample_size)] for _ in prompts_ids]
+    sampled_paths = [[] for _ in prompts_ids]
+    allowed_paths = [[] for _ in prompts_ids]
 
     for _position in range(depth):
         step_prompts = []
         sampling_params = []
         path_origins = []
 
-        for prompt_index, prompt_ids in enumerate(prompts_ids):
-            for sample_index, sid_prefix in enumerate(sampled_paths[prompt_index]):
-                allowed = sid_token_trie.get(tuple(sid_prefix))
-                if not allowed:
-                    raise RuntimeError(f"No valid SID continuation for token prefix {sid_prefix}")
-                step_prompts.append({"prompt_token_ids": prompt_ids + sid_prefix})
-                sampling_params.append(
-                    SamplingParams(
-                        n=1,
-                        max_tokens=1,
-                        temperature=temperature,
-                        top_p=1.0,
-                        top_k=-1,
-                        min_p=0.0,
-                        detokenize=False,
-                        allowed_token_ids=allowed,
-                    )
+        for prompt_index, (prompt_ids, sid_prefix) in enumerate(zip(prompts_ids, sampled_paths, strict=True)):
+            allowed = sid_token_trie.get(tuple(sid_prefix))
+            if not allowed:
+                raise RuntimeError(f"No valid SID continuation for token prefix {sid_prefix}")
+            step_prompts.append({"prompt_token_ids": prompt_ids + sid_prefix})
+            sampling_params.append(
+                SamplingParams(
+                    n=1,
+                    max_tokens=1,
+                    temperature=temperature,
+                    top_p=1.0,
+                    top_k=-1,
+                    min_p=0.0,
+                    detokenize=False,
+                    allowed_token_ids=allowed,
                 )
-                path_origins.append((prompt_index, sample_index, allowed))
+            )
+            path_origins.append((prompt_index, allowed))
 
         step_lora_requests = lora_requests
         if isinstance(lora_requests, list):
-            step_lora_requests = [lora_requests[prompt_index] for prompt_index, _, _ in path_origins]
+            step_lora_requests = [lora_requests[prompt_index] for prompt_index, _ in path_origins]
 
         step_outputs = llm.generate(
             prompts=step_prompts,
@@ -239,12 +235,12 @@ def vllm_constrained_sid_sampling(
         if len(step_outputs) != len(step_prompts):
             raise RuntimeError("vLLM returned an unexpected constrained-sampling batch size")
 
-        for output, (prompt_index, sample_index, allowed) in zip(step_outputs, path_origins, strict=True):
+        for output, (prompt_index, allowed) in zip(step_outputs, path_origins, strict=True):
             token_ids = output.outputs[0].token_ids
             if len(token_ids) != 1 or token_ids[0] not in allowed:
                 raise RuntimeError("vLLM emitted a token outside the SID catalog constraint")
-            sampled_paths[prompt_index][sample_index].append(token_ids[0])
-            allowed_paths[prompt_index][sample_index].append(allowed)
+            sampled_paths[prompt_index].append(token_ids[0])
+            allowed_paths[prompt_index].append(allowed)
 
     return sampled_paths, allowed_paths
 
@@ -559,8 +555,8 @@ class vLLMRollout(BaseRollout):
                 raise ValueError("SID beam search modes cannot be enabled together")
             if self.activate_constrained_beam_search and _sid_constrained_beam_size < 2:
                 raise ValueError("sid_constrained_beam_size must be at least 2")
-            if self.activate_constrained_sid_sampling and _sid_constrained_sample_size < 2:
-                raise ValueError("sid_constrained_sample_size must be at least 2")
+            if self.activate_constrained_sid_sampling and _sid_constrained_sample_size != 1:
+                raise ValueError("sid_constrained_sample_size must be exactly 1")
             if self.activate_validation_beam_search and _sid_validation_beam_size < 2:
                 raise ValueError("sid_validation_beam_size must be at least 2")
             if _sid_length is None or _sid_length < 1:
@@ -574,7 +570,6 @@ class vLLMRollout(BaseRollout):
             import hf_data
 
             self.sid_constrained_beam_size = _sid_constrained_beam_size
-            self.sid_constrained_sample_size = _sid_constrained_sample_size
             self.sid_validation_beam_size = _sid_validation_beam_size
             self.num_sid_tokens = _sid_length
             self.end_think_marker = self.tokenizer.encode("</think>", add_special_tokens=False)
@@ -764,41 +759,25 @@ class vLLMRollout(BaseRollout):
                     prompts_ids=input_prompt_ids,
                     sid_token_trie=self.sid_token_trie,
                     depth=self.num_sid_tokens,
-                    sample_size=self.sid_constrained_sample_size,
                     temperature=self.config.temperature,
                     lora_requests=lora_requests,
                 )
 
-                sample_size = self.sid_constrained_sample_size
-                expanded_response_reasonings = []
-                expanded_sampled_reasoning_lengths = []
-                response = []
-                sid_allowed_token_ids = np.empty(batch_size * sample_size, dtype=object)
-                sid_beam_predictions = np.empty(batch_size * sample_size, dtype=object)
+                sid_allowed_token_ids = np.empty(batch_size, dtype=object)
+                sid_beam_predictions = np.empty(batch_size, dtype=object)
                 for prompt_index in range(batch_size):
-                    for sample_index in range(sample_size):
-                        output_index = prompt_index * sample_size + sample_index
-                        reasoning_ids = response_reasonings[prompt_index]
-                        sid_ids = sampled_sids[prompt_index][sample_index]
-                        expanded_response_reasonings.append(reasoning_ids)
-                        expanded_sampled_reasoning_lengths.append(sampled_reasoning_lengths[prompt_index])
-                        response.append(reasoning_ids + sid_ids + [primary_eos_token_id])
-                        sid_allowed_token_ids[output_index] = sampled_allowed_token_ids[prompt_index][sample_index]
-                        sid_beam_predictions[output_index] = np.array(
-                            [self.tokenizer.decode(sid_ids, skip_special_tokens=False)], dtype=object
-                        )
+                    sid_ids = sampled_sids[prompt_index]
+                    sid_allowed_token_ids[prompt_index] = sampled_allowed_token_ids[prompt_index]
+                    sid_beam_predictions[prompt_index] = np.array(
+                        [self.tokenizer.decode(sid_ids, skip_special_tokens=False)], dtype=object
+                    )
 
-                idx = idx.repeat_interleave(sample_size, dim=0)
-                attention_mask = attention_mask.repeat_interleave(sample_size, dim=0)
-                position_ids = position_ids.repeat_interleave(sample_size, dim=0)
-                non_tensor_batch = {
-                    key: np.repeat(value, sample_size, axis=0) for key, value in non_tensor_batch.items()
-                }
                 non_tensor_batch["sid_allowed_token_ids"] = sid_allowed_token_ids
                 non_tensor_batch["sid_beam_predictions"] = sid_beam_predictions
-                response_reasonings = expanded_response_reasonings
-                sampled_reasoning_lengths = expanded_sampled_reasoning_lengths
-                batch_size *= sample_size
+                response = [
+                    reasoning_ids + sid_ids + [primary_eos_token_id]
+                    for reasoning_ids, sid_ids in zip(response_reasonings, sampled_sids, strict=True)
+                ]
 
             # === SID Reasoner: constrained beam search over catalog SID paths ===
             elif use_constrained_beam_search:
@@ -862,6 +841,7 @@ class vLLMRollout(BaseRollout):
                     reasoning_token_mask[index, :sampled_length] = 1
                     sid_start = len(reasoning_ids)
                     sid_token_mask[index, sid_start : sid_start + self.num_sid_tokens] = 1
+                # Joint GRPO trains sampled reasoning and SID actions; normalized separators and EOS stay masked.
                 response_mask = reasoning_token_mask | sid_token_mask
             elif use_constrained_beam_search:
                 response_mask = torch.zeros_like(response, dtype=attention_mask.dtype)
@@ -905,7 +885,6 @@ class vLLMRollout(BaseRollout):
         )
         if use_constrained_sid_sampling:
             batch["response_mask"] = response_mask
-            batch["reasoning_token_mask"] = reasoning_token_mask
             batch["sid_token_mask"] = sid_token_mask
         elif use_constrained_beam_search:
             batch["response_mask"] = response_mask
@@ -913,8 +892,7 @@ class vLLMRollout(BaseRollout):
             # we will recompute old log prob with actor
             batch["rollout_log_probs"] = rollout_log_probs
 
-        meta_info = {"sid_sample_size": self.sid_constrained_sample_size} if use_constrained_sid_sampling else {}
-        return DataProto(batch=batch, non_tensor_batch=non_tensor_batch, meta_info=meta_info)
+        return DataProto(batch=batch, non_tensor_batch=non_tensor_batch)
 
     async def resume(self, tags: list[str]):
         """Resume rollout weights or kv cache in GPU memory.

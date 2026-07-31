@@ -66,7 +66,11 @@ class MyRewardComputer:
         if not beam_predictions:
             raise ValueError("sid_beam_predictions are required for NDCG@10 reward")
 
-        ndcg_at_10, beam_rank = calculate_ndcg_at_10(beam_predictions, ground_truth)
+        if len(beam_predictions) == 1:
+            exact_match = extract_sid_tokens(beam_predictions[0])[:3] == ground_truth
+            ndcg_at_10, beam_rank = float(exact_match), int(exact_match)
+        else:
+            ndcg_at_10, beam_rank = calculate_ndcg_at_10(beam_predictions, ground_truth)
         return {
             "score": ndcg_at_10,
             "sid_match_reward": ndcg_at_10,

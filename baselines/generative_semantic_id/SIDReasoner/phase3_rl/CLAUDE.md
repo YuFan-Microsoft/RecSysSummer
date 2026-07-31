@@ -73,7 +73,7 @@ ablation.
 
 The script **defaults to the `Video_Games` domain end‑to‑end** — data, reward, and the
 **wandb run name** all match the Games checkpoint above. Concretely the script sets
-`trainer.experiment_name=Video_Games_stage3_rl_constrained_sid_sampling_no_kl_Qwen3-1.7B`
+`trainer.experiment_name=Video_Games_stage3_rl_constrained_sid_single_sample_no_kl_Qwen3-1.7B`
 (this is the wandb run
 name, under project `SIDReasoner_Phase3_MetricsV2`), `data.*=.../Video_Games/*.parquet`, and
 `custom_reward_function.path=.../direct_recommendation_StepRule_Games.py`. So the
@@ -149,14 +149,14 @@ The vLLM rollout worker loads the selected domain's catalog and builds a token-l
 | --- | --- | --- |
 | `hf_data.load_sid_indices(sid_category)` | `<cat>_catalog` (train) | `sid_tokens` |
 
-- Each rollout first samples reasoning, discards the sampled suffix after `</think>`, then
-  independently samples 10 three-token SID paths. At each position, `allowed_token_ids`
-  contains only catalog-valid continuations, so every sampled SID is a real catalog path.
-- Training reward is exact match only. A reasoning receives hit-any credit if at least one
-  of its 10 SIDs matches; each SID receives a leave-one-out advantage within those 10 samples.
-- Reasoning and SID tokens use separate PPO masks and advantages. SID old/new log probabilities
-  are normalized over the trie-allowed actions, so all three sampled SID tokens contribute
-  actor gradients. The normalized separator and EOS remain outside the actor loss.
+- Each of the 16 GRPO rollouts samples one reasoning, discards the sampled suffix after
+  `</think>`, then samples one three-token SID path. At each position, `allowed_token_ids`
+  contains only catalog-valid continuations, so the sampled SID is a real catalog path.
+- Training reward is exact match only. Standard prompt-level GRPO compares the 16 complete
+  `reasoning + SID` trajectories and broadcasts each trajectory's advantage to both spans.
+- SID old/new log probabilities are normalized over the trie-allowed actions, so all three
+  sampled SID tokens contribute actor gradients. The normalized separator and EOS remain
+  outside the actor loss.
 - Validation remains deterministic reasoning followed by catalog-constrained beam-10 and logs
   HR/NDCG@1/3/5/10, so the final evaluator is unchanged.
 

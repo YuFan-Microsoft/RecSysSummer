@@ -231,8 +231,7 @@ class ActorRolloutRefWorker(Worker, DistProfilerExtension):
 
         # normalize config
         if self._is_actor:
-            sid_sample_size = self.config.rollout.get("sid_constrained_sample_size", None) or 1
-            self.config.actor.ppo_mini_batch_size *= self.config.rollout.n * sid_sample_size
+            self.config.actor.ppo_mini_batch_size *= self.config.rollout.n
             self.config.actor.ppo_mini_batch_size //= self.device_mesh.size() // self.ulysses_sequence_parallel_size
             assert self.config.actor.ppo_mini_batch_size > 0, (
                 f"ppo_mini_batch_size {self.config.actor.ppo_mini_batch_size} should be larger than 0 after "
