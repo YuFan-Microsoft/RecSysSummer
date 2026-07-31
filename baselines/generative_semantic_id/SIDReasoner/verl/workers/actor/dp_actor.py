@@ -28,6 +28,7 @@ from torch.distributed.tensor import DTensor
 import verl.utils.torch_functional as verl_F
 from verl import DataProto
 from verl.trainer.ppo.core_algos import agg_loss, get_policy_loss_fn, kl_penalty
+from verl.trainer.ppo.sid_hierarchical import apply_constrained_sid_log_probs
 from verl.utils.attention_utils import index_first_axis, pad_input, rearrange, unpad_input
 from verl.utils.device import get_device_id, get_device_name
 from verl.utils.fsdp_utils import FSDPModule, fsdp2_clip_grad_norm_
@@ -92,6 +93,11 @@ class DataParallelPPOActor(BasePPOActor):
             log_probs: # (bs, response_len)
         """
         response_length = micro_batch["responses"].size(-1)
+        has_sid_constraints = "sid_allowed_token_ids" in micro_batch
+        if has_sid_constraints and self.use_fused_kernels:
+            raise ValueError("Constrained SID log probabilities are incompatible with fused actor kernels")
+        if has_sid_constraints and self.use_ulysses_sp:
+            raise ValueError("Constrained SID log probabilities currently require Ulysses sequence parallel size 1")
         multi_modal_inputs = {}
         if "multi_modal_inputs" in micro_batch.keys():
             from verl.utils.model import extract_multi_modal_inputs
@@ -186,7 +192,7 @@ class DataParallelPPOActor(BasePPOActor):
 
                     # if use_sp: ((total_nnz / sp) + pad) ; if not use_sp: (batch, seqlen)
                     inplace_backward = True
-                    if calculate_entropy:
+                    if calculate_entropy or has_sid_constraints:
                         inplace_backward = False
                     log_probs = logprobs_from_logits(
                         logits=logits_rmpad,
@@ -238,6 +244,48 @@ class DataParallelPPOActor(BasePPOActor):
                 if calculate_entropy:
                     entropy = full_entropy.squeeze(-1)[:, -response_length - 1 : -1]  # (bsz, response_length)
                 log_probs = full_log_probs.squeeze(-1)[:, -response_length - 1 : -1]  # (bsz, response_length)
+                if has_sid_constraints:
+                    response_start = seqlen - response_length
+                    inverse_indices = torch.full(
+                        (batch_size * seqlen,),
+                        -1,
+                        dtype=torch.long,
+                        device=indices.device,
+                    )
+                    inverse_indices[indices] = torch.arange(indices.numel(), device=indices.device)
+                    constrained_values = []
+                    constrained_positions = []
+                    for batch_index in range(batch_size):
+                        sid_positions = torch.nonzero(
+                            micro_batch["sid_token_mask"][batch_index], as_tuple=False
+                        ).flatten().tolist()
+                        allowed_per_position = micro_batch["sid_allowed_token_ids"][batch_index]
+                        if len(sid_positions) != len(allowed_per_position):
+                            raise ValueError("SID mask and allowed-token metadata have different lengths")
+                        for sid_position, allowed in zip(sid_positions, allowed_per_position, strict=True):
+                            flat_predictor_index = (
+                                batch_index * seqlen + response_start + sid_position - 1
+                            )
+                            rmpad_index = inverse_indices[flat_predictor_index]
+                            if rmpad_index < 0:
+                                raise ValueError("SID predictor position was removed as padding")
+                            allowed_tensor = torch.as_tensor(
+                                allowed, dtype=torch.long, device=logits_rmpad.device
+                            )
+                            action = micro_batch["responses"][batch_index, sid_position]
+                            if not torch.any(allowed_tensor == action):
+                                raise ValueError("Sampled SID token is not in its recorded allowed-token set")
+                            position_logits = logits_rmpad[rmpad_index]
+                            constrained_values.append(
+                                position_logits[action]
+                                - torch.logsumexp(position_logits[allowed_tensor], dim=0)
+                            )
+                            constrained_positions.append((batch_index, sid_position))
+                    log_probs = log_probs.clone()
+                    for (batch_index, sid_position), value in zip(
+                        constrained_positions, constrained_values, strict=True
+                    ):
+                        log_probs[batch_index, sid_position] = value
 
             else:  # not using rmpad and no ulysses sp
                 extra_args = {}
@@ -264,6 +312,14 @@ class DataParallelPPOActor(BasePPOActor):
                     logits.div_(temperature)
                     logits = logits[:, -response_length - 1 : -1, :]  # (bsz, response_length, vocab_size)
                     log_probs = logprobs_from_logits(logits, micro_batch["responses"])
+                    if has_sid_constraints:
+                        log_probs = apply_constrained_sid_log_probs(
+                            log_probs=log_probs,
+                            logits=logits,
+                            responses=micro_batch["responses"],
+                            sid_token_mask=micro_batch["sid_token_mask"],
+                            sid_allowed_token_ids=micro_batch["sid_allowed_token_ids"],
+                        )
                     if calculate_entropy:
                         if not self.config.entropy_checkpointing:
                             entropy = verl_F.entropy_from_logits(logits)  # (bsz, response_length)
@@ -320,7 +376,12 @@ class DataParallelPPOActor(BasePPOActor):
         use_dynamic_bsz = data.meta_info["use_dynamic_bsz"]
         has_multi_modal_inputs = "multi_modal_inputs" in data.non_tensor_batch.keys()
         select_keys = ["responses", "input_ids", "attention_mask", "position_ids"]
+        has_sid_constraints = "sid_allowed_token_ids" in data.non_tensor_batch
+        if has_sid_constraints:
+            select_keys.append("sid_token_mask")
         non_tensor_select_keys = ["multi_modal_inputs"] if has_multi_modal_inputs else []
+        if has_sid_constraints:
+            non_tensor_select_keys.append("sid_allowed_token_ids")
 
         data = data.select(batch_keys=select_keys, non_tensor_batch_keys=non_tensor_select_keys)
 
@@ -371,6 +432,16 @@ class DataParallelPPOActor(BasePPOActor):
             "old_log_probs",
             "advantages",
         ]
+        hierarchical_sid_loss = "sid_advantages" in data.batch
+        if hierarchical_sid_loss:
+            select_keys.extend(
+                [
+                    "reasoning_token_mask",
+                    "sid_token_mask",
+                    "reasoning_advantages",
+                    "sid_advantages",
+                ]
+            )
         if self.config.use_kl_loss:
             select_keys.append("ref_log_prob")
         # Include pre-computed IS weights if present in batch
@@ -380,6 +451,8 @@ class DataParallelPPOActor(BasePPOActor):
 
         has_multi_modal_inputs = "multi_modal_inputs" in data.non_tensor_batch.keys()
         non_tensor_select_keys = ["multi_modal_inputs"] if has_multi_modal_inputs else []
+        if hierarchical_sid_loss:
+            non_tensor_select_keys.append("sid_allowed_token_ids")
 
         data = data.select(batch_keys=select_keys, non_tensor_batch_keys=non_tensor_select_keys)
 
@@ -448,16 +521,48 @@ class DataParallelPPOActor(BasePPOActor):
                     # clip_cov -> verl.trainer.ppo.core_algos.compute_policy_loss_clip_cov
                     policy_loss_fn = get_policy_loss_fn(loss_mode)
 
-                    # Compute policy loss (all functions return 4 values)
-                    pg_loss, pg_clipfrac, ppo_kl, pg_clipfrac_lower = policy_loss_fn(
-                        old_log_prob=old_log_prob,
-                        log_prob=log_prob,
-                        advantages=advantages,
-                        response_mask=response_mask,
-                        loss_agg_mode=loss_agg_mode,
-                        config=self.config,
-                        rollout_is_weights=rollout_is_weights,
-                    )
+                    if hierarchical_sid_loss:
+                        if entropy_coeff != 0:
+                            raise ValueError("Hierarchical SID sampling currently requires entropy_coeff=0")
+                        reasoning_pg_loss, reasoning_clipfrac, reasoning_kl, reasoning_clipfrac_lower = policy_loss_fn(
+                            old_log_prob=old_log_prob,
+                            log_prob=log_prob,
+                            advantages=model_inputs["reasoning_advantages"],
+                            response_mask=model_inputs["reasoning_token_mask"],
+                            loss_agg_mode=loss_agg_mode,
+                            config=self.config,
+                            rollout_is_weights=rollout_is_weights,
+                        )
+                        sid_pg_loss, sid_clipfrac, sid_kl, sid_clipfrac_lower = policy_loss_fn(
+                            old_log_prob=old_log_prob,
+                            log_prob=log_prob,
+                            advantages=model_inputs["sid_advantages"],
+                            response_mask=model_inputs["sid_token_mask"],
+                            loss_agg_mode=loss_agg_mode,
+                            config=self.config,
+                            rollout_is_weights=rollout_is_weights,
+                        )
+                        pg_loss = reasoning_pg_loss + sid_pg_loss
+                        pg_clipfrac = (reasoning_clipfrac + sid_clipfrac) / 2
+                        ppo_kl = (reasoning_kl + sid_kl) / 2
+                        pg_clipfrac_lower = (reasoning_clipfrac_lower + sid_clipfrac_lower) / 2
+                        micro_batch_metrics.update(
+                            {
+                                "actor/pg_loss_reasoning": reasoning_pg_loss.detach().item() * loss_scale_factor,
+                                "actor/pg_loss_sid": sid_pg_loss.detach().item() * loss_scale_factor,
+                            }
+                        )
+                    else:
+                        # Compute policy loss (all functions return 4 values)
+                        pg_loss, pg_clipfrac, ppo_kl, pg_clipfrac_lower = policy_loss_fn(
+                            old_log_prob=old_log_prob,
+                            log_prob=log_prob,
+                            advantages=advantages,
+                            response_mask=response_mask,
+                            loss_agg_mode=loss_agg_mode,
+                            config=self.config,
+                            rollout_is_weights=rollout_is_weights,
+                        )
 
                     if entropy_coeff != 0:
                         entropy_loss = agg_loss(loss_mat=entropy, loss_mask=response_mask, loss_agg_mode=loss_agg_mode)

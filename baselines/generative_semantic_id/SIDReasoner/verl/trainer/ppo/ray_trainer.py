@@ -53,6 +53,7 @@ from verl.trainer.ppo.metric_utils import (
 )
 from verl.trainer.ppo.mismatch_helper import compute_rollout_importance_weights
 from verl.trainer.ppo.reward import compute_reward, compute_reward_async
+from verl.trainer.ppo.sid_hierarchical import compute_hierarchical_exact_match_advantages
 from verl.trainer.ppo.utils import Role, WorkerType, need_critic, need_reference_policy, need_reward_model
 from verl.utils.checkpoint.checkpoint_manager import find_latest_ckpt_path, should_save_ckpt_esi
 from verl.utils.config import omega_conf_to_dataclass
@@ -453,6 +454,19 @@ class RayPPOTrainer:
         self.config = config
         self.reward_fn = reward_fn
         self.val_reward_fn = val_reward_fn
+
+        sid_sample_size = self.config.actor_rollout_ref.rollout.get("sid_constrained_sample_size", None)
+        if sid_sample_size is not None:
+            if self.config.actor_rollout_ref.actor.strategy not in {"fsdp", "fsdp2"}:
+                raise ValueError("Hierarchical SID sampling currently requires an FSDP actor")
+            if self.config.actor_rollout_ref.actor.entropy_coeff != 0:
+                raise ValueError("Hierarchical SID sampling requires actor entropy_coeff=0")
+            if self.config.actor_rollout_ref.actor.ulysses_sequence_parallel_size != 1:
+                raise ValueError("Hierarchical SID sampling requires Ulysses sequence parallel size 1")
+            if self.config.actor_rollout_ref.model.get("use_fused_kernels", False):
+                raise ValueError("Hierarchical SID sampling is incompatible with fused actor kernels")
+            if self.config.algorithm.use_kl_in_reward:
+                raise ValueError("Hierarchical SID sampling does not support KL-in-reward")
 
         self.hybrid_engine = config.actor_rollout_ref.hybrid_engine
         assert self.hybrid_engine, "Currently, only support hybrid engine"
@@ -1209,6 +1223,10 @@ class RayPPOTrainer:
                 # pass global_steps to trace
                 gen_batch.meta_info["global_steps"] = self.global_steps
                 gen_batch = gen_batch.repeat(repeat_times=self.config.actor_rollout_ref.rollout.n, interleave=True)
+                if self.config.actor_rollout_ref.rollout.get("sid_constrained_sample_size", None) is not None:
+                    gen_batch.non_tensor_batch["reasoning_uid"] = np.array(
+                        [str(uuid.uuid4()) for _ in range(len(gen_batch.batch))], dtype=object
+                    )
 
                 is_last_step = self.global_steps >= self.total_training_steps
                 with marked_timer("step", timing_raw):
@@ -1221,6 +1239,7 @@ class RayPPOTrainer:
 
                         timing_raw.update(gen_batch_output.meta_info["timing"])
                         gen_batch_output.meta_info.pop("timing", None)
+                        sid_sample_size = gen_batch_output.meta_info.pop("sid_sample_size", 1)
 
                     if self.config.algorithm.adv_estimator == AdvantageEstimator.REMAX:
                         if self.reward_fn is None:
@@ -1243,7 +1262,10 @@ class RayPPOTrainer:
 
                             del gen_baseline_batch, gen_baseline_output
                     # repeat to align with repeated responses in rollout
-                    batch = batch.repeat(repeat_times=self.config.actor_rollout_ref.rollout.n, interleave=True)
+                    batch = batch.repeat(
+                        repeat_times=self.config.actor_rollout_ref.rollout.n * sid_sample_size,
+                        interleave=True,
+                    )
                     batch = batch.union(gen_batch_output)
 
                     if "response_mask" not in batch.batch.keys():
@@ -1255,6 +1277,12 @@ class RayPPOTrainer:
                     # TODO: Decouple the DP balancing and mini-batching.
                     if self.config.trainer.balance_batch:
                         self._balance_batch(batch, metrics=metrics)
+                    if "sid_token_mask" in batch.batch:
+                        batch_size = len(batch.batch)
+                        if len(batch.non_tensor_batch.get("uid", [])) != batch_size:
+                            raise ValueError("Prompt UID metadata is not aligned with sampled SID responses")
+                        if len(batch.non_tensor_batch.get("reasoning_uid", [])) != batch_size:
+                            raise ValueError("Reasoning UID metadata is not aligned with sampled SID responses")
 
                     # compute global_valid tokens
                     batch.meta_info["global_token_num"] = torch.sum(batch.batch["attention_mask"], dim=-1).tolist()
@@ -1334,15 +1362,50 @@ class RayPPOTrainer:
                             "norm_adv_by_std_in_grpo", True
                         )  # GRPO adv normalization factor
 
-                        batch = compute_advantage(
-                            batch,
-                            adv_estimator=self.config.algorithm.adv_estimator,
-                            gamma=self.config.algorithm.gamma,
-                            lam=self.config.algorithm.lam,
-                            num_repeat=self.config.actor_rollout_ref.rollout.n,
-                            norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
-                            config=self.config.algorithm,
-                        )
+                        if "sid_token_mask" in batch.batch:
+                            if self.config.algorithm.use_kl_in_reward:
+                                raise ValueError("Hierarchical SID sampling does not support KL-in-reward")
+                            if self.config.algorithm.adv_estimator != AdvantageEstimator.GRPO:
+                                raise ValueError("Hierarchical SID sampling requires the GRPO advantage estimator")
+                            if "exact_match" not in reward_extra_infos_dict:
+                                raise ValueError("Hierarchical SID sampling requires exact_match reward metadata")
+
+                            _, prompt_ids = np.unique(batch.non_tensor_batch["uid"], return_inverse=True)
+                            _, reasoning_ids = np.unique(
+                                batch.non_tensor_batch["reasoning_uid"], return_inverse=True
+                            )
+                            exact_matches = torch.as_tensor(
+                                reward_extra_infos_dict["exact_match"],
+                                dtype=torch.float32,
+                                device=batch.batch["responses"].device,
+                            )
+                            reasoning_advantages, sid_advantages = compute_hierarchical_exact_match_advantages(
+                                exact_matches=exact_matches,
+                                prompt_ids=torch.as_tensor(prompt_ids, device=exact_matches.device),
+                                reasoning_ids=torch.as_tensor(reasoning_ids, device=exact_matches.device),
+                            )
+                            reasoning_token_mask = batch.batch["reasoning_token_mask"]
+                            sid_token_mask = batch.batch["sid_token_mask"]
+                            if torch.any(reasoning_token_mask.bool() & sid_token_mask.bool()):
+                                raise ValueError("Reasoning and SID token masks must be disjoint")
+                            batch.batch["reasoning_advantages"] = (
+                                reasoning_advantages.unsqueeze(-1) * reasoning_token_mask
+                            )
+                            batch.batch["sid_advantages"] = sid_advantages.unsqueeze(-1) * sid_token_mask
+                            batch.batch["advantages"] = (
+                                batch.batch["reasoning_advantages"] + batch.batch["sid_advantages"]
+                            )
+                            batch.batch["returns"] = batch.batch["advantages"]
+                        else:
+                            batch = compute_advantage(
+                                batch,
+                                adv_estimator=self.config.algorithm.adv_estimator,
+                                gamma=self.config.algorithm.gamma,
+                                lam=self.config.algorithm.lam,
+                                num_repeat=self.config.actor_rollout_ref.rollout.n,
+                                norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
+                                config=self.config.algorithm,
+                            )
 
                     # update critic
                     if self.use_critic:

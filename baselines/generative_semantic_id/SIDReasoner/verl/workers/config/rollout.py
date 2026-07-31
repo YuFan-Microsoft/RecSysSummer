@@ -183,6 +183,7 @@ class RolloutConfig(BaseConfig):
     sid_beam_size: Optional[int] = None
     sid_length: Optional[int] = None
     sid_constrained_beam_size: Optional[int] = None
+    sid_constrained_sample_size: Optional[int] = None
     sid_validation_beam_size: Optional[int] = None
     sid_category: Optional[str] = None
 
