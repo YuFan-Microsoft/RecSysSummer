@@ -311,6 +311,35 @@ and the reproduction closely matches the reported SIDReasoner results.
 | NDCG | 0.0708 | 0.0834 | 0.0905 | 0.1010 |
 | HR | 0.0708 | 0.0927 | 0.1101 | 0.1427 |
 
+### Phase-3 decoding and reward ablation (Video Games)
+
+The following partial results compare how the Stage-3 training decoder and its
+reward signal affect final recommendation quality. All runs use GRPO with 16
+rollouts per prompt and the same thinking-mode, catalog-constrained beam-10
+evaluation protocol. `M` is the pointwise three-level SID match score
+(`0`, `0.25`, `0.5`, or `1.0`), `V` indicates a catalog-valid SID, `D(r) =
+1/log2(r + 1)` discounts a beam match at rank `r`, and `m` is the target SID
+log-probability margin over the lowest-scoring beam-10 candidate.
+
+| Variant | Training SID decoder | Candidates per trajectory | Catalog-constrained training | Reward family | Effective training reward | Validity bonus | Credit scope | Recall@10 | Delta Recall@10 | NDCG@10 | Delta NDCG@10 |
+|---|---|---:|:---:|---|---|:---:|---|---:|---:|---:|---:|
+| Baseline | Standard sampled decoding | 1 | No | Prefix matching + validity | `M + 0.1V` | `+0.1` | Generated SID | 0.0897 | reference | 0.0497 | reference |
+| Constrained greedy search | Trie-constrained greedy | 1 | Yes | Pointwise SID matching | `M` | None | Top-1 valid path | 0.0926 | +0.0029 | 0.0546 | +0.0049 |
+| Constrained beam search (EM) | Trie-constrained beam, width 10 | Up to 10 | Yes | Exact-match beam reward | `D(r_exact)` if the exact SID is in the beam; otherwise `0` | None | Exact-match rank in the full beam | **0.0988** | **+0.0091** | **0.0560** | **+0.0063** |
+| Constrained beam search (prefix) | Trie-constrained beam, width 10 | Up to 10 | Yes | Hierarchical prefix reward | Exact: `D(r3)`; else prefix-2: `0.2D(r2)`; else prefix-1: `0.05D(r1)`; else `0` | None | Best matched hierarchy level in the full beam | 0.0964 | +0.0067 | 0.0549 | +0.0052 |
+| Constrained beam search (margin) | Trie-constrained beam, width 10 | Up to 10 | Yes | Exact match + margin fallback | Exact: `D(r_exact)`; miss: `0.2 exp(min(0, m))` | None | Exact-match rank or target-vs-threshold log-probability margin | 0.0871 | -0.0026 | 0.0505 | +0.0008 |
+
+The constrained beam EM variant is currently the strongest configuration,
+improving Recall@10 by 0.0091 (10.1% relative) and NDCG@10 by 0.0063 (12.7%
+relative) over the baseline. Prefix shaping ranks second, but its denser partial
+credit does not outperform the exact-match beam signal in these runs. The
+margin fallback produces a small NDCG gain but lower Recall@10 than the
+baseline, indicating a recall-ranking trade-off. Constrained greedy decoding
+also improves both metrics, showing that catalog-valid training-time decoding
+is useful even without a beam. Because each row changes both the decoder and
+the reward interface, these numbers should be read as a system ablation rather
+than an isolated causal comparison of reward functions.
+
 ---
 
 ## Checkpoints
