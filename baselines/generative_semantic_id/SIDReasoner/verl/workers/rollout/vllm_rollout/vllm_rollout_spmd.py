@@ -129,22 +129,42 @@ def prepare_reasoning_prefix(
     reasoning_separator: list[int],
     eos_token_id: int,
     max_length: int,
+    eos_token_ids: "set[int] | list[int] | tuple[int, ...] | None" = None,
 ) -> tuple[list[int], int]:
-    """Keep sampled reasoning, normalize its separator, and report sampled length."""
+    """Keep sampled reasoning, normalize its separator, and report sampled length.
+
+    Any EOS token must be stripped from the reasoning span. The final response is
+    ``reasoning + SID + [trailing EOS]`` and ``get_response_mask`` masks every
+    position AFTER the first EOS (using the full EOS-id list). An EOS left inside
+    the reasoning (e.g. a secondary EOS such as ``<|endoftext|>`` that the primary
+    trailing-pop below did not catch) would therefore mask the appended SID tokens
+    and their predictor positions, which then crashes the constrained
+    log-probability recomputation under remove-padding with
+    "SID predictor position was removed as padding". Removing every EOS-list token
+    here guarantees the trailing EOS is the only one, keeping the SID region (and
+    its predictors) inside the attended span on every rank.
+    """
+    if eos_token_ids is None:
+        eos_set = {eos_token_id}
+    elif isinstance(eos_token_ids, int):
+        eos_set = {eos_token_ids, eos_token_id}
+    else:
+        eos_set = set(eos_token_ids)
+        eos_set.add(eos_token_id)
+
     marker_length = len(end_think_marker)
     for start in range(len(tokens) - marker_length + 1):
         if tokens[start : start + marker_length] == end_think_marker:
             reasoning = tokens[: start + marker_length]
             break
     else:
-        reasoning = list(tokens)
-        while reasoning and reasoning[-1] == eos_token_id:
-            reasoning.pop()
+        reasoning = [token for token in tokens if token not in eos_set]
         reasoning = reasoning[: max_length - len(reasoning_separator)]
         if not reasoning:
             raise RuntimeError("Reasoning rollout ended before producing any trainable token")
         return reasoning + reasoning_separator, len(reasoning)
 
+    reasoning = [token for token in reasoning if token not in eos_set]
     separator_suffix = reasoning_separator[marker_length:]
     normalized = reasoning + separator_suffix
     if len(normalized) > max_length:
@@ -734,6 +754,7 @@ class vLLMRollout(BaseRollout):
                             reasoning_separator=self.truncate_marker,
                             eos_token_id=primary_eos_token_id,
                             max_length=self.config.response_length - self.num_sid_tokens - 1,
+                            eos_token_ids=eos_token_id,
                         )
                         response_reasonings.append(reasoning_ids)
                         sampled_reasoning_lengths.append(sampled_length)
