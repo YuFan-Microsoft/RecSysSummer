@@ -18,7 +18,7 @@ LR="${LR:-9e-5}"
 NCCL_DEBUG="${NCCL_DEBUG:-WARN}"
 DRY_RUN="${DRY_RUN:-0}"
 EVAL_NUM_SAMPLES="${EVAL_NUM_SAMPLES:--1}"
-EVAL_BATCH_SIZE="${EVAL_BATCH_SIZE:-1024}"
+EVAL_BATCH_SIZE="${EVAL_BATCH_SIZE:-96}"
 
 DEFAULT_CATEGORIES=(Video_Games Office_Products Industrial_and_Scientific)
 if [[ $# -gt 0 ]]; then

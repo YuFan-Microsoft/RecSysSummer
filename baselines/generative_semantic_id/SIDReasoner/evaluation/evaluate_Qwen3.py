@@ -51,7 +51,7 @@ def main(
     category: str = "Video_Games",
     test_data_path: str = "./data/Amazon_Games/test/Video_Games_5_2016-10-2018-11_for_test.csv",
     result_json_data: str = "./temp/test_results_Qwen3.json",
-    batch_size: int = 1024,
+    batch_size: int = 96,
     K: int = 0,
     seed: int = 42,
     length_penalty: float = 0.0,

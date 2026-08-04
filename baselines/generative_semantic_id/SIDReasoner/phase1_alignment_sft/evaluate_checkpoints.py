@@ -27,7 +27,7 @@ def parse_args():
     parser.add_argument("--cuda-list", default="0,1,2,3,4,5,6,7")
     parser.add_argument("--num-samples", type=int, default=-1)
     parser.add_argument("--num-beams", type=int, default=10)
-    parser.add_argument("--batch-size", type=int, default=1024)
+    parser.add_argument("--batch-size", type=int, default=96)
     parser.add_argument("--sid-length", type=int, default=3)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--min-epoch", type=int, default=0)

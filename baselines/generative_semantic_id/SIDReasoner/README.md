@@ -240,6 +240,10 @@ from oversubscribing the host and starving the GPUs. Set
 `SIDR_EVAL_CPU_THREADS=<N>` only when intentionally tuning for a different
 process/GPU topology.
 
+The tested defaults use batch size 32 for thinking and 96 for no-thinking.
+With beam width 10, no-thinking expands to at most 960 requests per SID step;
+larger batches can trigger a pinned-buffer sizing failure in vLLM 0.10.2.
+
 ---
 
 ## Results
