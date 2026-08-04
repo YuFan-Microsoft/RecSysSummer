@@ -253,9 +253,22 @@ def upload_metrics_to_wandb(args, report):
         id=args.wandb_run_id,
         resume="must",
     )
-    logged_metrics = {}
+    wandb.define_metric("recsys_eval_step")
+    wandb.define_metric(
+        "recsys_eval_nothinking/*", step_metric="recsys_eval_step"
+    )
+    wandb.define_metric(
+        "recsys_eval_thinking/*", step_metric="recsys_eval_step"
+    )
+    logged_metrics = {
+        "recsys_eval_step": 0 if args.stage == "pretrain" else 1,
+    }
     for mode, metrics in report["modes"].items():
-        prefix = f"recsys_eval/{args.stage}/{mode}"
+        prefix = (
+            "recsys_eval_nothinking"
+            if mode == "no_thinking"
+            else "recsys_eval_thinking"
+        )
         for cutoff in METRIC_CUTOFFS:
             logged_metrics[f"{prefix}/hr_at_{cutoff}"] = metrics["hr"][str(cutoff)]
             logged_metrics[f"{prefix}/ndcg_at_{cutoff}"] = metrics["ndcg"][str(cutoff)]

@@ -392,12 +392,23 @@ def main():
         if args.wandb_run_id:
             init_kwargs.update({"id": args.wandb_run_id, "resume": "allow"})
         wandb.init(**init_kwargs)
+        wandb.define_metric("recsys_eval_step")
+        wandb.define_metric(
+            "recsys_eval_nothinking/*", step_metric="recsys_eval_step"
+        )
+        wandb.define_metric(
+            "recsys_eval_thinking/*", step_metric="recsys_eval_step"
+        )
         if args.pretrain_eval_metrics:
             with open(args.pretrain_eval_metrics, "r", encoding="utf-8") as handle:
                 pretrain_report = json.load(handle)
-            pretrain_metrics = {}
+            pretrain_metrics = {"recsys_eval_step": 0}
             for mode, metrics in pretrain_report["modes"].items():
-                prefix = f"recsys_eval/pretrain/{mode}"
+                prefix = (
+                    "recsys_eval_nothinking"
+                    if mode == "no_thinking"
+                    else "recsys_eval_thinking"
+                )
                 for cutoff in (5, 10):
                     pretrain_metrics[f"{prefix}/hr_at_{cutoff}"] = metrics["hr"][str(cutoff)]
                     pretrain_metrics[f"{prefix}/ndcg_at_{cutoff}"] = metrics["ndcg"][str(cutoff)]

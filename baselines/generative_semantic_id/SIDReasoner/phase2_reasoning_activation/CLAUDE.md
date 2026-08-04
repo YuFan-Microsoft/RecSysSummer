@@ -152,8 +152,9 @@ nohup bash phase2_reasoning_activation/sft_reasoning_activation.sh > logs/phase2
   (`epoch_1/`, and `final_checkpoint/` which for a 1‑epoch run is the same weights).
 - Recommendation metrics → `.../recsys_eval/{pretrain,posttrain}/metrics.json`.
   Each stage reports thinking and no-thinking `HR@5`, `HR@10`, `NDCG@5`, and `NDCG@10`.
-- The same metrics are logged to the training W&B run under
-  `recsys_eval/{pretrain,posttrain}/{thinking,no_thinking}/{hr,ndcg}_at_{5,10}`.
+- W&B keeps the stages together in two blocks: `recsys_eval_nothinking/*` and
+  `recsys_eval_thinking/*`. Their charts use `recsys_eval_step` as the x-axis, where
+  `0` is before training and `1` is after training.
 
 Repeat for each domain you need (edit the vars, or copy the launcher per domain).
 
@@ -188,8 +189,10 @@ decoding, with catalog-constrained beam-10 in both modes. It records `HR@5`, `HR
 `NDCG@5`, and `NDCG@10` under `OUTPUT_DIR/recsys_eval/` so the before/after effect is directly
 comparable. The launcher gives the pre-evaluation, training process, and post-evaluation one
 shared W&B run ID, so these metrics appear alongside the training loss instead of creating
-separate runs. Set `EVAL_NUM_SAMPLES` in the launcher to a positive value for a pilot; `-1`
-evaluates the full test split.
+separate runs. W&B does not create separate pretrain/posttrain metric blocks: each HR/NDCG
+chart has the two evaluation points connected in one line. The local JSON snapshots remain
+separate for reproducibility. Set `EVAL_NUM_SAMPLES` in the launcher to a positive value for
+a pilot; `-1` evaluates the full test split.
 
 ## 9. Definition of done
 
