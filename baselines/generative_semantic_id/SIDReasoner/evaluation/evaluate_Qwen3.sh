@@ -55,7 +55,7 @@ do
             --category "${CATEGORY}" \
             --test_data_path "${temp_dir}/${i}.csv" \
             --result_json_data "${temp_dir}/${i}.json" \
-            --batch_size 8 \
+            --batch_size 1024 \
             --num_beams 10 \
             --sid_length 3 \
             --length_penalty 0.0 &

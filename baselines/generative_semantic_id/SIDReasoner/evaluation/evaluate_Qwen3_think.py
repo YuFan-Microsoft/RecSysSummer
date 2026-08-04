@@ -58,7 +58,7 @@ def main(
     item_file: str = "./data/Amazon_Games/Video_Games/Video_Games.item.json",
     index_file: str = "./data/Amazon_Games/Video_Games/Video_Games.index.json",
     result_json_data: str = "./temp/test_results_Qwen3.json",
-    batch_size: int = 4,
+    batch_size: int = 1024,
     K: int = 0,
     seed: int = 42,
     length_penalty: float = 0.0,
@@ -68,6 +68,9 @@ def main(
     max_prompt_length: int = 1024,
     sid_length: int = 3,
     gpu_memory_utilization: float = 0.8,
+    max_num_batched_tokens: int = 32768,
+    max_num_seqs: int = 4096,
+    enforce_eager: bool = False,
 ):
     """Evaluate thinking-mode recommendations with the training validation path."""
     del info_file, K, padding_side
@@ -79,6 +82,8 @@ def main(
         raise ValueError("SID recommendation metrics require exactly three semantic tokens")
     if length_penalty != 0.0:
         raise ValueError("training-style fixed-depth SID beam search requires length_penalty=0.0")
+    if max_num_batched_tokens < max_prompt_length + max_new_tokens:
+        raise ValueError("max_num_batched_tokens must cover at least one full sequence")
 
     logging.basicConfig(level=logging.INFO)
     set_seed(seed)
@@ -86,11 +91,15 @@ def main(
     llm = LLM(
         model=base_model,
         max_model_len=max_prompt_length + max_new_tokens,
-        max_num_seqs=max(32, batch_size * num_beams),
+        max_num_batched_tokens=max_num_batched_tokens,
+        max_num_seqs=max_num_seqs,
         dtype="bfloat16",
         gpu_memory_utilization=gpu_memory_utilization,
         tensor_parallel_size=1,
         seed=seed,
+        enforce_eager=enforce_eager,
+        enable_chunked_prefill=True,
+        enable_prefix_caching=True,
     )
     tokenizer = llm.get_tokenizer()
     end_think_marker = tokenizer.encode("</think>", add_special_tokens=False)

@@ -89,7 +89,7 @@ do
                 --item_file "${ITEM_FILE}" \
                 --index_file "${INDEX_FILE}" \
                 --result_json_data "${temp_dir}/${i}.json" \
-                --batch_size 4 \
+                --batch_size 1024 \
                 --num_beams 10 \
                 --max_new_tokens 1024 \
                 --length_penalty 0.0 &

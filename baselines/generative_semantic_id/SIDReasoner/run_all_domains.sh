@@ -47,7 +47,7 @@ for row in "${ROWS[@]}"; do
         --base_model "$CK" --info_file "$INFO" --category "$CAT" \
         --test_data_path "$TMP/$i.csv" --item_file "$ITEM" --index_file "$INDEX" \
         --result_json_data "$TMP/$i.json" \
-        --batch_size 4 --num_beams 10 --max_new_tokens 1024 --length_penalty 0.0 \
+        --batch_size 1024 --num_beams 10 --max_new_tokens 1024 --length_penalty 0.0 \
         > "$TMP/$i.log" 2>&1 &
     fi
   done
