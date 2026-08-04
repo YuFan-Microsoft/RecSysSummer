@@ -3,6 +3,10 @@ import sys as _sys
 
 _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 
+_cpu_threads = _os.environ.get("SIDR_EVAL_CPU_THREADS", "1")
+for _thread_var in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+    _os.environ[_thread_var] = _cpu_threads
+
 import json
 import os
 import random

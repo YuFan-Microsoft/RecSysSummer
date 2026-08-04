@@ -77,7 +77,7 @@ do
                 --item_file ./data/Amazon/index/${category}.item.json \
                 --index_file ./data/Amazon/index/${category}.index.json \
                 --result_json_data "$temp_dir/${i}.json" \
-                --batch_size 1024 \
+                --batch_size 32 \
                 --num_beams 10 \
                 --max_new_tokens 1024 \
                 --length_penalty 0.0 &

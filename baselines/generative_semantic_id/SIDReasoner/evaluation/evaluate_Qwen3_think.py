@@ -3,6 +3,10 @@ import sys as _sys
 
 _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 
+_cpu_threads = _os.environ.get("SIDR_EVAL_CPU_THREADS", "1")
+for _thread_var in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+    _os.environ[_thread_var] = _cpu_threads
+
 import json
 import logging
 import os
@@ -58,7 +62,7 @@ def main(
     item_file: str = "./data/Amazon_Games/Video_Games/Video_Games.item.json",
     index_file: str = "./data/Amazon_Games/Video_Games/Video_Games.index.json",
     result_json_data: str = "./temp/test_results_Qwen3.json",
-    batch_size: int = 1024,
+    batch_size: int = 32,
     K: int = 0,
     seed: int = 42,
     length_penalty: float = 0.0,

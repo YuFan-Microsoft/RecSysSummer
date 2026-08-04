@@ -87,7 +87,7 @@ def parse_args():
     parser.add_argument("--num-beams", type=int, default=10)
     parser.add_argument("--sid-length", type=int, default=3)
     parser.add_argument("--no-thinking-batch-size", type=int, default=1024)
-    parser.add_argument("--thinking-batch-size", type=int, default=1024)
+    parser.add_argument("--thinking-batch-size", type=int, default=32)
     parser.add_argument("--thinking-max-new-tokens", type=int, default=1024)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--upload-to-wandb", action="store_true")

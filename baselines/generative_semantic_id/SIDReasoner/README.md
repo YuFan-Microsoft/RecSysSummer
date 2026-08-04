@@ -234,6 +234,12 @@ Each script splits the test set across the listed GPUs, generates in parallel,
 merges the shards, and reports **NDCG@{1,3,5,10}** and **HR@{1,3,5,10}**.
 Results land in `./results/<run>/`.
 
+Each evaluator limits its OpenMP, MKL, OpenBLAS, and NumExpr pools to one CPU
+thread before importing vLLM. This prevents eight parallel EngineCore processes
+from oversubscribing the host and starving the GPUs. Set
+`SIDR_EVAL_CPU_THREADS=<N>` only when intentionally tuning for a different
+process/GPU topology.
+
 ---
 
 ## Results
