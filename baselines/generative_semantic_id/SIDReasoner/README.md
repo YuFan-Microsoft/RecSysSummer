@@ -67,7 +67,7 @@ SIDReasoner/
 │   ├── create_reasoning_rl_data.py
 │   └── merge_fsdp_checkpoint.py   # FSDP shards → HF `actor_merged`
 ├── evaluation/                    # split → generate → merge → score
-│   ├── evaluate_Qwen3.py / .sh          # non-thinking mode
+│   ├── evaluate_Qwen3.py / .sh          # non-thinking mode (vLLM + constrained beam)
 │   ├── evaluate_Qwen3_think.py / .sh    # thinking mode (vLLM + constrained beam)
 │   ├── split.py / merge.py / calc.py
 ├── verl/                          # vendored VERL RL trainer
@@ -105,13 +105,17 @@ emitting it, producing coherent `<think>` traces grounded in SID semantics.
 reward** that scores whether the reasoned-out SID matches the ground-truth next
 item. Output is an FSDP checkpoint; merge it into an HF model (`actor_merged`).
 
-**Evaluation (thinking mode).** Two generators, each doing what it is best at:
+**Recommendation evaluation.** Every phase uses the same vLLM fixed-depth
+decoder for training-time and offline HR/NDCG. Both modes rank catalog SIDs by
+the sum of exactly three semantic-token log-probabilities; newline and EOS
+probabilities never enter the ranking:
 
-1. **vLLM** greedily drafts the reasoning trace (`temperature=0`), truncated at
-   `</think>`.
-2. **Hugging Face `generate`** runs **beam search (beam 10)** with a
-   `prefix_allowed_tokens_fn` over a trie of all catalog SIDs, so the top-K
-   decoded SIDs are always valid items — scored with NDCG@K / HR@K.
+1. **Thinking mode:** vLLM greedily drafts the reasoning trace
+  (`temperature=0`), truncated at `</think>`.
+2. **No-thinking mode:** the prompt supplies an empty `<think></think>` span.
+3. The **same vLLM engine** runs fixed-depth **beam search (beam 10)** over a
+  trie of all catalog SIDs. Training and evaluation share the implementation
+  in `verl/workers/rollout/sid_constrained_decoding.py`.
 
 ---
 
@@ -121,7 +125,7 @@ item. Output is an FSDP checkpoint; merge it into an HF model (`actor_merged`).
 
 ```bash
 pip install -r requirements.txt
-# RL (Stage 3) + thinking-mode eval need a CUDA-matched vLLM/VERL stack:
+# All recommendation evaluation and Stage 3 need a CUDA-matched vLLM/VERL stack:
 bash scripts/install_vllm_sglang_mcore.sh
 ```
 
@@ -222,7 +226,7 @@ python3 ./phase3_rl/merge_fsdp_checkpoint.py \
 # Thinking mode — vLLM reasoning trace + constrained beam-search SID decoding
 bash evaluation/evaluate_Qwen3_think.sh
 
-# Non-thinking mode — direct constrained SID decoding
+# Non-thinking mode — vLLM fixed-depth constrained SID decoding
 bash evaluation/evaluate_Qwen3.sh
 ```
 

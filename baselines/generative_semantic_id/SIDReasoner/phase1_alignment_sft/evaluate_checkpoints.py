@@ -28,7 +28,7 @@ def parse_args():
     parser.add_argument("--num-samples", type=int, default=-1)
     parser.add_argument("--num-beams", type=int, default=10)
     parser.add_argument("--batch-size", type=int, default=8)
-    parser.add_argument("--max-new-tokens", type=int, default=256)
+    parser.add_argument("--sid-length", type=int, default=3)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--min-epoch", type=int, default=0)
     parser.add_argument("--max-epoch", type=int, default=-1)
@@ -44,8 +44,8 @@ def parse_args():
         parser.error("--num-samples must be -1 or a positive integer")
     if args.batch_size <= 0:
         parser.error("--batch-size must be positive")
-    if args.max_new_tokens <= 0:
-        parser.error("--max-new-tokens must be positive")
+    if args.sid_length != 3:
+        parser.error("--sid-length must be 3 for recommendation metrics")
     if args.min_epoch < 0:
         parser.error("--min-epoch must be non-negative")
     if args.max_epoch != -1 and args.max_epoch < args.min_epoch:
@@ -192,7 +192,7 @@ def evaluator_command(args, checkpoint, gpu, paths, shard_dir, result_dir):
         "--result_json_data", str(result_dir / f"{gpu}.json"),
         "--batch_size", str(args.batch_size),
         "--num_beams", str(args.num_beams),
-        "--max_new_tokens", str(args.max_new_tokens),
+        "--sid_length", str(args.sid_length),
         "--length_penalty", "0.0",
         "--seed", str(args.seed),
     ]

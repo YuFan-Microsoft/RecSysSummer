@@ -85,9 +85,9 @@ def parse_args():
     )
     parser.add_argument("--num-samples", type=int, default=-1)
     parser.add_argument("--num-beams", type=int, default=10)
+    parser.add_argument("--sid-length", type=int, default=3)
     parser.add_argument("--no-thinking-batch-size", type=int, default=8)
     parser.add_argument("--thinking-batch-size", type=int, default=4)
-    parser.add_argument("--no-thinking-max-new-tokens", type=int, default=256)
     parser.add_argument("--thinking-max-new-tokens", type=int, default=1024)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--upload-to-wandb", action="store_true")
@@ -98,6 +98,8 @@ def parse_args():
 
     if args.num_beams < max(METRIC_CUTOFFS):
         parser.error(f"--num-beams must be at least {max(METRIC_CUTOFFS)}")
+    if args.sid_length != 3:
+        parser.error("--sid-length must be 3 for recommendation metrics")
     args.cuda_list = [value.strip() for value in args.cuda_list.split(",") if value.strip()]
     if not args.cuda_list:
         parser.error("--cuda-list must contain at least one GPU")
@@ -168,6 +170,7 @@ def evaluator_command(args, mode, gpu, paths, temp_dir):
         "--test_data_path", str(temp_dir / f"{gpu}.csv"),
         "--result_json_data", str(temp_dir / f"{gpu}.json"),
         "--num_beams", str(args.num_beams),
+        "--sid_length", str(args.sid_length),
         "--length_penalty", "0.0",
         "--seed", str(args.seed),
     ]
@@ -181,7 +184,6 @@ def evaluator_command(args, mode, gpu, paths, temp_dir):
     else:
         common.extend([
             "--batch_size", str(args.no_thinking_batch_size),
-            "--max_new_tokens", str(args.no_thinking_max_new_tokens),
         ])
     return common
 

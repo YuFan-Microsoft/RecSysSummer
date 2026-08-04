@@ -131,7 +131,8 @@ never mixed — see §5). You only pass the `CATEGORY`:
 - **8× GPU @ 80 GB** (A100/H100). Config is tuned for this: ZeRO‑2, bf16,
   gradient checkpointing.
 - `pip install -r requirements.txt` (needs `torch`, `deepspeed`, `transformers>=4.51`,
-  `datasets`, `hf-transfer`, `wandb`, `fire`, …).
+  `vllm`, `datasets`, `hf-transfer`, `wandb`, `fire`, …). Recommendation HR/NDCG
+  uses vLLM fixed-depth beam search over exactly three SID tokens.
 - Network access to Hugging Face. Recommended: `export HF_HUB_ENABLE_HF_TRANSFER=1`.
   If you hit rate limits, `export HF_TOKEN=<your token>`.
 - wandb: the API key is hardcoded in `sft_Qwen3.py` and logs from rank 0 only.

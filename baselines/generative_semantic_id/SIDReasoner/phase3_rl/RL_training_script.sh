@@ -101,7 +101,8 @@ python3 -m verl.trainer.main_ppo \
 # ----------------------------------------------------------------------------
 # To enable SID beam search (verl B.1 port), add these overrides above:
 #     +actor_rollout_ref.rollout.sid_beam_size=<N> \
-#     +actor_rollout_ref.rollout.sid_length=<L> \
-# (both required, sid_beam_size > 1). They are declared fields on RolloutConfig
+#     +actor_rollout_ref.rollout.sid_length=3 \
+# (both required, sid_beam_size > 1). Recommendation metrics require SID length 3.
+# They are declared fields on RolloutConfig
 # in verl, so the `+` CLI override lands correctly.
 # ----------------------------------------------------------------------------

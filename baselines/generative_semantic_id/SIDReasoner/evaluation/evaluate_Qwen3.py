@@ -1,39 +1,45 @@
-import os as _os, sys as _sys
+import os as _os
+import sys as _sys
+
 _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 
-import fire
-import torch
 import json
-# os.environ["CUDA_VISIBLE_DEVICES"] = "3"
-
-from transformers import AutoTokenizer, AutoModelForCausalLM
-from data_Qwen3 import SidNextItemEvalDataset
+import os
 import random
 
-
-
-if torch.cuda.is_available():
-    device = "cuda"
-else:
-    device = "cpu"
-P = 998244353
-MOD = int(1e9 + 9)
+import fire
 import numpy as np
+from tqdm import tqdm
+from vllm import LLM
 
-def get_hash(x):
-    x = [str(_) for _ in x]
-    return '-'.join(x)
+import hf_data
+from data_Qwen3 import SidNextItemEvalDataset
+from verl.workers.rollout.sid_constrained_decoding import (
+    build_sid_token_trie,
+    vllm_constrained_beam_search,
+)
+
+
+CATEGORY_NAMES = {
+    "Industrial_and_Scientific": "industrial and scientific items",
+    "Office_Products": "office products",
+    "Toys_and_Games": "toys and games",
+    "Sports": "sports and outdoors",
+    "Books": "books",
+    "Video_Games": "video games",
+}
+
 
 def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
-    torch.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed(seed)
-        torch.cuda.manual_seed_all(seed)  # if you are using multi-GPU.
-    # torch.backends.cudnn.deterministic = True
-    # torch.backends.cudnn.benchmark = False
-    
+
+
+def batched(values, batch_size):
+    for start in range(0, len(values), batch_size):
+        yield values[start : start + batch_size]
+
+
 def main(
     base_model: str = "./output_dir/7Task-End2End_Qwen3_Games/final_checkpoint",
     train_file: str = "./data/Amazon_Games/train/Video_Games_5_2016-10-2018-11.csv",
@@ -44,212 +50,96 @@ def main(
     batch_size: int = 16,
     K: int = 0,
     seed: int = 42,
-    length_penalty: float=0.0,
-    max_new_tokens: int = 256,
+    length_penalty: float = 0.0,
     num_beams: int = 10,
     padding_side: str = "left",
+    max_prompt_length: int = 1024,
+    sid_length: int = 3,
+    gpu_memory_utilization: float = 0.8,
 ):
-    random.seed(seed)
+    """Evaluate no-thinking recommendations from three SID-token scores only."""
+    del train_file, info_file, K, padding_side
+    if batch_size < 1:
+        raise ValueError("batch_size must be at least 1")
+    if num_beams < 2:
+        raise ValueError("num_beams must be at least 2")
+    if sid_length != 3:
+        raise ValueError("SID recommendation metrics require exactly three semantic tokens")
+    if length_penalty != 0.0:
+        raise ValueError("fixed-depth SID beam search requires length_penalty=0.0")
+
     set_seed(seed)
-    category_dict = {"Industrial_and_Scientific": "industrial and scientific items", "Office_Products": "office products", "Toys_and_Games": "toys and games", "Sports": "sports and outdoors", "Books": "books", "Video_Games": "video games"}
-    if category in category_dict:
-        category = category_dict[category]
-    else:
-        category = "items"
-    print(category)
+    llm = LLM(
+        model=base_model,
+        max_model_len=max_prompt_length + sid_length,
+        max_num_seqs=max(32, batch_size * num_beams),
+        dtype="bfloat16",
+        gpu_memory_utilization=gpu_memory_utilization,
+        tensor_parallel_size=1,
+        seed=seed,
+    )
+    tokenizer = llm.get_tokenizer()
+    sid_token_trie = build_sid_token_trie(
+        tokenizer,
+        hf_data.load_sid_indices(category).values(),
+        depth=sid_length,
+    )
 
-    model = AutoModelForCausalLM.from_pretrained(base_model, torch_dtype=torch.bfloat16, device_map="auto")
-    model.eval()
-
-    prefix_prompt = "\n</think>\n\n"
-    prefix_index = 3
-    import hf_data
-    info = hf_data.load_info_lines(info_file)
-    # Parse new format: semantic_id \t item_title \t item_id
-    semantic_ids = [line.split('\t')[0].strip() for line in info]
-    # Format for tokenization
-    info_semantic = [f'''{prefix_prompt}{_}\n''' for _ in semantic_ids]
-
-    tokenizer = AutoTokenizer.from_pretrained(base_model)
-    # Create prefixID for semantic IDs (existing functionality)
-    if base_model.lower().find("llama") > -1:
-        prefixID = [tokenizer(_).input_ids[1:] for _ in info_semantic]
-    else:
-        prefixID = [tokenizer(_).input_ids for _ in info_semantic]
-    
-    # Build hash_dict for semantic IDs (existing functionality)
-    hash_dict = dict()
-    # print(f"eos token: {tokenizer.eos_token_id}")
-    for index, ID in enumerate(prefixID):
-        ID.append(tokenizer.eos_token_id)
-        for i in range(prefix_index, len(ID)):
-            if i == prefix_index:
-                hash_number = get_hash(ID[:i])
-            else:
-                hash_number = get_hash(ID[prefix_index:i])
-            if hash_number not in hash_dict:
-                hash_dict[hash_number] = set()
-            hash_dict[hash_number].add(ID[i])
-        hash_number = get_hash(ID[prefix_index:])
-
-
-    # Convert sets to lists for both dictionaries
-    for key in hash_dict.keys():
-        hash_dict[key] = list(hash_dict[key])
-
-
-    def find_last_sublist(lst, sub):
-        """Find the last occurrence of sublist in list"""
-        if not sub:
-            return None
-        n, m = len(lst), len(sub)
-        for start in range(n - m, -1, -1):
-            if lst[start:start + m] == sub:
-                return start
-        return None
-        
-
-    sep_ids = tokenizer(prefix_prompt, add_special_tokens=False)["input_ids"]
-    eos_id = tokenizer.eos_token_id
-
-    # Define prefix constraint functions
-    def prefix_allowed_tokens_fn_semantic(batch_id, input_ids):
-        input_ids = input_ids.tolist()
-        pos = find_last_sublist(input_ids, sep_ids)
-        if pos is None:
-            # "\n</think>\n\n" not detected
-            raise Exception(f"Error: Prefix prompt not found in input IDs - {tokenizer.decode(input_ids)}.")
-        
-        # Calculate position after "\n</think>\n\n"
-        pos_after_sep = pos + len(sep_ids)
-        generated_after_sep = input_ids[pos_after_sep:]
-        current_pos = len(generated_after_sep)
-
-        if current_pos == 0:
-            # First token after prefix prompt, the hash key should be predix.
-            hash_number = get_hash(sep_ids)
-            if hash_number in hash_dict:
-                return hash_dict[hash_number]
-            else:
-                return [eos_id]
-        else:
-            # Subsequent tokens, the hash key should be generated tokens after prefix.
-            hash_number = get_hash(generated_after_sep)
-            if hash_number in hash_dict:
-                return hash_dict[hash_number]
-            else:
-                return [eos_id]
-
-        
-    # Default to semantic constraints (backward compatibility)
-    prefix_allowed_tokens_fn = prefix_allowed_tokens_fn_semantic
-    # prefix_allowed_tokens_fn = prefix_allowed_tokens_fn_title
-    
-    tokenizer.pad_token = tokenizer.eos_token
-    tokenizer.pad_token_id = tokenizer.eos_token_id
-    tokenizer.padding_side = padding_side
-    
-    # val_dataset = EvalD3Dataset(train_file=test_data_path, tokenizer=tokenizer, max_len=2560, category=category, test=True, K=K, seed=seed)
-    val_dataset = SidNextItemEvalDataset(train_file=test_data_path, tokenizer=tokenizer, max_len=2560, category=category, test=True, K=K, seed=seed)
-    
-    encodings = [val_dataset[i] for i in range(len(val_dataset))]
-
-    # encodings = encodings[:100]
-    # encodings = [val_dataset[i] for i in indexes]
+    val_dataset = SidNextItemEvalDataset(
+        train_file=test_data_path,
+        tokenizer=tokenizer,
+        max_len=max_prompt_length,
+        category=CATEGORY_NAMES.get(category, "items"),
+        test=True,
+        seed=seed,
+    )
+    encodings = [val_dataset[index] for index in range(len(val_dataset))]
     test_data = val_dataset.get_all()
+    if len(encodings) != len(test_data):
+        raise RuntimeError("Evaluation prompts and result rows have different lengths")
 
-    model.config.pad_token_id = model.config.eos_token_id = tokenizer.eos_token_id
-    model.config.bos_token_id = tokenizer.bos_token_id
+    overlong_prompts = [
+        len(encoding["input_ids"])
+        for encoding in encodings
+        if len(encoding["input_ids"]) > max_prompt_length
+    ]
+    if overlong_prompts:
+        raise ValueError(
+            f"Found {len(overlong_prompts)} prompts longer than the training limit "
+            f"of {max_prompt_length} tokens (maximum: {max(overlong_prompts)})"
+        )
 
-    def evaluate(
-            encodings,
-            num_beams=10,
-            max_new_tokens=64,
-            length_penalty=1.0,
-            padding_side="right",
-            **kwargs,
-    ):
-        maxLen = max([len(_["input_ids"]) for _ in encodings])
+    predictions = []
+    encoding_batches = list(batched(encodings, batch_size))
+    for encoding_batch in tqdm(encoding_batches, desc="Generating constrained SID beams"):
+        prompt_ids = [list(encoding["input_ids"]) for encoding in encoding_batch]
+        sid_beams = vllm_constrained_beam_search(
+            llm,
+            prompts_ids=prompt_ids,
+            sid_token_trie=sid_token_trie,
+            depth=sid_length,
+            beam_width=num_beams,
+        )
+        predictions.extend(
+            [
+                tokenizer.decode(sid_ids, skip_special_tokens=False)
+                for sid_ids in sample_beams
+            ]
+            for sample_beams in sid_beams
+        )
 
-        padding_encodings = {"input_ids": []}
-        attention_mask = []
+    if len(predictions) != len(test_data):
+        raise RuntimeError("Evaluation generated an inconsistent number of result rows")
+    for sample, prediction in zip(test_data, predictions):
+        sample["predict"] = prediction
+        sample.pop("dedup", None)
 
-        for  _ in encodings:
-            L = len(_["input_ids"])
-            if padding_side == "left":
-                padding_encodings["input_ids"].append([tokenizer.pad_token_id] * (maxLen - L) + _["input_ids"])
-                attention_mask.append([0] * (maxLen - L) + [1] * L) 
-            elif padding_side == "right":
-                padding_encodings["input_ids"].append(_["input_ids"] + [tokenizer.pad_token_id] * (maxLen - L))
-                attention_mask.append([1] * L + [0] * (maxLen - L))
-            else:
-                raise ValueError("Invalid padding_side. Choose 'left' or 'right'.")
-            
-    
-        with torch.no_grad():
-            generate_kwargs = {
-                "input_ids": torch.tensor(padding_encodings["input_ids"]).to(device),
-                "attention_mask": torch.tensor(attention_mask).to(device),
-                "max_new_tokens": max_new_tokens,
-                "num_beams": num_beams,
-                "num_return_sequences": num_beams,
-                "output_scores": True,
-                "return_dict_in_generate": True,
-                "early_stopping": True,
-                "length_penalty": length_penalty,
-                # "temperature": args.temperature,
-                "prefix_allowed_tokens_fn": prefix_allowed_tokens_fn,
-            }
+    result_dir = os.path.dirname(result_json_data)
+    if result_dir:
+        os.makedirs(result_dir, exist_ok=True)
+    with open(result_json_data, "w", encoding="utf-8") as handle:
+        json.dump(test_data, handle, indent=4)
 
-            generation_output = model.generate(
-                **generate_kwargs
-            )
-       
-        batched_completions = generation_output.sequences[:, maxLen:]
-       
-        
-        if base_model.lower().find("llama") > -1:
-            output_raw = tokenizer.batch_decode(batched_completions, skip_special_tokens=True, clean_up_tokenization_spaces=False)
-        else:
-            output_raw = tokenizer.batch_decode(batched_completions, skip_special_tokens=True)
-            
-        output = [_.split("Response:\n")[-1].strip() for _ in output_raw]
-        real_outputs = [output[i * num_beams: (i + 1) * num_beams] for i in range(len(output) // num_beams)]
 
-        if "" in real_outputs:
-            print("Warning: Empty string detected in outputs.")
-        return real_outputs
-    
-    model = model.to(device)
-
-    from tqdm import tqdm
-    outputs = []
-    new_encodings = []
-    BLOCK = (len(encodings) + batch_size - 1) // batch_size
-    for i in range(BLOCK):
-        new_encodings.append(encodings[i * batch_size: (i + 1) * batch_size])
-
-    
-    for idx, encodings in enumerate(tqdm(new_encodings)):
-        # Use standard evaluation
-        output = evaluate(encodings, max_new_tokens=max_new_tokens, num_beams=num_beams, length_penalty=length_penalty, padding_side=padding_side)
-        
-        outputs = outputs + output
-       
-    for i, test in enumerate(test_data):
-        test["predict"] = outputs[i]
-  
-
-    for i in range(len(test_data)):
-        if 'dedup' in test_data[i]:
-            test_data[i].pop('dedup')  
-    with open(result_json_data, 'w') as f:
-        json.dump(test_data, f, indent=4)
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     fire.Fire(main)
-
-
-
-
-

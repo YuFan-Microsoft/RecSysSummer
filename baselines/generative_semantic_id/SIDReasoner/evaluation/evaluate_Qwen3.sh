@@ -57,7 +57,7 @@ do
             --result_json_data "${temp_dir}/${i}.json" \
             --batch_size 8 \
             --num_beams 10 \
-            --max_new_tokens 256 \
+            --sid_length 3 \
             --length_penalty 0.0 &
     else
         echo "Warning: Split file ${temp_dir}/${i}.csv not found, skipping GPU ${i}"

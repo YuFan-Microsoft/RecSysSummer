@@ -178,7 +178,8 @@ class RolloutConfig(BaseConfig):
 
     # === SID Reasoner customization ===
     # vLLM beam search over semantic-ID tokens after the reasoning span.
-    # Set via CLI override, e.g. +actor_rollout_ref.rollout.sid_beam_size=10 +...sid_length=4
+    # Recommendation metrics require sid_length=3 and rank only those token scores.
+    # Set via CLI override, e.g. +actor_rollout_ref.rollout.sid_beam_size=10 +...sid_length=3
     # Both must be provided (and sid_beam_size > 1) to activate beam search.
     sid_beam_size: Optional[int] = None
     sid_length: Optional[int] = None

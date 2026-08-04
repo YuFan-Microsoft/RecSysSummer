@@ -117,8 +117,9 @@ Run each independently, pairing `CATEGORY` with its Phase‑1 checkpoint:
 ## 5. Environment / prerequisites
 
 - **8× GPU @ 80 GB** (A100/H100). Config tuned for this: ZeRO‑2, bf16.
-- `pip install -r requirements.txt` (`torch`, `deepspeed`, `transformers>=4.51`, `datasets`,
-  `hf-transfer`, `wandb`, …).
+- `pip install -r requirements.txt` (`torch`, `deepspeed`, `transformers>=4.51`, `vllm`,
+  `datasets`, `hf-transfer`, `wandb`, …). Thinking and no-thinking HR/NDCG use
+  the same vLLM fixed-depth beam search over exactly three SID tokens.
 - Network access to Hugging Face. Recommended: `export HF_HUB_ENABLE_HF_TRANSFER=1`.
   If you hit rate limits, `export HF_TOKEN=<your token>`.
 - The Phase‑1 checkpoint for the chosen domain must already exist under `./output_dir/...`.

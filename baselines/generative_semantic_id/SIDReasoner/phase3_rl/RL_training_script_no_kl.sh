@@ -87,4 +87,5 @@ python3 -m verl.trainer.main_ppo \
 
 # To enable SID beam search, add both overrides above:
 #     +actor_rollout_ref.rollout.sid_beam_size=<N> \
-#     +actor_rollout_ref.rollout.sid_length=<L> \
+#     +actor_rollout_ref.rollout.sid_length=3 \
+# Recommendation metrics require SID length 3.
