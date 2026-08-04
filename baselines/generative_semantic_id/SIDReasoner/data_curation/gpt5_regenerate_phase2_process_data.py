@@ -1,5 +1,5 @@
 """
-Generate simple, target-blind Phase-2 reasoning traces with GPT-5.4.
+Generate leakage-controlled, target-guided Phase-2 reasoning traces with GPT-5.4.
 
 The generated ``reasoning_path`` has three blocks:
 
@@ -18,8 +18,9 @@ The generated ``reasoning_path`` has three blocks:
 The current ReasoningActivationDataset adds the outer ``<think>...</think>`` and
 the target SID, so no Phase-2 training-loop change is required.
 
-The held-out target is never passed to the generator or reviewer as a target field.
-If the same item already appears in history, it remains visible only as history.
+The held-out target's title and catalog metadata are private guidance for selecting
+the strongest history-supported bridge. Its SID is not passed, and the output may
+not name the target or invent target-specific preferences unsupported by history.
 
 Examples:
 
@@ -31,7 +32,7 @@ Examples:
     python gpt5_regenerate_phase2_process_data.py \
         --category Video_Games --limit 20
 
-Outputs are resume-safe:
+Outputs are resume-safe and updated after every completed inference:
 
     <out-dir>/<Category>.phase2_process.jsonl
     <out-dir>/<Category>.phase2_process.csv
@@ -42,6 +43,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import csv
 import fcntl
 import hashlib
 import json
@@ -50,6 +52,7 @@ import queue
 import re
 import threading
 import time
+from contextlib import contextmanager
 from typing import Any
 
 import pandas as pd
@@ -68,7 +71,7 @@ MAX_REASONING_CHARS = 4000
 MAX_API_ATTEMPTS = 4
 MAX_REPAIR_ATTEMPTS = 2
 LOG_EVERY_SEC = 10
-SCHEMA_VERSION = "phase2_process_v2"
+SCHEMA_VERSION = "phase2_process_v3_target_guided"
 
 ITEM_SID_RE = re.compile(r"<a_[^<>\s]+><b_[^<>\s]+><c_[^<>\s]+>")
 SECTION_PATTERNS = {
@@ -85,6 +88,39 @@ INTENT_MODES = ("continue", "adjacent", "explore")
 _write_lock = threading.Lock()
 
 
+@contextmanager
+def single_process_lock(path: str):
+    """Allow only one process to generate a category into an output directory."""
+    handle = open(path, "a+", encoding="utf-8")
+    try:
+        try:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as error:
+            handle.seek(0)
+            owner = handle.read().strip() or "unknown owner"
+            raise RuntimeError(
+                f"another generation process holds {path}: {owner}"
+            ) from error
+
+        handle.seek(0)
+        handle.truncate()
+        json.dump(
+            {
+                "pid": os.getpid(),
+                "started_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            },
+            handle,
+        )
+        handle.flush()
+        os.fsync(handle.fileno())
+        yield
+    finally:
+        try:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+        finally:
+            handle.close()
+
+
 OUTPUT_FORMAT = """<behavior>
 - HISTORY_SID(S) => one observed fact
 </behavior>
@@ -99,8 +135,10 @@ OUTPUT_FORMAT = """<behavior>
 
 
 GENERATOR_SYSTEM_PROMPT = (
-    "You create target-blind reasoning data for a recommendation model. "
-    "Use only the supplied history. Output only the requested format."
+    "You create leakage-controlled, target-guided reasoning data for a "
+    "recommendation model. The private target may guide which plausible bridge "
+    "to emphasize, but every output claim must remain supported by history. "
+    "Output only the requested format."
 )
 
 
@@ -109,22 +147,34 @@ GENERATOR_PROMPT = """Given the user history below, write a short reasoning trac
 HISTORY:
 {history_block}
 
+PRIVATE HELD-OUT TARGET (guidance only; never identify it in the output):
+{target_block}
+
 Use exactly this format:
 {output_format}
 
 Requirements:
-1. Use only history evidence. Do not predict one exact next item.
-2. Cite only full SIDs from the history. Do not write item titles in the output.
-3. <behavior> contains facts, not preferences.
-4. <interest> contains cautious interests supported by the cited SIDs.
-5. With one history item, do not claim a strong or long-term preference.
-6. The three <intent> lines must be different. Keep the explore line broad.
-7. Output only the three blocks."""
+1. First infer facts and plausible interests from HISTORY alone. Then use the
+    private target only to choose the strongest defensible bridge among those
+    possibilities, such as platform/ecosystem, era, broad use case, or broad gameplay.
+2. Do not force relevance. If history supports only a weak bridge, express a broad,
+    calibrated direction instead of inventing a target-specific preference.
+3. Never mention or copy the target title, target SID, exact product, unique target
+    franchise, or other wording that reveals the held-out answer.
+4. Cite only full SIDs from the history. Do not write any item titles in the output.
+5. <behavior> contains history facts, not preferences or target-derived claims.
+6. <interest> contains cautious interests independently supported by cited history.
+7. With one history item, do not claim a strong or long-term preference.
+8. [continue] follows the strongest history pattern. [adjacent] states the strongest
+    history-supported bridge toward the private target. [explore] broadens that bridge.
+    The three intent lines must remain meaningfully different.
+9. Do not predict one exact next item. Output only the three blocks."""
 
 
 REVIEWER_SYSTEM_PROMPT = (
-    "You fix target-blind recommendation reasoning data. "
-    "Use only the supplied history. Output only the requested format."
+    "You fix leakage-controlled, target-guided recommendation reasoning data. "
+    "The private target may select an evidence-backed bridge but may not create "
+    "unsupported claims or appear in the output. Output only the requested format."
 )
 
 
@@ -132,6 +182,9 @@ REVIEWER_PROMPT = """Fix the candidate trace.
 
 HISTORY:
 {history_block}
+
+PRIVATE HELD-OUT TARGET (guidance only; never identify it in the output):
+{target_block}
 
 CANDIDATE:
 {candidate}
@@ -142,8 +195,11 @@ VALIDATION ISSUE:
 Use exactly this format:
 {output_format}
 
-Keep only supported facts and interests. Use only history SIDs, no item titles,
-no exact next item, and three different intents: continue, adjacent, explore.
+Keep only history-supported facts and interests. Preserve the strongest defensible
+platform/ecosystem, era, broad-use, or broad-gameplay bridge toward the private target.
+Do not force a bridge when evidence is weak. Use only history SIDs; never reveal the
+target, name any item, or predict one exact next item. Keep three different intents:
+continue, adjacent, explore.
 Output only the three blocks."""
 
 
@@ -307,20 +363,42 @@ def history_from_row(
     return history_sids, history_titles, "\n".join(lines)
 
 
-def generator_prompt(history_block: str) -> str:
+def target_guidance_from_row(
+    row: dict[str, Any],
+    catalog: dict[str, dict[str, str]],
+) -> str:
+    """Render private target semantics without exposing its SID to GPT."""
+    target_sid = str(row.get("item_sid") or "")
+    meta = catalog.get(target_sid, {})
+    title = str(row.get("item_title") or meta.get("title") or "(missing title)")
+    parts = [f"Title: {title}"]
+    brand = str(meta.get("brand") or "")
+    if brand:
+        parts.append(f"Brand: {brand}")
+    parts.append(
+        "Description: "
+        + _clip(meta.get("description") or title, MAX_DESCRIPTION_CHARS)
+    )
+    return "\n".join(parts)
+
+
+def generator_prompt(history_block: str, target_block: str) -> str:
     return GENERATOR_PROMPT.format(
         history_block=history_block,
+        target_block=target_block,
         output_format=OUTPUT_FORMAT,
     )
 
 
 def reviewer_prompt(
     history_block: str,
+    target_block: str,
     candidate: str,
     validation_issue: str,
 ) -> str:
     return REVIEWER_PROMPT.format(
         history_block=history_block,
+        target_block=target_block,
         candidate=candidate,
         validation_issue=validation_issue,
         output_format=OUTPUT_FORMAT,
@@ -676,6 +754,7 @@ def generate_trace(
     client: Any,
     model: str,
     history_block: str,
+    target_block: str,
     history_sids: list[str],
     history_titles: list[str],
     title_index: dict[int, set[str]],
@@ -685,7 +764,7 @@ def generate_trace(
         client,
         model,
         GENERATOR_SYSTEM_PROMPT,
-        generator_prompt(history_block),
+        generator_prompt(history_block, target_block),
     )
     current = candidate
     if review:
@@ -695,6 +774,7 @@ def generate_trace(
             REVIEWER_SYSTEM_PROMPT,
             reviewer_prompt(
                 history_block,
+                target_block,
                 candidate,
                 validation_issue(
                     candidate,
@@ -720,7 +800,12 @@ def generate_trace(
                 client,
                 model,
                 REVIEWER_SYSTEM_PROMPT,
-                reviewer_prompt(history_block, current, str(error)),
+                reviewer_prompt(
+                    history_block,
+                    target_block,
+                    current,
+                    str(error),
+                ),
             )
     raise AssertionError("unreachable")
 
@@ -760,22 +845,21 @@ def append_jsonl(path: str, value: dict[str, Any]) -> None:
                 fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
 
-def acquire_run_lock(out_path: str) -> Any:
-    lock_path = out_path + ".run.lock"
-    handle = open(lock_path, "a+", encoding="utf-8")
-    try:
-        fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except BlockingIOError as error:
-        handle.close()
-        raise RuntimeError(
-            f"another generation process is already using {out_path}"
-        ) from error
-    return handle
-
-
-def release_run_lock(handle: Any) -> None:
-    fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
-    handle.close()
+def append_csv_row(path: str, value: dict[str, Any]) -> None:
+    """Append one result to a live CSV mirror and force it to disk."""
+    with _write_lock:
+        write_header = not os.path.exists(path) or os.path.getsize(path) == 0
+        with open(path, "a", encoding="utf-8", newline="") as handle:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            try:
+                writer = csv.DictWriter(handle, fieldnames=list(value))
+                if write_header:
+                    writer.writeheader()
+                writer.writerow(value)
+                handle.flush()
+                os.fsync(handle.fileno())
+            finally:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
 
 def build_output_row(
@@ -812,8 +896,9 @@ def build_output_row(
         "process_schema_version": SCHEMA_VERSION,
         "generation_signature": signature,
         "generation_model": model,
-        "generator_target_visible": False,
-        "reviewer_target_visible": False,
+        "generator_target_visible": True,
+        "reviewer_target_visible": True,
+        "target_guidance_policy": "private_metadata_bridge_only",
         "reviewed": review,
     }
 
@@ -822,6 +907,7 @@ def run_pool(
     tasks: list[tuple[str, int, dict[str, Any]]],
     process_fn: Any,
     out_path: str,
+    csv_paths: list[str],
     endpoints: list[str],
     per_endpoint: int,
     get_client: Any,
@@ -870,10 +956,10 @@ def run_pool(
                 return
             row_key, source_index, row = task
             try:
-                append_jsonl(
-                    out_path,
-                    process_fn(client, row_key, source_index, row),
-                )
+                result = process_fn(client, row_key, source_index, row)
+                append_jsonl(out_path, result)
+                for csv_path in csv_paths:
+                    append_csv_row(csv_path, result)
                 with counter_lock:
                     counter["done"] += 1
                     done = counter["done"]
@@ -936,9 +1022,21 @@ def jsonl_to_csv(jsonl_path: str, csv_path: str) -> None:
     print(f"  wrote {csv_path} ({len(frame)} rows)")
 
 
+def reconcile_csv_mirrors(jsonl_path: str, csv_paths: list[str]) -> None:
+    """Make live CSV mirrors agree with the canonical JSONL before resuming."""
+    if os.path.exists(jsonl_path):
+        for csv_path in csv_paths:
+            jsonl_to_csv(jsonl_path, csv_path)
+        return
+    for csv_path in csv_paths:
+        if os.path.exists(csv_path):
+            os.remove(csv_path)
+
+
 def regenerate(
     category: str,
     out_path: str,
+    csv_paths: list[str],
     endpoints: list[str],
     per_endpoint: int,
     limit: int,
@@ -972,7 +1070,8 @@ def regenerate(
             return
         _, _, row = tasks[0]
         _, _, history_block = history_from_row(row, catalog)
-        print(generator_prompt(history_block))
+        target_block = target_guidance_from_row(row, catalog)
+        print(generator_prompt(history_block, target_block))
         return
 
     def process(
@@ -984,10 +1083,12 @@ def regenerate(
         history_sids, history_titles, history_block = history_from_row(
             row, catalog
         )
+        target_block = target_guidance_from_row(row, catalog)
         trace = generate_trace(
             client,
             model,
             history_block,
+            target_block,
             history_sids,
             history_titles,
             title_index,
@@ -1012,7 +1113,15 @@ def regenerate(
 
     if get_client is None:
         raise RuntimeError("generation requires an Azure client factory")
-    run_pool(tasks, process, out_path, endpoints, per_endpoint, get_client)
+    run_pool(
+        tasks,
+        process,
+        out_path,
+        csv_paths,
+        endpoints,
+        per_endpoint,
+        get_client,
+    )
 
 
 def main() -> None:
@@ -1036,31 +1145,41 @@ def main() -> None:
     if args.per_endpoint < 1:
         parser.error("--per-endpoint must be at least 1")
 
-    get_client = None
-    endpoints = []
-    if not args.dry_run:
-        configured_endpoints, get_client = load_endpoint_helpers()
-        endpoints = args.endpoints or configured_endpoints
-        unknown = [
-            endpoint
-            for endpoint in endpoints
-            if endpoint not in configured_endpoints
-        ]
-        if unknown:
-            parser.error(f"unknown endpoint(s): {unknown}")
-
     os.makedirs(args.out_dir, exist_ok=True)
     output_jsonl = os.path.join(
         args.out_dir,
         f"{args.category}.phase2_process.jsonl",
     )
-    run_lock = None
-    if not args.dry_run:
-        run_lock = acquire_run_lock(output_jsonl)
-    try:
+    output_csvs = [
+        output_jsonl.replace(".jsonl", ".csv"),
+        os.path.join(
+            args.out_dir,
+            f"{args.category}.integrated_narrative.csv",
+        ),
+    ]
+    lock_path = os.path.join(
+        args.out_dir,
+        f".{args.category}.phase2_process.lock",
+    )
+    with single_process_lock(lock_path):
+        get_client = None
+        endpoints = []
+        if not args.dry_run:
+            configured_endpoints, get_client = load_endpoint_helpers()
+            endpoints = args.endpoints or configured_endpoints
+            unknown = [
+                endpoint
+                for endpoint in endpoints
+                if endpoint not in configured_endpoints
+            ]
+            if unknown:
+                parser.error(f"unknown endpoint(s): {unknown}")
+
+            reconcile_csv_mirrors(output_jsonl, output_csvs)
         regenerate(
             category=args.category,
             out_path=output_jsonl,
+            csv_paths=output_csvs,
             endpoints=endpoints,
             per_endpoint=args.per_endpoint,
             limit=args.limit,
@@ -1069,21 +1188,9 @@ def main() -> None:
             dry_run=args.dry_run,
             get_client=get_client,
         )
-    finally:
-        if run_lock is not None:
-            release_run_lock(run_lock)
-    if not args.dry_run:
-        jsonl_to_csv(
-            output_jsonl,
-            output_jsonl.replace(".jsonl", ".csv"),
-        )
-        jsonl_to_csv(
-            output_jsonl,
-            os.path.join(
-                args.out_dir,
-                f"{args.category}.integrated_narrative.csv",
-            ),
-        )
+        if not args.dry_run:
+            for output_csv in output_csvs:
+                jsonl_to_csv(output_jsonl, output_csv)
 
 
 if __name__ == "__main__":
