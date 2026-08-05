@@ -97,6 +97,7 @@ def main(
         max_model_len=max_prompt_length + max_new_tokens,
         max_num_batched_tokens=max_num_batched_tokens,
         max_num_seqs=max_num_seqs,
+        logprobs_mode="processed_logprobs",
         dtype="bfloat16",
         gpu_memory_utilization=gpu_memory_utilization,
         tensor_parallel_size=1,
@@ -199,6 +200,13 @@ def main(
             depth=sid_length,
             beam_width=num_beams,
         )
+        short_beams = [len(sample_beams) for sample_beams in sid_beams if len(sample_beams) != num_beams]
+        if short_beams:
+            raise RuntimeError(
+                "Constrained SID beam search did not return the requested beam width "
+                f"of {num_beams} (minimum returned: {min(short_beams)}). Ensure the "
+                "vLLM engine uses logprobs_mode='processed_logprobs'."
+            )
         predictions.extend(
             [
                 tokenizer.decode(sid_ids, skip_special_tokens=False)
