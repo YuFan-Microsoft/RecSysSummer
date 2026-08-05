@@ -53,6 +53,27 @@ With both switches disabled, verl does not register a `RefPolicy` worker, does n
 compute reference-policy log probabilities, does not add KL to the actor loss, and
 passes the custom rule-based reward directly into GRPO advantage estimation.
 
+### Reasoning format reward
+
+The custom reward combines the branch's constrained-beam recommendation reward
+with a small binary reasoning-format bonus:
+
+```text
+score = ndcg_at_10 + 0.05 * format_reward
+```
+
+`format_reward` is `1` only when the text before the single `</think>` marker
+contains exactly one non-empty `<behavior>...</behavior>` block, followed by
+exactly one non-empty `<interest>...</interest>` block, followed by exactly one
+non-empty `<intent>...</intent>` block, with no reasoning text outside those
+blocks. The opening `<think>` token is optional because tokenizer decoding may
+omit it. The format check does not judge semantic quality or require particular
+intent labels.
+
+The original `sid_match_reward` remains pure NDCG@10. W&B adds only one format
+metric, `core_metrics_train/format_reward_mean`, which is the training-batch
+format pass rate.
+
 Observed final recommendation results:
 
 | Variant | Office_Products NDCG@10 / R@10 | Video_Games NDCG@10 / R@10 | Industrial_and_Scientific NDCG@10 / R@10 |

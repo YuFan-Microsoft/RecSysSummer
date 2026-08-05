@@ -66,6 +66,7 @@ from verl.utils.tracking import ValidationGenerationsLogger
 
 _WANDB_METRIC_ORDER = (
     "core_metrics_train/sid_match_reward_mean",
+    "core_metrics_train/format_reward_mean",
     "core_metrics_train/prefix_1_match_rate",
     "core_metrics_train/prefix_2_match_rate",
     "core_metrics_train/exact_match_rate",
@@ -153,6 +154,7 @@ def _compute_core_metrics(batch, metrics):
 
     reward_extra_metrics = {
         "sid_match_reward": "core_metrics_train/sid_match_reward_mean",
+        "format_reward": "core_metrics_train/format_reward_mean",
         "prefix_1_match": "core_metrics_train/prefix_1_match_rate",
         "prefix_2_match": "core_metrics_train/prefix_2_match_rate",
         "exact_match": "core_metrics_train/exact_match_rate",
@@ -781,7 +783,10 @@ class RayPPOTrainer:
 
         data_sources = np.concatenate(data_source_lst, axis=0)
 
-        data_src2var2metric2val = process_validation_metrics(data_sources, sample_uids, reward_extra_infos_dict)
+        validation_reward_info = {
+            key: values for key, values in reward_extra_infos_dict.items() if key != "format_reward"
+        }
+        data_src2var2metric2val = process_validation_metrics(data_sources, sample_uids, validation_reward_info)
         metric_dict = {}
         validation_core_metrics = {
             "sid_match_reward": "core_metrics_val/sid_match_reward_mean",
