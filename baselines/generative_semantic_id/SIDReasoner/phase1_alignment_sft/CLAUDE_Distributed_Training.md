@@ -185,8 +185,13 @@ Ties it together, per domain, sequentially:
 2. Copy node-0's hostfile to every worker and preflight the remote repo,
    `deepspeed`, and Python launcher so every node builds the same world map.
 3. **Prefetch** data+model on all nodes, **ONLINE** (§4b).
-4. **Train** across all 40 GPUs via ssh fan-out of `deepspeed --no_ssh --node_rank R`,
+4. Prepare identical SID-extended `epoch_0` checkpoints on every node, then immediately
+  evaluate node-0's copy and upload its metrics to W&B. Failure aborts before training.
+5. **Train** from that exact checkpoint across all 40 GPUs via ssh fan-out of
+  `deepspeed --no_ssh --node_rank R`,
    **OFFLINE** (`HF_HUB_OFFLINE=1 HF_DATASETS_OFFLINE=1`) to dodge Hub rate-limits.
+6. After every DeepSpeed process exits, evaluate each trained epoch on node-0's 8 GPUs
+  with no-thinking constrained beam-10 decoding; epoch 0 is not repeated.
 
 The launcher monitors every node process concurrently. If any prefetch or
 DeepSpeed launcher exits non-zero, it terminates the remaining node launchers
@@ -208,6 +213,7 @@ NCCL_DEBUG          = WARN
 # Prefetch env: ONLINE.  Training env: + HF_HUB_OFFLINE=1 HF_DATASETS_OFFLINE=1
 wandb_project = SIDReasoner_Phase1_Distributed_Training     # groups the 3 runs
 wandb_run     = <Category>_Stage1_SFT_Qwen3-1.7B           # Title-cased
+recsys_eval   = no-thinking HR/NDCG@5,10 at epoch 0..N     # same wandb run
 ```
 
 Env propagation detail: worker ssh shells are non-login and **don't inherit** the
@@ -299,11 +305,15 @@ Speed levers: raise `MICRO_BATCH_SIZE` (80 GB has headroom; bump `LR` ~linearly)
 cut steps/epoch, or lower `NUM_EPOCHS`.
 
 **Outputs (all on node-0 — rank 0 saves):**
+- pre-training SID-extended baseline → `.../epoch_0` (evaluated before training starts)
 - per-epoch checkpoints → `output_dir/<CAT>_stage1_sft_Qwen3-1.7B_distributed/epoch_<N>`
 - loss-best pointer → `.../final_checkpoint`
+- no-thinking metrics/predictions → `.../recsys_eval_nothinking/`
 - Final checkpoint is chosen by **recsys metrics** (NDCG@10/HR@10) per domain, by
-  scoring each `epoch_<N>` — see `phase1_alignment_sft/CLAUDE.md §7`. Evaluation
-  runs single-node on node-0 (8 GPUs), which is why keeping rank 0 on node-0 matters.
+  scoring epoch 0 and each `epoch_<N>` — see `phase1_alignment_sft/CLAUDE.md §7`.
+  Epoch 0 is evaluated before DeepSpeed starts; trained epochs are evaluated only after
+  all multi-node processes exit. Both run single-node on node-0 (8 GPUs), which is why
+  keeping rank 0 on node-0 matters.
 
 ---
 

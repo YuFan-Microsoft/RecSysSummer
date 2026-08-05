@@ -21,6 +21,7 @@ import math
 import time
 import random
 import argparse
+import json
 
 import numpy as np
 import torch
@@ -290,6 +291,8 @@ def parse_args():
     parser.add_argument("--wandb_project", type=str, default="SIDReasoner_Phase2")
     parser.add_argument("--wandb_run_name", type=str,
                         default="Office_Products_stage2_reasoning_activation_Qwen3-1.7B")
+    parser.add_argument("--wandb_run_id", type=str, default=None)
+    parser.add_argument("--pretrain_eval_metrics", type=str, default=None)
     parser.add_argument("--report_to", type=str, default="wandb", choices=["wandb", "none"])
 
     parser = deepspeed.add_config_arguments(parser)
@@ -381,7 +384,35 @@ def main():
     if use_wandb:
         os.environ["WANDB_PROJECT"] = args.wandb_project
         wandb.login(key="3f14084582ffbf0986b305f813aea34ca59c77c5")
-        wandb.init(project=args.wandb_project, name=args.wandb_run_name, config=vars(args))
+        init_kwargs = {
+            "project": args.wandb_project,
+            "name": args.wandb_run_name,
+            "config": vars(args),
+        }
+        if args.wandb_run_id:
+            init_kwargs.update({"id": args.wandb_run_id, "resume": "allow"})
+        wandb.init(**init_kwargs)
+        wandb.define_metric("recsys_eval_step")
+        wandb.define_metric(
+            "recsys_eval_nothinking/*", step_metric="recsys_eval_step"
+        )
+        wandb.define_metric(
+            "recsys_eval_thinking/*", step_metric="recsys_eval_step"
+        )
+        if args.pretrain_eval_metrics:
+            with open(args.pretrain_eval_metrics, "r", encoding="utf-8") as handle:
+                pretrain_report = json.load(handle)
+            pretrain_metrics = {"recsys_eval_step": 0}
+            for mode, metrics in pretrain_report["modes"].items():
+                prefix = (
+                    "recsys_eval_nothinking"
+                    if mode == "no_thinking"
+                    else "recsys_eval_thinking"
+                )
+                for cutoff in (5, 10):
+                    pretrain_metrics[f"{prefix}/hr_at_{cutoff}"] = metrics["hr"][str(cutoff)]
+                    pretrain_metrics[f"{prefix}/ndcg_at_{cutoff}"] = metrics["ndcg"][str(cutoff)]
+            wandb.log(pretrain_metrics)
 
     category = CATEGORY_DICT.get(args.category, "items")
     print_rank_0(f"[Config] category={args.category} -> '{category}' | "
