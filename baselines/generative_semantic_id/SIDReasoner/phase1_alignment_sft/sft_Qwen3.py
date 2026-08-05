@@ -19,6 +19,7 @@ import math
 import time
 import random
 import argparse
+import json
 
 import numpy as np
 import torch
@@ -183,6 +184,18 @@ def save_hf_checkpoint(model, tokenizer, save_dir):
         torch.distributed.barrier()
 
 
+def write_checkpoint_manifest(output_dir, wandb_run_id, epochs):
+    """Record checkpoints created by this run on the rank-0 filesystem."""
+    if not is_rank_0():
+        return
+    os.makedirs(output_dir, exist_ok=True)
+    path = os.path.join(output_dir, "phase1_checkpoint_manifest.json")
+    temp_path = f"{path}.tmp.{os.getpid()}"
+    with open(temp_path, "w", encoding="utf-8") as handle:
+        json.dump({"wandb_run_id": wandb_run_id, "epochs": epochs}, handle, indent=2)
+    os.replace(temp_path, path)
+
+
 def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
@@ -276,6 +289,8 @@ def parse_args():
     # logging
     parser.add_argument("--wandb_project", type=str, default="SIDReasoner_Phase1")
     parser.add_argument("--wandb_run_name", type=str, default="Office_Products_stage1_sft_Qwen3-1.7B")
+    parser.add_argument("--wandb_run_id", type=str, default=None)
+    parser.add_argument("--epoch_zero_prepared", action="store_true")
     parser.add_argument("--report_to", type=str, default="wandb", choices=["wandb", "none"])
 
     parser = deepspeed.add_config_arguments(parser)
@@ -393,7 +408,18 @@ def main():
     if use_wandb:
         os.environ["WANDB_PROJECT"] = args.wandb_project
         wandb.login(key="3f14084582ffbf0986b305f813aea34ca59c77c5")
-        wandb.init(project=args.wandb_project, name=args.wandb_run_name, config=vars(args))
+        init_kwargs = {
+            "project": args.wandb_project,
+            "name": args.wandb_run_name,
+            "config": vars(args),
+        }
+        if args.wandb_run_id:
+            init_kwargs.update({"id": args.wandb_run_id, "resume": "allow"})
+        wandb.init(**init_kwargs)
+        wandb.define_metric("recsys_eval_step")
+        wandb.define_metric(
+            "recsys_eval_nothinking/*", step_metric="recsys_eval_step"
+        )
 
     category = CATEGORY_DICT.get(args.category, "items")
     print_rank_0(f"[Config] category={args.category} -> '{category}' | "
@@ -487,6 +513,17 @@ def main():
     print_rank_0(f"  Optimizer steps per epoch   = {num_update_steps_per_epoch}")
     print_rank_0(f"  Total optimizer steps       = {max_train_steps}")
 
+    # The multi-node launcher prepares and evaluates epoch_0 before spawning
+    # DeepSpeed. Other launchers retain the previous in-trainer fallback.
+    epoch_zero_dir = os.path.join(args.output_dir, "epoch_0")
+    if args.epoch_zero_prepared:
+        print_rank_0(f"Using pre-evaluated checkpoint at {epoch_zero_dir}")
+    else:
+        print_rank_0(f"Saving pre-training checkpoint -> {epoch_zero_dir}")
+        save_hf_checkpoint(model, tokenizer, epoch_zero_dir)
+    completed_epochs = [0]
+    write_checkpoint_manifest(args.output_dir, args.wandb_run_id, completed_epochs)
+
     # --- pre-training evaluation ---
     ppl, eval_loss = evaluation(model, val_dataloader, device)
     print_rank_0(f"[Eval @ epoch 0] sid_pred loss = {eval_loss:.4f} | ppl = {ppl:.4f}")
@@ -565,6 +602,8 @@ def main():
         epoch_dir = os.path.join(args.output_dir, f"epoch_{epoch + 1}")
         print_rank_0(f"Saving epoch {epoch + 1} checkpoint -> {epoch_dir}")
         save_hf_checkpoint(model, tokenizer, epoch_dir)
+        completed_epochs.append(epoch + 1)
+        write_checkpoint_manifest(args.output_dir, args.wandb_run_id, completed_epochs)
 
         # ---- also keep the loss-best as a convenience pointer + optional early stopping ----
         if eval_loss < best_eval_loss:
