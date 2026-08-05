@@ -17,6 +17,8 @@ NUM_EPOCHS="${NUM_EPOCHS:-10}"
 LR="${LR:-9e-5}"
 NCCL_DEBUG="${NCCL_DEBUG:-WARN}"
 DRY_RUN="${DRY_RUN:-0}"
+EVAL_NUM_SAMPLES="${EVAL_NUM_SAMPLES:--1}"
+EVAL_BATCH_SIZE="${EVAL_BATCH_SIZE:-96}"
 
 DEFAULT_CATEGORIES=(Video_Games Office_Products Industrial_and_Scientific)
 if [[ $# -gt 0 ]]; then
@@ -54,6 +56,14 @@ if ! is_positive_integer "$NUM_EPOCHS"; then
 fi
 if ! is_positive_integer "$DIST_MASTER_PORT"; then
     echo "[launcher] DIST_MASTER_PORT must be a positive integer: $DIST_MASTER_PORT" >&2
+    exit 1
+fi
+if ! is_positive_integer "$EVAL_BATCH_SIZE"; then
+    echo "[launcher] EVAL_BATCH_SIZE must be a positive integer: $EVAL_BATCH_SIZE" >&2
+    exit 1
+fi
+if [[ ! "$EVAL_NUM_SAMPLES" =~ ^-1$|^[1-9][0-9]*$ ]]; then
+    echo "[launcher] EVAL_NUM_SAMPLES must be -1 or a positive integer: $EVAL_NUM_SAMPLES" >&2
     exit 1
 fi
 for category in "${CATEGORIES[@]}"; do
@@ -105,6 +115,10 @@ fi
 NUM_NODES="${#HOSTS[@]}"
 MASTER_ADDR="${MASTER_ADDR:-$FIRST_HOST}"
 GLOBAL_BATCH_SIZE=$((MICRO_BATCH_SIZE * GPUS_PER_NODE * NUM_NODES))
+EVAL_CUDA_LIST=""
+for ((gpu = 0; gpu < GPUS_PER_NODE; gpu++)); do
+    EVAL_CUDA_LIST+="${EVAL_CUDA_LIST:+,}${gpu}"
+done
 
 mkdir -p logs output_dir
 
@@ -127,6 +141,14 @@ if [[ "$DRY_RUN" != "1" ]]; then
 fi
 if [[ ! -f "$SCRIPT_DIR/sft_Qwen3.py" ]]; then
     echo "[launcher] Training script not found: $SCRIPT_DIR/sft_Qwen3.py" >&2
+    exit 1
+fi
+if [[ ! -f "$SCRIPT_DIR/evaluate_checkpoints.py" ]]; then
+    echo "[launcher] Evaluation script not found: $SCRIPT_DIR/evaluate_checkpoints.py" >&2
+    exit 1
+fi
+if [[ ! -f "$SCRIPT_DIR/prepare_epoch_zero.py" ]]; then
+    echo "[launcher] Epoch-0 preparation script not found: $SCRIPT_DIR/prepare_epoch_zero.py" >&2
     exit 1
 fi
 
@@ -319,6 +341,10 @@ for CATEGORY in "${CATEGORIES[@]}"; do
     RUN_NAME="${CATEGORY}_Stage1_SFT_Qwen3-1.7B"
     OUTPUT_DIR="./output_dir/${CATEGORY}_stage1_sft_Qwen3-1.7B_distributed"
     TRAIN_LOG="./logs/${CATEGORY}_stage1_sft_Qwen3-1.7B_distributed.txt"
+    PRE_EVAL_LOG="./logs/${CATEGORY}_stage1_sft_Qwen3-1.7B_distributed.eval_epoch0.txt"
+    POST_EVAL_LOG="./logs/${CATEGORY}_stage1_sft_Qwen3-1.7B_distributed.eval_epochs.txt"
+    WANDB_PROJECT="SIDReasoner_Phase1_Distributed_Training"
+    WANDB_RUN_ID="${RUN_NAME}-$(date -u +%Y%m%dT%H%M%SZ)-$$"
 
     echo "==== [Stage-1 distributed] PREFETCH domain=$CATEGORY ===="
     CURRENT_ENV=(
@@ -337,6 +363,67 @@ for CATEGORY in "${CATEGORIES[@]}"; do
             --strict
     done
     wait_for_processes "prefetch:$CATEGORY"
+
+    # Build the identical SID-extended baseline on every node's local
+    # filesystem, then evaluate node-0's copy before training starts.
+    echo "==== [Stage-1 distributed] PREPARE epoch_0 domain=$CATEGORY ===="
+    CURRENT_ENV=(
+        "${COMMON_ENV[@]}"
+        "HF_HUB_OFFLINE=1"
+        "HF_DATASETS_OFFLINE=1"
+        "TRANSFORMERS_OFFLINE=1"
+    )
+    for node_rank in "${!HOSTS[@]}"; do
+        if [[ $node_rank -eq 0 ]]; then
+            PREPARE_LOG="./logs/${CATEGORY}_stage1_sft_Qwen3-1.7B_distributed.prepare.txt"
+        else
+            PREPARE_LOG="./logs/${CATEGORY}_stage1_sft_Qwen3-1.7B_distributed.prepare.node${node_rank}.txt"
+        fi
+        launch_process \
+            "$node_rank" "${HOSTS[$node_rank]}" "$PREPARE_LOG" \
+            "${PYTHON_COMMAND[@]}" "$SCRIPT_DIR/prepare_epoch_zero.py" \
+            --base-model "$BASE_MODEL" \
+            --output-dir "$OUTPUT_DIR" \
+            --category "$CATEGORY" \
+            --wandb-run-id "$WANDB_RUN_ID" \
+            --seed 42 \
+            --dtype bf16
+    done
+    wait_for_processes "prepare-epoch0:$CATEGORY"
+
+    echo "==== [Stage-1 distributed] PRE-EVAL epoch_0 domain=$CATEGORY ===="
+    if [[ "$DRY_RUN" == "1" ]]; then
+        echo "[dry-run] $(shell_join "${PYTHON_COMMAND[@]}" "$SCRIPT_DIR/evaluate_checkpoints.py" \
+            --output-dir "$OUTPUT_DIR" \
+            --category "$CATEGORY" \
+            --cuda-list "$EVAL_CUDA_LIST" \
+            --num-samples "$EVAL_NUM_SAMPLES" \
+            --batch-size "$EVAL_BATCH_SIZE" \
+            --num-beams 10 \
+            --min-epoch 0 \
+            --max-epoch 0 \
+            --report-to wandb \
+            --wandb-project "$WANDB_PROJECT" \
+            --wandb-run-name "$RUN_NAME" \
+            --wandb-run-id "$WANDB_RUN_ID")"
+    else
+        "${ENV_COMMAND[@]}" "${COMMON_ENV[@]}" \
+            HF_HUB_OFFLINE=1 HF_DATASETS_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+            "${PYTHON_COMMAND[@]}" "$SCRIPT_DIR/evaluate_checkpoints.py" \
+            --output-dir "$OUTPUT_DIR" \
+            --category "$CATEGORY" \
+            --cuda-list "$EVAL_CUDA_LIST" \
+            --num-samples "$EVAL_NUM_SAMPLES" \
+            --batch-size "$EVAL_BATCH_SIZE" \
+            --num-beams 10 \
+            --min-epoch 0 \
+            --max-epoch 0 \
+            --report-to wandb \
+            --wandb-project "$WANDB_PROJECT" \
+            --wandb-run-name "$RUN_NAME" \
+            --wandb-run-id "$WANDB_RUN_ID" \
+            > "$PRE_EVAL_LOG" 2>&1
+    fi
 
     echo "==== [Stage-1 distributed] TRAIN domain=$CATEGORY -> $OUTPUT_DIR ===="
     CURRENT_ENV=(
@@ -363,7 +450,7 @@ for CATEGORY in "${CATEGORIES[@]}"; do
             --num_nodes "$NUM_NODES" \
             --num_gpus "$GPUS_PER_NODE" \
             "$SCRIPT_DIR/sft_Qwen3.py" \
-            --base_model "$BASE_MODEL" \
+            --base_model "$OUTPUT_DIR/epoch_0" \
             --micro_batch_size "$MICRO_BATCH_SIZE" \
             --num_epochs "$NUM_EPOCHS" \
             --early_stopping_patience 2 \
@@ -371,8 +458,10 @@ for CATEGORY in "${CATEGORIES[@]}"; do
             --cutoff_len 1024 \
             --output_dir "$OUTPUT_DIR" \
             --report_to wandb \
-            --wandb_project SIDReasoner_Phase1_Distributed_Training \
+            --wandb_project "$WANDB_PROJECT" \
             --wandb_run_name "$RUN_NAME" \
+            --wandb_run_id "$WANDB_RUN_ID" \
+            --epoch_zero_prepared \
             --category "$CATEGORY" \
             --seed 42 \
             --mask_assistant True \
@@ -382,6 +471,40 @@ for CATEGORY in "${CATEGORIES[@]}"; do
             --deepspeed
     done
     wait_for_processes "train:$CATEGORY"
+
+    # Every DeepSpeed process has exited. Replay only trained checkpoints;
+    # epoch_0 already succeeded before training and is retained in metrics.json.
+    echo "==== [Stage-1 distributed] POST-EVAL domain=$CATEGORY checkpoints=$OUTPUT_DIR/epoch_[1-N] ===="
+    if [[ "$DRY_RUN" == "1" ]]; then
+        echo "[dry-run] $(shell_join "${PYTHON_COMMAND[@]}" "$SCRIPT_DIR/evaluate_checkpoints.py" \
+            --output-dir "$OUTPUT_DIR" \
+            --category "$CATEGORY" \
+            --cuda-list "$EVAL_CUDA_LIST" \
+            --num-samples "$EVAL_NUM_SAMPLES" \
+            --batch-size "$EVAL_BATCH_SIZE" \
+            --num-beams 10 \
+            --min-epoch 1 \
+            --report-to wandb \
+            --wandb-project "$WANDB_PROJECT" \
+            --wandb-run-name "$RUN_NAME" \
+            --wandb-run-id "$WANDB_RUN_ID")"
+    else
+        "${ENV_COMMAND[@]}" "${COMMON_ENV[@]}" \
+            HF_HUB_OFFLINE=1 HF_DATASETS_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+            "${PYTHON_COMMAND[@]}" "$SCRIPT_DIR/evaluate_checkpoints.py" \
+            --output-dir "$OUTPUT_DIR" \
+            --category "$CATEGORY" \
+            --cuda-list "$EVAL_CUDA_LIST" \
+            --num-samples "$EVAL_NUM_SAMPLES" \
+            --batch-size "$EVAL_BATCH_SIZE" \
+            --num-beams 10 \
+            --min-epoch 1 \
+            --report-to wandb \
+            --wandb-project "$WANDB_PROJECT" \
+            --wandb-run-name "$RUN_NAME" \
+            --wandb-run-id "$WANDB_RUN_ID" \
+            > "$POST_EVAL_LOG" 2>&1
+    fi
     echo "==== [Stage-1 distributed] DONE domain=$CATEGORY ===="
 done
 
