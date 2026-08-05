@@ -131,7 +131,8 @@ never mixed — see §5). You only pass the `CATEGORY`:
 - **8× GPU @ 80 GB** (A100/H100). Config is tuned for this: ZeRO‑2, bf16,
   gradient checkpointing.
 - `pip install -r requirements.txt` (needs `torch`, `deepspeed`, `transformers>=4.51`,
-  `datasets`, `hf-transfer`, `wandb`, `fire`, …).
+  `vllm`, `datasets`, `hf-transfer`, `wandb`, `fire`, …). Recommendation HR/NDCG
+  uses vLLM fixed-depth beam search over exactly three SID tokens.
 - Network access to Hugging Face. Recommended: `export HF_HUB_ENABLE_HF_TRANSFER=1`.
   If you hit rate limits, `export HF_TOKEN=<your token>`.
 - wandb: the API key is hardcoded in `sft_Qwen3.py` and logs from rank 0 only.
@@ -191,59 +192,31 @@ Tuning notes:
 
 **The final checkpoint MUST be chosen by recsys metrics, per domain.**
 
-- Training saves **every epoch** to `./output_dir/<CATEGORY>_stage1_sft_Qwen3-1.7B/epoch_<N>`
-  until either `num_epochs` is reached or `sid_pred` eval loss fails to improve for 2
-  consecutive epochs. It also copies
-  the lowest‑val‑loss epoch to `.../final_checkpoint` as a convenience pointer — but
-  val loss is only a **proxy**, not the selection criterion.
-- **Selection = evaluate each `epoch_<N>` with the recsys pipeline and keep the best.**
-  The pipeline does **constrained beam decoding over the SID codebook** and computes
-  **NDCG@K / HR@K** (K ∈ {1,3,5,10,20,50}). Pick the epoch with the best **NDCG@10 / HR@10**.
-
-Evaluate one checkpoint (uses HF data automatically):
-
-```bash
-CAT="Video_Games"; STEM="Video_Games_5_2016-10-2018-11"
-CKPT="epoch_5"                                  # <-- the epoch_<N> dir to score (N in 1..num_epochs)
-CK="./output_dir/${CAT}_stage1_sft_Qwen3-1.7B/${CKPT}"
-TEST="./data/Amazon/test/${STEM}.csv"          # locator → HF test split
-INFO="./data/Amazon/info/${STEM}.txt"
-ITEM="./data/Amazon/index/${CAT}.item.json"
-INDEX="./data/Amazon/index/${CAT}.index.json"
-TMP="./temp/eval_${CAT}_${CKPT}"; OUT="./results/eval_${CAT}_${CKPT}"; mkdir -p "$TMP" "$OUT"
-
-# 1) shard the test set across 8 GPUs
-python evaluation/split.py --input_path "$TEST" --output_path "$TMP" --cuda_list "0,1,2,3,4,5,6,7"
-
-# 2) constrained beam-search decode on each GPU
-for i in 0 1 2 3 4 5 6 7; do
-  CUDA_VISIBLE_DEVICES=$i python -u evaluation/evaluate_Qwen3_think.py \
-    --base_model "$CK" --info_file "$INFO" --category "$CAT" \
-    --test_data_path "$TMP/$i.csv" --item_file "$ITEM" --index_file "$INDEX" \
-    --result_json_data "$TMP/$i.json" \
-    --batch_size 4 --num_beams 10 --max_new_tokens 1024 --length_penalty 0.0 &
-done; wait
-
-# 3) merge + compute NDCG / HR
-python evaluation/merge.py --input_path "$TMP" --output_path "$OUT/final_result_${CAT}.json" --cuda_list "0,1,2,3,4,5,6,7"
-python evaluation/calc.py --path "$OUT/final_result_${CAT}.json" --item_path "$INFO"
-```
-
-`calc.py` prints `NDCG` and `HR` at each K. **Loop the block above over every
-`epoch_<N>` dir**, record NDCG@10 / HR@10, and keep the best epoch as the domain's final
-Phase‑1 checkpoint. (Evaluating every epoch is the reliable way to pick the winner; the
-per‑epoch checkpoints exist precisely for this.)
-
-A ready‑made end‑to‑end evaluator for all 3 domains lives at
-`../run_all_domains.sh` (split → decode → merge → calc). It is currently wired to RL
-`actor_merged` checkpoints; for Phase‑1, point its `CK` at an `epoch_<N>` dir.
+- Before training, every node creates the same SID-extended `epoch_0` checkpoint with the
+  training seed. Node-0 immediately runs no-thinking catalog-constrained beam-10 evaluation
+  on its copy and uploads step 0 to W&B. If preparation, evaluation, metric calculation, or
+  W&B upload fails, the launcher exits before DeepSpeed starts.
+- Multi-node training then loads that exact `epoch_0` checkpoint and saves every completed
+  `epoch_<N>`. A manifest identifies only checkpoints from the current run, so stale
+  directories are never evaluated.
+- After **all** DeepSpeed processes on **all** nodes exit, node-0 evaluates the trained
+  `epoch_1...N` checkpoints on its 8 local GPUs. Generation never overlaps the NCCL job,
+  avoiding GPU contention and collective deadlocks.
+- The four metrics are `HR@5`, `HR@10`, `NDCG@5`, and `NDCG@10`. W&B stores them under
+  `recsys_eval_nothinking/*` with `recsys_eval_step = epoch`, producing one line per metric
+  from the untrained SID-extended baseline through all epochs.
+- Local predictions and the incrementally extended `metrics.json` are written under
+  `.../recsys_eval_nothinking/`. Pick the epoch with the best NDCG@10 / HR@10; the
+  lowest-validation-loss `final_checkpoint` remains only a convenience pointer.
 
 ## 8. Definition of done
 
 For **each** of the 3 domains:
-- Per‑epoch checkpoints at `./output_dir/<CATEGORY>_stage1_sft_Qwen3-1.7B/epoch_<N>`
+- Baseline `epoch_0` and per‑epoch checkpoints at
+  `./output_dir/<CATEGORY>_stage1_sft_Qwen3-1.7B/epoch_<N>`
   (plus the loss‑best `final_checkpoint` pointer).
-- A recsys‑metrics table (NDCG/HR per epoch) from the evaluation pipeline, and the
+- `recsys_eval_nothinking/metrics.json` plus W&B HR/NDCG lines for epoch 0 through the
+  last trained epoch, and the
   **selected best epoch** (by NDCG@10 / HR@10) recorded as the domain's Phase‑1 winner.
 
 The 3 selected Phase‑1 checkpoints are the initialization for Phase‑2 (reasoning activation).

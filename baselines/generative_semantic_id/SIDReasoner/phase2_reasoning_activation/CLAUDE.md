@@ -117,8 +117,9 @@ Run each independently, pairing `CATEGORY` with its Phase‑1 checkpoint:
 ## 5. Environment / prerequisites
 
 - **8× GPU @ 80 GB** (A100/H100). Config tuned for this: ZeRO‑2, bf16.
-- `pip install -r requirements.txt` (`torch`, `deepspeed`, `transformers>=4.51`, `datasets`,
-  `hf-transfer`, `wandb`, …).
+- `pip install -r requirements.txt` (`torch`, `deepspeed`, `transformers>=4.51`, `vllm`,
+  `datasets`, `hf-transfer`, `wandb`, …). Thinking and no-thinking HR/NDCG use
+  the same vLLM fixed-depth beam search over exactly three SID tokens.
 - Network access to Hugging Face. Recommended: `export HF_HUB_ENABLE_HF_TRANSFER=1`.
   If you hit rate limits, `export HF_TOKEN=<your token>`.
 - The Phase‑1 checkpoint for the chosen domain must already exist under `./output_dir/...`.
@@ -150,6 +151,11 @@ nohup bash phase2_reasoning_activation/sft_reasoning_activation.sh > logs/phase2
 - Training log → `./logs/<RUN_NAME>.txt`
 - Output checkpoint → `./output_dir/<CATEGORY>_stage2_reasoning_activation_Qwen3-1.7B/`
   (`epoch_1/`, and `final_checkpoint/` which for a 1‑epoch run is the same weights).
+- Recommendation metrics → `.../recsys_eval/{pretrain,posttrain}/metrics.json`.
+  Each stage reports thinking and no-thinking `HR@5`, `HR@10`, `NDCG@5`, and `NDCG@10`.
+- W&B keeps the stages together in two blocks: `recsys_eval_nothinking/*` and
+  `recsys_eval_thinking/*`. Their charts use `recsys_eval_step` as the x-axis, where
+  `0` is before training and `1` is after training.
 
 Repeat for each domain you need (edit the vars, or copy the launcher per domain).
 
@@ -176,14 +182,18 @@ Tuning notes:
 - If you change the global batch, rescale LR ~linearly.
 - If a GPU OOMs, drop `micro_batch_size` to 4–6. If GPUs are underutilized, raise it.
 
-## 8. Optional: sanity‑check the checkpoint with recsys metrics
+## 8. Automatic recommendation evaluation
 
-Phase‑2 is a light format activation, so a single 1‑epoch checkpoint is expected — there is
-no per‑epoch selection to do. If you want to confirm it didn't regress, you can score
-`.../stage2_reasoning_activation_.../final_checkpoint` with the **reasoning** evaluator
-(constrained beam decode over the SID codebook → NDCG@K / HR@K). See Phase‑1's `CLAUDE.md`
-§7 for the exact split → `evaluate_Qwen3_think.py` → merge → `calc.py` recipe; just point the
-`CK` variable at the Phase‑2 `final_checkpoint`.
+The launcher evaluates twice: the Phase‑1 `BASE_MODEL` before training and `epoch_1` after
+training. At each point it runs both no-thinking direct decoding and thinking-mode two-pass
+decoding, with catalog-constrained beam-10 in both modes. It records `HR@5`, `HR@10`,
+`NDCG@5`, and `NDCG@10` under `OUTPUT_DIR/recsys_eval/` so the before/after effect is directly
+comparable. The launcher gives the pre-evaluation, training process, and post-evaluation one
+shared W&B run ID, so these metrics appear alongside the training loss instead of creating
+separate runs. W&B does not create separate pretrain/posttrain metric blocks: each HR/NDCG
+chart has the two evaluation points connected in one line. The local JSON snapshots remain
+separate for reproducibility. Set `EVAL_NUM_SAMPLES` in the launcher to a positive value for
+a pilot; `-1` evaluates the full test split.
 
 ## 9. Definition of done
 
@@ -192,5 +202,7 @@ For **each** domain you run:
   (a 1‑epoch reasoning‑activated model that reasons in `<think>…</think>` then emits a SID).
 - Training log shows the single epoch completed and the eval losses (sid_pred / title2sid /
   sid2title) were recorded.
+- `recsys_eval/pretrain/metrics.json` and `recsys_eval/posttrain/metrics.json` contain both
+  thinking and no-thinking HR/NDCG at 5 and 10.
 
 This Phase‑2 checkpoint is the initialization for **Phase‑3 (RL / GRPO)**.

@@ -34,8 +34,8 @@ wandb
 bitsandbytes
 
 # ============================================================
-# Reinforcement learning stack (Stage 3, VERL)
-# Linux + CUDA required for vllm.
+# vLLM recommendation evaluation (Stages 1-3) and VERL RL (Stage 3)
+# Linux + CUDA required for vLLM-backed HR/NDCG evaluation.
 # ============================================================
 vllm==0.8.5.post1
 tensordict==0.6.2
