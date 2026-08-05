@@ -77,6 +77,7 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_train/entropy",
     "core_metrics_train/response_clip_ratio",
     "core_metrics_val/sid_match_reward_mean",
+    "core_metrics_val/format_reward_mean",
     "core_metrics_val/prefix_1_match_rate",
     "core_metrics_val/prefix_2_match_rate",
     "core_metrics_val/exact_match_rate",
@@ -790,6 +791,7 @@ class RayPPOTrainer:
         metric_dict = {}
         validation_core_metrics = {
             "sid_match_reward": "core_metrics_val/sid_match_reward_mean",
+            "format_reward": "core_metrics_val/format_reward_mean",
             "prefix_1_match": "core_metrics_val/prefix_1_match_rate",
             "prefix_2_match": "core_metrics_val/prefix_2_match_rate",
             "exact_match": "core_metrics_val/exact_match_rate",

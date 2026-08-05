@@ -70,9 +70,10 @@ blocks. The opening `<think>` token is optional because tokenizer decoding may
 omit it. The format check does not judge semantic quality or require particular
 intent labels.
 
-The original `sid_match_reward` remains pure NDCG@10. W&B adds only one format
-metric, `core_metrics_train/format_reward_mean`, which is the training-batch
-format pass rate.
+The original `sid_match_reward` remains pure NDCG@10. W&B records only the same
+binary format signal for training and validation:
+`core_metrics_train/format_reward_mean` and
+`core_metrics_val/format_reward_mean`.
 
 Observed final recommendation results:
 
