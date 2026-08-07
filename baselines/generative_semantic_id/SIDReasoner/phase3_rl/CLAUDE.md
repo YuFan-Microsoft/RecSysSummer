@@ -164,15 +164,19 @@ the exact-match NDCG@10 beam reward above.
 Each candidate prompt receives `rollout.n=16` responses; groups whose 16 rewards are
 uniform are discarded before old-log-probability and actor computation. The trainer
 repeats generation on the candidate prompt batch until it accumulates
-`data.train_batch_size=256` active groups, then truncates by complete UID groups.
-`max_num_gen_batches=10` prevents an infinite refill loop when rewards are too sparse.
+`data.train_batch_size=256` active groups. If a candidate batch does not fill the
+remaining slots, all of its active groups are retained and generation continues. On the
+final refill, only the number of complete UID groups needed to reach 256 is retained;
+groups are never duplicated and a 16-trajectory group is never split. Refill has no
+generation-batch limit; while it remains incomplete, the trainer reports progress and the
+candidate active-group rate every 10 generation batches.
 
 W&B logs `dynamic_sampling/generated_batches`, `generated_prompt_groups`,
-`active_prompt_groups`, `candidate_active_group_rate`, `discarded_prompt_groups`, and
-`discarded_surplus_active_groups`, plus candidate `all_zero`, `all_one`, and
-`uniform_other` group rates. The regular `sid_match_active_group_rate` is computed after
-filtering and is therefore 1; use `candidate_active_group_rate` to compare against an
-unfiltered baseline.
+`active_prompt_groups`, `selected_prompt_groups`, `candidate_active_group_rate`,
+`discarded_prompt_groups`, and `discarded_surplus_active_groups`, plus candidate
+`all_zero`, `all_one`, and `uniform_other` group rates. The regular
+`sid_match_active_group_rate` is computed after filtering and is therefore 1; use
+`candidate_active_group_rate` to compare against an unfiltered baseline.
 
 ## Environment
 

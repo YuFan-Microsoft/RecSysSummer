@@ -1260,17 +1260,18 @@ class RayPPOTrainer:
                     if filter_enabled:
                         target_prompt_groups = self.config.data.train_batch_size
                         metric_key = filter_groups.metric
-                        max_num_gen_batches = filter_groups.max_num_gen_batches
                         active_batches = []
                         reward_extra_keys = set()
                         generated_prompt_groups = 0
-                        active_prompt_groups = 0
+                        candidate_active_prompt_groups = 0
+                        selected_active_prompt_groups = 0
+                        discarded_surplus_active_groups = 0
                         all_zero_prompt_groups = 0
                         all_one_prompt_groups = 0
                         uniform_other_prompt_groups = 0
                         num_gen_batches = 0
 
-                        while active_prompt_groups < target_prompt_groups:
+                        while selected_active_prompt_groups < target_prompt_groups:
                             candidate_batch, candidate_reward_infos = self._generate_scored_batch(
                                 batch_dict, timing_raw
                             )
@@ -1281,13 +1282,18 @@ class RayPPOTrainer:
 
                             candidate_uids = candidate_batch.non_tensor_batch["uid"]
                             candidate_rewards = candidate_batch.non_tensor_batch[metric_key]
+                            remaining_prompt_groups = target_prompt_groups - selected_active_prompt_groups
                             selected_indices, candidate_active_count = select_active_group_indices(
                                 candidate_uids,
                                 candidate_rewards,
+                                max_groups=remaining_prompt_groups,
                                 expected_group_size=self.config.actor_rollout_ref.rollout.n,
                             )
+                            selected_active_count = min(candidate_active_count, remaining_prompt_groups)
                             generated_prompt_groups += len(np.unique(candidate_uids))
-                            active_prompt_groups += candidate_active_count
+                            candidate_active_prompt_groups += candidate_active_count
+                            selected_active_prompt_groups += selected_active_count
+                            discarded_surplus_active_groups += candidate_active_count - selected_active_count
                             zero_count, one_count, other_count = count_uniform_group_types(
                                 candidate_uids, candidate_rewards
                             )
@@ -1296,21 +1302,21 @@ class RayPPOTrainer:
                             uniform_other_prompt_groups += other_count
                             if selected_indices.size:
                                 active_batches.append(candidate_batch.select_idxs(selected_indices))
-
-                            if active_prompt_groups < target_prompt_groups:
-                                if max_num_gen_batches > 0 and num_gen_batches >= max_num_gen_batches:
-                                    raise ValueError(
-                                        "Dynamic sampling reached max_num_gen_batches before filling the active batch"
-                                    )
+                            if (
+                                selected_active_prompt_groups < target_prompt_groups
+                                and num_gen_batches % 10 == 0
+                            ):
+                                candidate_active_rate = (
+                                    candidate_active_prompt_groups / generated_prompt_groups
+                                )
+                                tqdm.write(
+                                    "Dynamic sampling refill: "
+                                    f"{selected_active_prompt_groups}/{target_prompt_groups} active groups "
+                                    f"after {num_gen_batches} candidate batches "
+                                    f"(candidate active rate {candidate_active_rate:.2%})"
+                                )
 
                         batch = DataProto.concat(active_batches)
-                        selected_indices, _ = select_active_group_indices(
-                            batch.non_tensor_batch["uid"],
-                            batch.non_tensor_batch[metric_key],
-                            max_groups=target_prompt_groups,
-                            expected_group_size=self.config.actor_rollout_ref.rollout.n,
-                        )
-                        batch = batch.select_idxs(selected_indices)
                         expected_trajectory_count = (
                             target_prompt_groups * self.config.actor_rollout_ref.rollout.n
                         )
@@ -1334,15 +1340,16 @@ class RayPPOTrainer:
                             {
                                 "dynamic_sampling/generated_batches": float(num_gen_batches),
                                 "dynamic_sampling/generated_prompt_groups": float(generated_prompt_groups),
-                                "dynamic_sampling/active_prompt_groups": float(active_prompt_groups),
+                                "dynamic_sampling/active_prompt_groups": float(candidate_active_prompt_groups),
+                                "dynamic_sampling/selected_prompt_groups": float(selected_active_prompt_groups),
                                 "dynamic_sampling/candidate_active_group_rate": (
-                                    active_prompt_groups / generated_prompt_groups
+                                    candidate_active_prompt_groups / generated_prompt_groups
                                 ),
                                 "dynamic_sampling/discarded_prompt_groups": float(
-                                    generated_prompt_groups - active_prompt_groups
+                                    generated_prompt_groups - candidate_active_prompt_groups
                                 ),
                                 "dynamic_sampling/discarded_surplus_active_groups": float(
-                                    active_prompt_groups - target_prompt_groups
+                                    discarded_surplus_active_groups
                                 ),
                                 "dynamic_sampling/candidate_all_zero_group_rate": (
                                     all_zero_prompt_groups / generated_prompt_groups

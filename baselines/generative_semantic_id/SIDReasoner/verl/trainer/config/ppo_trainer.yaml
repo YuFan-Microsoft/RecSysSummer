@@ -125,9 +125,6 @@ algorithm:
     # Reward extra-info key used to compare trajectories in each UID group
     metric: null
 
-    # Maximum candidate generation batches per optimizer step; non-positive means unlimited
-    max_num_gen_batches: 0
-
   # Rollout Importance Sampling: corrects distribution mismatch between rollout and training policies
   # Main control: Upper threshold for IS weights (null = disabled, float = enabled)
   # When enabled, computes IS weights and mismatch metrics (KL, PPL, etc.)

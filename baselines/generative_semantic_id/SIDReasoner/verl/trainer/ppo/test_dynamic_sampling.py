@@ -23,6 +23,16 @@ def test_truncates_by_whole_groups_in_encounter_order():
     assert selected.tolist() == [0, 1, 2, 3]
 
 
+def test_keeps_all_active_groups_when_below_remaining_capacity():
+    group_ids = np.array(["a", "a", "b", "b", "c", "c"], dtype=object)
+    rewards = np.array([0.0, 1.0, 0.0, 0.0, 1.0, 1.0])
+
+    selected, active_count = select_active_group_indices(group_ids, rewards, max_groups=3)
+
+    assert active_count == 1
+    assert selected.tolist() == [0, 1]
+
+
 def test_supports_interleaved_group_members():
     group_ids = np.array(["a", "b", "a", "b"], dtype=object)
     rewards = np.array([0.0, 1.0, 1.0, 1.0])

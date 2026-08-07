@@ -74,7 +74,6 @@ python3 -m verl.trainer.main_ppo \
     algorithm.use_kl_in_reward=False \
     algorithm.filter_groups.enable=True \
     algorithm.filter_groups.metric=sid_match_reward \
-    algorithm.filter_groups.max_num_gen_batches=10 \
     trainer.critic_warmup=0 \
     trainer.logger=['console','wandb'] \
     +trainer.wandb_exclude_prefixes='["val-core/","val-aux/","training/","timing_s/","timing_per_token_ms/","response_length_non_aborted/","global_seqlen/","perf/","critic/","actor/"]' \

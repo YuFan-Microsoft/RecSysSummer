@@ -467,7 +467,6 @@ algorithm:
     _target_: verl.trainer.config.FilterGroupsConfig
     enable: false
     metric: null
-    max_num_gen_batches: 0
   rollout_is_threshold: null
   rollout_is_threshold_lower: null
   rollout_is_level: token
