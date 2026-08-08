@@ -53,6 +53,32 @@ With both switches disabled, verl does not register a `RefPolicy` worker, does n
 compute reference-policy log probabilities, does not add KL to the actor loss, and
 passes the custom rule-based reward directly into GRPO advantage estimation.
 
+### Constrained sampling with process reward
+
+Training samples one catalog-valid SID per reasoning. The primary reward remains
+the pure sampled-SID exact match. Process supervision has two equal components:
+
+```text
+process_reward = (format_reward + grounding_reward) / 2
+```
+
+`format_reward` is `1` only when the text before the single `</think>` marker has
+one `<history_evidence>...</history_evidence>` block followed by one
+`<next_interest>...</next_interest>` block. Evidence lines use
+`- <SID> => text`; interest lines use
+`- [exploit|explore] <SID> => text`, with both labels represented.
+
+`grounding_reward` is the fraction of parsed lines whose leading citation is
+grounded. Evidence citations must belong to the real history. Interest citations
+must belong to the real history and appear in the evidence block. Repeated
+citations are allowed, and target SIDs inside free-text explanations are not
+penalized.
+
+SID and process advantages are normalized separately. SID advantage trains both
+reasoning and sampled SID tokens. Process advantage is multiplied by `0.1` and
+trains reasoning tokens only, so process quality cannot reinforce an incorrect
+SID action. Format, grounding, and combined process metrics are logged separately.
+
 Observed final recommendation results:
 
 | Variant | Office_Products NDCG@10 / R@10 | Video_Games NDCG@10 / R@10 | Industrial_and_Scientific NDCG@10 / R@10 |
@@ -73,7 +99,7 @@ ablation.
 
 The script **defaults to the `Video_Games` domain end‑to‑end** — data, reward, and the
 **wandb run name** all match the Games checkpoint above. Concretely the script sets
-`trainer.experiment_name=Video_Games_stage3_rl_constrained_sid_single_sample_no_kl_Qwen3-1.7B`
+`trainer.experiment_name=Video_Games_stage3_rl_constrained_sid_sampling_process_reward_no_kl_Qwen3-1.7B`
 (this is the wandb run
 name, under project `SIDReasoner_Phase3_MetricsV2`), `data.*=.../Video_Games/*.parquet`, and
 `custom_reward_function.path=.../direct_recommendation_StepRule_Games.py`. So the

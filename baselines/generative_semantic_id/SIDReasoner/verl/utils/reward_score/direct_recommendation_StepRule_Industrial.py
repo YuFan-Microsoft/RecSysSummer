@@ -15,6 +15,12 @@
 import math
 import re
 from typing import Optional
+
+from verl.utils.reward_score.sid_reasoning_format import (
+    calculate_process_rewards,
+    extract_history_sids_from_question,
+)
+
 _SOLUTION_CLIP_CHARS = 50
 
 
@@ -71,9 +77,14 @@ class MyRewardComputer:
             ndcg_at_10, beam_rank = float(exact_match), int(exact_match)
         else:
             ndcg_at_10, beam_rank = calculate_ndcg_at_10(beam_predictions, ground_truth)
+        history_sids = (extra_info or {}).get("history_sids")
+        if history_sids is None:
+            history_sids = extract_history_sids_from_question((extra_info or {}).get("question"))
+        process_rewards = calculate_process_rewards(solution_str, history_sids)
         return {
             "score": ndcg_at_10,
             "sid_match_reward": ndcg_at_10,
+            **process_rewards,
             "ndcg_at_10": ndcg_at_10,
             "beam_rank": float(beam_rank),
             "hit_at_1": float(beam_rank == 1),
