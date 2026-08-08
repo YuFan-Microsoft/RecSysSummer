@@ -78,11 +78,11 @@ class Reasoning_RL_Dataset(Dataset):
         return f"""The user has sequentially interacted with items {history}. Can you recommend the next item for him?
 Think before making the recommendation. Your reasoning must use exactly these two blocks:
 <history_evidence>
-- <history item SID> => evidence grounded in that item
+- HISTORY_SID [HISTORY_SID ...] => evidence grounded in those items
 </history_evidence>
 <next_interest>
-- [exploit] <supporting history item SID> => a directly supported continuation
-- [explore] <supporting history item SID> => a broader plausible direction
+- [exploit] HISTORY_SID [HISTORY_SID ...] => a directly supported continuation
+- [explore] HISTORY_SID [HISTORY_SID ...] => a broader plausible direction
 </next_interest>
 Directly output the recommended item SID after thinking."""
     
