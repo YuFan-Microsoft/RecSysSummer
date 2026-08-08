@@ -1,6 +1,15 @@
 import numpy as np
 
-from verl.trainer.ppo.dynamic_sampling import count_uniform_group_types, select_active_group_indices
+from verl.trainer.ppo.dynamic_sampling import CyclingIterator, count_uniform_group_types, select_active_group_indices
+
+
+def test_cycling_iterator_consumes_fresh_batches_before_restart():
+    batches = CyclingIterator(["batch-a", "batch-b", "batch-c"])
+
+    consumed = [next(batches) for _ in range(4)]
+
+    assert consumed == ["batch-a", "batch-b", "batch-c", "batch-a"]
+    assert batches.cycles == 1
 
 
 def test_selects_complete_non_uniform_groups_only():

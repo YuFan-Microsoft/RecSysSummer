@@ -3,6 +3,23 @@ from __future__ import annotations
 import numpy as np
 
 
+class CyclingIterator:
+    """Consume successive items and restart the iterable only after exhaustion."""
+
+    def __init__(self, iterable):
+        self.iterable = iterable
+        self.iterator = iter(iterable)
+        self.cycles = 0
+
+    def __next__(self):
+        try:
+            return next(self.iterator)
+        except StopIteration:
+            self.cycles += 1
+            self.iterator = iter(self.iterable)
+            return next(self.iterator)
+
+
 def count_uniform_group_types(group_ids: np.ndarray, rewards: np.ndarray) -> tuple[int, int, int]:
     """Count uniform-zero, uniform-one, and other uniform reward groups."""
     group_ids = np.asarray(group_ids)

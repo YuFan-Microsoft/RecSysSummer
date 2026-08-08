@@ -163,13 +163,14 @@ The no-KL launcher enables DAPO-style group filtering with `sid_match_reward`, w
 the exact-match NDCG@10 beam reward above.
 Each candidate prompt receives `rollout.n=16` responses; groups whose 16 rewards are
 uniform are discarded before old-log-probability and actor computation. The trainer
-repeats generation on the candidate prompt batch until it accumulates
-`data.train_batch_size=256` active groups. If a candidate batch does not fill the
-remaining slots, all of its active groups are retained and generation continues. On the
-final refill, only the number of complete UID groups needed to reach 256 is retained;
-groups are never duplicated and a 16-trajectory group is never split. Refill has no
-generation-batch limit; while it remains incomplete, the trainer reports progress and the
-candidate active-group rate every 10 generation batches.
+accumulates active groups from successive fresh dataloader batches until it reaches
+`data.train_batch_size=256`. It restarts the dataloader only after exhaustion; it does not
+immediately retry the same candidate prompt batch. If a candidate batch does not fill the
+remaining slots, all of its active groups are retained and generation continues with the
+next prompt batch. On the final refill, only the number of complete UID groups needed to
+reach 256 is retained; a 16-trajectory group is never split. Refill has no generation-batch
+limit; while it remains incomplete, the trainer reports progress and the candidate
+active-group rate every 10 generation batches.
 
 W&B logs `dynamic_sampling/generated_batches`, `generated_prompt_groups`,
 `active_prompt_groups`, `selected_prompt_groups`, `candidate_active_group_rate`,
@@ -177,6 +178,9 @@ W&B logs `dynamic_sampling/generated_batches`, `generated_prompt_groups`,
 `all_zero`, `all_one`, and `uniform_other` group rates. The regular
 `sid_match_active_group_rate` is computed after filtering and is therefore 1; use
 `candidate_active_group_rate` to compare against an unfiltered baseline.
+`dynamic_sampling/data_epochs_advanced` reports dataloader rollovers during one optimizer
+step. Because refill can consume several fresh batches, `trainer.total_epochs` retains the
+existing optimizer-step budget and is not the number of raw dataset passes.
 
 ## Environment
 

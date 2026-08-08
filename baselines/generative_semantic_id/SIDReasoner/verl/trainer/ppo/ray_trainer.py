@@ -53,7 +53,7 @@ from verl.trainer.ppo.metric_utils import (
 )
 from verl.trainer.ppo.mismatch_helper import compute_rollout_importance_weights
 from verl.trainer.ppo.reward import compute_reward, compute_reward_async
-from verl.trainer.ppo.dynamic_sampling import count_uniform_group_types, select_active_group_indices
+from verl.trainer.ppo.dynamic_sampling import CyclingIterator, count_uniform_group_types, select_active_group_indices
 from verl.trainer.ppo.utils import Role, WorkerType, need_critic, need_reference_policy, need_reward_model
 from verl.utils.checkpoint.checkpoint_manager import find_latest_ckpt_path, should_save_ckpt_esi
 from verl.utils.config import omega_conf_to_dataclass
@@ -1240,8 +1240,12 @@ class RayPPOTrainer:
         )
         next_step_profile = False
 
+        train_batches = CyclingIterator(self.train_dataloader)
+
         for epoch in range(self.config.trainer.total_epochs):
-            for batch_dict in self.train_dataloader:
+            for _ in range(len(self.train_dataloader)):
+                data_epochs_before_step = train_batches.cycles
+                batch_dict = next(train_batches)
                 metrics = {}
                 timing_raw = {}
 
@@ -1270,10 +1274,11 @@ class RayPPOTrainer:
                         all_one_prompt_groups = 0
                         uniform_other_prompt_groups = 0
                         num_gen_batches = 0
+                        candidate_batch_dict = batch_dict
 
                         while selected_active_prompt_groups < target_prompt_groups:
                             candidate_batch, candidate_reward_infos = self._generate_scored_batch(
-                                batch_dict, timing_raw
+                                candidate_batch_dict, timing_raw
                             )
                             num_gen_batches += 1
                             reward_extra_keys.update(candidate_reward_infos.keys())
@@ -1315,6 +1320,8 @@ class RayPPOTrainer:
                                     f"after {num_gen_batches} candidate batches "
                                     f"(candidate active rate {candidate_active_rate:.2%})"
                                 )
+                            if selected_active_prompt_groups < target_prompt_groups:
+                                candidate_batch_dict = next(train_batches)
 
                         batch = DataProto.concat(active_batches)
                         expected_trajectory_count = (
@@ -1359,6 +1366,9 @@ class RayPPOTrainer:
                                 ),
                                 "dynamic_sampling/candidate_uniform_other_group_rate": (
                                     uniform_other_prompt_groups / generated_prompt_groups
+                                ),
+                                "dynamic_sampling/data_epochs_advanced": float(
+                                    train_batches.cycles - data_epochs_before_step
                                 ),
                             }
                         )
