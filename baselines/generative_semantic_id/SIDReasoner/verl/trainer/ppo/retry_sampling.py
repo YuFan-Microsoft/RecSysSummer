@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import math
-
 import numpy as np
 
 
@@ -56,45 +54,21 @@ def classify_retry_groups(
     )
 
 
-def required_active_group_multiple(rollout_n: int, world_size: int, micro_batch_size: int) -> int:
-    """Return the active-group multiple required for equal full micro-batches."""
-    sizes = {
-        "rollout_n": rollout_n,
-        "world_size": world_size,
-        "micro_batch_size": micro_batch_size,
-    }
-    for name, value in sizes.items():
-        if value < 1:
-            raise ValueError(f"{name} must be positive")
-    distributed_micro_batch = world_size * micro_batch_size
-    return distributed_micro_batch // math.gcd(rollout_n, distributed_micro_batch)
-
-
-def align_active_group_count(
-    active_group_count: int,
-    rollout_n: int,
-    world_size: int,
-    micro_batch_size: int,
-) -> int:
-    """Round active groups down so every rank receives full micro-batches."""
-    if active_group_count < 0:
-        raise ValueError("active_group_count must be non-negative")
-    group_multiple = required_active_group_multiple(rollout_n, world_size, micro_batch_size)
-    return active_group_count - active_group_count % group_multiple
-
-
-def select_first_complete_groups(group_ids: np.ndarray, max_groups: int, expected_group_size: int) -> np.ndarray:
-    """Select the first complete UID groups in encounter order."""
-    if max_groups < 1:
-        raise ValueError("max_groups must be positive")
+def select_fallback_group_indices(
+    group_ids: np.ndarray,
+    accepted_group_ids: set[object],
+    expected_group_size: int,
+) -> np.ndarray:
+    """Select complete first-attempt groups that were never replaced by an active retry."""
     group_ids = np.asarray(group_ids)
     grouped_indices: dict[object, list[int]] = {}
     for index, group_id in enumerate(group_ids):
         grouped_indices.setdefault(group_id, []).append(index)
 
     selected_indices = []
-    for indices in list(grouped_indices.values())[:max_groups]:
+    for group_id, indices in grouped_indices.items():
         if len(indices) != expected_group_size:
             raise ValueError("A retry sampling group has an unexpected number of trajectories")
-        selected_indices.extend(indices)
+        if group_id not in accepted_group_ids:
+            selected_indices.extend(indices)
     return np.asarray(selected_indices, dtype=np.int64)

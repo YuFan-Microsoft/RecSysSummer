@@ -54,9 +54,8 @@ from verl.trainer.ppo.metric_utils import (
 from verl.trainer.ppo.mismatch_helper import compute_rollout_importance_weights
 from verl.trainer.ppo.reward import compute_reward, compute_reward_async
 from verl.trainer.ppo.retry_sampling import (
-    align_active_group_count,
     classify_retry_groups,
-    select_first_complete_groups,
+    select_fallback_group_indices,
 )
 from verl.trainer.ppo.utils import Role, WorkerType, need_critic, need_reference_policy, need_reward_model
 from verl.utils.checkpoint.checkpoint_manager import find_latest_ckpt_path, should_save_ckpt_esi
@@ -733,12 +732,15 @@ class RayPPOTrainer:
         accepted_uids = set()
         reward_extra_keys = set()
         retry_metrics = {}
+        first_attempt_batch = None
 
         for attempt in range(1, max_attempts + 1):
             candidate_prompts = prompt_batch.select_idxs(candidate_prompt_indices)
             candidate_batch, candidate_reward_infos = self._generate_scored_prompt_batch(
                 candidate_prompts, timing_raw
             )
+            if attempt == 1:
+                first_attempt_batch = candidate_batch
             reward_extra_keys.update(candidate_reward_infos.keys())
             if metric_key not in candidate_batch.non_tensor_batch:
                 raise ValueError(f"Retry sampling metric {metric_key!r} is missing from reward info")
@@ -766,33 +768,24 @@ class RayPPOTrainer:
             if candidate_prompt_indices.size != all_wrong_uids.size:
                 raise RuntimeError("Retry prompt UIDs are not aligned with the original prompt batch")
 
-        if not accepted_batches:
-            raise RuntimeError("No active prompt groups were found after bounded all-wrong retries")
-
-        batch = DataProto.concat(accepted_batches)
-        raw_active_group_count = len(accepted_uids)
-        aligned_active_group_count = align_active_group_count(
-            raw_active_group_count,
-            rollout_n=rollout_n,
-            world_size=self.actor_rollout_wg.world_size,
-            micro_batch_size=self.config.actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu,
+        if first_attempt_batch is None:
+            raise RuntimeError("Retry sampling did not produce a first-attempt batch")
+        fallback_indices = select_fallback_group_indices(
+            first_attempt_batch.non_tensor_batch["uid"],
+            accepted_group_ids=accepted_uids,
+            expected_group_size=rollout_n,
         )
-        if aligned_active_group_count < 1:
-            raise RuntimeError("Too few active groups to form one distributed PPO micro-batch")
-        if aligned_active_group_count < raw_active_group_count:
-            aligned_indices = select_first_complete_groups(
-                batch.non_tensor_batch["uid"],
-                max_groups=aligned_active_group_count,
-                expected_group_size=rollout_n,
-            )
-            batch = batch.select_idxs(aligned_indices)
+        final_batches = list(accepted_batches)
+        if fallback_indices.size:
+            final_batches.append(first_attempt_batch.select_idxs(fallback_indices))
+        batch = DataProto.concat(final_batches) if final_batches else first_attempt_batch
 
-        expected_trajectory_count = aligned_active_group_count * rollout_n
+        expected_trajectory_count = original_prompt_count * rollout_n
         final_uids, final_group_counts = np.unique(batch.non_tensor_batch["uid"], return_counts=True)
         if len(batch.batch) != expected_trajectory_count:
             raise RuntimeError("Retry sampling produced an unexpected final trajectory count")
-        if len(final_uids) != aligned_active_group_count or not np.all(final_group_counts == rollout_n):
-            raise RuntimeError("Retry sampling did not preserve unique complete rollout groups")
+        if len(final_uids) != original_prompt_count or not np.all(final_group_counts == rollout_n):
+            raise RuntimeError("Retry sampling did not restore the complete original prompt batch")
 
         reward_extra_infos_dict = {
             key: batch.non_tensor_batch[key].tolist()
@@ -802,13 +795,6 @@ class RayPPOTrainer:
         if any(len(values) != expected_trajectory_count for values in reward_extra_infos_dict.values()):
             raise RuntimeError("Retry sampling reward metadata is not aligned with the final batch")
 
-        retry_metrics.update(
-            {
-                "retry_sampling/cumulative_unique_active_rate": (
-                    raw_active_group_count / original_prompt_count
-                ),
-            }
-        )
         return batch, reward_extra_infos_dict, retry_metrics
 
     def _validate(self):

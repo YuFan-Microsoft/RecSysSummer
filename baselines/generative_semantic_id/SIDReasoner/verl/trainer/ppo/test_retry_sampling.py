@@ -1,10 +1,8 @@
 import numpy as np
 
 from verl.trainer.ppo.retry_sampling import (
-    align_active_group_count,
     classify_retry_groups,
-    required_active_group_multiple,
-    select_first_complete_groups,
+    select_fallback_group_indices,
 )
 
 
@@ -38,20 +36,9 @@ def test_rejects_incomplete_retry_group():
         raise AssertionError("Expected an incomplete retry group to fail")
 
 
-def test_aligns_active_groups_for_current_distributed_batch():
-    assert required_active_group_multiple(rollout_n=16, world_size=8, micro_batch_size=8) == 4
-    assert align_active_group_count(56, rollout_n=16, world_size=8, micro_batch_size=8) == 56
-    assert align_active_group_count(59, rollout_n=16, world_size=8, micro_batch_size=8) == 56
-
-
-def test_alignment_formula_handles_nontrivial_gcd():
-    assert required_active_group_multiple(rollout_n=6, world_size=4, micro_batch_size=8) == 16
-    assert align_active_group_count(31, rollout_n=6, world_size=4, micro_batch_size=8) == 16
-
-
-def test_selects_unique_complete_groups_in_order():
+def test_selects_only_unreplaced_first_attempt_groups():
     group_ids = np.array(["a", "b", "a", "b", "c", "c"], dtype=object)
 
-    selected = select_first_complete_groups(group_ids, max_groups=2, expected_group_size=2)
+    selected = select_fallback_group_indices(group_ids, accepted_group_ids={"b"}, expected_group_size=2)
 
-    assert selected.tolist() == [0, 2, 1, 3]
+    assert selected.tolist() == [0, 2, 4, 5]

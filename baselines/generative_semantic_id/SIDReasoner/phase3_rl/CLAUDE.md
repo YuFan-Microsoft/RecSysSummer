@@ -169,17 +169,14 @@ sampled again. A prompt stops retrying as soon as it produces an active group, a
 from uniform attempts are never merged into the retained group.
 
 Retries stay within the original 256-prompt dataloader batch and never consume the next
-prompt batch. After the third attempt, the trainer updates on however many unique active
-groups were accumulated. The count is rounded down only to the multiple required for full
-distributed micro-batches; with 8 actor workers, `rollout.n=16`, and micro-batch size 8,
-that multiple is four groups. For example, 59 raw active groups become 56 selected groups.
-The actor retains the original fixed 256-prompt PPO normalization rather than renormalizing
-by the smaller active batch. Consequently, a 56-group update contributes proportionally less
-gradient than a full 256-group update.
+prompt batch. The first attempt is also the fallback full batch. If a prompt becomes active
+on any attempt, its first active 16-trajectory group replaces that prompt's fallback group;
+otherwise its first-attempt uniform group remains. The final PPO batch therefore always has
+the original 256 complete prompt groups and uses the unchanged baseline PPO normalization.
 
-W&B logs the active rate for each attempted round and the cumulative unique active rate after
-bounded retry. If fewer than four prompts become active, the trainer fails explicitly instead
-of applying an empty or partial distributed micro-batch.
+W&B logs the conditional active rate for each attempted round. The regular
+`core_metrics_train/sid_match_active_group_rate` is computed on the reconstructed 256-group
+batch and therefore reports the cumulative active rate after bounded retry.
 
 ## Environment
 
