@@ -98,23 +98,3 @@ def select_first_complete_groups(group_ids: np.ndarray, max_groups: int, expecte
             raise ValueError("A retry sampling group has an unexpected number of trajectories")
         selected_indices.extend(indices)
     return np.asarray(selected_indices, dtype=np.int64)
-
-
-def resolve_local_mini_batch_size(
-    local_batch_size: int,
-    configured_mini_batch_size: int,
-    micro_batch_size: int,
-) -> int:
-    """Use the actual local batch when a filtered update is smaller than configured."""
-    sizes = {
-        "local_batch_size": local_batch_size,
-        "configured_mini_batch_size": configured_mini_batch_size,
-        "micro_batch_size": micro_batch_size,
-    }
-    for name, value in sizes.items():
-        if value < 1:
-            raise ValueError(f"{name} must be positive")
-    effective_mini_batch_size = min(local_batch_size, configured_mini_batch_size)
-    if effective_mini_batch_size % micro_batch_size != 0:
-        raise ValueError("The effective PPO mini-batch must be divisible by the micro-batch size")
-    return effective_mini_batch_size

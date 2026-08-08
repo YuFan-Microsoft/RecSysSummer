@@ -733,7 +733,6 @@ class RayPPOTrainer:
         accepted_uids = set()
         reward_extra_keys = set()
         retry_metrics = {}
-        generated_prompt_groups = 0
 
         for attempt in range(1, max_attempts + 1):
             candidate_prompts = prompt_batch.select_idxs(candidate_prompt_indices)
@@ -749,16 +748,8 @@ class RayPPOTrainer:
                 candidate_batch.non_tensor_batch[metric_key],
                 expected_group_size=rollout_n,
             )
-            generated_prompt_groups += counts["candidate_groups"]
-            retry_metrics.update(
-                {
-                    f"retry_sampling/attempt_{attempt}_candidate_groups": float(counts["candidate_groups"]),
-                    f"retry_sampling/attempt_{attempt}_new_active_groups": float(counts["active_groups"]),
-                    f"retry_sampling/attempt_{attempt}_all_wrong_groups": float(counts["all_wrong_groups"]),
-                    f"retry_sampling/attempt_{attempt}_active_rate": (
-                        counts["active_groups"] / counts["candidate_groups"]
-                    ),
-                }
+            retry_metrics[f"retry_sampling/attempt_{attempt}_active_rate"] = (
+                counts["active_groups"] / counts["candidate_groups"]
             )
 
             if selected_indices.size:
@@ -813,13 +804,6 @@ class RayPPOTrainer:
 
         retry_metrics.update(
             {
-                "retry_sampling/attempts_used": float(attempt),
-                "retry_sampling/generated_prompt_groups": float(generated_prompt_groups),
-                "retry_sampling/raw_unique_active_groups": float(raw_active_group_count),
-                "retry_sampling/selected_unique_active_groups": float(aligned_active_group_count),
-                "retry_sampling/discarded_alignment_groups": float(
-                    raw_active_group_count - aligned_active_group_count
-                ),
                 "retry_sampling/cumulative_unique_active_rate": (
                     raw_active_group_count / original_prompt_count
                 ),

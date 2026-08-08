@@ -173,13 +173,13 @@ prompt batch. After the third attempt, the trainer updates on however many uniqu
 groups were accumulated. The count is rounded down only to the multiple required for full
 distributed micro-batches; with 8 actor workers, `rollout.n=16`, and micro-batch size 8,
 that multiple is four groups. For example, 59 raw active groups become 56 selected groups.
-The actor uses the actual filtered local batch size for PPO gradient accumulation, so a
-56-group update is normalized as 56 groups rather than the configured maximum of 256.
+The actor retains the original fixed 256-prompt PPO normalization rather than renormalizing
+by the smaller active batch. Consequently, a 56-group update contributes proportionally less
+gradient than a full 256-group update.
 
-W&B logs per-attempt candidate, new-active, all-wrong, and active-rate metrics, plus total
-generated prompt groups, raw/selected unique active groups, alignment discards, and the
-cumulative unique active rate. If fewer than four prompts become active, the trainer fails
-explicitly instead of applying a mis-scaled or empty update.
+W&B logs the active rate for each attempted round and the cumulative unique active rate after
+bounded retry. If fewer than four prompts become active, the trainer fails explicitly instead
+of applying an empty or partial distributed micro-batch.
 
 ## Environment
 

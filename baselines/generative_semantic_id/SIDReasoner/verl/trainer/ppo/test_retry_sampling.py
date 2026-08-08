@@ -4,7 +4,6 @@ from verl.trainer.ppo.retry_sampling import (
     align_active_group_count,
     classify_retry_groups,
     required_active_group_multiple,
-    resolve_local_mini_batch_size,
     select_first_complete_groups,
 )
 
@@ -56,8 +55,3 @@ def test_selects_unique_complete_groups_in_order():
     selected = select_first_complete_groups(group_ids, max_groups=2, expected_group_size=2)
 
     assert selected.tolist() == [0, 2, 1, 3]
-
-
-def test_uses_actual_filtered_batch_for_ppo_scaling():
-    assert resolve_local_mini_batch_size(112, configured_mini_batch_size=512, micro_batch_size=8) == 112
-    assert resolve_local_mini_batch_size(512, configured_mini_batch_size=512, micro_batch_size=8) == 512
