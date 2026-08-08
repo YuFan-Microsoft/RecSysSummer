@@ -160,6 +160,27 @@ The vLLM rollout worker loads the selected domain's catalog and builds a token-l
 - Validation remains deterministic reasoning followed by catalog-constrained beam-10 and logs
   HR/NDCG@1/3/5/10, so the final evaluator is unchanged.
 
+### D · Bounded all-wrong retry
+
+The no-KL launcher gives each prompt at most three total constrained-sampling attempts.
+After the first 16-trajectory group, prompts with mixed exact-match rewards are retained
+once, all-correct prompts are discarded without retry, and only all-wrong prompts are
+sampled again. A prompt stops retrying as soon as it produces an active group, and outputs
+from uniform attempts are never merged into the retained group.
+
+Retries stay within the original 256-prompt dataloader batch and never consume the next
+prompt batch. After the third attempt, the trainer updates on however many unique active
+groups were accumulated. The count is rounded down only to the multiple required for full
+distributed micro-batches; with 8 actor workers, `rollout.n=16`, and micro-batch size 8,
+that multiple is four groups. For example, 59 raw active groups become 56 selected groups.
+The actor uses the actual filtered local batch size for PPO gradient accumulation, so a
+56-group update is normalized as 56 groups rather than the configured maximum of 256.
+
+W&B logs per-attempt candidate, new-active, all-wrong, and active-rate metrics, plus total
+generated prompt groups, raw/selected unique active groups, alignment discards, and the
+cumulative unique active rate. If fewer than four prompts become active, the trainer fails
+explicitly instead of applying a mis-scaled or empty update.
+
 ## Environment
 
 - Build/run with [`../Dockerfile`](../Dockerfile): verl 0.6 base image
