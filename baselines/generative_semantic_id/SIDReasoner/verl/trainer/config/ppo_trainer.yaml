@@ -113,6 +113,23 @@ algorithm:
     # Power used for weight scaling in "pow" method
     weight_pow: 2.0
 
+  # DAPO-style filtering and refill of complete non-uniform reward groups
+  filter_groups:
+
+    _target_: verl.trainer.config.FilterGroupsConfig
+
+    enable: False
+
+    # Reward extra-info key compared within each prompt's rollout group
+    metric: null
+
+    # Complete active prompt groups per optimizer update; null uses train_batch_size.
+    # Must be divisible by actor.ppo_mini_batch_size.
+    target_active_groups: null
+
+    # Fresh generation batches allowed per update; non-positive means unlimited
+    max_num_gen_batches: 0
+
   # Rollout Importance Sampling: corrects distribution mismatch between rollout and training policies
   # Main control: Upper threshold for IS weights (null = disabled, float = enabled)
   # When enabled, computes IS weights and mismatch metrics (KL, PPL, etc.)

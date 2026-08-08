@@ -48,11 +48,13 @@ class FilterGroupsConfig(BaseConfig):
     Args:
         enable (bool): Whether to enable filter groups.
         metric (Optional[str]): Metric to use for filtering: "acc", "score", "seq_reward", "seq_final_reward", etc.
+        target_active_groups (Optional[int]): Complete active prompt groups per optimizer update.
         max_num_gen_batches (int): Non-positive values mean no upper limit.
     """
 
     enable: bool = False
     metric: Optional[str] = None
+    target_active_groups: Optional[int] = None
     max_num_gen_batches: int = 0
 
 

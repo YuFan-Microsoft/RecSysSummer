@@ -45,6 +45,12 @@ from verl.single_controller.ray.base import create_colocated_worker_cls
 from verl.trainer.config import AlgoConfig
 from verl.trainer.ppo import core_algos
 from verl.trainer.ppo.core_algos import AdvantageEstimator, agg_loss
+from verl.trainer.ppo.dynamic_sampling import (
+    CyclingIterator,
+    count_uniform_group_types,
+    select_active_group_indices,
+    validate_dynamic_batch_sizes,
+)
 from verl.trainer.ppo.metric_utils import (
     compute_data_metrics,
     compute_throughout_metrics,
@@ -670,6 +676,170 @@ class RayPPOTrainer:
 
         return gen_batch
 
+    def _generate_scored_batch(self, batch_dict, timing_raw) -> tuple[DataProto, dict[str, list]]:
+        """Generate and score one fresh prompt batch before model-side PPO work."""
+        batch = DataProto.from_single_dict(batch_dict)
+        batch.non_tensor_batch["uid"] = np.array(
+            [str(uuid.uuid4()) for _ in range(len(batch.batch))], dtype=object
+        )
+
+        gen_batch = self._get_gen_batch(batch)
+        gen_batch.meta_info["global_steps"] = self.global_steps
+        gen_batch = gen_batch.repeat(repeat_times=self.config.actor_rollout_ref.rollout.n, interleave=True)
+
+        with marked_timer("gen", timing_raw, color="red"):
+            if not self.async_rollout_mode:
+                gen_batch_output = self.actor_rollout_wg.generate_sequences(gen_batch)
+            else:
+                gen_batch_output = self.async_rollout_manager.generate_sequences(gen_batch)
+            for key, value in gen_batch_output.meta_info["timing"].items():
+                timing_raw[key] = timing_raw.get(key, 0.0) + value
+            gen_batch_output.meta_info.pop("timing", None)
+
+        batch = batch.repeat(repeat_times=self.config.actor_rollout_ref.rollout.n, interleave=True)
+        batch = batch.union(gen_batch_output)
+        if "response_mask" not in batch.batch:
+            batch.batch["response_mask"] = compute_response_mask(batch)
+
+        with marked_timer("reward", timing_raw, color="yellow"):
+            if self.use_rm and "rm_scores" not in batch.batch:
+                reward_tensor = self.rm_wg.compute_rm_score(batch)
+                batch = batch.union(reward_tensor)
+
+            if self.config.reward_model.launch_reward_fn_async:
+                future_reward = compute_reward_async.remote(data=batch, reward_fn=self.reward_fn)
+                reward_tensor, reward_extra_infos_dict = ray.get(future_reward)
+            else:
+                reward_tensor, reward_extra_infos_dict = compute_reward(batch, self.reward_fn)
+
+        batch.batch["token_level_scores"] = reward_tensor
+        if reward_extra_infos_dict:
+            batch.non_tensor_batch.update(
+                {key: np.asarray(values) for key, values in reward_extra_infos_dict.items()}
+            )
+        return batch, reward_extra_infos_dict
+
+    def _collect_active_batch(self, first_batch_dict, next_batch, timing_raw):
+        """Collect complete active groups from successive fresh prompt batches."""
+        filter_groups = self.config.algorithm.filter_groups
+        metric_key = filter_groups.metric
+        target_prompt_groups = filter_groups.target_active_groups
+        if target_prompt_groups is None:
+            target_prompt_groups = self.config.data.train_batch_size
+        if target_prompt_groups < 1:
+            raise ValueError("filter_groups.target_active_groups must be positive")
+        if not metric_key:
+            raise ValueError("filter_groups.metric must be set when group filtering is enabled")
+        if self.config.algorithm.adv_estimator != AdvantageEstimator.GRPO:
+            raise ValueError("Dynamic active-group sampling currently requires GRPO")
+
+        max_num_gen_batches = filter_groups.max_num_gen_batches
+        rollout_n = self.config.actor_rollout_ref.rollout.n
+        validate_dynamic_batch_sizes(
+            target_active_groups=target_prompt_groups,
+            ppo_mini_batch_size=self.config.actor_rollout_ref.actor.ppo_mini_batch_size,
+            rollout_n=rollout_n,
+            world_size=self.actor_rollout_wg.world_size,
+        )
+        active_batches = []
+        reward_extra_keys = set()
+        generated_prompt_groups = 0
+        candidate_active_prompt_groups = 0
+        retained_active_prompt_groups = 0
+        all_zero_prompt_groups = 0
+        all_one_prompt_groups = 0
+        uniform_other_prompt_groups = 0
+        num_gen_batches = 0
+        candidate_batch_dict = first_batch_dict
+
+        while retained_active_prompt_groups < target_prompt_groups:
+            candidate_batch, candidate_reward_infos = self._generate_scored_batch(
+                candidate_batch_dict, timing_raw
+            )
+            num_gen_batches += 1
+            reward_extra_keys.update(candidate_reward_infos.keys())
+            if metric_key not in candidate_batch.non_tensor_batch:
+                raise ValueError(f"Dynamic sampling metric {metric_key!r} is missing from reward info")
+
+            candidate_uids = candidate_batch.non_tensor_batch["uid"]
+            candidate_rewards = candidate_batch.non_tensor_batch[metric_key]
+            remaining_groups = target_prompt_groups - retained_active_prompt_groups
+            selected_indices, candidate_active_count = select_active_group_indices(
+                candidate_uids,
+                candidate_rewards,
+                max_groups=remaining_groups,
+                expected_group_size=rollout_n,
+            )
+            selected_group_count = selected_indices.size // rollout_n
+            generated_prompt_groups += len(np.unique(candidate_uids))
+            candidate_active_prompt_groups += candidate_active_count
+            retained_active_prompt_groups += selected_group_count
+            zero_count, one_count, other_count = count_uniform_group_types(
+                candidate_uids, candidate_rewards
+            )
+            all_zero_prompt_groups += zero_count
+            all_one_prompt_groups += one_count
+            uniform_other_prompt_groups += other_count
+            if selected_indices.size:
+                active_batches.append(candidate_batch.select_idxs(selected_indices))
+
+            if retained_active_prompt_groups < target_prompt_groups:
+                if max_num_gen_batches > 0 and num_gen_batches >= max_num_gen_batches:
+                    raise RuntimeError(
+                        "Dynamic sampling reached max_num_gen_batches before filling the active batch"
+                    )
+                if num_gen_batches % 10 == 0:
+                    candidate_active_rate = candidate_active_prompt_groups / generated_prompt_groups
+                    tqdm.write(
+                        "Dynamic sampling refill: "
+                        f"{retained_active_prompt_groups}/{target_prompt_groups} active groups "
+                        f"after {num_gen_batches} candidate batches "
+                        f"(candidate active rate {candidate_active_rate:.2%})"
+                    )
+                candidate_batch_dict = next_batch()
+
+        batch = DataProto.concat(active_batches)
+        expected_trajectory_count = target_prompt_groups * rollout_n
+        if len(batch.batch) != expected_trajectory_count:
+            raise RuntimeError("Dynamic sampling produced an unexpected final trajectory count")
+        final_uids, final_group_counts = np.unique(batch.non_tensor_batch["uid"], return_counts=True)
+        if len(final_uids) != target_prompt_groups or not np.all(final_group_counts == rollout_n):
+            raise RuntimeError("Dynamic sampling did not preserve complete rollout groups")
+
+        reward_extra_infos_dict = {
+            key: batch.non_tensor_batch[key].tolist()
+            for key in reward_extra_keys
+            if key in batch.non_tensor_batch
+        }
+        if any(len(values) != expected_trajectory_count for values in reward_extra_infos_dict.values()):
+            raise RuntimeError("Dynamic sampling reward metadata is not aligned with the final batch")
+
+        dynamic_metrics = {
+            "dynamic_sampling/generated_batches": float(num_gen_batches),
+            "dynamic_sampling/generated_prompt_groups": float(generated_prompt_groups),
+            "dynamic_sampling/candidate_active_prompt_groups": float(candidate_active_prompt_groups),
+            "dynamic_sampling/retained_active_prompt_groups": float(retained_active_prompt_groups),
+            "dynamic_sampling/candidate_active_group_rate": (
+                candidate_active_prompt_groups / generated_prompt_groups
+            ),
+            "dynamic_sampling/discarded_uniform_prompt_groups": float(
+                generated_prompt_groups - candidate_active_prompt_groups
+            ),
+            "dynamic_sampling/discarded_surplus_active_groups": float(
+                candidate_active_prompt_groups - retained_active_prompt_groups
+            ),
+            "dynamic_sampling/candidate_all_zero_group_rate": (
+                all_zero_prompt_groups / generated_prompt_groups
+            ),
+            "dynamic_sampling/candidate_all_one_group_rate": (
+                all_one_prompt_groups / generated_prompt_groups
+            ),
+            "dynamic_sampling/candidate_uniform_other_group_rate": (
+                uniform_other_prompt_groups / generated_prompt_groups
+            ),
+        }
+        return batch, reward_extra_infos_dict, dynamic_metrics
+
     def _validate(self):
         data_source_lst = []
         reward_extra_infos_dict: dict[str, list] = defaultdict(list)
@@ -1199,8 +1369,15 @@ class RayPPOTrainer:
         )
         next_step_profile = False
 
+        train_batches = CyclingIterator(self.train_dataloader)
+
+        filter_groups = self.config.algorithm.filter_groups
+        filter_enabled = bool(filter_groups is not None and filter_groups.enable)
+
         for epoch in range(self.config.trainer.total_epochs):
-            for batch_dict in self.train_dataloader:
+            for _ in range(len(self.train_dataloader)):
+                data_epochs_before_step = train_batches.cycles
+                batch_dict = next(train_batches)
                 metrics = {}
                 timing_raw = {}
 
@@ -1210,57 +1387,75 @@ class RayPPOTrainer:
                         if self.config.global_profiler.profile_continuous_steps
                         else curr_step_profile
                     )
-                batch: DataProto = DataProto.from_single_dict(batch_dict)
-
-                # add uid to batch
-                batch.non_tensor_batch["uid"] = np.array(
-                    [str(uuid.uuid4()) for _ in range(len(batch.batch))], dtype=object
-                )
-
-                gen_batch = self._get_gen_batch(batch)
-
-                # pass global_steps to trace
-                gen_batch.meta_info["global_steps"] = self.global_steps
-                gen_batch = gen_batch.repeat(repeat_times=self.config.actor_rollout_ref.rollout.n, interleave=True)
 
                 is_last_step = self.global_steps >= self.total_training_steps
                 with marked_timer("step", timing_raw):
-                    # generate a batch
-                    with marked_timer("gen", timing_raw, color="red"):
-                        if not self.async_rollout_mode:
-                            gen_batch_output = self.actor_rollout_wg.generate_sequences(gen_batch)
-                        else:
-                            gen_batch_output = self.async_rollout_manager.generate_sequences(gen_batch)
+                    if filter_enabled:
+                        batch, reward_extra_infos_dict, dynamic_metrics = self._collect_active_batch(
+                            batch_dict,
+                            next_batch=lambda: next(train_batches),
+                            timing_raw=timing_raw,
+                        )
+                        dynamic_metrics["dynamic_sampling/data_epochs_advanced"] = float(
+                            train_batches.cycles - data_epochs_before_step
+                        )
+                        metrics.update(dynamic_metrics)
+                    else:
+                        batch = DataProto.from_single_dict(batch_dict)
+                        batch.non_tensor_batch["uid"] = np.array(
+                            [str(uuid.uuid4()) for _ in range(len(batch.batch))], dtype=object
+                        )
+                        gen_batch = self._get_gen_batch(batch)
+                        gen_batch.meta_info["global_steps"] = self.global_steps
+                        gen_batch = gen_batch.repeat(
+                            repeat_times=self.config.actor_rollout_ref.rollout.n, interleave=True
+                        )
 
-                        timing_raw.update(gen_batch_output.meta_info["timing"])
-                        gen_batch_output.meta_info.pop("timing", None)
-
-                    if self.config.algorithm.adv_estimator == AdvantageEstimator.REMAX:
-                        if self.reward_fn is None:
-                            raise ValueError("A reward_fn is required for REMAX advantage estimation.")
-
-                        with marked_timer("gen_max", timing_raw, color="purple"):
-                            gen_baseline_batch = deepcopy(gen_batch)
-                            gen_baseline_batch.meta_info["do_sample"] = False
+                        with marked_timer("gen", timing_raw, color="red"):
                             if not self.async_rollout_mode:
-                                gen_baseline_output = self.actor_rollout_wg.generate_sequences(gen_baseline_batch)
+                                gen_batch_output = self.actor_rollout_wg.generate_sequences(gen_batch)
                             else:
-                                gen_baseline_output = self.async_rollout_manager.generate_sequences(gen_baseline_batch)
-                            batch = batch.union(gen_baseline_output)
-                            reward_baseline_tensor = self.reward_fn(batch)
-                            reward_baseline_tensor = reward_baseline_tensor.sum(dim=-1)
+                                gen_batch_output = self.async_rollout_manager.generate_sequences(gen_batch)
+                            timing_raw.update(gen_batch_output.meta_info["timing"])
+                            gen_batch_output.meta_info.pop("timing", None)
 
-                            batch.pop(batch_keys=list(gen_baseline_output.batch.keys()))
+                        if self.config.algorithm.adv_estimator == AdvantageEstimator.REMAX:
+                            if self.reward_fn is None:
+                                raise ValueError("A reward_fn is required for REMAX advantage estimation.")
 
-                            batch.batch["reward_baselines"] = reward_baseline_tensor
+                            with marked_timer("gen_max", timing_raw, color="purple"):
+                                gen_baseline_batch = deepcopy(gen_batch)
+                                gen_baseline_batch.meta_info["do_sample"] = False
+                                if not self.async_rollout_mode:
+                                    gen_baseline_output = self.actor_rollout_wg.generate_sequences(gen_baseline_batch)
+                                else:
+                                    gen_baseline_output = self.async_rollout_manager.generate_sequences(
+                                        gen_baseline_batch
+                                    )
+                                batch = batch.union(gen_baseline_output)
+                                reward_baseline_tensor = self.reward_fn(batch)
+                                reward_baseline_tensor = reward_baseline_tensor.sum(dim=-1)
+                                batch.pop(batch_keys=list(gen_baseline_output.batch.keys()))
+                                batch.batch["reward_baselines"] = reward_baseline_tensor
+                                del gen_baseline_batch, gen_baseline_output
 
-                            del gen_baseline_batch, gen_baseline_output
-                    # repeat to align with repeated responses in rollout
-                    batch = batch.repeat(repeat_times=self.config.actor_rollout_ref.rollout.n, interleave=True)
-                    batch = batch.union(gen_batch_output)
+                        batch = batch.repeat(
+                            repeat_times=self.config.actor_rollout_ref.rollout.n, interleave=True
+                        )
+                        batch = batch.union(gen_batch_output)
+                        if "response_mask" not in batch.batch:
+                            batch.batch["response_mask"] = compute_response_mask(batch)
 
-                    if "response_mask" not in batch.batch.keys():
-                        batch.batch["response_mask"] = compute_response_mask(batch)
+                        with marked_timer("reward", timing_raw, color="yellow"):
+                            if self.use_rm and "rm_scores" not in batch.batch:
+                                reward_tensor = self.rm_wg.compute_rm_score(batch)
+                                batch = batch.union(reward_tensor)
+
+                            if self.config.reward_model.launch_reward_fn_async:
+                                future_reward = compute_reward_async.remote(data=batch, reward_fn=self.reward_fn)
+                            else:
+                                reward_tensor, reward_extra_infos_dict = compute_reward(batch, self.reward_fn)
+
                     # Balance the number of valid tokens across DP ranks.
                     # NOTE: This usually changes the order of data in the `batch`,
                     # which won't affect the advantage calculation (since it's based on uid),
@@ -1282,17 +1477,6 @@ class RayPPOTrainer:
 
                     # compute global_valid tokens
                     batch.meta_info["global_token_num"] = torch.sum(batch.batch["attention_mask"], dim=-1).tolist()
-
-                    with marked_timer("reward", timing_raw, color="yellow"):
-                        # compute reward model score
-                        if self.use_rm and "rm_scores" not in batch.batch.keys():
-                            reward_tensor = self.rm_wg.compute_rm_score(batch)
-                            batch = batch.union(reward_tensor)
-
-                        if self.config.reward_model.launch_reward_fn_async:
-                            future_reward = compute_reward_async.remote(data=batch, reward_fn=self.reward_fn)
-                        else:
-                            reward_tensor, reward_extra_infos_dict = compute_reward(batch, self.reward_fn)
 
                     # recompute old_log_probs
                     with marked_timer("old_log_prob", timing_raw, color="blue"):
@@ -1329,13 +1513,15 @@ class RayPPOTrainer:
 
                     with marked_timer("adv", timing_raw, color="brown"):
                         # we combine with rule-based rm
-                        reward_extra_infos_dict: dict[str, list]
-                        if self.config.reward_model.launch_reward_fn_async:
-                            reward_tensor, reward_extra_infos_dict = ray.get(future_reward)
-                        batch.batch["token_level_scores"] = reward_tensor
+                        if not filter_enabled:
+                            if self.config.reward_model.launch_reward_fn_async:
+                                reward_tensor, reward_extra_infos_dict = ray.get(future_reward)
+                            batch.batch["token_level_scores"] = reward_tensor
 
-                        if reward_extra_infos_dict:
-                            batch.non_tensor_batch.update({k: np.array(v) for k, v in reward_extra_infos_dict.items()})
+                            if reward_extra_infos_dict:
+                                batch.non_tensor_batch.update(
+                                    {key: np.asarray(values) for key, values in reward_extra_infos_dict.items()}
+                                )
 
                         # compute rewards. apply_kl_penalty if available
                         if self.config.algorithm.use_kl_in_reward:

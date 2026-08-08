@@ -73,7 +73,7 @@ ablation.
 
 The script **defaults to the `Video_Games` domain end‑to‑end** — data, reward, and the
 **wandb run name** all match the Games checkpoint above. Concretely the script sets
-`trainer.experiment_name=Video_Games_stage3_rl_constrained_sid_single_sample_no_kl_Qwen3-1.7B`
+`trainer.experiment_name=Video_Games_stage3_rl_constrained_sid_sampling_dynamic_active_no_kl_Qwen3-1.7B`
 (this is the wandb run
 name, under project `SIDReasoner_Phase3_MetricsV2`), `data.*=.../Video_Games/*.parquet`, and
 `custom_reward_function.path=.../direct_recommendation_StepRule_Games.py`. So the
@@ -86,7 +86,7 @@ sync** so the experiment is labeled by its real domain, e.g. for Office_Products
 ```bash
 nohup bash phase3_rl/RL_training_script_no_kl.sh \
     actor_rollout_ref.model.path=./output_dir/Office_Products_stage2_reasoning_activation_Qwen3-1.7B/final_checkpoint \
-  trainer.experiment_name=Office_Products_stage3_rl_no_kl_Qwen3-1.7B \
+  trainer.experiment_name=Office_Products_stage3_rl_constrained_sid_sampling_dynamic_active_no_kl_Qwen3-1.7B \
     data.train_files=./data/Amazon/rec_reasoning_verl/Office_Products/train.parquet \
     data.val_files=./data/Amazon/rec_reasoning_verl/Office_Products/test.parquet \
     custom_reward_function.path=./verl/utils/reward_score/direct_recommendation_StepRule_Office.py \
@@ -157,6 +157,20 @@ The vLLM rollout worker loads the selected domain's catalog and builds a token-l
 - SID old/new log probabilities are normalized over the trie-allowed actions, so all three
   sampled SID tokens contribute actor gradients. The normalized separator and EOS remain
   outside the actor loss.
+- The no-KL launcher enables dynamic active-group sampling on `sid_match_reward`. It consumes
+  successive fresh prompt batches, discards complete 16-trajectory groups whose rewards are
+  uniform, and retains exactly 256 active prompt groups (4096 trajectories) before each actor
+  update. Refill advances through the dataloader and restarts it only after exhaustion, so prompts
+  are not retried immediately but can reappear after a full dataset cycle. The active-group target
+  must be divisible by the prompt-level PPO mini-batch size; the launcher sets both to 256.
+- Refill has no generation-batch limit and continues across successive dataloader batches until
+  all 256 active groups are filled. Logged `dynamic_sampling/*` metrics expose candidate
+  acceptance, discarded group types, surplus active groups, and raw generation batches consumed.
+  Compare experiments by generated trajectories or GPU-hours as well as optimizer steps.
+- `trainer.total_epochs` retains the existing optimizer-step budget
+  (`len(train_dataloader) * total_epochs`). Because one update can consume several fresh generation
+  batches, it is not the number of raw dataset passes in this experiment. Use
+  `dynamic_sampling/data_epochs_advanced` to track dataloader rollover caused by refill.
 - Validation remains deterministic reasoning followed by catalog-constrained beam-10 and logs
   HR/NDCG@1/3/5/10, so the final evaluator is unchanged.
 

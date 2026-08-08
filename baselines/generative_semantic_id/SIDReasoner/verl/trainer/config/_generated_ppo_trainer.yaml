@@ -463,6 +463,12 @@ algorithm:
   pf_ppo:
     reweight_method: pow
     weight_pow: 2.0
+  filter_groups:
+    _target_: verl.trainer.config.FilterGroupsConfig
+    enable: false
+    metric: null
+    target_active_groups: null
+    max_num_gen_batches: 0
   rollout_is_threshold: null
   rollout_is_threshold_lower: null
   rollout_is_level: token
