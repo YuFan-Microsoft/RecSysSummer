@@ -44,8 +44,61 @@ VALID_REASONING = """<think>
 <a_9><b_9><c_9>"""
 HISTORY_SIDS = ["<a_240><b_208><c_129>"]
 
+MULTI_SID_REASONING = """<history_evidence>
+- <a_140><b_237><c_88>, <a_74><b_218><c_196> => Two Sony game listings are for the same PlayStation 2 franchise.
+- <a_249><b_80><c_0>, <a_249><b_138><c_211>, <a_249><b_138><c_211> => The history contains PlayStation 2 hardware/accessory listings.
+- <a_10><b_193><c_15>, <a_131><b_233><c_112> => Two Bethesda console game listings are role-playing titles on Xbox 360.
+</history_evidence>
+<next_interest>
+- [exploit] <a_249><b_80><c_0>, <a_249><b_138><c_211>, <a_249><b_138><c_211> => Another PlayStation 2 accessory is the strongest continuation.
+- [explore] <a_140><b_237><c_88>, <a_74><b_218><c_196> => Another game from the same franchise is plausible.
+- [explore] <a_10><b_193><c_15>, <a_131><b_233><c_112> => Another Xbox 360 role-playing game is plausible.
+</next_interest>
+</think>
+<a_1><b_2><c_3>"""
+MULTI_SID_HISTORY = [
+    "<a_140><b_237><c_88>",
+    "<a_74><b_218><c_196>",
+    "<a_249><b_80><c_0>",
+    "<a_249><b_138><c_211>",
+    "<a_10><b_193><c_15>",
+    "<a_131><b_233><c_112>",
+]
+
 
 class ProcessRewardTest(unittest.TestCase):
+    def test_real_v3_multi_sid_trace_receives_full_reward(self):
+        self.assertEqual(
+            calculate_process_rewards(MULTI_SID_REASONING, MULTI_SID_HISTORY),
+            {
+                "format_reward": 1.0,
+                "grounding_reward": 1.0,
+                "process_reward": 1.0,
+            },
+        )
+
+    def test_space_separated_v3_citations_receive_full_reward(self):
+        response = MULTI_SID_REASONING.replace(", ", " ")
+        self.assertEqual(
+            calculate_process_rewards(response, MULTI_SID_HISTORY),
+            {
+                "format_reward": 1.0,
+                "grounding_reward": 1.0,
+                "process_reward": 1.0,
+            },
+        )
+
+    def test_multi_sid_line_is_ungrounded_when_any_citation_is_not_in_history(self):
+        response = MULTI_SID_REASONING.replace(
+            "<a_140><b_237><c_88>, <a_74><b_218><c_196>",
+            "<a_140><b_237><c_88>, <a_999><b_999><c_999>",
+            1,
+        )
+        scores = calculate_process_rewards(response, MULTI_SID_HISTORY)
+        self.assertEqual(scores["format_reward"], 1.0)
+        self.assertAlmostEqual(scores["grounding_reward"], 5.0 / 6.0)
+        self.assertAlmostEqual(scores["process_reward"], 11.0 / 12.0)
+
     def test_valid_repeated_citations_and_target_in_text_receive_full_reward(self):
         self.assertEqual(
             calculate_process_rewards(VALID_REASONING, HISTORY_SIDS),

@@ -5,9 +5,15 @@ from typing import Any
 PROCESS_ADVANTAGE_WEIGHT = 0.1
 
 _SID_PATTERN = r"<a_\d+><b_\d+><c_\d+>"
-_EVIDENCE_LINE_PATTERN = re.compile(rf"^-\s*(?P<sid>{_SID_PATTERN})\s*=>\s*(?P<text>\S.*)$")
+_CITATION_SEPARATOR = r"(?:\s*,\s*|\s+)"
+_CITATIONS_PATTERN = rf"{_SID_PATTERN}(?:{_CITATION_SEPARATOR}{_SID_PATTERN})*"
+_EVIDENCE_LINE_PATTERN = re.compile(
+    rf"^-\s*(?P<citations>{_CITATIONS_PATTERN})\s*=>\s*(?P<text>\S.*)$"
+)
 _INTEREST_LINE_PATTERN = re.compile(
-    rf"^-\s*\[(?P<label>exploit|explore)\]\s*(?P<sid>{_SID_PATTERN})\s*=>\s*(?P<text>\S.*)$"
+    rf"^-\s*\[(?P<label>exploit|explore)\]\s*"
+    rf"(?P<citations>{_CITATIONS_PATTERN})\s*=>\s*(?P<text>\S.*)$",
+    re.IGNORECASE,
 )
 _OUTER_PATTERN = re.compile(
     r"""
@@ -49,6 +55,10 @@ def _nonempty_lines(block: str) -> list[str]:
     return [line.strip() for line in block.splitlines() if line.strip()]
 
 
+def _citation_sids(line_match: re.Match[str]) -> set[str]:
+    return set(re.findall(_SID_PATTERN, line_match.group("citations")))
+
+
 def calculate_process_rewards(solution_str: str, history_sids: Any) -> dict[str, float]:
     """Score the two-block reasoning schema and its citations to the real history."""
     zero_scores = {
@@ -72,7 +82,7 @@ def calculate_process_rewards(solution_str: str, history_sids: Any) -> dict[str,
     parsed_evidence = [_EVIDENCE_LINE_PATTERN.fullmatch(line) for line in evidence_lines]
     parsed_interest = [_INTEREST_LINE_PATTERN.fullmatch(line) for line in interest_lines]
 
-    labels = {line.group("label") for line in parsed_interest if line is not None}
+    labels = {line.group("label").casefold() for line in parsed_interest if line is not None}
     format_reward = float(
         bool(evidence_lines)
         and bool(interest_lines)
@@ -82,14 +92,12 @@ def calculate_process_rewards(solution_str: str, history_sids: Any) -> dict[str,
     )
 
     history_sid_set = _normalize_history_sids(history_sids)
-    evidence_sid_set = {line.group("sid") for line in parsed_evidence if line is not None}
     grounded_lines = sum(
-        line is not None and line.group("sid") in history_sid_set for line in parsed_evidence
+        line is not None and _citation_sids(line) <= history_sid_set for line in parsed_evidence
     )
     grounded_lines += sum(
         line is not None
-        and line.group("sid") in history_sid_set
-        and line.group("sid") in evidence_sid_set
+        and _citation_sids(line) <= history_sid_set
         for line in parsed_interest
     )
     total_lines = len(evidence_lines) + len(interest_lines)

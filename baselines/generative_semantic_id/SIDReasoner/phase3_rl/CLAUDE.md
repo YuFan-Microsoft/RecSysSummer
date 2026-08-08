@@ -65,14 +65,15 @@ process_reward = (format_reward + grounding_reward) / 2
 `format_reward` is `1` only when the text before the single `</think>` marker has
 one `<history_evidence>...</history_evidence>` block followed by one
 `<next_interest>...</next_interest>` block. Evidence lines use
-`- <SID> => text`; interest lines use
-`- [exploit|explore] <SID> => text`, with both labels represented.
+`- SID [SID ...] => text`; interest lines use
+`- [exploit|explore] SID [SID ...] => text`, with both labels represented.
+Multiple citations may be separated by whitespace or commas. Repeated citations
+are allowed.
 
-`grounding_reward` is the fraction of parsed lines whose leading citation is
-grounded. Evidence citations must belong to the real history. Interest citations
-must belong to the real history and appear in the evidence block. Repeated
-citations are allowed, and target SIDs inside free-text explanations are not
-penalized.
+`grounding_reward` is the fraction of parsed lines whose complete leading
+citation list is grounded. Every evidence citation must belong to the real
+history, and every interest citation must also belong to the real history.
+Target SIDs inside free-text explanations are not penalized.
 
 SID and process advantages are normalized separately. SID advantage trains both
 reasoning and sampled SID tokens. Process advantage is multiplied by `0.1` and
