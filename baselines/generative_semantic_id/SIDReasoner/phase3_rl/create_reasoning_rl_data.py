@@ -75,7 +75,16 @@ class Reasoning_RL_Dataset(Dataset):
         return len(self.data)
     
     def generate_prompt_title(self, history):
-        return f"The user has sequentially interacted with items {history}. Can you recommend the next item for him? Let's think step by step before making recommendation. Directly output the item SID after thinking."
+        return f"""The user has sequentially interacted with items {history}. Can you recommend the next item for him?
+Think before making the recommendation. Your reasoning must use exactly these two blocks:
+<history_evidence>
+- <history item SID> => evidence grounded in that item
+</history_evidence>
+<next_interest>
+- [exploit] <supporting history item SID> => a directly supported continuation
+- [explore] <supporting history item SID> => a broader plausible direction
+</next_interest>
+Directly output the recommended item SID after thinking."""
     
     def get_history(self, row):
         history_item_sid = eval(row['history_item_sid'])
@@ -95,6 +104,7 @@ class Reasoning_RL_Dataset(Dataset):
         
         return {
             "history_str": history_str,
+            "history_sids": history_item_sid,
             "target_title": target_title,
             "target_sid": target_sid,
             "dedup": is_duplicate,
@@ -130,6 +140,7 @@ Can you recommend the next item for the user based on their interaction history?
         return {
             "input": messages,
             "target": assistant_response,
+            "history_sids": history_data["history_sids"],
         }
     
     def get_inputs(self):
@@ -171,6 +182,7 @@ def convert_to_verl_format(ds, split, out_path):
                 "index": idx,
                 "answer": answer_raw,
                 "question": question_raw,
+                "history_sids": example["history_sids"],
             }
         })
 
