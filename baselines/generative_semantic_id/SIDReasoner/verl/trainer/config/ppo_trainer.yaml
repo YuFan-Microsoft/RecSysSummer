@@ -113,6 +113,19 @@ algorithm:
     # Power used for weight scaling in "pow" method
     weight_pow: 2.0
 
+  # Bounded retries for complete prompt rollout groups whose beam reward is all zero
+  filter_groups:
+
+    _target_: verl.trainer.config.FilterGroupsConfig
+
+    enable: False
+
+    # Reward extra-info key compared within each prompt's rollout group
+    metric: null
+
+    # Total attempts for each all-wrong prompt, including the first attempt
+    max_num_gen_batches: 0
+
   # Rollout Importance Sampling: corrects distribution mismatch between rollout and training policies
   # Main control: Upper threshold for IS weights (null = disabled, float = enabled)
   # When enabled, computes IS weights and mismatch metrics (KL, PPL, etc.)

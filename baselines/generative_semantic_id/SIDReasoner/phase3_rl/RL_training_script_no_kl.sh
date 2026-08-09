@@ -30,7 +30,7 @@ export PYTHONPATH="$REPO_ROOT${PYTHONPATH:+:$PYTHONPATH}"
 # ================================
 n_gpus_per_node=8
 nnodes=1
-experiment_name="Video_Games_stage3_rl_no_kl_Qwen3-1.7B"
+experiment_name="Video_Games_stage3_rl_beam_all_wrong_retry_no_kl_Qwen3-1.7B"
 stage2_checkpoint="./output_dir/Video_Games_stage2_reasoning_activation_Qwen3-1.7B/final_checkpoint"
 checkpoint_dir="./output_dir/${experiment_name}"
 log_file="./logs/${experiment_name}.log"
@@ -71,6 +71,9 @@ python3 -m verl.trainer.main_ppo \
     +actor_rollout_ref.rollout.sid_category=Video_Games \
     +actor_rollout_ref.rollout.sid_length=3 \
     algorithm.use_kl_in_reward=False \
+    algorithm.filter_groups.enable=True \
+    algorithm.filter_groups.metric=sid_match_reward \
+    algorithm.filter_groups.max_num_gen_batches=3 \
     trainer.critic_warmup=0 \
     trainer.logger=['console','wandb'] \
     +trainer.wandb_exclude_prefixes='["val-core/","val-aux/","training/","timing_s/","timing_per_token_ms/","response_length_non_aborted/","global_seqlen/","perf/","critic/","actor/"]' \

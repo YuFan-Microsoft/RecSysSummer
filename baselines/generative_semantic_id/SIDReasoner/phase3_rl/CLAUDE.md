@@ -39,6 +39,44 @@ The script forwards trailing args (`"$@"`) to `python -m verl.trainer.main_ppo`,
 and Hydra applies last-wins overrides, so the `model.path` above overrides the
 script's default checkpoint.
 
+## Beam Retry-3
+
+Training keeps the constrained width-10 beam decoder and NDCG@10 rank reward from
+the beam exact-match baseline. Each prompt first receives 16 reasoning rollouts.
+When all 16 have `sid_match_reward=0` (the target SID is absent from every top-10
+beam), only that prompt is generated again, for at most three total attempts.
+
+The first retry that produces a non-uniform reward group replaces the original
+group. Prompts that remain all wrong after all three attempts fall back to their
+first group, so the optimizer batch always contains the original 256 prompts and
+16 trajectories per prompt. Retry never substitutes a different prompt.
+
+The default launcher enables the mechanism with:
+
+```text
+algorithm.filter_groups.enable=True
+algorithm.filter_groups.metric=sid_match_reward
+algorithm.filter_groups.max_num_gen_batches=3
+```
+
+W&B logs a fixed `beam_retry/` dashboard on every optimizer step. `attempt_1` is
+the initial generation; `attempt_2` and `attempt_3` are the first and second
+retries. For each attempt, monitor:
+
+- `executed`, `candidate_groups`, and `candidate_rate_of_batch`
+- `active_groups` / `active_rate`
+- `all_wrong_groups` / `all_wrong_rate`
+- `all_correct_groups` / `all_correct_rate`
+- `uniform_other_groups` / `uniform_other_rate`
+
+Later attempts that are not needed still log `executed=0` and zero-valued rates,
+so W&B curves do not disappear. Summary metrics include
+`initial_all_wrong_rate`, `retry_rescue_rate`, `final_unresolved_rate`, and
+`extra_generation_ratio`. In particular, `attempt_2/active_rate` and
+`attempt_3/active_rate` are the conditional success rates of the two actual
+retries, while `retry_rescue_rate` is the cumulative fraction of initially
+all-wrong prompts rescued by either retry.
+
 ## Default algorithm choice: No-KL
 
 Use **No-KL GRPO** for Stage-3 by default. The launcher explicitly sets both KL
@@ -73,8 +111,9 @@ ablation.
 
 The script **defaults to the `Video_Games` domain end‑to‑end** — data, reward, and the
 **wandb run name** all match the Games checkpoint above. Concretely the script sets
-`trainer.experiment_name=Video_Games_stage3_rl_no_kl_Qwen3-1.7B` (this is the wandb run
-name, under project `SIDReasoner_Phase3_MetricsV2`), `data.*=.../Video_Games/*.parquet`, and
+`trainer.experiment_name=Video_Games_stage3_rl_beam_all_wrong_retry_no_kl_Qwen3-1.7B`
+(this is the wandb run name, under project `SIDReasoner_Phase3_MetricsV2`),
+`data.*=.../Video_Games/*.parquet`, and
 `custom_reward_function.path=.../direct_recommendation_StepRule_Games.py`. So the
 launch command above is all you need — you do **not** have to override data / reward /
 wandb.
