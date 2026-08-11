@@ -1,6 +1,6 @@
 """Run Phase-3 rejection-sampling inference on eight single-GPU workers.
 
-The input rows follow ``gpt5_regenerate_phase2_process_data.py``:
+The input rows follow ``gpt5_regenerate_phase2_process_data_V4.py``:
 ``Video_Games_reasoning/train`` from
 ``yufan/recsys-genrec-dataset-refresh-gpt5.4-candidateV1``.  Only the history
 is placed in the model prompt; the existing ``reasoning_path`` and target SID
@@ -9,8 +9,8 @@ are retained as references in the output.
 Each worker owns one GPU and one contiguous eighth of the selected rows.  The
 generation path mirrors ``evaluation/evaluate_Qwen3_think.py``: sample the
 reasoning continuation first, normalize ``</think>``, then run constrained SID
-beam search. Format validity follows the two-block ``<history_evidence>`` and
-``<next_interest>`` schema in ``gpt5_regenerate_phase2_process_data_V3.py``.
+beam search. Format validity follows the two-block ``<history_summary>`` and
+``<future_interests>`` schema in ``gpt5_regenerate_phase2_process_data_V4.py``.
 
 Phase-3 VERL/FSDP checkpoints must be merged to Hugging Face format first:
 
@@ -52,7 +52,7 @@ for import_root in (str(REPO_ROOT), str(DATA_CURATION_DIR)):
 
 HF_REPO = "yufan/recsys-genrec-dataset-refresh-gpt5.4-candidateV1"
 CATEGORIES = ("Video_Games",)
-FORMAT_SCHEMA_VERSION = "phase2_process_v13_history_evidence_next_interest"
+FORMAT_SCHEMA_VERSION = "phase2_process_v22_detailed_description_fallback"
 SYSTEM_INSTRUCTION = """Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.
 Can you recommend the next item for the user based on their interaction history?
 """
@@ -181,7 +181,8 @@ def _validate_dataset_schema(
 
 def _extract_and_validate_reasoning(
     raw_reasoning_output: str,
-    phase2_v3: Any,
+    phase2_v4: Any,
+    history_sids: list[str],
 ) -> tuple[str, bool, str | None]:
     marker_count = raw_reasoning_output.count("</think>")
     reasoning_path = raw_reasoning_output.split("</think>", 1)[0].strip()
@@ -192,8 +193,8 @@ def _extract_and_validate_reasoning(
             f"expected exactly one generated </think> marker, found {marker_count}",
         )
     try:
-        phase2_v3.parse_and_validate_generation(reasoning_path)
-    except phase2_v3.TraceValidationError as error:
+        phase2_v4.parse_and_validate_generation(reasoning_path, history_sids)
+    except phase2_v4.TraceValidationError as error:
         return reasoning_path, False, str(error)
     return reasoning_path, True, None
 
@@ -233,7 +234,7 @@ def _worker_main(
         import torch
         from vllm import LLM, SamplingParams
 
-        import gpt5_regenerate_phase2_process_data_V3 as phase2_v3
+        import gpt5_regenerate_phase2_process_data_V4 as phase2_v4
         import hf_data
         from verl.workers.rollout.sid_constrained_decoding import (
             build_sid_token_trie,
@@ -246,8 +247,7 @@ def _worker_main(
                 "Each worker must see exactly one CUDA GPU through CUDA_VISIBLE_DEVICES"
             )
         device_name = torch.cuda.get_device_name(0)
-        phase2_v3.HF_REPO = config.dataset_repo
-        phase2_v3.v2.HF_REPO = config.dataset_repo
+        phase2_v4.HF_REPO = config.dataset_repo
         random.seed(config.seed + rank)
         shard_start = config.start_index + rank * config.num_rows // config.world_size
         shard_end = (
@@ -259,7 +259,7 @@ def _worker_main(
             f"{config.category}_reasoning",
             split=config.split,
         )
-        catalog = phase2_v3.v2.build_catalog(config.category)
+        catalog = phase2_v4.build_catalog(config.category)
 
         llm = LLM(
             model=config.checkpoint,
@@ -317,7 +317,7 @@ def _worker_main(
         contexts = []
         for source_index in range(shard_start, shard_end):
             row = dict(source[source_index])
-            history_sids, _, _ = phase2_v3.v2.history_from_row(
+            history_sids, _, _ = phase2_v4.history_from_row(
                 row, catalog
             )
             prompt_ids = tokenizer.apply_chat_template(
@@ -432,7 +432,8 @@ def _worker_main(
                     reasoning_path, format_valid, format_error = (
                         _extract_and_validate_reasoning(
                             candidate["raw_reasoning_output"],
-                            phase2_v3,
+                            phase2_v4,
+                            context["history_sids"],
                         )
                     )
                     if candidate["prefix_error"] is not None:
