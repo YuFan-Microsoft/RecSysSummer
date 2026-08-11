@@ -1,6 +1,6 @@
 """Run Phase-3 rejection-sampling inference on eight single-GPU workers.
 
-The input rows follow ``gpt5_regenerate_phase2_process_data.py``:
+The input rows follow ``gpt5_regenerate_phase2_process_data_V4.py``:
 ``Video_Games_reasoning/train`` from
 ``yufan/recsys-genrec-dataset-refresh-gpt5.4-candidateV1``.  Only the history
 is placed in the model prompt; the existing ``reasoning_path`` and target SID
@@ -244,7 +244,6 @@ def _worker_main(
             )
         device_name = torch.cuda.get_device_name(0)
         phase2_v4.HF_REPO = config.dataset_repo
-        phase2_v4.v2.HF_REPO = config.dataset_repo
         random.seed(config.seed + rank)
         shard_start = config.start_index + rank * config.num_rows // config.world_size
         shard_end = (
@@ -314,7 +313,7 @@ def _worker_main(
         contexts = []
         for source_index in range(shard_start, shard_end):
             row = dict(source[source_index])
-            history_sids, _, _ = phase2_v4.v2.history_from_row(
+            history_sids, _, _ = phase2_v4.history_from_row(
                 row, catalog
             )
             prompt_ids = tokenizer.apply_chat_template(
