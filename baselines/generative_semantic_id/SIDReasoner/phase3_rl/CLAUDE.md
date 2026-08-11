@@ -77,6 +77,30 @@ so W&B curves do not disappear. Summary metrics include
 retries, while `retry_rescue_rate` is the cumulative fraction of initially
 all-wrong prompts rescued by either retry.
 
+### V4 process reward
+
+Retry classification remains outcome-only: `algorithm.filter_groups.metric` is
+always `sid_match_reward`, so process quality cannot rescue an all-wrong beam
+group or change which retry attempt is retained. After retry selection produces
+the final 16 trajectories per prompt, process supervision is applied to those
+retained reasoning traces:
+
+```text
+process_reward = (format_reward + history_summary_grounding_reward + future_interests_grounding_reward) / 3
+```
+
+`format_reward` enforces the Phase-2 V4 `<history_summary>` then
+`<future_interests>` contract, including 1-3 summary lines, 2-4 future-interest
+lines, and both `exploit` and `explore`. Each grounding reward is the fraction of
+parsed lines whose complete citation list belongs to the real history.
+`history_reference_coverage` is monitoring-only.
+
+Beam NDCG and process rewards are normalized independently within each retained
+prompt group. The final reasoning-token advantage is
+`A_beam + 0.1 * A_process`; constrained beam SID tokens and EOS remain outside
+the actor loss. W&B logs all process components and `process_active_group_rate`
+alongside the unchanged `beam_retry/*` dashboard.
+
 ## Default algorithm choice: No-KL
 
 Use **No-KL GRPO** for Stage-3 by default. The launcher explicitly sets both KL
@@ -91,7 +115,10 @@ With both switches disabled, verl does not register a `RefPolicy` worker, does n
 compute reference-policy log probabilities, does not add KL to the actor loss, and
 passes the custom rule-based reward directly into GRPO advantage estimation.
 
-Observed final recommendation results:
+The results below predate this V4 process-reward integration. Treat them as
+legacy baselines and rerun before attributing results to the current design.
+
+Observed legacy final recommendation results:
 
 | Variant | Office_Products NDCG@10 / R@10 | Video_Games NDCG@10 / R@10 | Industrial_and_Scientific NDCG@10 / R@10 |
 | --- | --- | --- | --- |
@@ -111,7 +138,7 @@ ablation.
 
 The script **defaults to the `Video_Games` domain end‑to‑end** — data, reward, and the
 **wandb run name** all match the Games checkpoint above. Concretely the script sets
-`trainer.experiment_name=Video_Games_stage3_rl_beam_all_wrong_retry_no_kl_Qwen3-1.7B`
+`trainer.experiment_name=Video_Games_stage3_rl_beam_all_wrong_retry_process_reward_no_kl_Qwen3-1.7B`
 (this is the wandb run name, under project `SIDReasoner_Phase3_MetricsV2`),
 `data.*=.../Video_Games/*.parquet`, and
 `custom_reward_function.path=.../direct_recommendation_StepRule_Games.py`. So the
