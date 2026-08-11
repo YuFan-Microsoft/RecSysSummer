@@ -59,6 +59,7 @@ from verl.utils.config import omega_conf_to_dataclass
 from verl.utils.debug import marked_timer
 from verl.utils.metric import reduce_metrics
 from verl.utils.rollout_skip import RolloutSkip
+from verl.utils.reward_score.sid_reasoning_format import PROCESS_ADVANTAGE_WEIGHT
 from verl.utils.seqlen_balancing import get_seqlen_balanced_partitions, log_seqlen_unbalance
 from verl.utils.torch_functional import masked_mean
 from verl.utils.tracking import ValidationGenerationsLogger
@@ -67,6 +68,10 @@ from verl.utils.tracking import ValidationGenerationsLogger
 _WANDB_METRIC_ORDER = (
     "core_metrics_train/sid_match_reward_mean",
     "core_metrics_train/format_reward_mean",
+    "core_metrics_train/history_summary_grounding_reward_mean",
+    "core_metrics_train/future_interests_grounding_reward_mean",
+    "core_metrics_train/history_reference_coverage_mean",
+    "core_metrics_train/process_reward_mean",
     "core_metrics_train/prefix_1_match_rate",
     "core_metrics_train/prefix_2_match_rate",
     "core_metrics_train/exact_match_rate",
@@ -74,10 +79,15 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_train/sid_match_all_wrong_group_rate",
     "core_metrics_train/sid_match_uniform_partial_group_rate",
     "core_metrics_train/sid_match_all_correct_group_rate",
+    "core_metrics_train/process_active_group_rate",
     "core_metrics_train/entropy",
     "core_metrics_train/response_clip_ratio",
     "core_metrics_val/sid_match_reward_mean",
     "core_metrics_val/format_reward_mean",
+    "core_metrics_val/history_summary_grounding_reward_mean",
+    "core_metrics_val/future_interests_grounding_reward_mean",
+    "core_metrics_val/history_reference_coverage_mean",
+    "core_metrics_val/process_reward_mean",
     "core_metrics_val/prefix_1_match_rate",
     "core_metrics_val/prefix_2_match_rate",
     "core_metrics_val/exact_match_rate",
@@ -156,6 +166,10 @@ def _compute_core_metrics(batch, metrics):
     reward_extra_metrics = {
         "sid_match_reward": "core_metrics_train/sid_match_reward_mean",
         "format_reward": "core_metrics_train/format_reward_mean",
+        "history_summary_grounding_reward": "core_metrics_train/history_summary_grounding_reward_mean",
+        "future_interests_grounding_reward": "core_metrics_train/future_interests_grounding_reward_mean",
+        "history_reference_coverage": "core_metrics_train/history_reference_coverage_mean",
+        "process_reward": "core_metrics_train/process_reward_mean",
         "prefix_1_match": "core_metrics_train/prefix_1_match_rate",
         "prefix_2_match": "core_metrics_train/prefix_2_match_rate",
         "exact_match": "core_metrics_train/exact_match_rate",
@@ -166,6 +180,7 @@ def _compute_core_metrics(batch, metrics):
 
     active_group_metrics = {
         "sid_match_reward": "core_metrics_train/sid_match_active_group_rate",
+        "process_reward": "core_metrics_train/process_active_group_rate",
     }
     if "uid" in batch.non_tensor_batch:
         sample_uids = batch.non_tensor_batch["uid"]
@@ -375,15 +390,34 @@ def compute_advantage(
         # Initialize the mask for GRPO calculation
         grpo_calculation_mask = data.batch["response_mask"]
 
-        # Call compute_grpo_outcome_advantage with parameters matching its definition
-        advantages, returns = core_algos.compute_grpo_outcome_advantage(
+        # Beam outcome and process quality are normalized independently.
+        sid_advantages, _ = core_algos.compute_grpo_outcome_advantage(
             token_level_rewards=data.batch["token_level_rewards"],
             response_mask=grpo_calculation_mask,
             index=data.non_tensor_batch["uid"],
             norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
         )
+        advantages = sid_advantages
+
+        if "process_reward" in data.non_tensor_batch:
+            process_scores = torch.as_tensor(
+                np.asarray(data.non_tensor_batch["process_reward"], dtype=float),
+                dtype=data.batch["token_level_rewards"].dtype,
+                device=data.batch["token_level_rewards"].device,
+            )
+            if process_scores.shape != (len(data),):
+                raise ValueError("Process rewards must provide one scalar per trajectory")
+
+            process_advantages, _ = core_algos.compute_grpo_outcome_advantage(
+                token_level_rewards=process_scores.unsqueeze(-1),
+                response_mask=grpo_calculation_mask,
+                index=data.non_tensor_batch["uid"],
+                norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
+            )
+            advantages = sid_advantages + PROCESS_ADVANTAGE_WEIGHT * process_advantages
+
         data.batch["advantages"] = advantages
-        data.batch["returns"] = returns
+        data.batch["returns"] = advantages
     else:
         # handle all other adv estimator type other than GAE and GRPO
         adv_estimator_fn = core_algos.get_adv_estimator_fn(adv_estimator)
@@ -784,14 +818,25 @@ class RayPPOTrainer:
 
         data_sources = np.concatenate(data_source_lst, axis=0)
 
+        process_reward_keys = {
+            "history_summary_grounding_reward",
+            "future_interests_grounding_reward",
+            "format_reward",
+            "history_reference_coverage",
+            "process_reward",
+        }
         validation_reward_info = {
-            key: values for key, values in reward_extra_infos_dict.items() if key != "format_reward"
+            key: values for key, values in reward_extra_infos_dict.items() if key not in process_reward_keys
         }
         data_src2var2metric2val = process_validation_metrics(data_sources, sample_uids, validation_reward_info)
         metric_dict = {}
         validation_core_metrics = {
             "sid_match_reward": "core_metrics_val/sid_match_reward_mean",
             "format_reward": "core_metrics_val/format_reward_mean",
+            "history_summary_grounding_reward": "core_metrics_val/history_summary_grounding_reward_mean",
+            "future_interests_grounding_reward": "core_metrics_val/future_interests_grounding_reward_mean",
+            "history_reference_coverage": "core_metrics_val/history_reference_coverage_mean",
+            "process_reward": "core_metrics_val/process_reward_mean",
             "prefix_1_match": "core_metrics_val/prefix_1_match_rate",
             "prefix_2_match": "core_metrics_val/prefix_2_match_rate",
             "exact_match": "core_metrics_val/exact_match_rate",

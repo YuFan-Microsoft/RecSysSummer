@@ -16,7 +16,10 @@ import math
 import re
 from typing import Optional
 
-from verl.utils.reward_score.sid_reasoning_format import FORMAT_REWARD_WEIGHT, calculate_format_reward
+from verl.utils.reward_score.sid_reasoning_format import (
+    calculate_process_rewards,
+    extract_history_sids_from_question,
+)
 
 _SOLUTION_CLIP_CHARS = 50
 
@@ -70,11 +73,14 @@ class MyRewardComputer:
             raise ValueError("sid_beam_predictions are required for NDCG@10 reward")
 
         ndcg_at_10, beam_rank = calculate_ndcg_at_10(beam_predictions, ground_truth)
-        format_reward = calculate_format_reward(solution_str)
+        history_sids = (extra_info or {}).get("history_sids")
+        if history_sids is None:
+            history_sids = extract_history_sids_from_question((extra_info or {}).get("question"))
+        process_rewards = calculate_process_rewards(solution_str, history_sids)
         return {
-            "score": ndcg_at_10 + FORMAT_REWARD_WEIGHT * format_reward,
+            "score": ndcg_at_10,
             "sid_match_reward": ndcg_at_10,
-            "format_reward": format_reward,
+            **process_rewards,
             "ndcg_at_10": ndcg_at_10,
             "beam_rank": float(beam_rank),
             "hit_at_1": float(beam_rank == 1),

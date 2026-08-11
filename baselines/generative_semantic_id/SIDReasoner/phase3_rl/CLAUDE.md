@@ -53,29 +53,39 @@ With both switches disabled, verl does not register a `RefPolicy` worker, does n
 compute reference-policy log probabilities, does not add KL to the actor loss, and
 passes the custom rule-based reward directly into GRPO advantage estimation.
 
-### Reasoning format reward
+### Constrained beam with process reward
 
-The custom reward combines the branch's constrained-beam recommendation reward
-with a small binary reasoning-format bonus:
+Each of the 16 trajectories samples one reasoning and then runs catalog-constrained
+beam-10 over the three-token SID path. The primary reward remains the pure beam
+NDCG@10. Process supervision follows the Phase-2 V4 trace contract:
 
 ```text
-score = ndcg_at_10 + 0.05 * format_reward
+process_reward = (format_reward + history_summary_grounding_reward + future_interests_grounding_reward) / 3
 ```
 
-`format_reward` is `1` only when the text before the single `</think>` marker
-contains exactly one non-empty `<behavior>...</behavior>` block, followed by
-exactly one non-empty `<interest>...</interest>` block, followed by exactly one
-non-empty `<intent>...</intent>` block, with no reasoning text outside those
-blocks. The opening `<think>` token is optional because tokenizer decoding may
-omit it. The format check does not judge semantic quality or require particular
-intent labels.
+`format_reward` is `1` only when the text before the single `</think>` marker has
+exactly one `<history_summary>...</history_summary>` block followed by one
+`<future_interests>...</future_interests>` block, with no surrounding text.
+History summaries require 1-3 valid `- SID[, SID...] => text` lines. Future
+interests require 2-4 valid `- [exploit|explore] SID[, SID...] => text` lines and
+at least one of each mode.
 
-The original `sid_match_reward` remains pure NDCG@10. W&B records only the same
-binary format signal for training and validation:
-`core_metrics_train/format_reward_mean` and
-`core_metrics_val/format_reward_mean`.
+The two grounding rewards are the fractions of parsed lines whose complete
+leading citation list belongs to the real history. `history_reference_coverage`
+tracks the fraction of unique history SIDs referenced across both blocks but is
+monitoring-only and does not enter `process_reward`.
 
-Observed final recommendation results:
+Beam NDCG and process rewards are normalized independently within each prompt's
+16 trajectories. The final reasoning-token advantage is
+`A_beam + 0.1 * A_process`. Constrained beam SID tokens and EOS remain outside
+the actor loss. W&B logs all process components, the aggregate process reward,
+and process active-group rate separately from recommendation metrics.
+
+The results below predate the V4 process-reward redesign. Treat them as legacy
+baselines and rerun both variants before attributing results to the current
+reward definition.
+
+Observed legacy final recommendation results:
 
 | Variant | Office_Products NDCG@10 / R@10 | Video_Games NDCG@10 / R@10 | Industrial_and_Scientific NDCG@10 / R@10 |
 | --- | --- | --- | --- |
@@ -95,7 +105,7 @@ ablation.
 
 The script **defaults to the `Video_Games` domain end‑to‑end** — data, reward, and the
 **wandb run name** all match the Games checkpoint above. Concretely the script sets
-`trainer.experiment_name=Video_Games_stage3_rl_no_kl_Qwen3-1.7B` (this is the wandb run
+`trainer.experiment_name=Video_Games_stage3_rl_constrained_sid_beam_process_reward_no_kl_Qwen3-1.7B` (this is the wandb run
 name, under project `SIDReasoner_Phase3_MetricsV2`), `data.*=.../Video_Games/*.parquet`, and
 `custom_reward_function.path=.../direct_recommendation_StepRule_Games.py`. So the
 launch command above is all you need — you do **not** have to override data / reward /
