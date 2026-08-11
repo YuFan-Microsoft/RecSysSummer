@@ -66,6 +66,11 @@ from verl.utils.tracking import ValidationGenerationsLogger
 
 _WANDB_METRIC_ORDER = (
     "core_metrics_train/sid_match_reward_mean",
+    "core_metrics_train/format_reward_mean",
+    "core_metrics_train/history_summary_grounding_reward_mean",
+    "core_metrics_train/future_interests_grounding_reward_mean",
+    "core_metrics_train/history_reference_coverage_mean",
+    "core_metrics_train/process_reward_mean",
     "core_metrics_train/prefix_1_match_rate",
     "core_metrics_train/prefix_2_match_rate",
     "core_metrics_train/exact_match_rate",
@@ -73,9 +78,15 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_train/sid_match_all_wrong_group_rate",
     "core_metrics_train/sid_match_uniform_partial_group_rate",
     "core_metrics_train/sid_match_all_correct_group_rate",
+    "core_metrics_train/process_active_group_rate",
     "core_metrics_train/entropy",
     "core_metrics_train/response_clip_ratio",
     "core_metrics_val/sid_match_reward_mean",
+    "core_metrics_val/format_reward_mean",
+    "core_metrics_val/history_summary_grounding_reward_mean",
+    "core_metrics_val/future_interests_grounding_reward_mean",
+    "core_metrics_val/history_reference_coverage_mean",
+    "core_metrics_val/process_reward_mean",
     "core_metrics_val/prefix_1_match_rate",
     "core_metrics_val/prefix_2_match_rate",
     "core_metrics_val/exact_match_rate",
@@ -153,6 +164,11 @@ def _compute_core_metrics(batch, metrics):
 
     reward_extra_metrics = {
         "sid_match_reward": "core_metrics_train/sid_match_reward_mean",
+        "format_reward": "core_metrics_train/format_reward_mean",
+        "history_summary_grounding_reward": "core_metrics_train/history_summary_grounding_reward_mean",
+        "future_interests_grounding_reward": "core_metrics_train/future_interests_grounding_reward_mean",
+        "history_reference_coverage": "core_metrics_train/history_reference_coverage_mean",
+        "process_reward": "core_metrics_train/process_reward_mean",
         "prefix_1_match": "core_metrics_train/prefix_1_match_rate",
         "prefix_2_match": "core_metrics_train/prefix_2_match_rate",
         "exact_match": "core_metrics_train/exact_match_rate",
@@ -163,6 +179,7 @@ def _compute_core_metrics(batch, metrics):
 
     active_group_metrics = {
         "sid_match_reward": "core_metrics_train/sid_match_active_group_rate",
+        "process_reward": "core_metrics_train/process_active_group_rate",
     }
     if "uid" in batch.non_tensor_batch:
         sample_uids = batch.non_tensor_batch["uid"]
@@ -781,10 +798,25 @@ class RayPPOTrainer:
 
         data_sources = np.concatenate(data_source_lst, axis=0)
 
-        data_src2var2metric2val = process_validation_metrics(data_sources, sample_uids, reward_extra_infos_dict)
+        process_reward_keys = {
+            "history_summary_grounding_reward",
+            "future_interests_grounding_reward",
+            "format_reward",
+            "history_reference_coverage",
+            "process_reward",
+        }
+        validation_reward_info = {
+            key: values for key, values in reward_extra_infos_dict.items() if key not in process_reward_keys
+        }
+        data_src2var2metric2val = process_validation_metrics(data_sources, sample_uids, validation_reward_info)
         metric_dict = {}
         validation_core_metrics = {
             "sid_match_reward": "core_metrics_val/sid_match_reward_mean",
+            "format_reward": "core_metrics_val/format_reward_mean",
+            "history_summary_grounding_reward": "core_metrics_val/history_summary_grounding_reward_mean",
+            "future_interests_grounding_reward": "core_metrics_val/future_interests_grounding_reward_mean",
+            "history_reference_coverage": "core_metrics_val/history_reference_coverage_mean",
+            "process_reward": "core_metrics_val/process_reward_mean",
             "prefix_1_match": "core_metrics_val/prefix_1_match_rate",
             "prefix_2_match": "core_metrics_val/prefix_2_match_rate",
             "exact_match": "core_metrics_val/exact_match_rate",

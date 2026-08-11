@@ -53,6 +53,15 @@ With both switches disabled, verl does not register a `RefPolicy` worker, does n
 compute reference-policy log probabilities, does not add KL to the actor loss, and
 passes the custom rule-based reward directly into GRPO advantage estimation.
 
+### Monitoring-only process metrics
+
+This constrained-beam experiment trains only on its beam-ranking outcome reward.
+For comparison with the process-reward experiment, the reward function also logs
+strict V4 format, history-summary grounding, future-interests grounding,
+history-reference coverage, their aggregate process score, and process
+active-group rate. These values remain in `reward_extra_info`; they never enter
+`compute_advantage`, the policy loss, or the training `score`.
+
 Observed final recommendation results:
 
 | Variant | Office_Products NDCG@10 / R@10 | Video_Games NDCG@10 / R@10 | Industrial_and_Scientific NDCG@10 / R@10 |
