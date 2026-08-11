@@ -75,16 +75,7 @@ class Reasoning_RL_Dataset(Dataset):
         return len(self.data)
     
     def generate_prompt_title(self, history):
-        return f"""The user has sequentially interacted with items {history}. Can you recommend the next item for him?
-Think before making the recommendation. Your reasoning must use exactly these two blocks:
-<history_evidence>
-- HISTORY_SID [HISTORY_SID ...] => evidence grounded in those items
-</history_evidence>
-<next_interest>
-- [exploit] HISTORY_SID [HISTORY_SID ...] => a directly supported continuation
-- [explore] HISTORY_SID [HISTORY_SID ...] => a broader plausible direction
-</next_interest>
-Directly output the recommended item SID after thinking."""
+        return f"The user has sequentially interacted with items {history}. Can you recommend the next item for him? Let's think step by step before making recommendation. Directly output the item SID after thinking."
     
     def get_history(self, row):
         history_item_sid = eval(row['history_item_sid'])
