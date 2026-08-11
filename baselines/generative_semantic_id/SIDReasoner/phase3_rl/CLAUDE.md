@@ -53,6 +53,15 @@ With both switches disabled, verl does not register a `RefPolicy` worker, does n
 compute reference-policy log probabilities, does not add KL to the actor loss, and
 passes the custom rule-based reward directly into GRPO advantage estimation.
 
+### Outcome-only reward
+
+This branch is the constrained-sampling exact-match baseline. Each training
+trajectory samples one catalog-valid three-token SID after its reasoning. The
+custom reward returns `1` only when that sampled SID exactly matches the target
+and `0` otherwise. Standard prompt-group GRPO normalizes this outcome reward and
+broadcasts the resulting advantage across the sampled reasoning and SID actions.
+There is no format, grounding, coverage, or other process reward.
+
 Observed final recommendation results:
 
 | Variant | Office_Products NDCG@10 / R@10 | Video_Games NDCG@10 / R@10 | Industrial_and_Scientific NDCG@10 / R@10 |
@@ -73,7 +82,7 @@ ablation.
 
 The script **defaults to the `Video_Games` domain end‑to‑end** — data, reward, and the
 **wandb run name** all match the Games checkpoint above. Concretely the script sets
-`trainer.experiment_name=Video_Games_stage3_rl_constrained_sid_single_sample_no_kl_Qwen3-1.7B`
+`trainer.experiment_name=Video_Games_stage3_rl_constrained_sid_sampling_em_outcome_only_no_kl_Qwen3-1.7B`
 (this is the wandb run
 name, under project `SIDReasoner_Phase3_MetricsV2`), `data.*=.../Video_Games/*.parquet`, and
 `custom_reward_function.path=.../direct_recommendation_StepRule_Games.py`. So the

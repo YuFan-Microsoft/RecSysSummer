@@ -37,7 +37,7 @@ export WANDB_API_KEY=3f14084582ffbf0986b305f813aea34ca59c77c5
 # ================================
 n_gpus_per_node=8
 nnodes=1
-experiment_name="Video_Games_stage3_rl_constrained_sid_single_sample_Qwen3-1.7B"
+experiment_name="Video_Games_stage3_rl_constrained_sid_sampling_em_outcome_only_Qwen3-1.7B"
 stage2_checkpoint="./output_dir/Video_Games_stage2_reasoning_activation_Qwen3-1.7B/final_checkpoint"
 # Keep Phase-3 checkpoints alongside Phase-1/2 under ./output_dir. verl otherwise
 # defaults to ./checkpoints/${project_name}/${experiment_name}; overriding
