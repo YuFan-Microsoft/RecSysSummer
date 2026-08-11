@@ -61,18 +61,18 @@ import re
 from typing import Any
 
 if __package__:
-    from . import gpt5_regenerate_phase2_process_data_V2 as v2
+    from . import _phase2_process_common as common
 else:
-    import gpt5_regenerate_phase2_process_data_V2 as v2
+    import _phase2_process_common as common
 
 
 HF_REPO = "yufan/recsys-genrec-dataset-refresh-gpt5.4-candidateV1"
-CATEGORY = v2.CATEGORY
-DEFAULT_MODEL = v2.DEFAULT_MODEL
-DEFAULT_PER_ENDPOINT = v2.DEFAULT_PER_ENDPOINT
-REASONING_EFFORT = v2.REASONING_EFFORT
-MAX_COMPLETION_TOKENS = v2.MAX_COMPLETION_TOKENS
-MAX_REPAIR_ATTEMPTS = v2.MAX_REPAIR_ATTEMPTS
+CATEGORY = common.CATEGORY
+DEFAULT_MODEL = common.DEFAULT_MODEL
+DEFAULT_PER_ENDPOINT = common.DEFAULT_PER_ENDPOINT
+REASONING_EFFORT = common.REASONING_EFFORT
+MAX_COMPLETION_TOKENS = common.MAX_COMPLETION_TOKENS
+MAX_REPAIR_ATTEMPTS = common.MAX_REPAIR_ATTEMPTS
 CATALOG_DESCRIPTION_PRIORITY = (
     "detailed_description",
     "description",
@@ -80,8 +80,9 @@ CATALOG_DESCRIPTION_PRIORITY = (
 )
 SCHEMA_VERSION = "phase2_process_v22_detailed_description_fallback"
 
-ITEM_SID_RE = v2.ITEM_SID_RE
-TraceValidationError = v2.TraceValidationError
+ITEM_SID_RE = common.ITEM_SID_RE
+TraceValidationError = common.TraceValidationError
+history_from_row = common.history_from_row
 SECTION_PATTERNS = {
     tag: re.compile(fr"<{tag}>\s*(.*?)\s*</{tag}>", re.DOTALL)
     for tag in ("history_summary", "future_interests")
@@ -258,16 +259,16 @@ def generation_signature(model: str, review: bool) -> str:
 
 
 def build_catalog(category: str) -> dict[str, dict[str, str]]:
-    dataset = v2.load_dataset(HF_REPO, f"{category}_catalog", split="train")
+    dataset = common.load_dataset(HF_REPO, f"{category}_catalog", split="train")
     catalog = {}
     for row in dataset:
         sid = str(row["sid"])
         title = str(row.get("title") or "")
-        detailed_description = v2.process_description(
+        detailed_description = common.process_description(
             row.get("detailed_description"),
             "",
         )
-        description = detailed_description or v2.process_description(
+        description = detailed_description or common.process_description(
             row.get("description"),
             title,
         )
@@ -432,7 +433,7 @@ def generate_trace(
     target_block: str,
     review: bool,
 ) -> dict[str, str]:
-    candidate = v2.chat(
+    candidate = common.chat(
         client,
         model,
         GENERATOR_SYSTEM_PROMPT,
@@ -440,7 +441,7 @@ def generate_trace(
     )
     current = candidate
     if review:
-        current = v2.chat(
+        current = common.chat(
             client,
             model,
             REVIEWER_SYSTEM_PROMPT,
@@ -458,7 +459,7 @@ def generate_trace(
         except TraceValidationError as error:
             if repair_index == MAX_REPAIR_ATTEMPTS:
                 raise
-            current = v2.chat(
+            current = common.chat(
                 client,
                 model,
                 REVIEWER_SYSTEM_PROMPT,
@@ -484,8 +485,8 @@ def build_output_row(
     reasoning_path = render_trace(trace)
     history_summary = trace["history_summary"]
     future_interests = trace["future_interests"]
-    history_summary_records = v2.block_to_records(history_summary)
-    future_interest_records = v2.block_to_records(
+    history_summary_records = common.block_to_records(history_summary)
+    future_interest_records = common.block_to_records(
         future_interests,
         include_mode=True,
     )
@@ -551,11 +552,11 @@ def jsonl_to_check_json(jsonl_path: str, json_path: str) -> None:
             row = json.loads(line)
             history_sids = [
                 str(value)
-                for value in v2._maybe_list(row.get("history_item_sid"))
+                for value in common._maybe_list(row.get("history_item_sid"))
             ]
             history_titles = [
                 str(value)
-                for value in v2._maybe_list(row.get("history_item_title"))
+                for value in common._maybe_list(row.get("history_item_title"))
             ]
             checks.append(
                 {
@@ -598,8 +599,8 @@ def regenerate(
     dry_run: bool,
     get_client: Any = None,
 ) -> None:
-    source = v2.load_dataset(HF_REPO, f"{category}_reasoning", split="train")
-    source_indices = v2.select_source_indices(
+    source = common.load_dataset(HF_REPO, f"{category}_reasoning", split="train")
+    source_indices = common.select_source_indices(
         len(source),
         limit,
         random_sample,
@@ -607,12 +608,12 @@ def regenerate(
     )
     catalog = build_catalog(category)
     signature = generation_signature(model, review)
-    done = v2.load_done_keys(out_path, signature)
+    done = common.load_done_keys(out_path, signature)
 
     tasks = []
     for source_index in source_indices:
         row = dict(source[source_index])
-        row_key = v2.row_key_for(row, source_index)
+        row_key = common.row_key_for(row, source_index)
         if row_key not in done:
             tasks.append((row_key, source_index, row))
     print(
@@ -626,8 +627,8 @@ def regenerate(
             return
         _, source_index, row = tasks[0]
         print(f"[phase2-process-v4] dry-run source_index={source_index}")
-        _, _, history_block = v2.history_from_row(row, catalog)
-        target_block = v2.target_guidance_from_row(row, catalog)
+        _, _, history_block = common.history_from_row(row, catalog)
+        target_block = common.target_guidance_from_row(row, catalog)
         print(generator_prompt(history_block, target_block))
         return
 
@@ -637,8 +638,8 @@ def regenerate(
         source_index: int,
         row: dict[str, Any],
     ) -> dict[str, Any]:
-        history_sids, _, history_block = v2.history_from_row(row, catalog)
-        target_block = v2.target_guidance_from_row(row, catalog)
+        history_sids, _, history_block = common.history_from_row(row, catalog)
+        target_block = common.target_guidance_from_row(row, catalog)
         trace = generate_trace(
             client,
             model,
@@ -659,7 +660,7 @@ def regenerate(
 
     if get_client is None:
         raise RuntimeError("generation requires an Azure client factory")
-    v2.run_pool(
+    common.run_pool(
         tasks,
         process,
         out_path,
@@ -729,11 +730,11 @@ def main() -> None:
         args.out_dir,
         f".{args.category}.phase2_process.lock",
     )
-    with v2.single_process_lock(lock_path):
+    with common.single_process_lock(lock_path):
         get_client = None
         endpoints = []
         if not args.dry_run:
-            configured_endpoints, get_client = v2.load_endpoint_helpers()
+            configured_endpoints, get_client = common.load_endpoint_helpers()
             endpoints = args.endpoints or configured_endpoints
             unknown = [
                 endpoint
@@ -743,7 +744,7 @@ def main() -> None:
             if unknown:
                 parser.error(f"unknown endpoint(s): {unknown}")
 
-            v2.reconcile_output_mirrors(
+            common.reconcile_output_mirrors(
                 output_jsonl,
                 output_csvs,
                 output_pretty_json,
@@ -764,9 +765,9 @@ def main() -> None:
         )
         if not args.dry_run:
             for output_csv in output_csvs:
-                v2.jsonl_to_csv(output_jsonl, output_csv)
+                common.jsonl_to_csv(output_jsonl, output_csv)
             if output_pretty_json is not None:
-                v2.jsonl_to_pretty_json(output_jsonl, output_pretty_json)
+                common.jsonl_to_pretty_json(output_jsonl, output_pretty_json)
             if args.check_json is not None:
                 jsonl_to_check_json(output_jsonl, args.check_json)
 
