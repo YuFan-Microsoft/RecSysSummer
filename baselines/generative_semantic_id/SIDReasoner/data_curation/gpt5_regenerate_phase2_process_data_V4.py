@@ -73,7 +73,12 @@ DEFAULT_PER_ENDPOINT = v2.DEFAULT_PER_ENDPOINT
 REASONING_EFFORT = v2.REASONING_EFFORT
 MAX_COMPLETION_TOKENS = v2.MAX_COMPLETION_TOKENS
 MAX_REPAIR_ATTEMPTS = v2.MAX_REPAIR_ATTEMPTS
-SCHEMA_VERSION = "phase2_process_v21_candidate_v1_production_io"
+CATALOG_DESCRIPTION_PRIORITY = (
+    "detailed_description",
+    "description",
+    "title",
+)
+SCHEMA_VERSION = "phase2_process_v22_detailed_description_fallback"
 
 ITEM_SID_RE = v2.ITEM_SID_RE
 TraceValidationError = v2.TraceValidationError
@@ -239,6 +244,7 @@ def generation_signature(model: str, review: bool) -> str:
     payload = {
         "schema": SCHEMA_VERSION,
         "hf_repo": HF_REPO,
+        "catalog_description_priority": CATALOG_DESCRIPTION_PRIORITY,
         "model": model,
         "review": review,
         "reasoning_effort": REASONING_EFFORT,
@@ -257,10 +263,18 @@ def build_catalog(category: str) -> dict[str, dict[str, str]]:
     for row in dataset:
         sid = str(row["sid"])
         title = str(row.get("title") or "")
+        detailed_description = v2.process_description(
+            row.get("detailed_description"),
+            "",
+        )
+        description = detailed_description or v2.process_description(
+            row.get("description"),
+            title,
+        )
         catalog[sid] = {
             "title": title,
             "brand": str(row.get("brand") or ""),
-            "description": v2.process_description(row.get("description"), title),
+            "description": description,
         }
     return catalog
 
