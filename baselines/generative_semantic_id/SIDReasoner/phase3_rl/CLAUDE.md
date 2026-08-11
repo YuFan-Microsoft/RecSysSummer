@@ -56,31 +56,46 @@ passes the custom rule-based reward directly into GRPO advantage estimation.
 ### Constrained sampling with process reward
 
 Training samples one catalog-valid SID per reasoning. The primary reward remains
-the pure sampled-SID exact match. Process supervision has two equal components:
+the pure sampled-SID exact match. Process supervision follows the same two stages
+used to construct the Phase-2 V4 traces:
 
 ```text
-process_reward = (format_reward + grounding_reward) / 2
+process_reward = (format_reward + history_summary_grounding_reward + future_interests_grounding_reward) / 3
 ```
 
 `format_reward` is `1` only when the text before the single `</think>` marker has
-one `<history_evidence>...</history_evidence>` block followed by one
-`<next_interest>...</next_interest>` block. Evidence lines use
-`- SID [SID ...] => text`; interest lines use
-`- [exploit|explore] SID [SID ...] => text`, with both labels represented.
-Multiple citations may be separated by whitespace or commas. Repeated citations
-are allowed.
+exactly one `<history_summary>...</history_summary>` block followed by one
+`<future_interests>...</future_interests>` block, with no surrounding text.
+History summaries require 1-3 valid `- SID[, SID...] => text` lines. Future
+interests require 2-4 valid `- [exploit|explore] SID[, SID...] => text` lines and
+at least one of each mode. Any violation makes the strict format reward `0`.
 
-`grounding_reward` is the fraction of parsed lines whose complete leading
-citation list is grounded. Every evidence citation must belong to the real
-history, and every interest citation must also belong to the real history.
-Target SIDs inside free-text explanations are not penalized.
+Grounding is computed separately for the two stages as the fraction of lines
+whose complete leading citation list belongs to the real history. Both stage
+scores enter `process_reward` directly with the strict format score.
+`history_reference_coverage` is the fraction of unique history SIDs referenced
+at least once across both stages; it is monitoring-only and does not enter the
+process advantage. Repeated citations are allowed, but multiple citations must
+be comma separated to match the V4 data contract.
+
+These online rules intentionally do not claim to verify semantic factuality,
+whether an exploit is truly instantiated, or whether an explore bridge is
+meaningful: the reward path has history SIDs but no trustworthy item metadata or
+semantic judge. Those properties are taught by the reviewed Phase-2 V4 traces;
+the online process reward enforces their observable schema and grounding proxies.
 
 SID and process advantages are normalized separately. SID advantage trains both
 reasoning and sampled SID tokens. Process advantage is multiplied by `0.1` and
 trains reasoning tokens only, so process quality cannot reinforce an incorrect
-SID action. Format, grounding, and combined process metrics are logged separately.
+SID action. Thinking format is logged as one strict `format_reward` metric;
+history-summary grounding, future-interests grounding, history-reference
+coverage, and combined process metrics remain separate.
 
-Observed final recommendation results:
+The results below were produced before the V4 process-reward redesign. Keep them
+as legacy V3 baselines; rerun both variants before attributing any result to the
+V4 reward definition.
+
+Observed legacy final recommendation results:
 
 | Variant | Office_Products NDCG@10 / R@10 | Video_Games NDCG@10 / R@10 | Industrial_and_Scientific NDCG@10 / R@10 |
 | --- | --- | --- | --- |

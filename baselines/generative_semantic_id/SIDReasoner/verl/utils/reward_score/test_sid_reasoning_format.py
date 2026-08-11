@@ -32,28 +32,28 @@ def load_reward_module(domain):
 
 
 VALID_REASONING = """<think>
-<history_evidence>
+<history_summary>
 - <a_240><b_208><c_129> => The recorded item is a Rockstar Games title.
 - <a_240><b_208><c_129> => The game is part of the Grand Theft Auto series.
-</history_evidence>
-<next_interest>
-- [exploit] <a_240><b_208><c_129> => Another game from the same series is a likely continuation.
-- [explore] <a_240><b_208><c_129> => The user may explore other urban action games and <a_9><b_9><c_9>.
-</next_interest>
+</history_summary>
+<future_interests>
+- [exploit] <a_240><b_208><c_129> => The user may continue with urban action games from the same series.
+- [explore] <a_240><b_208><c_129> => The open-world setting bridges to other exploration-driven games and <a_9><b_9><c_9>.
+</future_interests>
 </think>
 <a_9><b_9><c_9>"""
 HISTORY_SIDS = ["<a_240><b_208><c_129>"]
 
-MULTI_SID_REASONING = """<history_evidence>
-- <a_140><b_237><c_88>, <a_74><b_218><c_196> => Two Sony game listings are for the same PlayStation 2 franchise.
-- <a_249><b_80><c_0>, <a_249><b_138><c_211>, <a_249><b_138><c_211> => The history contains PlayStation 2 hardware/accessory listings.
-- <a_10><b_193><c_15>, <a_131><b_233><c_112> => Two Bethesda console game listings are role-playing titles on Xbox 360.
-</history_evidence>
-<next_interest>
-- [exploit] <a_249><b_80><c_0>, <a_249><b_138><c_211>, <a_249><b_138><c_211> => Another PlayStation 2 accessory is the strongest continuation.
-- [explore] <a_140><b_237><c_88>, <a_74><b_218><c_196> => Another game from the same franchise is plausible.
-- [explore] <a_10><b_193><c_15>, <a_131><b_233><c_112> => Another Xbox 360 role-playing game is plausible.
-</next_interest>
+MULTI_SID_REASONING = """<history_summary>
+- <a_140><b_237><c_88>, <a_74><b_218><c_196> => Two game listings belong to the same franchise.
+- <a_249><b_80><c_0>, <a_249><b_138><c_211>, <a_249><b_138><c_211> => The history contains related hardware and accessory listings.
+- <a_10><b_193><c_15>, <a_131><b_233><c_112> => Two console game listings are role-playing titles.
+</history_summary>
+<future_interests>
+- [exploit] <a_249><b_80><c_0>, <a_249><b_138><c_211>, <a_249><b_138><c_211> => The user may continue with accessories for the same hardware family.
+- [explore] <a_140><b_237><c_88>, <a_74><b_218><c_196> => The shared franchise bridges to story-driven games in a neighboring genre.
+- [explore] <a_10><b_193><c_15>, <a_131><b_233><c_112> => Role-playing progression bridges to strategy games with long-term character planning.
+</future_interests>
 </think>
 <a_1><b_2><c_3>"""
 MULTI_SID_HISTORY = [
@@ -67,73 +67,89 @@ MULTI_SID_HISTORY = [
 
 
 class ProcessRewardTest(unittest.TestCase):
-    def test_real_v3_multi_sid_trace_receives_full_reward(self):
+    def test_v4_multi_sid_trace_receives_full_reward(self):
         self.assertEqual(
             calculate_process_rewards(MULTI_SID_REASONING, MULTI_SID_HISTORY),
             {
+                "history_summary_grounding_reward": 1.0,
+                "future_interests_grounding_reward": 1.0,
                 "format_reward": 1.0,
-                "grounding_reward": 1.0,
+                "history_reference_coverage": 1.0,
                 "process_reward": 1.0,
             },
         )
 
-    def test_space_separated_v3_citations_receive_full_reward(self):
-        response = MULTI_SID_REASONING.replace(", ", " ")
-        self.assertEqual(
-            calculate_process_rewards(response, MULTI_SID_HISTORY),
-            {
-                "format_reward": 1.0,
-                "grounding_reward": 1.0,
-                "process_reward": 1.0,
-            },
-        )
-
-    def test_multi_sid_line_is_ungrounded_when_any_citation_is_not_in_history(self):
+    def test_history_reference_coverage_is_independent_of_grounding(self):
         response = MULTI_SID_REASONING.replace(
-            "<a_140><b_237><c_88>, <a_74><b_218><c_196>",
-            "<a_140><b_237><c_88>, <a_999><b_999><c_999>",
-            1,
+            "<a_131><b_233><c_112>",
+            "<a_10><b_193><c_15>",
         )
         scores = calculate_process_rewards(response, MULTI_SID_HISTORY)
         self.assertEqual(scores["format_reward"], 1.0)
-        self.assertAlmostEqual(scores["grounding_reward"], 5.0 / 6.0)
-        self.assertAlmostEqual(scores["process_reward"], 11.0 / 12.0)
+        self.assertEqual(scores["history_summary_grounding_reward"], 1.0)
+        self.assertEqual(scores["future_interests_grounding_reward"], 1.0)
+        self.assertEqual(scores["process_reward"], 1.0)
+        self.assertAlmostEqual(scores["history_reference_coverage"], 5.0 / 6.0)
+
+    def test_space_separated_citations_are_not_valid_v4_format(self):
+        response = VALID_REASONING.replace(
+            "<a_240><b_208><c_129> => The recorded item",
+            "<a_240><b_208><c_129> <a_240><b_208><c_129> => The recorded item",
+            1,
+        )
+        scores = calculate_process_rewards(response, HISTORY_SIDS)
+        self.assertEqual(scores["format_reward"], 0.0)
+        self.assertEqual(scores["history_summary_grounding_reward"], 0.5)
+        self.assertEqual(scores["process_reward"], 0.5)
+
+    def test_future_line_is_ungrounded_when_any_citation_is_not_in_history(self):
+        response = VALID_REASONING.replace(
+            "[explore] <a_240><b_208><c_129>",
+            "[explore] <a_240><b_208><c_129>, <a_999><b_999><c_999>",
+            1,
+        )
+        scores = calculate_process_rewards(response, HISTORY_SIDS)
+        self.assertEqual(scores["format_reward"], 1.0)
+        self.assertEqual(scores["history_summary_grounding_reward"], 1.0)
+        self.assertEqual(scores["future_interests_grounding_reward"], 0.5)
+        self.assertAlmostEqual(scores["process_reward"], 5.0 / 6.0)
 
     def test_valid_repeated_citations_and_target_in_text_receive_full_reward(self):
-        self.assertEqual(
-            calculate_process_rewards(VALID_REASONING, HISTORY_SIDS),
-            {
-                "format_reward": 1.0,
-                "grounding_reward": 1.0,
-                "process_reward": 1.0,
-            },
+        self.assertTrue(
+            all(
+                reward == 1.0
+                for reward in calculate_process_rewards(VALID_REASONING, HISTORY_SIDS).values()
+            )
         )
 
     def test_opening_think_is_optional(self):
         response = VALID_REASONING.replace("<think>\n", "", 1)
         self.assertEqual(calculate_process_rewards(response, HISTORY_SIDS)["process_reward"], 1.0)
 
-    def test_missing_label_fails_format_but_keeps_grounding(self):
-        response = VALID_REASONING.replace("[explore] ", "", 1)
+    def test_missing_mode_reduces_future_stage_only(self):
+        response = VALID_REASONING.replace("[explore]", "[exploit]", 1)
         scores = calculate_process_rewards(response, HISTORY_SIDS)
         self.assertEqual(scores["format_reward"], 0.0)
-        self.assertEqual(scores["grounding_reward"], 0.75)
-        self.assertEqual(scores["process_reward"], 0.375)
+        self.assertEqual(scores["history_summary_grounding_reward"], 1.0)
+        self.assertEqual(scores["future_interests_grounding_reward"], 1.0)
+        self.assertAlmostEqual(scores["process_reward"], 2.0 / 3.0)
 
-    def test_ungrounded_leading_citation_reduces_grounding(self):
+    def test_future_interest_count_is_partially_rewarded(self):
         response = VALID_REASONING.replace(
-            "[explore] <a_240><b_208><c_129>", "[explore] <a_7><b_8><c_9>", 1
+            "- [explore] <a_240><b_208><c_129> => The open-world setting bridges to other exploration-driven games and <a_9><b_9><c_9>.\n",
+            "",
         )
         scores = calculate_process_rewards(response, HISTORY_SIDS)
-        self.assertEqual(scores["format_reward"], 1.0)
-        self.assertEqual(scores["grounding_reward"], 0.75)
-        self.assertEqual(scores["process_reward"], 0.875)
+        self.assertEqual(scores["format_reward"], 0.0)
+        self.assertEqual(scores["history_summary_grounding_reward"], 1.0)
+        self.assertEqual(scores["future_interests_grounding_reward"], 1.0)
+        self.assertAlmostEqual(scores["process_reward"], 2.0 / 3.0)
 
     def test_wrong_block_order_or_extra_text_returns_zero(self):
-        history_start = VALID_REASONING.index("<history_evidence>")
-        history_end = VALID_REASONING.index("</history_evidence>") + len("</history_evidence>")
-        interest_start = VALID_REASONING.index("<next_interest>")
-        interest_end = VALID_REASONING.index("</next_interest>") + len("</next_interest>")
+        history_start = VALID_REASONING.index("<history_summary>")
+        history_end = VALID_REASONING.index("</history_summary>") + len("</history_summary>")
+        interest_start = VALID_REASONING.index("<future_interests>")
+        interest_end = VALID_REASONING.index("</future_interests>") + len("</future_interests>")
         wrong_order = (
             VALID_REASONING[:history_start]
             + VALID_REASONING[interest_start:interest_end]
@@ -141,7 +157,7 @@ class ProcessRewardTest(unittest.TestCase):
             + VALID_REASONING[history_start:history_end]
             + VALID_REASONING[interest_end:]
         )
-        extra_text = VALID_REASONING.replace("<history_evidence>", "preamble\n<history_evidence>", 1)
+        extra_text = VALID_REASONING.replace("<history_summary>", "preamble\n<history_summary>", 1)
         self.assertEqual(calculate_process_rewards(wrong_order, HISTORY_SIDS)["process_reward"], 0.0)
         self.assertEqual(calculate_process_rewards(extra_text, HISTORY_SIDS)["process_reward"], 0.0)
 

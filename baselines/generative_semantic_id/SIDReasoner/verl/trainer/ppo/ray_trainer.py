@@ -68,7 +68,9 @@ from verl.utils.tracking import ValidationGenerationsLogger
 _WANDB_METRIC_ORDER = (
     "core_metrics_train/sid_match_reward_mean",
     "core_metrics_train/format_reward_mean",
-    "core_metrics_train/grounding_reward_mean",
+    "core_metrics_train/history_summary_grounding_reward_mean",
+    "core_metrics_train/future_interests_grounding_reward_mean",
+    "core_metrics_train/history_reference_coverage_mean",
     "core_metrics_train/process_reward_mean",
     "core_metrics_train/prefix_1_match_rate",
     "core_metrics_train/prefix_2_match_rate",
@@ -82,7 +84,9 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_train/response_clip_ratio",
     "core_metrics_val/sid_match_reward_mean",
     "core_metrics_val/format_reward_mean",
-    "core_metrics_val/grounding_reward_mean",
+    "core_metrics_val/history_summary_grounding_reward_mean",
+    "core_metrics_val/future_interests_grounding_reward_mean",
+    "core_metrics_val/history_reference_coverage_mean",
     "core_metrics_val/process_reward_mean",
     "core_metrics_val/prefix_1_match_rate",
     "core_metrics_val/prefix_2_match_rate",
@@ -162,7 +166,9 @@ def _compute_core_metrics(batch, metrics):
     reward_extra_metrics = {
         "sid_match_reward": "core_metrics_train/sid_match_reward_mean",
         "format_reward": "core_metrics_train/format_reward_mean",
-        "grounding_reward": "core_metrics_train/grounding_reward_mean",
+        "history_summary_grounding_reward": "core_metrics_train/history_summary_grounding_reward_mean",
+        "future_interests_grounding_reward": "core_metrics_train/future_interests_grounding_reward_mean",
+        "history_reference_coverage": "core_metrics_train/history_reference_coverage_mean",
         "process_reward": "core_metrics_train/process_reward_mean",
         "prefix_1_match": "core_metrics_train/prefix_1_match_rate",
         "prefix_2_match": "core_metrics_train/prefix_2_match_rate",
@@ -831,7 +837,13 @@ class RayPPOTrainer:
 
         data_sources = np.concatenate(data_source_lst, axis=0)
 
-        process_reward_keys = {"format_reward", "grounding_reward", "process_reward"}
+        process_reward_keys = {
+            "history_summary_grounding_reward",
+            "future_interests_grounding_reward",
+            "format_reward",
+            "history_reference_coverage",
+            "process_reward",
+        }
         validation_reward_info = {
             key: values for key, values in reward_extra_infos_dict.items() if key not in process_reward_keys
         }
@@ -840,7 +852,9 @@ class RayPPOTrainer:
         validation_core_metrics = {
             "sid_match_reward": "core_metrics_val/sid_match_reward_mean",
             "format_reward": "core_metrics_val/format_reward_mean",
-            "grounding_reward": "core_metrics_val/grounding_reward_mean",
+            "history_summary_grounding_reward": "core_metrics_val/history_summary_grounding_reward_mean",
+            "future_interests_grounding_reward": "core_metrics_val/future_interests_grounding_reward_mean",
+            "history_reference_coverage": "core_metrics_val/history_reference_coverage_mean",
             "process_reward": "core_metrics_val/process_reward_mean",
             "prefix_1_match": "core_metrics_val/prefix_1_match_rate",
             "prefix_2_match": "core_metrics_val/prefix_2_match_rate",
