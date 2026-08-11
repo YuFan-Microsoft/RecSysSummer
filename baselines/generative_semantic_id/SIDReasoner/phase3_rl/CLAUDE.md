@@ -60,7 +60,13 @@ trajectory samples one catalog-valid three-token SID after its reasoning. The
 custom reward returns `1` only when that sampled SID exactly matches the target
 and `0` otherwise. Standard prompt-group GRPO normalizes this outcome reward and
 broadcasts the resulting advantage across the sampled reasoning and SID actions.
-There is no format, grounding, coverage, or other process reward.
+
+For a controlled comparison with the process-reward branch, the reward function
+also computes and logs strict V4 format, history-summary grounding,
+future-interests grounding, history-reference coverage, their aggregate process
+score, and process active-group rate. These are diagnostics only: they stay in
+`reward_extra_info` and never enter `compute_advantage`, the policy loss, or the
+training `score`.
 
 Observed final recommendation results:
 
