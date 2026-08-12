@@ -99,6 +99,15 @@ SID action. Thinking format is logged as one strict `format_reward` metric;
 history-summary grounding, future-interests grounding, history-reference
 coverage, and combined process metrics remain separate.
 
+W&B uses a strict allowlist rather than forwarding every VERL metric. The
+dashboard keeps recommendation outcomes (HR/NDCG at 1, 5, and 10), all process
+gate diagnostics, retry-attempt metrics when retry sampling is enabled, final
+active/all-wrong rates, actor entropy, policy loss, clip fraction, policy KL,
+gradient norm, learning rate, and compact response-length health metrics.
+Redundant aliases, prefix-match diagnostics, HR/NDCG@3, prompt-length statistics,
+and detailed timing/performance metrics stay available in console logging but are
+not uploaded to W&B.
+
 The results below were produced before the V4 process-reward redesign. Keep them
 as legacy V3 baselines; rerun both variants before attributing any result to the
 V4 reward definition.
