@@ -211,6 +211,7 @@ def chat(
     model: str,
     system_prompt: str,
     user_prompt: str,
+    max_completion_tokens: int = MAX_COMPLETION_TOKENS,
 ) -> str:
     last_error: Exception | None = None
     for attempt in range(1, MAX_API_ATTEMPTS + 1):
@@ -221,7 +222,7 @@ def chat(
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt},
                 ],
-                max_completion_tokens=MAX_COMPLETION_TOKENS,
+                max_completion_tokens=max_completion_tokens,
                 reasoning_effort=REASONING_EFFORT,
             )
             content = (response.choices[0].message.content or "").strip()
