@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import re
 from typing import Any
 
@@ -87,6 +89,38 @@ def _history_reference_coverage(
     return len(referenced_sids & history_sid_set) / len(history_sid_set)
 
 
+def _latest_history_sid(history_sids: Any) -> str | None:
+    if history_sids is None:
+        return None
+    if isinstance(history_sids, str):
+        matches = re.findall(_SID_PATTERN, history_sids)
+        return matches[-1] if matches else None
+
+    latest_sid = None
+    for value in history_sids:
+        matches = re.findall(_SID_PATTERN, str(value))
+        if matches:
+            latest_sid = matches[0]
+    return latest_sid
+
+
+def _latest_history_summary_reference_reward(
+    summary_matches: list[re.Match[str] | None],
+    history_sids: Any,
+) -> float:
+    latest_sid = _latest_history_sid(history_sids)
+    if latest_sid is None:
+        return 0.0
+    summary_citations = set().union(
+        *(
+            _citation_sids(line_match)
+            for line_match in summary_matches
+            if line_match is not None
+        )
+    )
+    return float(latest_sid in summary_citations)
+
+
 def calculate_process_rewards(solution_str: str, history_sids: Any) -> dict[str, float]:
     """Score strict V4 format and the grounding of its two reasoning stages."""
     zero_scores = {
@@ -94,6 +128,7 @@ def calculate_process_rewards(solution_str: str, history_sids: Any) -> dict[str,
         "future_interests_grounding_reward": 0.0,
         "format_reward": 0.0,
         "history_reference_coverage": 0.0,
+        "latest_history_summary_reference_reward": 0.0,
         "process_reward": 0.0,
     }
     if not isinstance(solution_str, str) or solution_str.count("</think>") != 1:
@@ -143,16 +178,27 @@ def calculate_process_rewards(solution_str: str, history_sids: Any) -> dict[str,
         parsed_summary + parsed_future_interests,
         history_sid_set,
     )
-    process_reward = (
-        format_reward
-        + history_summary_grounding_reward
-        + future_interests_grounding_reward
-    ) / 3.0
+    latest_history_summary_reference_reward = (
+        _latest_history_summary_reference_reward(
+            parsed_summary,
+            history_sids,
+        )
+    )
+    hard_valid = (
+        format_reward == 1.0
+        and history_summary_grounding_reward == 1.0
+        and future_interests_grounding_reward == 1.0
+        and latest_history_summary_reference_reward == 1.0
+    )
+    process_reward = 1.0 if hard_valid else 0.0
 
     return {
         "history_summary_grounding_reward": history_summary_grounding_reward,
         "future_interests_grounding_reward": future_interests_grounding_reward,
         "format_reward": format_reward,
         "history_reference_coverage": history_reference_coverage,
+        "latest_history_summary_reference_reward": (
+            latest_history_summary_reference_reward
+        ),
         "process_reward": process_reward,
     }

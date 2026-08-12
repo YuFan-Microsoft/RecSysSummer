@@ -75,23 +75,39 @@ class ProcessRewardTest(unittest.TestCase):
                 "future_interests_grounding_reward": 1.0,
                 "format_reward": 1.0,
                 "history_reference_coverage": 1.0,
+                "latest_history_summary_reference_reward": 1.0,
                 "process_reward": 1.0,
             },
         )
 
     def test_history_reference_coverage_is_independent_of_grounding(self):
         response = MULTI_SID_REASONING.replace(
-            "<a_131><b_233><c_112>",
-            "<a_10><b_193><c_15>",
+            "<a_249><b_138><c_211>",
+            "<a_249><b_80><c_0>",
         )
         scores = calculate_process_rewards(response, MULTI_SID_HISTORY)
         self.assertEqual(scores["format_reward"], 1.0)
         self.assertEqual(scores["history_summary_grounding_reward"], 1.0)
         self.assertEqual(scores["future_interests_grounding_reward"], 1.0)
+        self.assertEqual(scores["latest_history_summary_reference_reward"], 1.0)
         self.assertEqual(scores["process_reward"], 1.0)
         self.assertAlmostEqual(scores["history_reference_coverage"], 5.0 / 6.0)
 
-    def test_space_separated_citations_are_not_valid_v4_format(self):
+    def test_latest_history_sid_must_be_cited_in_summary(self):
+        response = MULTI_SID_REASONING.replace(
+            "- <a_10><b_193><c_15>, <a_131><b_233><c_112> => Two console game listings are role-playing titles.",
+            "- <a_10><b_193><c_15> => One console game listing is a role-playing title.",
+            1,
+        )
+        scores = calculate_process_rewards(response, MULTI_SID_HISTORY)
+        self.assertEqual(scores["format_reward"], 1.0)
+        self.assertEqual(scores["history_summary_grounding_reward"], 1.0)
+        self.assertEqual(scores["future_interests_grounding_reward"], 1.0)
+        self.assertEqual(scores["history_reference_coverage"], 1.0)
+        self.assertEqual(scores["latest_history_summary_reference_reward"], 0.0)
+        self.assertEqual(scores["process_reward"], 0.0)
+
+    def test_invalid_citation_syntax_fails_process_hard_gate(self):
         response = VALID_REASONING.replace(
             "<a_240><b_208><c_129> => The recorded item",
             "<a_240><b_208><c_129> <a_240><b_208><c_129> => The recorded item",
@@ -100,9 +116,9 @@ class ProcessRewardTest(unittest.TestCase):
         scores = calculate_process_rewards(response, HISTORY_SIDS)
         self.assertEqual(scores["format_reward"], 0.0)
         self.assertEqual(scores["history_summary_grounding_reward"], 0.5)
-        self.assertEqual(scores["process_reward"], 0.5)
+        self.assertEqual(scores["process_reward"], 0.0)
 
-    def test_future_line_is_ungrounded_when_any_citation_is_not_in_history(self):
+    def test_non_history_citation_fails_process_hard_gate(self):
         response = VALID_REASONING.replace(
             "[explore] <a_240><b_208><c_129>",
             "[explore] <a_240><b_208><c_129>, <a_999><b_999><c_999>",
@@ -112,7 +128,7 @@ class ProcessRewardTest(unittest.TestCase):
         self.assertEqual(scores["format_reward"], 1.0)
         self.assertEqual(scores["history_summary_grounding_reward"], 1.0)
         self.assertEqual(scores["future_interests_grounding_reward"], 0.5)
-        self.assertAlmostEqual(scores["process_reward"], 5.0 / 6.0)
+        self.assertEqual(scores["process_reward"], 0.0)
 
     def test_valid_repeated_citations_and_target_in_text_receive_full_reward(self):
         self.assertTrue(
@@ -126,15 +142,15 @@ class ProcessRewardTest(unittest.TestCase):
         response = VALID_REASONING.replace("<think>\n", "", 1)
         self.assertEqual(calculate_process_rewards(response, HISTORY_SIDS)["process_reward"], 1.0)
 
-    def test_missing_mode_reduces_future_stage_only(self):
+    def test_missing_mode_fails_process_hard_gate(self):
         response = VALID_REASONING.replace("[explore]", "[exploit]", 1)
         scores = calculate_process_rewards(response, HISTORY_SIDS)
         self.assertEqual(scores["format_reward"], 0.0)
         self.assertEqual(scores["history_summary_grounding_reward"], 1.0)
         self.assertEqual(scores["future_interests_grounding_reward"], 1.0)
-        self.assertAlmostEqual(scores["process_reward"], 2.0 / 3.0)
+        self.assertEqual(scores["process_reward"], 0.0)
 
-    def test_future_interest_count_is_partially_rewarded(self):
+    def test_invalid_future_interest_count_fails_process_hard_gate(self):
         response = VALID_REASONING.replace(
             "- [explore] <a_240><b_208><c_129> => The open-world setting bridges to other exploration-driven games and <a_9><b_9><c_9>.\n",
             "",
@@ -143,7 +159,7 @@ class ProcessRewardTest(unittest.TestCase):
         self.assertEqual(scores["format_reward"], 0.0)
         self.assertEqual(scores["history_summary_grounding_reward"], 1.0)
         self.assertEqual(scores["future_interests_grounding_reward"], 1.0)
-        self.assertAlmostEqual(scores["process_reward"], 2.0 / 3.0)
+        self.assertEqual(scores["process_reward"], 0.0)
 
     def test_wrong_block_order_or_extra_text_returns_zero(self):
         history_start = VALID_REASONING.index("<history_summary>")
