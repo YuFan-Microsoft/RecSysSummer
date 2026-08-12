@@ -77,43 +77,33 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_train/history_reference_coverage_mean",
     "core_metrics_train/latest_history_summary_reference_reward_mean",
     "core_metrics_train/process_reward_mean",
-    "core_metrics_train/prefix_1_match_rate",
-    "core_metrics_train/prefix_2_match_rate",
-    "core_metrics_train/exact_match_rate",
     "core_metrics_train/sid_match_active_group_rate",
     "core_metrics_train/sid_match_all_wrong_group_rate",
-    "core_metrics_train/sid_match_uniform_partial_group_rate",
-    "core_metrics_train/sid_match_all_correct_group_rate",
     "core_metrics_train/process_active_group_rate",
+    "retry_sampling/attempt_1_active_rate",
+    "retry_sampling/attempt_2_active_rate",
+    "retry_sampling/attempt_3_active_rate",
     "core_metrics_train/entropy",
-    "core_metrics_train/response_clip_ratio",
-    "core_metrics_val/sid_match_reward_mean",
+    "core_metrics_train/pg_loss",
+    "core_metrics_train/pg_clipfrac",
+    "core_metrics_train/ppo_kl",
+    "core_metrics_train/grad_norm",
+    "core_metrics_train/lr",
     "core_metrics_val/format_reward_mean",
     "core_metrics_val/history_summary_grounding_reward_mean",
     "core_metrics_val/future_interests_grounding_reward_mean",
     "core_metrics_val/history_reference_coverage_mean",
     "core_metrics_val/latest_history_summary_reference_reward_mean",
     "core_metrics_val/process_reward_mean",
-    "core_metrics_val/prefix_1_match_rate",
-    "core_metrics_val/prefix_2_match_rate",
-    "core_metrics_val/exact_match_rate",
     "core_metrics_val/hr_at_1",
-    "core_metrics_val/hr_at_3",
     "core_metrics_val/hr_at_5",
     "core_metrics_val/hr_at_10",
     "core_metrics_val/ndcg_at_1",
-    "core_metrics_val/ndcg_at_3",
     "core_metrics_val/ndcg_at_5",
     "core_metrics_val/ndcg_at_10",
     "response_length/mean",
-    "response_length/max",
-    "response_length/min",
     "response_length/clip_ratio",
     "response/aborted_ratio",
-    "prompt_length/mean",
-    "prompt_length/max",
-    "prompt_length/min",
-    "prompt_length/clip_ratio",
 )
 
 _SID_TOKEN_PATTERN = re.compile(r"<[^>]+>")
@@ -151,7 +141,7 @@ def _compute_sid_ranking_metrics(beam_predictions, ground_truths):
 
 
 def _log_metrics(logger, data, step, configured_backends, wandb_exclude_prefixes=None):
-    if not wandb_exclude_prefixes or "wandb" not in configured_backends:
+    if "wandb" not in configured_backends:
         logger.log(data=data, step=step)
         return
 
@@ -159,10 +149,9 @@ def _log_metrics(logger, data, step, configured_backends, wandb_exclude_prefixes
     if other_backends:
         logger.log(data=data, step=step, backend=other_backends)
 
-    excluded_prefixes = tuple(wandb_exclude_prefixes)
+    excluded_prefixes = tuple(wandb_exclude_prefixes or ())
     filtered_data = {key: value for key, value in data.items() if not key.startswith(excluded_prefixes)}
-    wandb_data = {key: filtered_data.pop(key) for key in _WANDB_METRIC_ORDER if key in filtered_data}
-    wandb_data.update(filtered_data)
+    wandb_data = {key: filtered_data[key] for key in _WANDB_METRIC_ORDER if key in filtered_data}
     logger.log(data=wandb_data, step=step, backend=["wandb"])
 
 
@@ -219,7 +208,11 @@ def _compute_core_metrics(batch, metrics):
 
     metric_aliases = {
         "actor/entropy": "core_metrics_train/entropy",
-        "response_length/clip_ratio": "core_metrics_train/response_clip_ratio",
+        "actor/pg_loss": "core_metrics_train/pg_loss",
+        "actor/pg_clipfrac": "core_metrics_train/pg_clipfrac",
+        "actor/ppo_kl": "core_metrics_train/ppo_kl",
+        "actor/grad_norm": "core_metrics_train/grad_norm",
+        "actor/lr": "core_metrics_train/lr",
     }
     for source_key, metric_key in metric_aliases.items():
         if source_key in metrics:
