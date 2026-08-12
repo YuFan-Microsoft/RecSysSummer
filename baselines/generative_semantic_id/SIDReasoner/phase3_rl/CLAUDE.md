@@ -60,7 +60,10 @@ the pure sampled-SID exact match. Process supervision follows the same two stage
 used to construct the Phase-2 V4 traces:
 
 ```text
-process_reward = (format_reward + history_summary_grounding_reward + future_interests_grounding_reward) / 3
+process_reward = 1 if strict_format_valid
+          and all_citations_are_from_history
+          and latest_history_sid_is_cited_in_history_summary
+        else 0
 ```
 
 `format_reward` is `1` only when the text before the single `</think>` marker has
@@ -71,8 +74,13 @@ interests require 2-4 valid `- [exploit|explore] SID[, SID...] => text` lines an
 at least one of each mode. Any violation makes the strict format reward `0`.
 
 Grounding is computed separately for the two stages as the fraction of lines
-whose complete leading citation list belongs to the real history. Both stage
-scores enter `process_reward` directly with the strict format score.
+whose complete leading citation list belongs to the real history. The final
+`process_reward` has a hard validity gate: any format violation or any line with
+a non-history citation makes it `0`; only a strict-format trace with every cited
+SID grounded in history and the latest history SID cited in `history_summary`
+receives `1`. Citing the latest SID only in `future_interests` does not satisfy
+the gate. The component grounding and latest-reference scores retain their
+values for diagnostics and logging.
 `history_reference_coverage` is the fraction of unique history SIDs referenced
 at least once across both stages; it is monitoring-only and does not enter the
 process advantage. Repeated citations are allowed, but multiple citations must
