@@ -45,6 +45,7 @@ from verl.single_controller.ray.base import create_colocated_worker_cls
 from verl.trainer.config import AlgoConfig
 from verl.trainer.ppo import core_algos
 from verl.trainer.ppo.core_algos import AdvantageEstimator, agg_loss
+from verl.trainer.ppo.generation_metadata import copy_reward_models_for_generation
 from verl.trainer.ppo.metric_utils import (
     compute_data_metrics,
     compute_throughout_metrics,
@@ -725,6 +726,7 @@ class RayPPOTrainer:
         self.validation_generations_logger.log(self.config.trainer.logger, samples, self.global_steps)
 
     def _get_gen_batch(self, batch: DataProto) -> DataProto:
+        batch_size = len(batch)
         reward_model_keys = set({"data_source", "reward_model", "extra_info", "uid"}) & batch.non_tensor_batch.keys()
 
         # pop those keys for generation
@@ -734,6 +736,13 @@ class RayPPOTrainer:
             batch_keys=batch_keys_to_pop,
             non_tensor_batch_keys=list(non_tensor_batch_keys_to_pop),
         )
+
+        sid_sample_size = self.config.actor_rollout_ref.rollout.get("sid_constrained_sample_size", None)
+        if sid_sample_size is not None and sid_sample_size > 1:
+            gen_batch.non_tensor_batch["reward_model"] = copy_reward_models_for_generation(
+                batch.non_tensor_batch,
+                expected_size=batch_size,
+            )
 
         # For agent loop, we need reward model keys to compute score.
         if self.async_rollout_mode:
