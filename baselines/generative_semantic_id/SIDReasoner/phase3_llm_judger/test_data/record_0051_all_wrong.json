@@ -1,0 +1,137 @@
+{
+  "request_id": "checkpoint-record-0051",
+  "history": [
+    {
+      "sid": "<a_80><b_59><c_29>",
+      "title": "Resident Evil 5 - Playstation 3"
+    },
+    {
+      "sid": "<a_80><b_59><c_29>",
+      "title": "Resident Evil 5 - Playstation 3"
+    },
+    {
+      "sid": "<a_200><b_168><c_118>",
+      "title": "Mortal Kombat: Komplete Edition - Playstation 3"
+    },
+    {
+      "sid": "<a_74><b_128><c_20>",
+      "title": "Minecraft - PlayStation 4"
+    },
+    {
+      "sid": "<a_157><b_63><c_97>",
+      "title": "NIKE Toddlers Tanjun (TDV) Running Shoe"
+    },
+    {
+      "sid": "<a_39><b_182><c_232>",
+      "title": "Call of Duty: Black Ops Combo Pack - PlayStation 3"
+    },
+    {
+      "sid": "<a_231><b_237><c_131>",
+      "title": "WWE 2K16 - PlayStation 3"
+    },
+    {
+      "sid": "<a_39><b_20><c_73>",
+      "title": "Call of Duty: Black Ops III - Multiplayer Edition - PlayStation 3"
+    },
+    {
+      "sid": "<a_22><b_2><c_25>",
+      "title": "Minecraft: Story Mode - Season Disc - PlayStation 3"
+    }
+  ],
+  "target": {
+    "sid": "<a_189><b_154><c_99>",
+    "title": "MIZAR 5 Empty Standard Playstation 3 Replacement Cases (PS3 Replacement Cases)"
+  },
+  "candidates": [
+    {
+      "candidate_id": "beam-01",
+      "reasoning": "<think>\n<history_summary>\n- <a_80><b_59><c_29>, <a_80><b_59><c_29> => Two interactions are the same PlayStation 3 survival-horror action title with combat, exploration, and campaign-based play.\n- <a_200><b_168><c_118>, <a_231><b_237><c_131> => Two interactions are PlayStation 3 fighting games built around one-on-one matches, recognizable character rosters, and local multiplayer.\n- <a_74><b_128><c_20>, <a_39><b_182><c_232>, <a_39><b_20><c_73>, <a_22><b_2><c_25> => Other interactions cover sandbox building, first-person shooter modes, and episodic narrative adventure on PlayStation 3 and PlayStation 4.\n</history_summary>\n<future_interests>\n- [exploit] <a_80><b_59><c_29> => Possible future interest in additional survival-horror action centered on combat, exploration, and story campaigns.\n- [exploit] <a_200><b_168><c_118>, <a_231><b_237><c_131> => Possible future interest in more versus-focused fighting games with roster-based matchups and local competitive play.\n- [explore] <a_80><b_59><c_29> => Possible future interest in stealth-action games, reached through the explicit bridge of tense encounters and hostile-environment navigation rather than direct horror combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_140><b_50><c_3>",
+        "title": "Call of Duty: Ghosts - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-02",
+      "reasoning": "<think>\n<history_summary>\n- <a_80><b_59><c_29>, <a_80><b_59><c_29> => Two interactions are the same PlayStation 3 survival-horror action title with combat, exploration, and campaign-based play.\n- <a_200><b_168><c_118>, <a_231><b_237><c_131> => Two interactions are PlayStation 3 fighting games built around one-on-one matches, recognizable character rosters, and local multiplayer.\n- <a_74><b_128><c_20>, <a_39><b_182><c_232>, <a_39><b_20><c_73>, <a_22><b_2><c_25> => Other interactions cover sandbox building, first-person shooter modes, and episodic narrative adventure on PlayStation 3 and PlayStation 4.\n</history_summary>\n<future_interests>\n- [exploit] <a_80><b_59><c_29> => Possible future interest in additional survival-horror action centered on combat, exploration, and story campaigns.\n- [exploit] <a_200><b_168><c_118>, <a_231><b_237><c_131> => Possible future interest in more versus-focused fighting games with roster-based matchups and local competitive play.\n- [explore] <a_80><b_59><c_29> => Possible future interest in stealth-action games, reached through the explicit bridge of tense encounters and hostile-environment navigation rather than direct horror combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_231><b_107><c_24>",
+        "title": "WWE 2K15 - PlayStation 3"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-03",
+      "reasoning": "<think>\n<history_summary>\n- <a_80><b_59><c_29>, <a_80><b_59><c_29> => Two interactions are the same PlayStation 3 survival-horror action title with combat, exploration, and campaign-based play.\n- <a_200><b_168><c_118>, <a_231><b_237><c_131> => Two interactions are PlayStation 3 fighting games built around one-on-one matches, recognizable character rosters, and local multiplayer.\n- <a_74><b_128><c_20>, <a_39><b_182><c_232>, <a_39><b_20><c_73>, <a_22><b_2><c_25> => Other interactions cover sandbox building, first-person shooter modes, and episodic narrative adventure on PlayStation 3 and PlayStation 4.\n</history_summary>\n<future_interests>\n- [exploit] <a_80><b_59><c_29> => Possible future interest in additional survival-horror action centered on combat, exploration, and story campaigns.\n- [exploit] <a_200><b_168><c_118>, <a_231><b_237><c_131> => Possible future interest in more versus-focused fighting games with roster-based matchups and local competitive play.\n- [explore] <a_80><b_59><c_29> => Possible future interest in stealth-action games, reached through the explicit bridge of tense encounters and hostile-environment navigation rather than direct horror combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_80><b_69><c_85>",
+        "title": "Grand Theft Auto V - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-04",
+      "reasoning": "<think>\n<history_summary>\n- <a_80><b_59><c_29>, <a_80><b_59><c_29> => Two interactions are the same PlayStation 3 survival-horror action title with combat, exploration, and campaign-based play.\n- <a_200><b_168><c_118>, <a_231><b_237><c_131> => Two interactions are PlayStation 3 fighting games built around one-on-one matches, recognizable character rosters, and local multiplayer.\n- <a_74><b_128><c_20>, <a_39><b_182><c_232>, <a_39><b_20><c_73>, <a_22><b_2><c_25> => Other interactions cover sandbox building, first-person shooter modes, and episodic narrative adventure on PlayStation 3 and PlayStation 4.\n</history_summary>\n<future_interests>\n- [exploit] <a_80><b_59><c_29> => Possible future interest in additional survival-horror action centered on combat, exploration, and story campaigns.\n- [exploit] <a_200><b_168><c_118>, <a_231><b_237><c_131> => Possible future interest in more versus-focused fighting games with roster-based matchups and local competitive play.\n- [explore] <a_80><b_59><c_29> => Possible future interest in stealth-action games, reached through the explicit bridge of tense encounters and hostile-environment navigation rather than direct horror combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_231><b_107><c_4>",
+        "title": "WWE 2K15 - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-05",
+      "reasoning": "<think>\n<history_summary>\n- <a_80><b_59><c_29>, <a_80><b_59><c_29> => Two interactions are the same PlayStation 3 survival-horror action title with combat, exploration, and campaign-based play.\n- <a_200><b_168><c_118>, <a_231><b_237><c_131> => Two interactions are PlayStation 3 fighting games built around one-on-one matches, recognizable character rosters, and local multiplayer.\n- <a_74><b_128><c_20>, <a_39><b_182><c_232>, <a_39><b_20><c_73>, <a_22><b_2><c_25> => Other interactions cover sandbox building, first-person shooter modes, and episodic narrative adventure on PlayStation 3 and PlayStation 4.\n</history_summary>\n<future_interests>\n- [exploit] <a_80><b_59><c_29> => Possible future interest in additional survival-horror action centered on combat, exploration, and story campaigns.\n- [exploit] <a_200><b_168><c_118>, <a_231><b_237><c_131> => Possible future interest in more versus-focused fighting games with roster-based matchups and local competitive play.\n- [explore] <a_80><b_59><c_29> => Possible future interest in stealth-action games, reached through the explicit bridge of tense encounters and hostile-environment navigation rather than direct horror combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_201><b_190><c_179>",
+        "title": "Minecraft - PlayStation 3"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-06",
+      "reasoning": "<think>\n<history_summary>\n- <a_80><b_59><c_29>, <a_80><b_59><c_29> => Two interactions are the same PlayStation 3 survival-horror action title with combat, exploration, and campaign-based play.\n- <a_200><b_168><c_118>, <a_231><b_237><c_131> => Two interactions are PlayStation 3 fighting games built around one-on-one matches, recognizable character rosters, and local multiplayer.\n- <a_74><b_128><c_20>, <a_39><b_182><c_232>, <a_39><b_20><c_73>, <a_22><b_2><c_25> => Other interactions cover sandbox building, first-person shooter modes, and episodic narrative adventure on PlayStation 3 and PlayStation 4.\n</history_summary>\n<future_interests>\n- [exploit] <a_80><b_59><c_29> => Possible future interest in additional survival-horror action centered on combat, exploration, and story campaigns.\n- [exploit] <a_200><b_168><c_118>, <a_231><b_237><c_131> => Possible future interest in more versus-focused fighting games with roster-based matchups and local competitive play.\n- [explore] <a_80><b_59><c_29> => Possible future interest in stealth-action games, reached through the explicit bridge of tense encounters and hostile-environment navigation rather than direct horror combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_39><b_20><c_73>",
+        "title": "Call of Duty: Black Ops III - Multiplayer Edition - PlayStation 3"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-07",
+      "reasoning": "<think>\n<history_summary>\n- <a_80><b_59><c_29>, <a_80><b_59><c_29> => Two interactions are the same PlayStation 3 survival-horror action title with combat, exploration, and campaign-based play.\n- <a_200><b_168><c_118>, <a_231><b_237><c_131> => Two interactions are PlayStation 3 fighting games built around one-on-one matches, recognizable character rosters, and local multiplayer.\n- <a_74><b_128><c_20>, <a_39><b_182><c_232>, <a_39><b_20><c_73>, <a_22><b_2><c_25> => Other interactions cover sandbox building, first-person shooter modes, and episodic narrative adventure on PlayStation 3 and PlayStation 4.\n</history_summary>\n<future_interests>\n- [exploit] <a_80><b_59><c_29> => Possible future interest in additional survival-horror action centered on combat, exploration, and story campaigns.\n- [exploit] <a_200><b_168><c_118>, <a_231><b_237><c_131> => Possible future interest in more versus-focused fighting games with roster-based matchups and local competitive play.\n- [explore] <a_80><b_59><c_29> => Possible future interest in stealth-action games, reached through the explicit bridge of tense encounters and hostile-environment navigation rather than direct horror combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_201><b_151><c_255>",
+        "title": "Playstation Plus: 3 Month Membership [Digital Code]"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-08",
+      "reasoning": "<think>\n<history_summary>\n- <a_80><b_59><c_29>, <a_80><b_59><c_29> => Two interactions are the same PlayStation 3 survival-horror action title with combat, exploration, and campaign-based play.\n- <a_200><b_168><c_118>, <a_231><b_237><c_131> => Two interactions are PlayStation 3 fighting games built around one-on-one matches, recognizable character rosters, and local multiplayer.\n- <a_74><b_128><c_20>, <a_39><b_182><c_232>, <a_39><b_20><c_73>, <a_22><b_2><c_25> => Other interactions cover sandbox building, first-person shooter modes, and episodic narrative adventure on PlayStation 3 and PlayStation 4.\n</history_summary>\n<future_interests>\n- [exploit] <a_80><b_59><c_29> => Possible future interest in additional survival-horror action centered on combat, exploration, and story campaigns.\n- [exploit] <a_200><b_168><c_118>, <a_231><b_237><c_131> => Possible future interest in more versus-focused fighting games with roster-based matchups and local competitive play.\n- [explore] <a_80><b_59><c_29> => Possible future interest in stealth-action games, reached through the explicit bridge of tense encounters and hostile-environment navigation rather than direct horror combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_140><b_213><c_236>",
+        "title": "Watch Dogs - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-09",
+      "reasoning": "<think>\n<history_summary>\n- <a_80><b_59><c_29>, <a_80><b_59><c_29> => Two interactions are the same PlayStation 3 survival-horror action title with combat, exploration, and campaign-based play.\n- <a_200><b_168><c_118>, <a_231><b_237><c_131> => Two interactions are PlayStation 3 fighting games built around one-on-one matches, recognizable character rosters, and local multiplayer.\n- <a_74><b_128><c_20>, <a_39><b_182><c_232>, <a_39><b_20><c_73>, <a_22><b_2><c_25> => Other interactions cover sandbox building, first-person shooter modes, and episodic narrative adventure on PlayStation 3 and PlayStation 4.\n</history_summary>\n<future_interests>\n- [exploit] <a_80><b_59><c_29> => Possible future interest in additional survival-horror action centered on combat, exploration, and story campaigns.\n- [exploit] <a_200><b_168><c_118>, <a_231><b_237><c_131> => Possible future interest in more versus-focused fighting games with roster-based matchups and local competitive play.\n- [explore] <a_80><b_59><c_29> => Possible future interest in stealth-action games, reached through the explicit bridge of tense encounters and hostile-environment navigation rather than direct horror combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_140><b_10><c_248>",
+        "title": "Call Of Duty: Infinite Warfare - Legacy Edition - PS4 [Digital Code]"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-10",
+      "reasoning": "<think>\n<history_summary>\n- <a_80><b_59><c_29>, <a_80><b_59><c_29> => Two interactions are the same PlayStation 3 survival-horror action title with combat, exploration, and campaign-based play.\n- <a_200><b_168><c_118>, <a_231><b_237><c_131> => Two interactions are PlayStation 3 fighting games built around one-on-one matches, recognizable character rosters, and local multiplayer.\n- <a_74><b_128><c_20>, <a_39><b_182><c_232>, <a_39><b_20><c_73>, <a_22><b_2><c_25> => Other interactions cover sandbox building, first-person shooter modes, and episodic narrative adventure on PlayStation 3 and PlayStation 4.\n</history_summary>\n<future_interests>\n- [exploit] <a_80><b_59><c_29> => Possible future interest in additional survival-horror action centered on combat, exploration, and story campaigns.\n- [exploit] <a_200><b_168><c_118>, <a_231><b_237><c_131> => Possible future interest in more versus-focused fighting games with roster-based matchups and local competitive play.\n- [explore] <a_80><b_59><c_29> => Possible future interest in stealth-action games, reached through the explicit bridge of tense encounters and hostile-environment navigation rather than direct horror combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_140><b_136><c_2>",
+        "title": "Call of Duty 3 - Playstation 3"
+      },
+      "hard_valid": true
+    }
+  ]
+}
