@@ -70,16 +70,17 @@ class MyRewardComputer:
         ground_truth = extract_sid_tokens(ground_truth)[:3]
         beam_predictions = (extra_info or {}).get("sid_beam_predictions")
         if not beam_predictions:
-            raise ValueError("sid_beam_predictions are required for NDCG@10 reward")
+            raise ValueError("sid_beam_predictions are required for binary exact-match reward")
 
         ndcg_at_10, beam_rank = calculate_ndcg_at_10(beam_predictions, ground_truth)
+        exact_match_reward = float(beam_rank > 0)
         history_sids = (extra_info or {}).get("history_sids")
         if history_sids is None:
             history_sids = extract_history_sids_from_question((extra_info or {}).get("question"))
         process_rewards = calculate_process_rewards(solution_str, history_sids)
         return {
-            "score": ndcg_at_10,
-            "sid_match_reward": ndcg_at_10,
+            "score": exact_match_reward,
+            "sid_match_reward": exact_match_reward,
             **process_rewards,
             "ndcg_at_10": ndcg_at_10,
             "beam_rank": float(beam_rank),
@@ -89,7 +90,7 @@ class MyRewardComputer:
             "hit_at_10": float(beam_rank > 0),
             "prefix_1_match": float(answer is not None and answer[0] == ground_truth[0]),
             "prefix_2_match": float(answer is not None and answer[:2] == ground_truth[:2]),
-            "exact_match": float(beam_rank == 1),
+            "exact_match": exact_match_reward,
         }
 
 

@@ -56,9 +56,11 @@ passes the custom rule-based reward directly into GRPO advantage estimation.
 ### Constrained beam with process and diversity rewards
 
 Each of the 16 trajectories samples one reasoning and then runs catalog-constrained
-beam-10 over the three-token SID path. The primary reward remains the pure beam
-NDCG@10. The same beam provides a first-level diversity proxy at no additional
-generation cost:
+beam-10 over the three-token SID path. The primary outcome reward is binary: it
+is `1` when the target SID exactly matches any candidate in beam-10 and `0`
+otherwise. Beam rank, HR@k, and NDCG@k remain diagnostics only and do not enter
+the training reward. The same beam provides a first-level diversity proxy at no
+additional generation cost:
 
 ```text
 diversity_reward = unique first SID tokens in beam-10 / 10
@@ -85,9 +87,9 @@ monitoring-only and does not enter `process_reward`. Any malformed line, invalid
 line count, missing exploit/explore mode, non-history citation, or missing latest
 history SID in `history_summary` makes the process reward zero.
 
-Beam NDCG, process, and diversity rewards are normalized independently within
+Binary exact-match, process, and diversity rewards are normalized independently within
 each prompt's 16 trajectories. The final reasoning-token advantage is
-`A_beam + 0.1 * A_process + 0.1 * A_diversity`. Constrained beam SID tokens and
+`A_exact_match + 0.1 * A_process + 0.1 * A_diversity`. Constrained beam SID tokens and
 EOS remain outside the actor loss. W&B logs the process components, strict process
 reward, first-level diversity count on the 1-10 scale, and process/diversity
 active-group rates separately from recommendation metrics. Validation reports the
@@ -117,7 +119,7 @@ ablation.
 
 The script **defaults to the `Video_Games` domain end‑to‑end** — data, reward, and the
 **wandb run name** all match the Games checkpoint above. Concretely the script sets
-`trainer.experiment_name=Video_Games_stage3_rl_constrained_sid_beam_process_diversity_reward_no_kl_Qwen3-1.7B` (this is the wandb run
+`trainer.experiment_name=Video_Games_stage3_rl_constrained_sid_beam_binary_exact_match_process_diversity_reward_no_kl_Qwen3-1.7B` (this is the wandb run
 name, under project `SIDReasoner_Phase3_MetricsV2`), `data.*=.../Video_Games/*.parquet`, and
 `custom_reward_function.path=.../direct_recommendation_StepRule_Games.py`. So the
 launch command above is all you need — you do **not** have to override data / reward /

@@ -174,7 +174,7 @@ class BeamProcessRewardTest(unittest.TestCase):
         response = VALID_REASONING.replace("<think>\n", "", 1)
         self.assertEqual(calculate_process_rewards(response, HISTORY_SIDS)["process_reward"], 1.0)
 
-    def test_process_reward_is_separate_from_beam_ndcg(self):
+    def test_process_reward_is_separate_from_binary_exact_match_reward(self):
         expected_ndcg = 1.0 / math.log2(3.0)
         for domain in ("Games", "Office", "Industrial"):
             with self.subTest(domain=domain):
@@ -191,8 +191,10 @@ class BeamProcessRewardTest(unittest.TestCase):
                     },
                 )
 
-                self.assertAlmostEqual(reward["score"], expected_ndcg)
-                self.assertAlmostEqual(reward["sid_match_reward"], expected_ndcg)
+                self.assertEqual(reward["score"], 1.0)
+                self.assertEqual(reward["sid_match_reward"], 1.0)
+                self.assertEqual(reward["exact_match"], 1.0)
+                self.assertAlmostEqual(reward["ndcg_at_10"], expected_ndcg)
                 self.assertEqual(reward["process_reward"], 1.0)
 
     def test_legacy_question_fallback(self):
@@ -207,6 +209,22 @@ class BeamProcessRewardTest(unittest.TestCase):
         )
         self.assertEqual(reward["score"], 1.0)
         self.assertEqual(reward["process_reward"], 1.0)
+
+    def test_missing_exact_match_receives_zero_binary_reward(self):
+        reward = load_reward_module("Games").MyRewardComputer().compute(
+            data_source="rec/test",
+            solution_str=VALID_REASONING,
+            ground_truth="<a_1><b_2><c_3>",
+            extra_info={
+                "history_sids": HISTORY_SIDS,
+                "sid_beam_predictions": ["<a_9><b_9><c_9>"],
+            },
+        )
+
+        self.assertEqual(reward["score"], 0.0)
+        self.assertEqual(reward["sid_match_reward"], 0.0)
+        self.assertEqual(reward["exact_match"], 0.0)
+        self.assertEqual(reward["ndcg_at_10"], 0.0)
 
 
 if __name__ == "__main__":
