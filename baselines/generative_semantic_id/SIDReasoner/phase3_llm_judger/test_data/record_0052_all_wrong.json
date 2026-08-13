@@ -1,0 +1,117 @@
+{
+  "request_id": "checkpoint-record-0052",
+  "history": [
+    {
+      "sid": "<a_61><b_170><c_90>",
+      "title": "Buffalo iBuffalo Classic USB Gamepad for PC"
+    },
+    {
+      "sid": "<a_141><b_202><c_181>",
+      "title": "Fallout: New Vegas Ultimate Edition - PC"
+    },
+    {
+      "sid": "<a_202><b_58><c_122>",
+      "title": "Logitech G910 Orion Spark RGB Mechanical Gaming Keyboard &ndash; 9 Programmable Buttons, Dedicated Media Controls"
+    },
+    {
+      "sid": "<a_202><b_33><c_133>",
+      "title": "G810 Orion Spectrum RGB Mechanical Gaming Keyboard &ndash; Easy-Access Media Control, Backlit Multicolor LED, Romer-G Mechanical Key Switches"
+    }
+  ],
+  "target": {
+    "sid": "<a_113><b_205><c_51>",
+    "title": "Retro Link GameCube Style USB Wired Controller"
+  },
+  "candidates": [
+    {
+      "candidate_id": "beam-01",
+      "reasoning": "<think>\n<history_summary>\n- <a_61><b_170><c_90> => USB gamepad hardware with a retro-style layout for PC and emulation play.\n- <a_141><b_202><c_181> => PC open-world role-playing game featuring exploration, faction alignment, and choice-driven narrative.\n</history_summary>\n<future_interests>\n- [exploit] <a_141><b_202><c_181> => PC open-world role-playing games centered on exploration, faction choice, and story-driven progression.\n- [explore] <a_141><b_202><c_181> => narrative adventure or choice-based interactive fiction, bridged by the same emphasis on branching decisions and consequence.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_202><b_120><c_89>",
+        "title": "Logitech G900 Chaos Spectrum Professional Grade Wired/Wireless Gaming Mouse, Ambidextrous Mouse"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-02",
+      "reasoning": "<think>\n<history_summary>\n- <a_61><b_170><c_90> => USB gamepad hardware with a retro-style layout for PC and emulation play.\n- <a_141><b_202><c_181> => PC open-world role-playing game featuring exploration, faction alignment, and choice-driven narrative.\n</history_summary>\n<future_interests>\n- [exploit] <a_141><b_202><c_181> => PC open-world role-playing games centered on exploration, faction choice, and story-driven progression.\n- [explore] <a_141><b_202><c_181> => narrative adventure or choice-based interactive fiction, bridged by the same emphasis on branching decisions and consequence.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_202><b_34><c_39>",
+        "title": "Logitech G303 Daedalus Apex Performance Edition Gaming Mouse"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-03",
+      "reasoning": "<think>\n<history_summary>\n- <a_61><b_170><c_90> => USB gamepad hardware with a retro-style layout for PC and emulation play.\n- <a_141><b_202><c_181> => PC open-world role-playing game featuring exploration, faction alignment, and choice-driven narrative.\n</history_summary>\n<future_interests>\n- [exploit] <a_141><b_202><c_181> => PC open-world role-playing games centered on exploration, faction choice, and story-driven progression.\n- [explore] <a_141><b_202><c_181> => narrative adventure or choice-based interactive fiction, bridged by the same emphasis on branching decisions and consequence.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_202><b_82><c_172>",
+        "title": "Logitech G502 Proteus Core Tunable Gaming Mouse with Fully Customizable Surface, Weight and Balance Tuning"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-04",
+      "reasoning": "<think>\n<history_summary>\n- <a_61><b_170><c_90> => USB gamepad hardware with a retro-style layout for PC and emulation play.\n- <a_141><b_202><c_181> => PC open-world role-playing game featuring exploration, faction alignment, and choice-driven narrative.\n</history_summary>\n<future_interests>\n- [exploit] <a_141><b_202><c_181> => PC open-world role-playing games centered on exploration, faction choice, and story-driven progression.\n- [explore] <a_141><b_202><c_181> => narrative adventure or choice-based interactive fiction, bridged by the same emphasis on branching decisions and consequence.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_202><b_16><c_110>",
+        "title": "Razer DeathAdder Expert - Optical Esports Ergonomic Professional-Grade Gaming Mouse - 6,400 Adjustible DPI"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-05",
+      "reasoning": "<think>\n<history_summary>\n- <a_61><b_170><c_90> => USB gamepad hardware with a retro-style layout for PC and emulation play.\n- <a_141><b_202><c_181> => PC open-world role-playing game featuring exploration, faction alignment, and choice-driven narrative.\n</history_summary>\n<future_interests>\n- [exploit] <a_141><b_202><c_181> => PC open-world role-playing games centered on exploration, faction choice, and story-driven progression.\n- [explore] <a_141><b_202><c_181> => narrative adventure or choice-based interactive fiction, bridged by the same emphasis on branching decisions and consequence.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_202><b_200><c_21>",
+        "title": "Logitech G300s Optical Ambidextrous  Gaming Mouse &ndash; 9 Programmable Buttons, Onboard Memory"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-06",
+      "reasoning": "<think>\n<history_summary>\n- <a_61><b_170><c_90> => USB gamepad hardware with a retro-style layout for PC and emulation play.\n- <a_141><b_202><c_181> => PC open-world role-playing game featuring exploration, faction alignment, and choice-driven narrative.\n</history_summary>\n<future_interests>\n- [exploit] <a_141><b_202><c_181> => PC open-world role-playing games centered on exploration, faction choice, and story-driven progression.\n- [explore] <a_141><b_202><c_181> => narrative adventure or choice-based interactive fiction, bridged by the same emphasis on branching decisions and consequence.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_202><b_200><c_67>",
+        "title": "Logitech G600 MMO Gaming Mouse, RGB Backlit, 20 Programmable Buttons"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-07",
+      "reasoning": "<think>\n<history_summary>\n- <a_61><b_170><c_90> => USB gamepad hardware with a retro-style layout for PC and emulation play.\n- <a_141><b_202><c_181> => PC open-world role-playing game featuring exploration, faction alignment, and choice-driven narrative.\n</history_summary>\n<future_interests>\n- [exploit] <a_141><b_202><c_181> => PC open-world role-playing games centered on exploration, faction choice, and story-driven progression.\n- [explore] <a_141><b_202><c_181> => narrative adventure or choice-based interactive fiction, bridged by the same emphasis on branching decisions and consequence.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_202><b_67><c_61>",
+        "title": "G710 Mechanical Gaming Keyboard"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-08",
+      "reasoning": "<think>\n<history_summary>\n- <a_61><b_170><c_90> => USB gamepad hardware with a retro-style layout for PC and emulation play.\n- <a_141><b_202><c_181> => PC open-world role-playing game featuring exploration, faction alignment, and choice-driven narrative.\n</history_summary>\n<future_interests>\n- [exploit] <a_141><b_202><c_181> => PC open-world role-playing games centered on exploration, faction choice, and story-driven progression.\n- [explore] <a_141><b_202><c_181> => narrative adventure or choice-based interactive fiction, bridged by the same emphasis on branching decisions and consequence.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_202><b_34><c_140>",
+        "title": "Logitech G402 Hyperion Fury FPS Gaming Mouse"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-09",
+      "reasoning": "<think>\n<history_summary>\n- <a_61><b_170><c_90> => USB gamepad hardware with a retro-style layout for PC and emulation play.\n- <a_141><b_202><c_181> => PC open-world role-playing game featuring exploration, faction alignment, and choice-driven narrative.\n</history_summary>\n<future_interests>\n- [exploit] <a_141><b_202><c_181> => PC open-world role-playing games centered on exploration, faction choice, and story-driven progression.\n- [explore] <a_141><b_202><c_181> => narrative adventure or choice-based interactive fiction, bridged by the same emphasis on branching decisions and consequence.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_202><b_20><c_237>",
+        "title": "HyperX Cloud Gaming Headset for PC, Xbox One&sup1;, PS4, PS4 PRO, Xbox One S&sup1;, Nnintedo Switch (KHX-H3CL/WR) - Black"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-10",
+      "reasoning": "<think>\n<history_summary>\n- <a_61><b_170><c_90> => USB gamepad hardware with a retro-style layout for PC and emulation play.\n- <a_141><b_202><c_181> => PC open-world role-playing game featuring exploration, faction alignment, and choice-driven narrative.\n</history_summary>\n<future_interests>\n- [exploit] <a_141><b_202><c_181> => PC open-world role-playing games centered on exploration, faction choice, and story-driven progression.\n- [explore] <a_141><b_202><c_181> => narrative adventure or choice-based interactive fiction, bridged by the same emphasis on branching decisions and consequence.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_202><b_33><c_133>",
+        "title": "G810 Orion Spectrum RGB Mechanical Gaming Keyboard &ndash; Easy-Access Media Control, Backlit Multicolor LED, Romer-G Mechanical Key Switches"
+      },
+      "hard_valid": true
+    }
+  ]
+}
