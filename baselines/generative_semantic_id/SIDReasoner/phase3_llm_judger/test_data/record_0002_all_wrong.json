@@ -1,0 +1,117 @@
+{
+  "request_id": "checkpoint-record-0002",
+  "history": [
+    {
+      "sid": "<a_191><b_246><c_101>",
+      "title": "Metro Redux - PlayStation 4"
+    },
+    {
+      "sid": "<a_194><b_87><c_112>",
+      "title": "Dark Souls III - PlayStation 4 Standard Edition"
+    },
+    {
+      "sid": "<a_231><b_2><c_193>",
+      "title": "Madden NFL 17 - Standard Edition - PlayStation 4"
+    },
+    {
+      "sid": "<a_39><b_51><c_188>",
+      "title": "Titanfall 2 - PlayStation 4"
+    }
+  ],
+  "target": {
+    "sid": "<a_194><b_97><c_127>",
+    "title": "Demon's Souls"
+  },
+  "candidates": [
+    {
+      "candidate_id": "beam-01",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_246><c_101>, <a_194><b_87><c_112> => Two PlayStation 4 titles combine combat with exploration in dark, hostile settings, with one emphasizing narrative survival-horror and the other emphasizing challenging action RPG progression.\n- <a_231><b_2><c_193> => One PlayStation 4 title is a football simulation centered on franchise management, roster decisions, and head-to-head play.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_246><c_101>, <a_194><b_87><c_112> => Possible future interest in single-player action games built around exploration, combat, and oppressive atmosphere, directly instantiated by both cited titles.\n- [explore] <a_191><b_246><c_101> => Possible future interest in investigative narrative games, reached through the explicit bridge of story-driven survival in a dangerous world rather than pure combat focus.\n- [exploit] <a_231><b_2><c_193> => Possible future interest in sports simulation games focused on team management, roster control, and competitive match play, directly instantiated by the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_24><b_72><c_142>",
+        "title": "Horizon Zero Dawn - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-02",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_246><c_101>, <a_194><b_87><c_112> => Two PlayStation 4 titles combine combat with exploration in dark, hostile settings, with one emphasizing narrative survival-horror and the other emphasizing challenging action RPG progression.\n- <a_231><b_2><c_193> => One PlayStation 4 title is a football simulation centered on franchise management, roster decisions, and head-to-head play.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_246><c_101>, <a_194><b_87><c_112> => Possible future interest in single-player action games built around exploration, combat, and oppressive atmosphere, directly instantiated by both cited titles.\n- [explore] <a_191><b_246><c_101> => Possible future interest in investigative narrative games, reached through the explicit bridge of story-driven survival in a dangerous world rather than pure combat focus.\n- [exploit] <a_231><b_2><c_193> => Possible future interest in sports simulation games focused on team management, roster control, and competitive match play, directly instantiated by the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_201><b_18><c_56>",
+        "title": "Mass Effect Andromeda - Pre-load - PS4 Digital Code"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-03",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_246><c_101>, <a_194><b_87><c_112> => Two PlayStation 4 titles combine combat with exploration in dark, hostile settings, with one emphasizing narrative survival-horror and the other emphasizing challenging action RPG progression.\n- <a_231><b_2><c_193> => One PlayStation 4 title is a football simulation centered on franchise management, roster decisions, and head-to-head play.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_246><c_101>, <a_194><b_87><c_112> => Possible future interest in single-player action games built around exploration, combat, and oppressive atmosphere, directly instantiated by both cited titles.\n- [explore] <a_191><b_246><c_101> => Possible future interest in investigative narrative games, reached through the explicit bridge of story-driven survival in a dangerous world rather than pure combat focus.\n- [exploit] <a_231><b_2><c_193> => Possible future interest in sports simulation games focused on team management, roster control, and competitive match play, directly instantiated by the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_201><b_31><c_107>",
+        "title": "Uncharted 4: A Thief's End - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-04",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_246><c_101>, <a_194><b_87><c_112> => Two PlayStation 4 titles combine combat with exploration in dark, hostile settings, with one emphasizing narrative survival-horror and the other emphasizing challenging action RPG progression.\n- <a_231><b_2><c_193> => One PlayStation 4 title is a football simulation centered on franchise management, roster decisions, and head-to-head play.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_246><c_101>, <a_194><b_87><c_112> => Possible future interest in single-player action games built around exploration, combat, and oppressive atmosphere, directly instantiated by both cited titles.\n- [explore] <a_191><b_246><c_101> => Possible future interest in investigative narrative games, reached through the explicit bridge of story-driven survival in a dangerous world rather than pure combat focus.\n- [exploit] <a_231><b_2><c_193> => Possible future interest in sports simulation games focused on team management, roster control, and competitive match play, directly instantiated by the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_123><b_58><c_78>",
+        "title": "Resident Evil 7: Biohazard - PS4 Digital Code"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-05",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_246><c_101>, <a_194><b_87><c_112> => Two PlayStation 4 titles combine combat with exploration in dark, hostile settings, with one emphasizing narrative survival-horror and the other emphasizing challenging action RPG progression.\n- <a_231><b_2><c_193> => One PlayStation 4 title is a football simulation centered on franchise management, roster decisions, and head-to-head play.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_246><c_101>, <a_194><b_87><c_112> => Possible future interest in single-player action games built around exploration, combat, and oppressive atmosphere, directly instantiated by both cited titles.\n- [explore] <a_191><b_246><c_101> => Possible future interest in investigative narrative games, reached through the explicit bridge of story-driven survival in a dangerous world rather than pure combat focus.\n- [exploit] <a_231><b_2><c_193> => Possible future interest in sports simulation games focused on team management, roster control, and competitive match play, directly instantiated by the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_200><b_186><c_92>",
+        "title": "Mafia III - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-06",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_246><c_101>, <a_194><b_87><c_112> => Two PlayStation 4 titles combine combat with exploration in dark, hostile settings, with one emphasizing narrative survival-horror and the other emphasizing challenging action RPG progression.\n- <a_231><b_2><c_193> => One PlayStation 4 title is a football simulation centered on franchise management, roster decisions, and head-to-head play.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_246><c_101>, <a_194><b_87><c_112> => Possible future interest in single-player action games built around exploration, combat, and oppressive atmosphere, directly instantiated by both cited titles.\n- [explore] <a_191><b_246><c_101> => Possible future interest in investigative narrative games, reached through the explicit bridge of story-driven survival in a dangerous world rather than pure combat focus.\n- [exploit] <a_231><b_2><c_193> => Possible future interest in sports simulation games focused on team management, roster control, and competitive match play, directly instantiated by the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_194><b_15><c_66>",
+        "title": "Dishonored 2 - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-07",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_246><c_101>, <a_194><b_87><c_112> => Two PlayStation 4 titles combine combat with exploration in dark, hostile settings, with one emphasizing narrative survival-horror and the other emphasizing challenging action RPG progression.\n- <a_231><b_2><c_193> => One PlayStation 4 title is a football simulation centered on franchise management, roster decisions, and head-to-head play.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_246><c_101>, <a_194><b_87><c_112> => Possible future interest in single-player action games built around exploration, combat, and oppressive atmosphere, directly instantiated by both cited titles.\n- [explore] <a_191><b_246><c_101> => Possible future interest in investigative narrative games, reached through the explicit bridge of story-driven survival in a dangerous world rather than pure combat focus.\n- [exploit] <a_231><b_2><c_193> => Possible future interest in sports simulation games focused on team management, roster control, and competitive match play, directly instantiated by the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_39><b_51><c_188>",
+        "title": "Titanfall 2 - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-08",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_246><c_101>, <a_194><b_87><c_112> => Two PlayStation 4 titles combine combat with exploration in dark, hostile settings, with one emphasizing narrative survival-horror and the other emphasizing challenging action RPG progression.\n- <a_231><b_2><c_193> => One PlayStation 4 title is a football simulation centered on franchise management, roster decisions, and head-to-head play.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_246><c_101>, <a_194><b_87><c_112> => Possible future interest in single-player action games built around exploration, combat, and oppressive atmosphere, directly instantiated by both cited titles.\n- [explore] <a_191><b_246><c_101> => Possible future interest in investigative narrative games, reached through the explicit bridge of story-driven survival in a dangerous world rather than pure combat focus.\n- [exploit] <a_231><b_2><c_193> => Possible future interest in sports simulation games focused on team management, roster control, and competitive match play, directly instantiated by the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_201><b_213><c_242>",
+        "title": "The Last of Us Remastered - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-09",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_246><c_101>, <a_194><b_87><c_112> => Two PlayStation 4 titles combine combat with exploration in dark, hostile settings, with one emphasizing narrative survival-horror and the other emphasizing challenging action RPG progression.\n- <a_231><b_2><c_193> => One PlayStation 4 title is a football simulation centered on franchise management, roster decisions, and head-to-head play.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_246><c_101>, <a_194><b_87><c_112> => Possible future interest in single-player action games built around exploration, combat, and oppressive atmosphere, directly instantiated by both cited titles.\n- [explore] <a_191><b_246><c_101> => Possible future interest in investigative narrative games, reached through the explicit bridge of story-driven survival in a dangerous world rather than pure combat focus.\n- [exploit] <a_231><b_2><c_193> => Possible future interest in sports simulation games focused on team management, roster control, and competitive match play, directly instantiated by the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_201><b_209><c_68>",
+        "title": "The Last Guardian - Collector's Edition - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-10",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_246><c_101>, <a_194><b_87><c_112> => Two PlayStation 4 titles combine combat with exploration in dark, hostile settings, with one emphasizing narrative survival-horror and the other emphasizing challenging action RPG progression.\n- <a_231><b_2><c_193> => One PlayStation 4 title is a football simulation centered on franchise management, roster decisions, and head-to-head play.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_246><c_101>, <a_194><b_87><c_112> => Possible future interest in single-player action games built around exploration, combat, and oppressive atmosphere, directly instantiated by both cited titles.\n- [explore] <a_191><b_246><c_101> => Possible future interest in investigative narrative games, reached through the explicit bridge of story-driven survival in a dangerous world rather than pure combat focus.\n- [exploit] <a_231><b_2><c_193> => Possible future interest in sports simulation games focused on team management, roster control, and competitive match play, directly instantiated by the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_24><b_96><c_27>",
+        "title": "Rise of the Tomb Raider: 20 Year Celebration - PlayStation 4"
+      },
+      "hard_valid": true
+    }
+  ]
+}
