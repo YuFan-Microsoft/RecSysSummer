@@ -1,0 +1,125 @@
+{
+  "request_id": "checkpoint-record-0004",
+  "history": [
+    {
+      "sid": "<a_191><b_10><c_232>",
+      "title": "Watch Dogs 2 - PlayStation 4"
+    },
+    {
+      "sid": "<a_74><b_218><c_206>",
+      "title": "Ratchet & Clank - PlayStation 4"
+    },
+    {
+      "sid": "<a_24><b_72><c_142>",
+      "title": "Horizon Zero Dawn - PlayStation 4"
+    },
+    {
+      "sid": "<a_21><b_94><c_61>",
+      "title": "CorpCo 6ft AC Power Cord for Sony PlayStation 4 (PS4)"
+    },
+    {
+      "sid": "<a_86><b_68><c_56>",
+      "title": "Deadpool - PlayStation 4"
+    },
+    {
+      "sid": "<a_61><b_251><c_51>",
+      "title": "DualShock 4 Wireless Controller for PlayStation 4 - Jet Black [Old Model]"
+    }
+  ],
+  "target": {
+    "sid": "<a_201><b_31><c_107>",
+    "title": "Uncharted 4: A Thief's End - PlayStation 4"
+  },
+  "candidates": [
+    {
+      "candidate_id": "beam-01",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_10><c_232>, <a_74><b_218><c_206>, <a_24><b_72><c_142>, <a_86><b_68><c_56> => Four entries are PlayStation 4 games spanning open-world action-adventure, platforming, and action-combat formats.\n- <a_21><b_94><c_61>, <a_61><b_251><c_51> => Two entries are PlayStation 4 hardware accessories covering console power and wireless controller input.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_10><c_232>, <a_24><b_72><c_142> => Possible future interest in single-player action-adventure games built around exploration, combat, and story progression, directly instantiated by both cited entries.\n- [exploit] <a_74><b_218><c_206>, <a_86><b_68><c_56> => Possible future interest in character-driven action-platform or action-adventure games with humor, stylized presentation, and accessible combat, directly instantiated by both cited entries.\n- [explore] <a_191><b_10><c_232> => Possible future interest in systemic sandbox or hacking-style puzzle experiences, reached through the explicit bridge of manipulating connected infrastructure and environments rather than relying only on direct combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_61><b_251><c_51>",
+        "title": "DualShock 4 Wireless Controller for PlayStation 4 - Jet Black [Old Model]"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-02",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_10><c_232>, <a_74><b_218><c_206>, <a_24><b_72><c_142>, <a_86><b_68><c_56> => Four entries are PlayStation 4 games spanning open-world action-adventure, platforming, and action-combat formats.\n- <a_21><b_94><c_61>, <a_61><b_251><c_51> => Two entries are PlayStation 4 hardware accessories covering console power and wireless controller input.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_10><c_232>, <a_24><b_72><c_142> => Possible future interest in single-player action-adventure games built around exploration, combat, and story progression, directly instantiated by both cited entries.\n- [exploit] <a_74><b_218><c_206>, <a_86><b_68><c_56> => Possible future interest in character-driven action-platform or action-adventure games with humor, stylized presentation, and accessible combat, directly instantiated by both cited entries.\n- [explore] <a_191><b_10><c_232> => Possible future interest in systemic sandbox or hacking-style puzzle experiences, reached through the explicit bridge of manipulating connected infrastructure and environments rather than relying only on direct combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_201><b_31><c_107>",
+        "title": "Uncharted 4: A Thief's End - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-03",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_10><c_232>, <a_74><b_218><c_206>, <a_24><b_72><c_142>, <a_86><b_68><c_56> => Four entries are PlayStation 4 games spanning open-world action-adventure, platforming, and action-combat formats.\n- <a_21><b_94><c_61>, <a_61><b_251><c_51> => Two entries are PlayStation 4 hardware accessories covering console power and wireless controller input.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_10><c_232>, <a_24><b_72><c_142> => Possible future interest in single-player action-adventure games built around exploration, combat, and story progression, directly instantiated by both cited entries.\n- [exploit] <a_74><b_218><c_206>, <a_86><b_68><c_56> => Possible future interest in character-driven action-platform or action-adventure games with humor, stylized presentation, and accessible combat, directly instantiated by both cited entries.\n- [explore] <a_191><b_10><c_232> => Possible future interest in systemic sandbox or hacking-style puzzle experiences, reached through the explicit bridge of manipulating connected infrastructure and environments rather than relying only on direct combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_61><b_251><c_144>",
+        "title": "DualShock 4 Wireless Controller for PlayStation 4 - Gray Blue"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-04",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_10><c_232>, <a_74><b_218><c_206>, <a_24><b_72><c_142>, <a_86><b_68><c_56> => Four entries are PlayStation 4 games spanning open-world action-adventure, platforming, and action-combat formats.\n- <a_21><b_94><c_61>, <a_61><b_251><c_51> => Two entries are PlayStation 4 hardware accessories covering console power and wireless controller input.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_10><c_232>, <a_24><b_72><c_142> => Possible future interest in single-player action-adventure games built around exploration, combat, and story progression, directly instantiated by both cited entries.\n- [exploit] <a_74><b_218><c_206>, <a_86><b_68><c_56> => Possible future interest in character-driven action-platform or action-adventure games with humor, stylized presentation, and accessible combat, directly instantiated by both cited entries.\n- [explore] <a_191><b_10><c_232> => Possible future interest in systemic sandbox or hacking-style puzzle experiences, reached through the explicit bridge of manipulating connected infrastructure and environments rather than relying only on direct combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_21><b_94><c_61>",
+        "title": "CorpCo 6ft AC Power Cord for Sony PlayStation 4 (PS4)"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-05",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_10><c_232>, <a_74><b_218><c_206>, <a_24><b_72><c_142>, <a_86><b_68><c_56> => Four entries are PlayStation 4 games spanning open-world action-adventure, platforming, and action-combat formats.\n- <a_21><b_94><c_61>, <a_61><b_251><c_51> => Two entries are PlayStation 4 hardware accessories covering console power and wireless controller input.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_10><c_232>, <a_24><b_72><c_142> => Possible future interest in single-player action-adventure games built around exploration, combat, and story progression, directly instantiated by both cited entries.\n- [exploit] <a_74><b_218><c_206>, <a_86><b_68><c_56> => Possible future interest in character-driven action-platform or action-adventure games with humor, stylized presentation, and accessible combat, directly instantiated by both cited entries.\n- [explore] <a_191><b_10><c_232> => Possible future interest in systemic sandbox or hacking-style puzzle experiences, reached through the explicit bridge of manipulating connected infrastructure and environments rather than relying only on direct combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_201><b_213><c_242>",
+        "title": "The Last of Us Remastered - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-06",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_10><c_232>, <a_74><b_218><c_206>, <a_24><b_72><c_142>, <a_86><b_68><c_56> => Four entries are PlayStation 4 games spanning open-world action-adventure, platforming, and action-combat formats.\n- <a_21><b_94><c_61>, <a_61><b_251><c_51> => Two entries are PlayStation 4 hardware accessories covering console power and wireless controller input.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_10><c_232>, <a_24><b_72><c_142> => Possible future interest in single-player action-adventure games built around exploration, combat, and story progression, directly instantiated by both cited entries.\n- [exploit] <a_74><b_218><c_206>, <a_86><b_68><c_56> => Possible future interest in character-driven action-platform or action-adventure games with humor, stylized presentation, and accessible combat, directly instantiated by both cited entries.\n- [explore] <a_191><b_10><c_232> => Possible future interest in systemic sandbox or hacking-style puzzle experiences, reached through the explicit bridge of manipulating connected infrastructure and environments rather than relying only on direct combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_24><b_96><c_27>",
+        "title": "Rise of the Tomb Raider: 20 Year Celebration - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-07",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_10><c_232>, <a_74><b_218><c_206>, <a_24><b_72><c_142>, <a_86><b_68><c_56> => Four entries are PlayStation 4 games spanning open-world action-adventure, platforming, and action-combat formats.\n- <a_21><b_94><c_61>, <a_61><b_251><c_51> => Two entries are PlayStation 4 hardware accessories covering console power and wireless controller input.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_10><c_232>, <a_24><b_72><c_142> => Possible future interest in single-player action-adventure games built around exploration, combat, and story progression, directly instantiated by both cited entries.\n- [exploit] <a_74><b_218><c_206>, <a_86><b_68><c_56> => Possible future interest in character-driven action-platform or action-adventure games with humor, stylized presentation, and accessible combat, directly instantiated by both cited entries.\n- [explore] <a_191><b_10><c_232> => Possible future interest in systemic sandbox or hacking-style puzzle experiences, reached through the explicit bridge of manipulating connected infrastructure and environments rather than relying only on direct combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_74><b_115><c_154>",
+        "title": "Injustice 2 - PlayStation 4 Standard Edition with Comic"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-08",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_10><c_232>, <a_74><b_218><c_206>, <a_24><b_72><c_142>, <a_86><b_68><c_56> => Four entries are PlayStation 4 games spanning open-world action-adventure, platforming, and action-combat formats.\n- <a_21><b_94><c_61>, <a_61><b_251><c_51> => Two entries are PlayStation 4 hardware accessories covering console power and wireless controller input.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_10><c_232>, <a_24><b_72><c_142> => Possible future interest in single-player action-adventure games built around exploration, combat, and story progression, directly instantiated by both cited entries.\n- [exploit] <a_74><b_218><c_206>, <a_86><b_68><c_56> => Possible future interest in character-driven action-platform or action-adventure games with humor, stylized presentation, and accessible combat, directly instantiated by both cited entries.\n- [explore] <a_191><b_10><c_232> => Possible future interest in systemic sandbox or hacking-style puzzle experiences, reached through the explicit bridge of manipulating connected infrastructure and environments rather than relying only on direct combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_201><b_151><c_255>",
+        "title": "Playstation Plus: 3 Month Membership [Digital Code]"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-09",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_10><c_232>, <a_74><b_218><c_206>, <a_24><b_72><c_142>, <a_86><b_68><c_56> => Four entries are PlayStation 4 games spanning open-world action-adventure, platforming, and action-combat formats.\n- <a_21><b_94><c_61>, <a_61><b_251><c_51> => Two entries are PlayStation 4 hardware accessories covering console power and wireless controller input.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_10><c_232>, <a_24><b_72><c_142> => Possible future interest in single-player action-adventure games built around exploration, combat, and story progression, directly instantiated by both cited entries.\n- [exploit] <a_74><b_218><c_206>, <a_86><b_68><c_56> => Possible future interest in character-driven action-platform or action-adventure games with humor, stylized presentation, and accessible combat, directly instantiated by both cited entries.\n- [explore] <a_191><b_10><c_232> => Possible future interest in systemic sandbox or hacking-style puzzle experiences, reached through the explicit bridge of manipulating connected infrastructure and environments rather than relying only on direct combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_201><b_18><c_56>",
+        "title": "Mass Effect Andromeda - Pre-load - PS4 Digital Code"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-10",
+      "reasoning": "<think>\n<history_summary>\n- <a_191><b_10><c_232>, <a_74><b_218><c_206>, <a_24><b_72><c_142>, <a_86><b_68><c_56> => Four entries are PlayStation 4 games spanning open-world action-adventure, platforming, and action-combat formats.\n- <a_21><b_94><c_61>, <a_61><b_251><c_51> => Two entries are PlayStation 4 hardware accessories covering console power and wireless controller input.\n</history_summary>\n<future_interests>\n- [exploit] <a_191><b_10><c_232>, <a_24><b_72><c_142> => Possible future interest in single-player action-adventure games built around exploration, combat, and story progression, directly instantiated by both cited entries.\n- [exploit] <a_74><b_218><c_206>, <a_86><b_68><c_56> => Possible future interest in character-driven action-platform or action-adventure games with humor, stylized presentation, and accessible combat, directly instantiated by both cited entries.\n- [explore] <a_191><b_10><c_232> => Possible future interest in systemic sandbox or hacking-style puzzle experiences, reached through the explicit bridge of manipulating connected infrastructure and environments rather than relying only on direct combat.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_201><b_169><c_181>",
+        "title": "PlayStation 4 500GB Console - Uncharted 4 Limited Edition Bundle [Discontinued]"
+      },
+      "hard_valid": true
+    }
+  ]
+}
