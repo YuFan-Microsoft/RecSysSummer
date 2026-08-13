@@ -1,0 +1,7 @@
+# The project Docker image already provides vLLM 0.10.2, PyTorch, and CUDA.
+aiohttp>=3.10
+fastapi>=0.115
+gradio>=4.44,<6
+huggingface-hub>=0.25,<1.0
+pydantic>=2.9
+uvicorn>=0.30
