@@ -1,0 +1,100 @@
+{
+  "source": "/Users/yufan/Desktop/Checkpoint_Result/constrained_sampling_with_format_reward",
+  "title_source": "history_title_list and target_title fields from the same JSONL",
+  "requests": [
+    {
+      "record_index": 1,
+      "request_file": "record_0001_all_wrong.json",
+      "history_titles": [
+        "PlayStation Eye",
+        "PlayStation Eye",
+        "Angry Birds Star Wars - Playstation 3",
+        "DuckTales - Remastered PS3 - PlayStation 3",
+        "Minecraft - PlayStation 3",
+        "LEGO Jurassic World - PlayStation 3"
+      ],
+      "target_title": "Just Dance 2017 - PlayStation 3",
+      "target_rank": null,
+      "candidate_count": 10,
+      "simulation_note": "All beam candidates share the record's single reasoning trace."
+    },
+    {
+      "record_index": 2,
+      "request_file": "record_0002_all_wrong.json",
+      "history_titles": [
+        "Metro Redux - PlayStation 4",
+        "Dark Souls III - PlayStation 4 Standard Edition",
+        "Madden NFL 17 - Standard Edition - PlayStation 4",
+        "Titanfall 2 - PlayStation 4"
+      ],
+      "target_title": "Demon's Souls",
+      "target_rank": null,
+      "candidate_count": 10,
+      "simulation_note": "All beam candidates share the record's single reasoning trace."
+    },
+    {
+      "record_index": 4,
+      "request_file": "record_0004_hit_rank_2.json",
+      "history_titles": [
+        "Watch Dogs 2 - PlayStation 4",
+        "Ratchet & Clank - PlayStation 4",
+        "Horizon Zero Dawn - PlayStation 4",
+        "CorpCo 6ft AC Power Cord for Sony PlayStation 4 (PS4)",
+        "Deadpool - PlayStation 4",
+        "DualShock 4 Wireless Controller for PlayStation 4 - Jet Black [Old Model]"
+      ],
+      "target_title": "Uncharted 4: A Thief's End - PlayStation 4",
+      "target_rank": 2,
+      "candidate_count": 10,
+      "simulation_note": "All beam candidates share the record's single reasoning trace."
+    },
+    {
+      "record_index": 51,
+      "request_file": "record_0051_all_wrong.json",
+      "history_titles": [
+        "Resident Evil 5 - Playstation 3",
+        "Resident Evil 5 - Playstation 3",
+        "Mortal Kombat: Komplete Edition - Playstation 3",
+        "Minecraft - PlayStation 4",
+        "NIKE Toddlers Tanjun (TDV) Running Shoe",
+        "Call of Duty: Black Ops Combo Pack - PlayStation 3",
+        "WWE 2K16 - PlayStation 3",
+        "Call of Duty: Black Ops III - Multiplayer Edition - PlayStation 3",
+        "Minecraft: Story Mode - Season Disc - PlayStation 3"
+      ],
+      "target_title": "MIZAR 5 Empty Standard Playstation 3 Replacement Cases (PS3 Replacement Cases)",
+      "target_rank": null,
+      "candidate_count": 10,
+      "simulation_note": "All beam candidates share the record's single reasoning trace."
+    },
+    {
+      "record_index": 52,
+      "request_file": "record_0052_all_wrong.json",
+      "history_titles": [
+        "Buffalo iBuffalo Classic USB Gamepad for PC",
+        "Fallout: New Vegas Ultimate Edition - PC",
+        "Logitech G910 Orion Spark RGB Mechanical Gaming Keyboard &ndash; 9 Programmable Buttons, Dedicated Media Controls",
+        "G810 Orion Spectrum RGB Mechanical Gaming Keyboard &ndash; Easy-Access Media Control, Backlit Multicolor LED, Romer-G Mechanical Key Switches"
+      ],
+      "target_title": "Retro Link GameCube Style USB Wired Controller",
+      "target_rank": null,
+      "candidate_count": 10,
+      "simulation_note": "All beam candidates share the record's single reasoning trace."
+    },
+    {
+      "record_index": 63,
+      "request_file": "record_0063_all_wrong.json",
+      "history_titles": [
+        "Fallout 4 - PlayStation 4",
+        "Divinity: Original Sin - Enhanced Edition - PlayStation 4",
+        "Mega Man 2 - Nintendo NES",
+        "Mortal Kombat: Komplete Edition - Playstation 3",
+        "Mass Effect Andromeda - Pre-load - PS4 Digital Code"
+      ],
+      "target_title": "Star Wars: Battlefront - Standard Edition - PlayStation 4",
+      "target_rank": null,
+      "candidate_count": 10,
+      "simulation_note": "All beam candidates share the record's single reasoning trace."
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "request_id": "checkpoint-record-0063",
+  "history": [
+    {
+      "sid": "<a_131><b_210><c_0>",
+      "title": "Fallout 4 - PlayStation 4"
+    },
+    {
+      "sid": "<a_194><b_13><c_215>",
+      "title": "Divinity: Original Sin - Enhanced Edition - PlayStation 4"
+    },
+    {
+      "sid": "<a_233><b_41><c_153>",
+      "title": "Mega Man 2 - Nintendo NES"
+    },
+    {
+      "sid": "<a_200><b_168><c_118>",
+      "title": "Mortal Kombat: Komplete Edition - Playstation 3"
+    },
+    {
+      "sid": "<a_201><b_18><c_56>",
+      "title": "Mass Effect Andromeda - Pre-load - PS4 Digital Code"
+    }
+  ],
+  "target": {
+    "sid": "<a_141><b_73><c_216>",
+    "title": "Star Wars: Battlefront - Standard Edition - PlayStation 4"
+  },
+  "candidates": [
+    {
+      "candidate_id": "beam-01",
+      "reasoning": "<think>\n<history_summary>\n- <a_131><b_210><c_0>, <a_194><b_13><c_215> => Two PlayStation 4 titles are single-player RPGs built around exploration, combat, and story progression.\n- <a_200><b_168><c_118> => One PlayStation 3 title is a fighting game centered on one-on-one battles, character variations, and local multiplayer.\n</history_summary>\n<future_interests>\n- [exploit] <a_131><b_210><c_0>, <a_194><b_13><c_215> => Possible future interest in additional single-player RPGs that combine exploration, combat, and narrative choice, directly instantiated by both cited titles.\n- [exploit] <a_200><b_168><c_118> => Possible future interest in fighting games focused on matchup knowledge, character mastery, and head-to-head play, directly instantiated by the cited title.\n- [explore] <a_131><b_210><c_0> => Possible future interest in open-world action-adventure games with crafting and survival systems, reached through the explicit bridge of resource gathering and world exploration in the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_194><b_36><c_254>",
+        "title": "Final Fantasy XV - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-02",
+      "reasoning": "<think>\n<history_summary>\n- <a_131><b_210><c_0>, <a_194><b_13><c_215> => Two PlayStation 4 titles are single-player RPGs built around exploration, combat, and story progression.\n- <a_200><b_168><c_118> => One PlayStation 3 title is a fighting game centered on one-on-one battles, character variations, and local multiplayer.\n</history_summary>\n<future_interests>\n- [exploit] <a_131><b_210><c_0>, <a_194><b_13><c_215> => Possible future interest in additional single-player RPGs that combine exploration, combat, and narrative choice, directly instantiated by both cited titles.\n- [exploit] <a_200><b_168><c_118> => Possible future interest in fighting games focused on matchup knowledge, character mastery, and head-to-head play, directly instantiated by the cited title.\n- [explore] <a_131><b_210><c_0> => Possible future interest in open-world action-adventure games with crafting and survival systems, reached through the explicit bridge of resource gathering and world exploration in the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_131><b_209><c_151>",
+        "title": "No Man's Sky - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-03",
+      "reasoning": "<think>\n<history_summary>\n- <a_131><b_210><c_0>, <a_194><b_13><c_215> => Two PlayStation 4 titles are single-player RPGs built around exploration, combat, and story progression.\n- <a_200><b_168><c_118> => One PlayStation 3 title is a fighting game centered on one-on-one battles, character variations, and local multiplayer.\n</history_summary>\n<future_interests>\n- [exploit] <a_131><b_210><c_0>, <a_194><b_13><c_215> => Possible future interest in additional single-player RPGs that combine exploration, combat, and narrative choice, directly instantiated by both cited titles.\n- [exploit] <a_200><b_168><c_118> => Possible future interest in fighting games focused on matchup knowledge, character mastery, and head-to-head play, directly instantiated by the cited title.\n- [explore] <a_131><b_210><c_0> => Possible future interest in open-world action-adventure games with crafting and survival systems, reached through the explicit bridge of resource gathering and world exploration in the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_194><b_26><c_190>",
+        "title": "Final Fantasy XV Deluxe Edition - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-04",
+      "reasoning": "<think>\n<history_summary>\n- <a_131><b_210><c_0>, <a_194><b_13><c_215> => Two PlayStation 4 titles are single-player RPGs built around exploration, combat, and story progression.\n- <a_200><b_168><c_118> => One PlayStation 3 title is a fighting game centered on one-on-one battles, character variations, and local multiplayer.\n</history_summary>\n<future_interests>\n- [exploit] <a_131><b_210><c_0>, <a_194><b_13><c_215> => Possible future interest in additional single-player RPGs that combine exploration, combat, and narrative choice, directly instantiated by both cited titles.\n- [exploit] <a_200><b_168><c_118> => Possible future interest in fighting games focused on matchup knowledge, character mastery, and head-to-head play, directly instantiated by the cited title.\n- [explore] <a_131><b_210><c_0> => Possible future interest in open-world action-adventure games with crafting and survival systems, reached through the explicit bridge of resource gathering and world exploration in the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_194><b_54><c_28>",
+        "title": "Final Fantasy XIV: A REALM REBORN - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-05",
+      "reasoning": "<think>\n<history_summary>\n- <a_131><b_210><c_0>, <a_194><b_13><c_215> => Two PlayStation 4 titles are single-player RPGs built around exploration, combat, and story progression.\n- <a_200><b_168><c_118> => One PlayStation 3 title is a fighting game centered on one-on-one battles, character variations, and local multiplayer.\n</history_summary>\n<future_interests>\n- [exploit] <a_131><b_210><c_0>, <a_194><b_13><c_215> => Possible future interest in additional single-player RPGs that combine exploration, combat, and narrative choice, directly instantiated by both cited titles.\n- [exploit] <a_200><b_168><c_118> => Possible future interest in fighting games focused on matchup knowledge, character mastery, and head-to-head play, directly instantiated by the cited title.\n- [explore] <a_131><b_210><c_0> => Possible future interest in open-world action-adventure games with crafting and survival systems, reached through the explicit bridge of resource gathering and world exploration in the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_24><b_72><c_142>",
+        "title": "Horizon Zero Dawn - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-06",
+      "reasoning": "<think>\n<history_summary>\n- <a_131><b_210><c_0>, <a_194><b_13><c_215> => Two PlayStation 4 titles are single-player RPGs built around exploration, combat, and story progression.\n- <a_200><b_168><c_118> => One PlayStation 3 title is a fighting game centered on one-on-one battles, character variations, and local multiplayer.\n</history_summary>\n<future_interests>\n- [exploit] <a_131><b_210><c_0>, <a_194><b_13><c_215> => Possible future interest in additional single-player RPGs that combine exploration, combat, and narrative choice, directly instantiated by both cited titles.\n- [exploit] <a_200><b_168><c_118> => Possible future interest in fighting games focused on matchup knowledge, character mastery, and head-to-head play, directly instantiated by the cited title.\n- [explore] <a_131><b_210><c_0> => Possible future interest in open-world action-adventure games with crafting and survival systems, reached through the explicit bridge of resource gathering and world exploration in the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_131><b_92><c_56>",
+        "title": "Fallout 4: Automatron - PS4 [Digital Code]"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-07",
+      "reasoning": "<think>\n<history_summary>\n- <a_131><b_210><c_0>, <a_194><b_13><c_215> => Two PlayStation 4 titles are single-player RPGs built around exploration, combat, and story progression.\n- <a_200><b_168><c_118> => One PlayStation 3 title is a fighting game centered on one-on-one battles, character variations, and local multiplayer.\n</history_summary>\n<future_interests>\n- [exploit] <a_131><b_210><c_0>, <a_194><b_13><c_215> => Possible future interest in additional single-player RPGs that combine exploration, combat, and narrative choice, directly instantiated by both cited titles.\n- [exploit] <a_200><b_168><c_118> => Possible future interest in fighting games focused on matchup knowledge, character mastery, and head-to-head play, directly instantiated by the cited title.\n- [explore] <a_131><b_210><c_0> => Possible future interest in open-world action-adventure games with crafting and survival systems, reached through the explicit bridge of resource gathering and world exploration in the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_121><b_155><c_99>",
+        "title": "NieR: Automata - Playstation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-08",
+      "reasoning": "<think>\n<history_summary>\n- <a_131><b_210><c_0>, <a_194><b_13><c_215> => Two PlayStation 4 titles are single-player RPGs built around exploration, combat, and story progression.\n- <a_200><b_168><c_118> => One PlayStation 3 title is a fighting game centered on one-on-one battles, character variations, and local multiplayer.\n</history_summary>\n<future_interests>\n- [exploit] <a_131><b_210><c_0>, <a_194><b_13><c_215> => Possible future interest in additional single-player RPGs that combine exploration, combat, and narrative choice, directly instantiated by both cited titles.\n- [exploit] <a_200><b_168><c_118> => Possible future interest in fighting games focused on matchup knowledge, character mastery, and head-to-head play, directly instantiated by the cited title.\n- [explore] <a_131><b_210><c_0> => Possible future interest in open-world action-adventure games with crafting and survival systems, reached through the explicit bridge of resource gathering and world exploration in the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_131><b_209><c_253>",
+        "title": "No Man's Sky - Limited Edition - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-09",
+      "reasoning": "<think>\n<history_summary>\n- <a_131><b_210><c_0>, <a_194><b_13><c_215> => Two PlayStation 4 titles are single-player RPGs built around exploration, combat, and story progression.\n- <a_200><b_168><c_118> => One PlayStation 3 title is a fighting game centered on one-on-one battles, character variations, and local multiplayer.\n</history_summary>\n<future_interests>\n- [exploit] <a_131><b_210><c_0>, <a_194><b_13><c_215> => Possible future interest in additional single-player RPGs that combine exploration, combat, and narrative choice, directly instantiated by both cited titles.\n- [exploit] <a_200><b_168><c_118> => Possible future interest in fighting games focused on matchup knowledge, character mastery, and head-to-head play, directly instantiated by the cited title.\n- [explore] <a_131><b_210><c_0> => Possible future interest in open-world action-adventure games with crafting and survival systems, reached through the explicit bridge of resource gathering and world exploration in the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_1><b_116><c_233>",
+        "title": "Dragon Quest Builders - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-10",
+      "reasoning": "<think>\n<history_summary>\n- <a_131><b_210><c_0>, <a_194><b_13><c_215> => Two PlayStation 4 titles are single-player RPGs built around exploration, combat, and story progression.\n- <a_200><b_168><c_118> => One PlayStation 3 title is a fighting game centered on one-on-one battles, character variations, and local multiplayer.\n</history_summary>\n<future_interests>\n- [exploit] <a_131><b_210><c_0>, <a_194><b_13><c_215> => Possible future interest in additional single-player RPGs that combine exploration, combat, and narrative choice, directly instantiated by both cited titles.\n- [exploit] <a_200><b_168><c_118> => Possible future interest in fighting games focused on matchup knowledge, character mastery, and head-to-head play, directly instantiated by the cited title.\n- [explore] <a_131><b_210><c_0> => Possible future interest in open-world action-adventure games with crafting and survival systems, reached through the explicit bridge of resource gathering and world exploration in the cited title.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_194><b_32><c_11>",
+        "title": "World of Final Fantasy - PlayStation Vita"
+      },
+      "hard_valid": true
+    }
+  ]
+}
