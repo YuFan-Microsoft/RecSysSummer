@@ -823,10 +823,6 @@ class vLLMRollout(BaseRollout):
                 sid_beam_predictions = np.empty(batch_size, dtype=object)
                 sid_first_token_unique_count = np.empty(batch_size, dtype=np.int64)
                 sid_diversity_reward = np.empty(batch_size, dtype=np.float32)
-                sid_exact_match_sample_count = np.empty(batch_size, dtype=np.int64)
-                sid_selected_sample_index = np.empty(batch_size, dtype=np.int64)
-                sid_best_of_n_hit = np.empty(batch_size, dtype=np.float32)
-                sid_best_of_n_selected = np.empty(batch_size, dtype=np.float32)
                 selected_sids = []
                 reward_models = non_tensor_batch.get("reward_model")
                 if reward_models is None or len(reward_models) != batch_size:
@@ -867,10 +863,6 @@ class vLLMRollout(BaseRollout):
                     )
                     sid_first_token_unique_count[prompt_index] = selection.first_token_unique_count
                     sid_diversity_reward[prompt_index] = selection.diversity_reward
-                    sid_exact_match_sample_count[prompt_index] = selection.exact_match_count
-                    sid_selected_sample_index[prompt_index] = selected_index
-                    sid_best_of_n_hit[prompt_index] = float(selection.exact_match_count > 0)
-                    sid_best_of_n_selected[prompt_index] = float(selected_index != 0)
 
                 non_tensor_batch["sid_beam_predictions"] = sid_beam_predictions
                 if self.sid_constrained_sample_size == 1:
@@ -878,10 +870,6 @@ class vLLMRollout(BaseRollout):
 
                 non_tensor_batch["sid_first_token_unique_count"] = sid_first_token_unique_count
                 non_tensor_batch["sid_diversity_reward"] = sid_diversity_reward
-                non_tensor_batch["sid_exact_match_sample_count"] = sid_exact_match_sample_count
-                non_tensor_batch["sid_selected_sample_index"] = sid_selected_sample_index
-                non_tensor_batch["sid_best_of_n_hit"] = sid_best_of_n_hit
-                non_tensor_batch["sid_best_of_n_selected"] = sid_best_of_n_selected
                 response = [
                     reasoning_ids + sid_ids + [primary_eos_token_id]
                     for reasoning_ids, sid_ids in zip(response_reasonings, selected_sids, strict=True)

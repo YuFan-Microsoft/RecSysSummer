@@ -109,7 +109,9 @@ to separate rollout overhead from backward cost.
 
 Thinking format is logged as one strict `format_reward` metric; history-summary
 grounding, future-interests grounding, history-reference coverage, first-token
-diversity count/rate, and combined process metrics remain separate.
+diversity mean count, and combined process metrics remain separate. The W&B
+diversity mean is on the 1-10 count scale used by offline evaluation; the
+normalized count divided by ten is used internally as the GRPO reward.
 
 W&B uses a strict allowlist rather than forwarding every VERL metric. The
 dashboard keeps recommendation outcomes (HR/NDCG at 1, 5, and 10), all process
