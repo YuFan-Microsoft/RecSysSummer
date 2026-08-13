@@ -112,6 +112,8 @@ grounding, future-interests grounding, history-reference coverage, first-token
 diversity mean count, and combined process metrics remain separate. The W&B
 diversity mean is on the 1-10 count scale used by offline evaluation; the
 normalized count divided by ten is used internally as the GRPO reward.
+Validation reports the same `sid_diversity_mean` count over its constrained
+top-10 beam, so train-sample and validation-beam diversity share one scale.
 
 W&B uses a strict allowlist rather than forwarding every VERL metric. The
 dashboard keeps recommendation outcomes (HR/NDCG at 1, 5, and 10), all process

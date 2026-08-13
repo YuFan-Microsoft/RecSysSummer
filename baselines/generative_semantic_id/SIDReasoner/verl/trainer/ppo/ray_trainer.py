@@ -63,6 +63,7 @@ from verl.utils.reward_score.sid_reasoning_format import PROCESS_ADVANTAGE_WEIGH
 from verl.utils.seqlen_balancing import get_seqlen_balanced_partitions, log_seqlen_unbalance
 from verl.utils.torch_functional import masked_mean
 from verl.utils.tracking import ValidationGenerationsLogger
+from verl.workers.rollout.sid_diversity import count_unique_first_sid_tokens
 
 
 _WANDB_METRIC_ORDER = (
@@ -96,6 +97,7 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_val/history_reference_coverage_mean",
     "core_metrics_val/latest_history_summary_reference_reward_mean",
     "core_metrics_val/process_reward_mean",
+    "core_metrics_val/sid_diversity_mean",
     "core_metrics_val/hr_at_1",
     "core_metrics_val/hr_at_5",
     "core_metrics_val/hr_at_10",
@@ -115,18 +117,21 @@ def _compute_sid_ranking_metrics(beam_predictions, ground_truths):
     metrics = {
         **{f"sid_eval_hr_at_{cutoff}": [] for cutoff in _SID_RANKING_CUTOFFS},
         **{f"sid_eval_ndcg_at_{cutoff}": [] for cutoff in _SID_RANKING_CUTOFFS},
+        "sid_eval_diversity": [],
     }
 
     if len(beam_predictions) != len(ground_truths):
         raise ValueError("SID beam predictions and ground truths must have the same length")
 
     for beam, ground_truth in zip(beam_predictions, ground_truths):
+        beam = list(beam)[:10]
+        metrics["sid_eval_diversity"].append(count_unique_first_sid_tokens(beam))
         target_sid = _SID_TOKEN_PATTERN.findall(str(ground_truth))[:3]
         if len(target_sid) != 3:
             raise ValueError(f"Expected a three-token ground-truth SID, got {ground_truth!r}")
 
         rank = 0
-        for candidate_rank, prediction in enumerate(list(beam)[:10], start=1):
+        for candidate_rank, prediction in enumerate(beam, start=1):
             if _SID_TOKEN_PATTERN.findall(str(prediction))[:3] == target_sid:
                 rank = candidate_rank
                 break
@@ -881,6 +886,7 @@ class RayPPOTrainer:
             "history_reference_coverage": "core_metrics_val/history_reference_coverage_mean",
             "latest_history_summary_reference_reward": "core_metrics_val/latest_history_summary_reference_reward_mean",
             "process_reward": "core_metrics_val/process_reward_mean",
+            "sid_eval_diversity": "core_metrics_val/sid_diversity_mean",
             "prefix_1_match": "core_metrics_val/prefix_1_match_rate",
             "prefix_2_match": "core_metrics_val/prefix_2_match_rate",
             "exact_match": "core_metrics_val/exact_match_rate",

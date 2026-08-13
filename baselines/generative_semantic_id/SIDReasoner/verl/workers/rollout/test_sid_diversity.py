@@ -10,9 +10,20 @@ if SPEC is None or SPEC.loader is None:
 MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
 select_sid_candidate = MODULE.select_sid_candidate
+count_unique_first_sid_tokens = MODULE.count_unique_first_sid_tokens
 
 
 class SidDiversitySelectionTest(unittest.TestCase):
+    def test_validation_diversity_counts_unique_first_tokens_in_top_ten(self):
+        predictions = [
+            "<a_1><b_1><c_1>",
+            "<a_1><b_2><c_2>",
+            "<a_2><b_3><c_3>",
+            "<a_3><b_4><c_4>",
+        ]
+
+        self.assertEqual(count_unique_first_sid_tokens(predictions), 3)
+
     def test_diversity_uses_unique_first_sid_tokens(self):
         selection = select_sid_candidate(
             candidates=[[1, 10, 100], [1, 11, 101], [2, 20, 200], [3, 30, 300]],
