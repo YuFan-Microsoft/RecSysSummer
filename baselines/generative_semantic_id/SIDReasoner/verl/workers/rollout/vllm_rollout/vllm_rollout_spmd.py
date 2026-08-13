@@ -71,6 +71,7 @@ from verl.utils.torch_functional import get_response_mask, pad_2d_list_to_length
 from verl.utils.vllm import TensorLoRARequest, VLLMHijack, is_version_ge
 from verl.workers.config import HFModelConfig, RolloutConfig
 from verl.workers.rollout.base import BaseRollout
+from verl.workers.rollout.beam_diversity import calculate_beam_diversity
 
 logger = logging.getLogger(__file__)
 logger.setLevel(os.getenv("VERL_LOGGING_LEVEL", "WARN"))
@@ -403,6 +404,14 @@ class vLLMRollout(BaseRollout):
         engine_kwargs = {key: val for key, val in engine_kwargs.items() if val is not None}
         if config.get("limit_images", None):  # support for multi-image data
             engine_kwargs["limit_mm_per_prompt"] = {"image": config.get("limit_images")}
+        if any(
+            config.get(key, None) is not None
+            for key in ("sid_constrained_beam_size", "sid_validation_beam_size")
+        ):
+            configured_logprobs_mode = engine_kwargs.get("logprobs_mode")
+            if configured_logprobs_mode not in (None, "processed_logprobs"):
+                raise ValueError("Constrained SID decoding requires vLLM logprobs_mode='processed_logprobs'")
+            engine_kwargs["logprobs_mode"] = "processed_logprobs"
 
         compilation_config = {}
 
@@ -697,12 +706,25 @@ class vLLMRollout(BaseRollout):
                 # shape identical on every rank while `.tolist()` in the reward manager
                 # still works (each cell is an ndarray).
                 sid_beam_predictions = np.empty(batch_size, dtype=object)
+                if not is_validate:
+                    sid_first_token_unique_count = np.empty(batch_size, dtype=np.int64)
+                    sid_diversity_reward = np.empty(batch_size, dtype=np.float32)
                 for _j, sid_beam in enumerate(constrained_sid_beams):
                     sid_beam_predictions[_j] = np.array(
                         [self.tokenizer.decode(sid_ids, skip_special_tokens=False) for sid_ids in sid_beam],
                         dtype=object,
                     )
+                    if not is_validate:
+                        diversity = calculate_beam_diversity(
+                            sid_beam,
+                            expected_size=constrained_beam_size,
+                        )
+                        sid_first_token_unique_count[_j] = diversity.first_token_unique_count
+                        sid_diversity_reward[_j] = diversity.normalized_reward
                 non_tensor_batch["sid_beam_predictions"] = sid_beam_predictions
+                if not is_validate:
+                    non_tensor_batch["sid_first_token_unique_count"] = sid_first_token_unique_count
+                    non_tensor_batch["sid_diversity_reward"] = sid_diversity_reward
                 response = [
                     reasoning_ids + sid_ids + [primary_eos_token_id]
                     for reasoning_ids, sid_ids in zip(response_reasonings, constrained_sids)

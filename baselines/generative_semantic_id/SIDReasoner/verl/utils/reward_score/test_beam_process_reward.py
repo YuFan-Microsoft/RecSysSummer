@@ -24,6 +24,22 @@ VALID_REASONING = """<think>
 <a_1><b_2><c_3>"""
 HISTORY_SIDS = ["<a_4><b_5><c_6>"]
 
+MULTI_SID_REASONING = """<history_summary>
+- <a_1><b_1><c_1>, <a_2><b_2><c_2> => Two recorded items share a franchise.
+- <a_3><b_3><c_3>, <a_3><b_3><c_3> => The latest item is a related accessory.
+</history_summary>
+<future_interests>
+- [exploit] <a_1><b_1><c_1>, <a_2><b_2><c_2> => Continue the observed franchise interest.
+- [explore] <a_3><b_3><c_3> => The latest accessory bridges to adjacent products.
+</future_interests>
+</think>
+<a_9><b_9><c_9>"""
+MULTI_SID_HISTORY = [
+    "<a_1><b_1><c_1>",
+    "<a_2><b_2><c_2>",
+    "<a_3><b_3><c_3>",
+]
+
 
 def load_reward_module(domain: str):
     verl_module = sys.modules.setdefault("verl", types.ModuleType("verl"))
@@ -51,19 +67,20 @@ class BeamProcessRewardTest(unittest.TestCase):
                 "future_interests_grounding_reward": 1.0,
                 "format_reward": 1.0,
                 "history_reference_coverage": 1.0,
+                "latest_history_summary_reference_reward": 1.0,
                 "process_reward": 1.0,
             },
         )
 
-    def test_missing_mode_keeps_grounding_but_reduces_process_reward(self):
+    def test_missing_mode_keeps_components_but_fails_process_hard_gate(self):
         response = VALID_REASONING.replace("[explore]", "[exploit]", 1)
         scores = calculate_process_rewards(response, HISTORY_SIDS)
         self.assertEqual(scores["format_reward"], 0.0)
         self.assertEqual(scores["history_summary_grounding_reward"], 1.0)
         self.assertEqual(scores["future_interests_grounding_reward"], 1.0)
-        self.assertAlmostEqual(scores["process_reward"], 2.0 / 3.0)
+        self.assertEqual(scores["process_reward"], 0.0)
 
-    def test_ungrounded_future_line_reduces_only_future_grounding(self):
+    def test_ungrounded_future_line_fails_process_hard_gate(self):
         response = VALID_REASONING.replace(
             "[explore] <a_4><b_5><c_6>",
             "[explore] <a_9><b_9><c_9>",
@@ -73,7 +90,89 @@ class BeamProcessRewardTest(unittest.TestCase):
         self.assertEqual(scores["format_reward"], 1.0)
         self.assertEqual(scores["history_summary_grounding_reward"], 1.0)
         self.assertEqual(scores["future_interests_grounding_reward"], 0.5)
-        self.assertAlmostEqual(scores["process_reward"], 5.0 / 6.0)
+        self.assertEqual(scores["process_reward"], 0.0)
+
+    def test_latest_history_sid_must_be_cited_in_summary(self):
+        history_sids = ["<a_4><b_5><c_6>", "<a_7><b_8><c_9>"]
+        response = VALID_REASONING.replace(
+            "[explore] <a_4><b_5><c_6>",
+            "[explore] <a_7><b_8><c_9>",
+            1,
+        )
+        scores = calculate_process_rewards(response, history_sids)
+
+        self.assertEqual(scores["format_reward"], 1.0)
+        self.assertEqual(scores["history_summary_grounding_reward"], 1.0)
+        self.assertEqual(scores["future_interests_grounding_reward"], 1.0)
+        self.assertEqual(scores["latest_history_summary_reference_reward"], 0.0)
+        self.assertEqual(scores["process_reward"], 0.0)
+
+    def test_multi_sid_and_repeated_citations_are_valid(self):
+        scores = calculate_process_rewards(MULTI_SID_REASONING, MULTI_SID_HISTORY)
+
+        self.assertEqual(scores["format_reward"], 1.0)
+        self.assertEqual(scores["history_summary_grounding_reward"], 1.0)
+        self.assertEqual(scores["future_interests_grounding_reward"], 1.0)
+        self.assertEqual(scores["history_reference_coverage"], 1.0)
+        self.assertEqual(scores["latest_history_summary_reference_reward"], 1.0)
+        self.assertEqual(scores["process_reward"], 1.0)
+
+    def test_history_coverage_is_monitoring_only(self):
+        history_sids = ["<a_0><b_0><c_0>", *MULTI_SID_HISTORY]
+        scores = calculate_process_rewards(MULTI_SID_REASONING, history_sids)
+
+        self.assertEqual(scores["history_summary_grounding_reward"], 1.0)
+        self.assertEqual(scores["future_interests_grounding_reward"], 1.0)
+        self.assertEqual(scores["latest_history_summary_reference_reward"], 1.0)
+        self.assertEqual(scores["history_reference_coverage"], 0.75)
+        self.assertEqual(scores["process_reward"], 1.0)
+
+    def test_invalid_citation_syntax_fails_process_hard_gate(self):
+        response = VALID_REASONING.replace(
+            "<a_4><b_5><c_6> => The history",
+            "<a_4><b_5><c_6> <a_4><b_5><c_6> => The history",
+            1,
+        )
+        scores = calculate_process_rewards(response, HISTORY_SIDS)
+
+        self.assertEqual(scores["format_reward"], 0.0)
+        self.assertEqual(scores["history_summary_grounding_reward"], 0.0)
+        self.assertEqual(scores["process_reward"], 0.0)
+
+    def test_wrong_block_order_and_extra_text_fail(self):
+        history_start = VALID_REASONING.index("<history_summary>")
+        history_end = VALID_REASONING.index("</history_summary>") + len("</history_summary>")
+        interest_start = VALID_REASONING.index("<future_interests>")
+        interest_end = VALID_REASONING.index("</future_interests>") + len("</future_interests>")
+        wrong_order = (
+            VALID_REASONING[:history_start]
+            + VALID_REASONING[interest_start:interest_end]
+            + "\n"
+            + VALID_REASONING[history_start:history_end]
+            + VALID_REASONING[interest_end:]
+        )
+        extra_text = VALID_REASONING.replace(
+            "<history_summary>",
+            "preamble\n<history_summary>",
+            1,
+        )
+
+        self.assertEqual(calculate_process_rewards(wrong_order, HISTORY_SIDS)["process_reward"], 0.0)
+        self.assertEqual(calculate_process_rewards(extra_text, HISTORY_SIDS)["process_reward"], 0.0)
+
+    def test_invalid_line_counts_fail_process_hard_gate(self):
+        one_future_line = VALID_REASONING.replace(
+            "- [explore] <a_4><b_5><c_6> => One shared attribute supports an adjacent interest.\n",
+            "",
+        )
+        scores = calculate_process_rewards(one_future_line, HISTORY_SIDS)
+
+        self.assertEqual(scores["format_reward"], 0.0)
+        self.assertEqual(scores["process_reward"], 0.0)
+
+    def test_opening_think_tag_is_optional(self):
+        response = VALID_REASONING.replace("<think>\n", "", 1)
+        self.assertEqual(calculate_process_rewards(response, HISTORY_SIDS)["process_reward"], 1.0)
 
     def test_process_reward_is_separate_from_beam_ndcg(self):
         expected_ndcg = 1.0 / math.log2(3.0)

@@ -53,14 +53,20 @@ With both switches disabled, verl does not register a `RefPolicy` worker, does n
 compute reference-policy log probabilities, does not add KL to the actor loss, and
 passes the custom rule-based reward directly into GRPO advantage estimation.
 
-### Constrained beam with process reward
+### Constrained beam with process and diversity rewards
 
 Each of the 16 trajectories samples one reasoning and then runs catalog-constrained
 beam-10 over the three-token SID path. The primary reward remains the pure beam
-NDCG@10. Process supervision follows the Phase-2 V4 trace contract:
+NDCG@10. The same beam provides a first-level diversity proxy at no additional
+generation cost:
 
 ```text
-process_reward = (format_reward + history_summary_grounding_reward + future_interests_grounding_reward) / 3
+diversity_reward = unique first SID tokens in beam-10 / 10
+
+process_reward = 1 if strict_format_valid
+          and all_citations_are_from_history
+          and latest_history_sid_is_cited_in_history_summary
+        else 0
 ```
 
 `format_reward` is `1` only when the text before the single `</think>` marker has
@@ -68,18 +74,24 @@ exactly one `<history_summary>...</history_summary>` block followed by one
 `<future_interests>...</future_interests>` block, with no surrounding text.
 History summaries require 1-3 valid `- SID[, SID...] => text` lines. Future
 interests require 2-4 valid `- [exploit|explore] SID[, SID...] => text` lines and
-at least one of each mode.
+at least one of each mode. The opening `<think>` tag is optional because rollout
+normalization may synthesize the closing separator, but exactly one `</think>` is
+required and no text may surround the two reasoning blocks.
 
 The two grounding rewards are the fractions of parsed lines whose complete
 leading citation list belongs to the real history. `history_reference_coverage`
 tracks the fraction of unique history SIDs referenced across both blocks but is
-monitoring-only and does not enter `process_reward`.
+monitoring-only and does not enter `process_reward`. Any malformed line, invalid
+line count, missing exploit/explore mode, non-history citation, or missing latest
+history SID in `history_summary` makes the process reward zero.
 
-Beam NDCG and process rewards are normalized independently within each prompt's
-16 trajectories. The final reasoning-token advantage is
-`A_beam + 0.1 * A_process`. Constrained beam SID tokens and EOS remain outside
-the actor loss. W&B logs all process components, the aggregate process reward,
-and process active-group rate separately from recommendation metrics.
+Beam NDCG, process, and diversity rewards are normalized independently within
+each prompt's 16 trajectories. The final reasoning-token advantage is
+`A_beam + 0.1 * A_process + 0.1 * A_diversity`. Constrained beam SID tokens and
+EOS remain outside the actor loss. W&B logs the process components, strict process
+reward, first-level diversity count on the 1-10 scale, and process/diversity
+active-group rates separately from recommendation metrics. Validation reports the
+same count over its constrained top-10 beam.
 
 The results below predate the V4 process-reward redesign. Treat them as legacy
 baselines and rerun both variants before attributing results to the current
@@ -105,7 +117,7 @@ ablation.
 
 The script **defaults to the `Video_Games` domain end‑to‑end** — data, reward, and the
 **wandb run name** all match the Games checkpoint above. Concretely the script sets
-`trainer.experiment_name=Video_Games_stage3_rl_constrained_sid_beam_process_reward_no_kl_Qwen3-1.7B` (this is the wandb run
+`trainer.experiment_name=Video_Games_stage3_rl_constrained_sid_beam_process_diversity_reward_no_kl_Qwen3-1.7B` (this is the wandb run
 name, under project `SIDReasoner_Phase3_MetricsV2`), `data.*=.../Video_Games/*.parquet`, and
 `custom_reward_function.path=.../direct_recommendation_StepRule_Games.py`. So the
 launch command above is all you need — you do **not** have to override data / reward /
