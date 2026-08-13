@@ -53,6 +53,7 @@ from verl.trainer.ppo.metric_utils import (
 )
 from verl.trainer.ppo.mismatch_helper import compute_rollout_importance_weights
 from verl.trainer.ppo.reward import compute_reward, compute_reward_async
+from verl.trainer.ppo.sid_eval_metrics import count_unique_first_sid_tokens
 from verl.trainer.ppo.utils import Role, WorkerType, need_critic, need_reference_policy, need_reward_model
 from verl.utils.checkpoint.checkpoint_manager import find_latest_ckpt_path, should_save_ckpt_esi
 from verl.utils.config import omega_conf_to_dataclass
@@ -82,6 +83,7 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_val/prefix_2_match_rate",
     "core_metrics_val/exact_match_rate",
     "core_metrics_val/valid_sid_reward_mean",
+    "core_metrics_val/sid_diversity_mean",
     "core_metrics_val/hr_at_1",
     "core_metrics_val/hr_at_3",
     "core_metrics_val/hr_at_5",
@@ -109,18 +111,21 @@ def _compute_sid_ranking_metrics(beam_predictions, ground_truths):
     metrics = {
         **{f"sid_eval_hr_at_{cutoff}": [] for cutoff in _SID_RANKING_CUTOFFS},
         **{f"sid_eval_ndcg_at_{cutoff}": [] for cutoff in _SID_RANKING_CUTOFFS},
+        "sid_eval_diversity": [],
     }
 
     if len(beam_predictions) != len(ground_truths):
         raise ValueError("SID beam predictions and ground truths must have the same length")
 
     for beam, ground_truth in zip(beam_predictions, ground_truths):
+        beam = list(beam)[:10]
+        metrics["sid_eval_diversity"].append(count_unique_first_sid_tokens(beam))
         target_sid = _SID_TOKEN_PATTERN.findall(str(ground_truth))[:3]
         if len(target_sid) != 3:
             raise ValueError(f"Expected a three-token ground-truth SID, got {ground_truth!r}")
 
         rank = 0
-        for candidate_rank, prediction in enumerate(list(beam)[:10], start=1):
+        for candidate_rank, prediction in enumerate(beam, start=1):
             if _SID_TOKEN_PATTERN.findall(str(prediction))[:3] == target_sid:
                 rank = candidate_rank
                 break
@@ -791,6 +796,7 @@ class RayPPOTrainer:
         validation_core_metrics = {
             "sid_match_reward": "core_metrics_val/sid_match_reward_mean",
             "valid_sid_reward": "core_metrics_val/valid_sid_reward_mean",
+            "sid_eval_diversity": "core_metrics_val/sid_diversity_mean",
             "prefix_1_match": "core_metrics_val/prefix_1_match_rate",
             "prefix_2_match": "core_metrics_val/prefix_2_match_rate",
             "exact_match": "core_metrics_val/exact_match_rate",
