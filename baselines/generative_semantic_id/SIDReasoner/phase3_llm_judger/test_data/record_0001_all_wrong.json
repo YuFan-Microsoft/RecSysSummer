@@ -1,0 +1,125 @@
+{
+  "request_id": "checkpoint-record-0001",
+  "history": [
+    {
+      "sid": "<a_140><b_220><c_113>",
+      "title": "PlayStation Eye"
+    },
+    {
+      "sid": "<a_140><b_220><c_113>",
+      "title": "PlayStation Eye"
+    },
+    {
+      "sid": "<a_245><b_148><c_169>",
+      "title": "Angry Birds Star Wars - Playstation 3"
+    },
+    {
+      "sid": "<a_86><b_134><c_38>",
+      "title": "DuckTales - Remastered PS3 - PlayStation 3"
+    },
+    {
+      "sid": "<a_201><b_190><c_179>",
+      "title": "Minecraft - PlayStation 3"
+    },
+    {
+      "sid": "<a_245><b_232><c_5>",
+      "title": "LEGO Jurassic World - PlayStation 3"
+    }
+  ],
+  "target": {
+    "sid": "<a_111><b_158><c_21>",
+    "title": "Just Dance 2017 - PlayStation 3"
+  },
+  "candidates": [
+    {
+      "candidate_id": "beam-01",
+      "reasoning": "<think>\n<history_summary>\n- <a_140><b_220><c_113> => Two interactions are with the same PlayStation camera/microphone accessory for motion tracking, video chat, and photo/video capture.\n- <a_245><b_148><c_169>, <a_86><b_134><c_38> => Two interactions are with PlayStation 3 games built around licensed characters, light action, and accessible play.\n- <a_201><b_190><c_179>, <a_245><b_232><c_5> => Two later interactions are with PlayStation 3 games centered on exploration, puzzle-solving, and family-oriented presentation.\n</history_summary>\n<future_interests>\n- [exploit] <a_245><b_148><c_169>, <a_86><b_134><c_38> => Possible future interest in additional licensed action-adventure games with accessible combat and recognizable characters.\n- [exploit] <a_201><b_190><c_179> => Possible future interest in sandbox-style games focused on building, crafting, exploration, and open-ended play.\n- [explore] <a_140><b_220><c_113> => Possible future interest in camera- or motion-driven party and fitness experiences, bridged by the accessory’s explicit motion tracking and video communication functions.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_245><b_86><c_8>",
+        "title": "LEGO The Hobbit - PlayStation 3"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-02",
+      "reasoning": "<think>\n<history_summary>\n- <a_140><b_220><c_113> => Two interactions are with the same PlayStation camera/microphone accessory for motion tracking, video chat, and photo/video capture.\n- <a_245><b_148><c_169>, <a_86><b_134><c_38> => Two interactions are with PlayStation 3 games built around licensed characters, light action, and accessible play.\n- <a_201><b_190><c_179>, <a_245><b_232><c_5> => Two later interactions are with PlayStation 3 games centered on exploration, puzzle-solving, and family-oriented presentation.\n</history_summary>\n<future_interests>\n- [exploit] <a_245><b_148><c_169>, <a_86><b_134><c_38> => Possible future interest in additional licensed action-adventure games with accessible combat and recognizable characters.\n- [exploit] <a_201><b_190><c_179> => Possible future interest in sandbox-style games focused on building, crafting, exploration, and open-ended play.\n- [explore] <a_140><b_220><c_113> => Possible future interest in camera- or motion-driven party and fitness experiences, bridged by the accessory’s explicit motion tracking and video communication functions.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_74><b_128><c_20>",
+        "title": "Minecraft - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-03",
+      "reasoning": "<think>\n<history_summary>\n- <a_140><b_220><c_113> => Two interactions are with the same PlayStation camera/microphone accessory for motion tracking, video chat, and photo/video capture.\n- <a_245><b_148><c_169>, <a_86><b_134><c_38> => Two interactions are with PlayStation 3 games built around licensed characters, light action, and accessible play.\n- <a_201><b_190><c_179>, <a_245><b_232><c_5> => Two later interactions are with PlayStation 3 games centered on exploration, puzzle-solving, and family-oriented presentation.\n</history_summary>\n<future_interests>\n- [exploit] <a_245><b_148><c_169>, <a_86><b_134><c_38> => Possible future interest in additional licensed action-adventure games with accessible combat and recognizable characters.\n- [exploit] <a_201><b_190><c_179> => Possible future interest in sandbox-style games focused on building, crafting, exploration, and open-ended play.\n- [explore] <a_140><b_220><c_113> => Possible future interest in camera- or motion-driven party and fitness experiences, bridged by the accessory’s explicit motion tracking and video communication functions.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_74><b_100><c_233>",
+        "title": "Minecraft"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-04",
+      "reasoning": "<think>\n<history_summary>\n- <a_140><b_220><c_113> => Two interactions are with the same PlayStation camera/microphone accessory for motion tracking, video chat, and photo/video capture.\n- <a_245><b_148><c_169>, <a_86><b_134><c_38> => Two interactions are with PlayStation 3 games built around licensed characters, light action, and accessible play.\n- <a_201><b_190><c_179>, <a_245><b_232><c_5> => Two later interactions are with PlayStation 3 games centered on exploration, puzzle-solving, and family-oriented presentation.\n</history_summary>\n<future_interests>\n- [exploit] <a_245><b_148><c_169>, <a_86><b_134><c_38> => Possible future interest in additional licensed action-adventure games with accessible combat and recognizable characters.\n- [exploit] <a_201><b_190><c_179> => Possible future interest in sandbox-style games focused on building, crafting, exploration, and open-ended play.\n- [explore] <a_140><b_220><c_113> => Possible future interest in camera- or motion-driven party and fitness experiences, bridged by the accessory’s explicit motion tracking and video communication functions.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_245><b_86><c_14>",
+        "title": "LEGO The Hobbit - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-05",
+      "reasoning": "<think>\n<history_summary>\n- <a_140><b_220><c_113> => Two interactions are with the same PlayStation camera/microphone accessory for motion tracking, video chat, and photo/video capture.\n- <a_245><b_148><c_169>, <a_86><b_134><c_38> => Two interactions are with PlayStation 3 games built around licensed characters, light action, and accessible play.\n- <a_201><b_190><c_179>, <a_245><b_232><c_5> => Two later interactions are with PlayStation 3 games centered on exploration, puzzle-solving, and family-oriented presentation.\n</history_summary>\n<future_interests>\n- [exploit] <a_245><b_148><c_169>, <a_86><b_134><c_38> => Possible future interest in additional licensed action-adventure games with accessible combat and recognizable characters.\n- [exploit] <a_201><b_190><c_179> => Possible future interest in sandbox-style games focused on building, crafting, exploration, and open-ended play.\n- [explore] <a_140><b_220><c_113> => Possible future interest in camera- or motion-driven party and fitness experiences, bridged by the accessory’s explicit motion tracking and video communication functions.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_245><b_121><c_8>",
+        "title": "LEGO Dimensions Starter Pack - PlayStation 3"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-06",
+      "reasoning": "<think>\n<history_summary>\n- <a_140><b_220><c_113> => Two interactions are with the same PlayStation camera/microphone accessory for motion tracking, video chat, and photo/video capture.\n- <a_245><b_148><c_169>, <a_86><b_134><c_38> => Two interactions are with PlayStation 3 games built around licensed characters, light action, and accessible play.\n- <a_201><b_190><c_179>, <a_245><b_232><c_5> => Two later interactions are with PlayStation 3 games centered on exploration, puzzle-solving, and family-oriented presentation.\n</history_summary>\n<future_interests>\n- [exploit] <a_245><b_148><c_169>, <a_86><b_134><c_38> => Possible future interest in additional licensed action-adventure games with accessible combat and recognizable characters.\n- [exploit] <a_201><b_190><c_179> => Possible future interest in sandbox-style games focused on building, crafting, exploration, and open-ended play.\n- [explore] <a_140><b_220><c_113> => Possible future interest in camera- or motion-driven party and fitness experiences, bridged by the accessory’s explicit motion tracking and video communication functions.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_245><b_91><c_144>",
+        "title": "The LEGO Movie Videogame - PlayStation 3"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-07",
+      "reasoning": "<think>\n<history_summary>\n- <a_140><b_220><c_113> => Two interactions are with the same PlayStation camera/microphone accessory for motion tracking, video chat, and photo/video capture.\n- <a_245><b_148><c_169>, <a_86><b_134><c_38> => Two interactions are with PlayStation 3 games built around licensed characters, light action, and accessible play.\n- <a_201><b_190><c_179>, <a_245><b_232><c_5> => Two later interactions are with PlayStation 3 games centered on exploration, puzzle-solving, and family-oriented presentation.\n</history_summary>\n<future_interests>\n- [exploit] <a_245><b_148><c_169>, <a_86><b_134><c_38> => Possible future interest in additional licensed action-adventure games with accessible combat and recognizable characters.\n- [exploit] <a_201><b_190><c_179> => Possible future interest in sandbox-style games focused on building, crafting, exploration, and open-ended play.\n- [explore] <a_140><b_220><c_113> => Possible future interest in camera- or motion-driven party and fitness experiences, bridged by the accessory’s explicit motion tracking and video communication functions.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_245><b_139><c_150>",
+        "title": "LEGO Star Wars: Force Awakens Deluxe Edition - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-08",
+      "reasoning": "<think>\n<history_summary>\n- <a_140><b_220><c_113> => Two interactions are with the same PlayStation camera/microphone accessory for motion tracking, video chat, and photo/video capture.\n- <a_245><b_148><c_169>, <a_86><b_134><c_38> => Two interactions are with PlayStation 3 games built around licensed characters, light action, and accessible play.\n- <a_201><b_190><c_179>, <a_245><b_232><c_5> => Two later interactions are with PlayStation 3 games centered on exploration, puzzle-solving, and family-oriented presentation.\n</history_summary>\n<future_interests>\n- [exploit] <a_245><b_148><c_169>, <a_86><b_134><c_38> => Possible future interest in additional licensed action-adventure games with accessible combat and recognizable characters.\n- [exploit] <a_201><b_190><c_179> => Possible future interest in sandbox-style games focused on building, crafting, exploration, and open-ended play.\n- [explore] <a_140><b_220><c_113> => Possible future interest in camera- or motion-driven party and fitness experiences, bridged by the accessory’s explicit motion tracking and video communication functions.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_245><b_148><c_16>",
+        "title": "Angry Birds: Star Wars - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-09",
+      "reasoning": "<think>\n<history_summary>\n- <a_140><b_220><c_113> => Two interactions are with the same PlayStation camera/microphone accessory for motion tracking, video chat, and photo/video capture.\n- <a_245><b_148><c_169>, <a_86><b_134><c_38> => Two interactions are with PlayStation 3 games built around licensed characters, light action, and accessible play.\n- <a_201><b_190><c_179>, <a_245><b_232><c_5> => Two later interactions are with PlayStation 3 games centered on exploration, puzzle-solving, and family-oriented presentation.\n</history_summary>\n<future_interests>\n- [exploit] <a_245><b_148><c_169>, <a_86><b_134><c_38> => Possible future interest in additional licensed action-adventure games with accessible combat and recognizable characters.\n- [exploit] <a_201><b_190><c_179> => Possible future interest in sandbox-style games focused on building, crafting, exploration, and open-ended play.\n- [explore] <a_140><b_220><c_113> => Possible future interest in camera- or motion-driven party and fitness experiences, bridged by the accessory’s explicit motion tracking and video communication functions.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_245><b_185><c_59>",
+        "title": "The LEGO Movie Videogame - PlayStation 4"
+      },
+      "hard_valid": true
+    },
+    {
+      "candidate_id": "beam-10",
+      "reasoning": "<think>\n<history_summary>\n- <a_140><b_220><c_113> => Two interactions are with the same PlayStation camera/microphone accessory for motion tracking, video chat, and photo/video capture.\n- <a_245><b_148><c_169>, <a_86><b_134><c_38> => Two interactions are with PlayStation 3 games built around licensed characters, light action, and accessible play.\n- <a_201><b_190><c_179>, <a_245><b_232><c_5> => Two later interactions are with PlayStation 3 games centered on exploration, puzzle-solving, and family-oriented presentation.\n</history_summary>\n<future_interests>\n- [exploit] <a_245><b_148><c_169>, <a_86><b_134><c_38> => Possible future interest in additional licensed action-adventure games with accessible combat and recognizable characters.\n- [exploit] <a_201><b_190><c_179> => Possible future interest in sandbox-style games focused on building, crafting, exploration, and open-ended play.\n- [explore] <a_140><b_220><c_113> => Possible future interest in camera- or motion-driven party and fitness experiences, bridged by the accessory’s explicit motion tracking and video communication functions.\n</future_interests>",
+      "predicted_item": {
+        "sid": "<a_74><b_247><c_164>",
+        "title": "PS3 Little Big Planet 2 Special Edition"
+      },
+      "hard_valid": true
+    }
+  ]
+}
