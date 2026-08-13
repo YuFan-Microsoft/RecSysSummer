@@ -53,11 +53,15 @@ With both switches disabled, verl does not register a `RefPolicy` worker, does n
 compute reference-policy log probabilities, does not add KL to the actor loss, and
 passes the custom rule-based reward directly into GRPO advantage estimation.
 
-### Constrained sampling with process reward
+### Constrained sampling with process and diversity rewards
 
-Training samples one catalog-valid SID per reasoning. The primary reward remains
-the pure sampled-SID exact match. Process supervision follows the same two stages
-used to construct the Phase-2 V4 traces:
+Training samples ten catalog-valid three-token SIDs per reasoning. First-level
+diversity is the number of unique first SID tokens divided by ten, matching the
+offline diversity metric's count/rate convention. If the target SID appears, the
+highest-cumulative-log-probability exact match becomes the single response SID;
+otherwise the first sampled SID is retained. The primary reward is therefore a
+best-of-ten exact match. Process supervision follows the same two stages used to
+construct the Phase-2 V4 traces:
 
 ```text
 process_reward = 1 if strict_format_valid
@@ -92,12 +96,20 @@ meaningful: the reward path has history SIDs but no trustworthy item metadata or
 semantic judge. Those properties are taught by the reviewed Phase-2 V4 traces;
 the online process reward enforces their observable schema and grounding proxies.
 
-SID and process advantages are normalized separately. SID advantage trains both
-reasoning and sampled SID tokens. Process advantage is multiplied by `0.1` and
-trains reasoning tokens only, so process quality cannot reinforce an incorrect
-SID action. Thinking format is logged as one strict `format_reward` metric;
-history-summary grounding, future-interests grounding, history-reference
-coverage, and combined process metrics remain separate.
+SID, process, and diversity advantages are normalized separately. Best-of-ten
+selection uses the target and is not an on-policy SID action, so all three
+advantages train reasoning tokens only; the selected SID and terminal separator
+are excluded from `response_mask`. Process and diversity advantages are each
+multiplied by `0.1`. The PPO batch still contains exactly one response per
+reasoning, so actor-update batch size and backward token count do not grow with
+the ten SID samples. Only the three-step vLLM SID rollout expands, with the first
+step sampled using `n=10` and the remaining two steps batched behind the sampled
+prefixes. `timing_s/gen`, `timing_s/update_actor`, and `timing_s/step` are logged
+to separate rollout overhead from backward cost.
+
+Thinking format is logged as one strict `format_reward` metric; history-summary
+grounding, future-interests grounding, history-reference coverage, first-token
+diversity count/rate, and combined process metrics remain separate.
 
 W&B uses a strict allowlist rather than forwarding every VERL metric. The
 dashboard keeps recommendation outcomes (HR/NDCG at 1, 5, and 10), all process

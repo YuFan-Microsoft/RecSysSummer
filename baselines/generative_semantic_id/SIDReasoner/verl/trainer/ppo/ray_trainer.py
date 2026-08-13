@@ -73,12 +73,21 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_train/history_reference_coverage_mean",
     "core_metrics_train/latest_history_summary_reference_reward_mean",
     "core_metrics_train/process_reward_mean",
+    "core_metrics_train/sid_first_token_diversity_count_mean",
+    "core_metrics_train/sid_first_token_diversity_rate_mean",
+    "core_metrics_train/sid_best_of_n_hit_rate",
+    "core_metrics_train/sid_best_of_n_selection_rate",
+    "core_metrics_train/sid_exact_match_sample_count_mean",
     "core_metrics_train/sid_match_active_group_rate",
     "core_metrics_train/sid_match_all_wrong_group_rate",
     "core_metrics_train/process_active_group_rate",
+    "core_metrics_train/sid_diversity_active_group_rate",
     "retry_sampling/attempt_1_active_rate",
     "retry_sampling/attempt_2_active_rate",
     "retry_sampling/attempt_3_active_rate",
+    "timing_s/gen",
+    "timing_s/update_actor",
+    "timing_s/step",
     "core_metrics_train/entropy",
     "core_metrics_train/pg_loss",
     "core_metrics_train/pg_clipfrac",
@@ -162,6 +171,11 @@ def _compute_core_metrics(batch, metrics):
         "history_reference_coverage": "core_metrics_train/history_reference_coverage_mean",
         "latest_history_summary_reference_reward": "core_metrics_train/latest_history_summary_reference_reward_mean",
         "process_reward": "core_metrics_train/process_reward_mean",
+        "sid_first_token_unique_count": "core_metrics_train/sid_first_token_diversity_count_mean",
+        "sid_diversity_reward": "core_metrics_train/sid_first_token_diversity_rate_mean",
+        "sid_best_of_n_hit": "core_metrics_train/sid_best_of_n_hit_rate",
+        "sid_best_of_n_selected": "core_metrics_train/sid_best_of_n_selection_rate",
+        "sid_exact_match_sample_count": "core_metrics_train/sid_exact_match_sample_count_mean",
         "prefix_1_match": "core_metrics_train/prefix_1_match_rate",
         "prefix_2_match": "core_metrics_train/prefix_2_match_rate",
         "exact_match": "core_metrics_train/exact_match_rate",
@@ -173,6 +187,7 @@ def _compute_core_metrics(batch, metrics):
     active_group_metrics = {
         "sid_match_reward": "core_metrics_train/sid_match_active_group_rate",
         "process_reward": "core_metrics_train/process_active_group_rate",
+        "sid_diversity_reward": "core_metrics_train/sid_diversity_active_group_rate",
     }
     if "uid" in batch.non_tensor_batch:
         sample_uids = batch.non_tensor_batch["uid"]
@@ -386,7 +401,7 @@ def compute_advantage(
         # Initialize the mask for GRPO calculation
         grpo_calculation_mask = data.batch["response_mask"]
 
-        # SID outcome advantage trains both sampled reasoning and constrained SID actions.
+        # Best-of-N response masks exclude selected SID actions, so outcome advantage trains reasoning only.
         sid_advantages, _ = core_algos.compute_grpo_outcome_advantage(
             token_level_rewards=data.batch["token_level_rewards"],
             response_mask=grpo_calculation_mask,
@@ -395,13 +410,13 @@ def compute_advantage(
         )
         advantages = sid_advantages
 
-        if "process_reward" in data.non_tensor_batch and "sid_token_mask" in data.batch:
-            sid_token_mask = data.batch["sid_token_mask"].bool()
-            response_mask = grpo_calculation_mask.bool()
-            if torch.any(sid_token_mask & ~response_mask):
-                raise ValueError("SID token mask must be a subset of the response mask")
+        response_mask = grpo_calculation_mask.bool()
+        reasoning_mask = response_mask
+        if "sid_token_mask" in data.batch:
+            reasoning_mask = response_mask & ~data.batch["sid_token_mask"].bool()
+        reasoning_mask = reasoning_mask.to(grpo_calculation_mask.dtype)
 
-            reasoning_mask = (response_mask & ~sid_token_mask).to(grpo_calculation_mask.dtype)
+        if "process_reward" in data.non_tensor_batch:
             process_scores = torch.as_tensor(
                 np.asarray(data.non_tensor_batch["process_reward"], dtype=float),
                 dtype=data.batch["token_level_rewards"].dtype,
@@ -416,7 +431,25 @@ def compute_advantage(
                 index=data.non_tensor_batch["uid"],
                 norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
             )
-            advantages = sid_advantages + PROCESS_ADVANTAGE_WEIGHT * process_advantages
+            advantages = advantages + PROCESS_ADVANTAGE_WEIGHT * process_advantages
+
+        if "sid_diversity_reward" in data.non_tensor_batch:
+            diversity_weight = float(config.get("sid_diversity_reward_weight", 0.0))
+            diversity_scores = torch.as_tensor(
+                np.asarray(data.non_tensor_batch["sid_diversity_reward"], dtype=float),
+                dtype=data.batch["token_level_rewards"].dtype,
+                device=data.batch["token_level_rewards"].device,
+            )
+            if diversity_scores.shape != (len(data),):
+                raise ValueError("SID diversity rewards must provide one scalar per trajectory")
+
+            diversity_advantages, _ = core_algos.compute_grpo_outcome_advantage(
+                token_level_rewards=diversity_scores.unsqueeze(-1),
+                response_mask=reasoning_mask,
+                index=data.non_tensor_batch["uid"],
+                norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
+            )
+            advantages = advantages + diversity_weight * diversity_advantages
 
         data.batch["advantages"] = advantages
         data.batch["returns"] = advantages
@@ -495,8 +528,10 @@ class RayPPOTrainer:
 
         sid_sample_size = self.config.actor_rollout_ref.rollout.get("sid_constrained_sample_size", None)
         if sid_sample_size is not None:
-            if sid_sample_size != 1:
-                raise ValueError("sid_constrained_sample_size must be exactly 1")
+            if sid_sample_size < 1:
+                raise ValueError("sid_constrained_sample_size must be positive")
+            if sid_sample_size > 1 and self.config.algorithm.get("sid_diversity_reward_weight", 0.0) <= 0:
+                raise ValueError("Best-of-N SID sampling requires a positive sid_diversity_reward_weight")
             if self.config.actor_rollout_ref.actor.strategy not in {"fsdp", "fsdp2"}:
                 raise ValueError("Constrained SID sampling currently requires an FSDP actor")
             if self.config.actor_rollout_ref.actor.entropy_coeff != 0:
