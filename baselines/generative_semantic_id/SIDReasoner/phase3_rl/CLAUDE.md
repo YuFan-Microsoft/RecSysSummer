@@ -108,13 +108,16 @@ meaningful: the reward path has history SIDs but no trustworthy item metadata or
 semantic judge. Those properties are taught by the reviewed Phase-2 V4 traces;
 the online process reward enforces their observable schema and grounding proxies.
 
-SID and process advantages use their existing normalization. The binary diversity
-advantage is centered within each prompt group but is not divided by its standard
-deviation, preventing rare pass/fail differences from being amplified. Best-of-ten
-selection uses the target and is not an on-policy SID action, so all three
-advantages train reasoning tokens only; the selected SID and terminal separator
-are excluded from `response_mask`. Process and diversity advantages are each
-multiplied by `0.1`. The PPO batch still contains exactly one response per
+Task, process, and binary diversity are combined as one raw trajectory reward:
+
+```text
+total_reward = task_reward + 0.1 * process_reward + 0.1 * diversity_reward
+```
+
+GRPO normalizes this combined reward exactly once within each prompt's trajectory
+group. Best-of-ten selection uses the target and is not an on-policy SID action,
+so the combined advantage trains reasoning tokens only; the selected SID and
+terminal separator are excluded from `response_mask`. The PPO batch still contains exactly one response per
 reasoning, so actor-update batch size and backward token count do not grow with
 the ten SID samples. Only the three-step vLLM SID rollout expands, with the first
 step sampled using `n=10` and the remaining two steps batched behind the sampled

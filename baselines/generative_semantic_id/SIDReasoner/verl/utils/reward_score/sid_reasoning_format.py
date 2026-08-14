@@ -4,7 +4,7 @@ import re
 from typing import Any
 
 
-PROCESS_ADVANTAGE_WEIGHT = 0.1
+PROCESS_REWARD_WEIGHT = 0.1
 
 _SID_PATTERN = r"<a_\d+><b_\d+><c_\d+>"
 _CITATIONS_PATTERN = rf"{_SID_PATTERN}(?:\s*,\s*{_SID_PATTERN})*"

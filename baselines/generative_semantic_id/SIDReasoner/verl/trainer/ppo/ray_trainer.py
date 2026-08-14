@@ -61,7 +61,7 @@ from verl.utils.config import omega_conf_to_dataclass
 from verl.utils.debug import marked_timer
 from verl.utils.metric import reduce_metrics
 from verl.utils.rollout_skip import RolloutSkip
-from verl.utils.reward_score.sid_reasoning_format import PROCESS_ADVANTAGE_WEIGHT
+from verl.utils.reward_score.sid_reasoning_format import PROCESS_REWARD_WEIGHT
 from verl.utils.seqlen_balancing import get_seqlen_balanced_partitions, log_seqlen_unbalance
 from verl.utils.torch_functional import masked_mean
 from verl.utils.tracking import ValidationGenerationsLogger
@@ -402,21 +402,14 @@ def compute_advantage(
     elif adv_estimator == AdvantageEstimator.GRPO:
         # Initialize the mask for GRPO calculation
         grpo_calculation_mask = data.batch["response_mask"]
+        trajectory_scores = data.batch["token_level_rewards"].sum(dim=-1)
 
-        # Best-of-N response masks exclude selected SID actions, so outcome advantage trains reasoning only.
-        sid_advantages, _ = core_algos.compute_grpo_outcome_advantage(
-            token_level_rewards=data.batch["token_level_rewards"],
-            response_mask=grpo_calculation_mask,
-            index=data.non_tensor_batch["uid"],
-            norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
-        )
-        advantages = sid_advantages
-
-        response_mask = grpo_calculation_mask.bool()
-        reasoning_mask = response_mask
-        if "sid_token_mask" in data.batch:
-            reasoning_mask = response_mask & ~data.batch["sid_token_mask"].bool()
-        reasoning_mask = reasoning_mask.to(grpo_calculation_mask.dtype)
+        if "sid_token_mask" in data.batch and torch.any(
+            data.batch["sid_token_mask"].bool() & grpo_calculation_mask.bool()
+        ):
+            raise ValueError(
+                "Combined process/diversity reward requires a reasoning-only response mask"
+            )
 
         if "process_reward" in data.non_tensor_batch:
             process_scores = torch.as_tensor(
@@ -426,14 +419,7 @@ def compute_advantage(
             )
             if process_scores.shape != (len(data),):
                 raise ValueError("Process rewards must provide one scalar per trajectory")
-
-            process_advantages, _ = core_algos.compute_grpo_outcome_advantage(
-                token_level_rewards=process_scores.unsqueeze(-1),
-                response_mask=reasoning_mask,
-                index=data.non_tensor_batch["uid"],
-                norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
-            )
-            advantages = advantages + PROCESS_ADVANTAGE_WEIGHT * process_advantages
+            trajectory_scores = trajectory_scores + PROCESS_REWARD_WEIGHT * process_scores
 
         if "sid_diversity_reward" in data.non_tensor_batch:
             diversity_weight = float(config.get("sid_diversity_reward_weight", 0.0))
@@ -444,14 +430,14 @@ def compute_advantage(
             )
             if diversity_scores.shape != (len(data),):
                 raise ValueError("SID diversity rewards must provide one scalar per trajectory")
+            trajectory_scores = trajectory_scores + diversity_weight * diversity_scores
 
-            diversity_advantages, _ = core_algos.compute_grpo_outcome_advantage(
-                token_level_rewards=diversity_scores.unsqueeze(-1),
-                response_mask=reasoning_mask,
-                index=data.non_tensor_batch["uid"],
-                norm_adv_by_std_in_grpo=False,
-            )
-            advantages = advantages + diversity_weight * diversity_advantages
+        advantages, _ = core_algos.compute_grpo_outcome_advantage(
+            token_level_rewards=trajectory_scores.unsqueeze(-1),
+            response_mask=grpo_calculation_mask,
+            index=data.non_tensor_batch["uid"],
+            norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
+        )
 
         data.batch["advantages"] = advantages
         data.batch["returns"] = advantages
