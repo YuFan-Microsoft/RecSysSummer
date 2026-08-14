@@ -53,6 +53,7 @@ from verl.trainer.ppo.metric_utils import (
 )
 from verl.trainer.ppo.mismatch_helper import compute_rollout_importance_weights
 from verl.trainer.ppo.reward import compute_reward, compute_reward_async
+from verl.trainer.ppo.sid_group_metrics import compute_exact_match_count_buckets
 from verl.trainer.ppo.sid_eval_metrics import count_unique_first_sid_tokens
 from verl.trainer.ppo.utils import Role, WorkerType, need_critic, need_reference_policy, need_reward_model
 from verl.utils.checkpoint.checkpoint_manager import find_latest_ckpt_path, should_save_ckpt_esi
@@ -76,6 +77,12 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_train/process_reward_mean",
     "core_metrics_train/sid_match_active_group_rate",
     "core_metrics_train/sid_match_all_wrong_group_rate",
+    "core_metrics_train/sid_match_all_wrong_group_count",
+    "core_metrics_train/sid_match_one_correct_group_count",
+    "core_metrics_train/sid_match_k_2_4_group_count",
+    "core_metrics_train/sid_match_k_5_11_group_count",
+    "core_metrics_train/sid_match_k_12_15_group_count",
+    "core_metrics_train/sid_match_all_correct_group_count",
     "core_metrics_train/process_active_group_rate",
     "retry_sampling/attempt_1_active_rate",
     "retry_sampling/attempt_2_active_rate",
@@ -192,6 +199,16 @@ def _compute_core_metrics(batch, metrics):
 
             if batch_key == "sid_match_reward":
                 group_rewards = list(grouped_rewards.values())
+                exact_match_count_buckets = compute_exact_match_count_buckets(
+                    sample_uids,
+                    batch.non_tensor_batch[batch_key],
+                )
+                core_metrics.update(
+                    {
+                        f"core_metrics_train/sid_match_{bucket_name}_group_count": count
+                        for bucket_name, count in exact_match_count_buckets.items()
+                    }
+                )
                 core_metrics["core_metrics_train/sid_match_all_wrong_group_rate"] = float(
                     np.mean([max(rewards) == 0.0 for rewards in group_rewards])
                 )
