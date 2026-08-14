@@ -45,6 +45,7 @@ from verl.single_controller.ray.base import create_colocated_worker_cls
 from verl.trainer.config import AlgoConfig
 from verl.trainer.ppo import core_algos
 from verl.trainer.ppo.core_algos import AdvantageEstimator, agg_loss
+from verl.trainer.ppo.diversity_reward import binary_diversity_rewards
 from verl.trainer.ppo.generation_metadata import copy_reward_models_for_generation
 from verl.trainer.ppo.metric_utils import (
     compute_data_metrics,
@@ -76,6 +77,7 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_train/latest_history_summary_reference_reward_mean",
     "core_metrics_train/process_reward_mean",
     "core_metrics_train/sid_diversity_mean",
+    "core_metrics_train/sid_diversity_pass_rate",
     "core_metrics_train/sid_match_active_group_rate",
     "core_metrics_train/sid_match_all_wrong_group_rate",
     "core_metrics_train/process_active_group_rate",
@@ -99,6 +101,7 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_val/latest_history_summary_reference_reward_mean",
     "core_metrics_val/process_reward_mean",
     "core_metrics_val/sid_diversity_mean",
+    "core_metrics_val/sid_diversity_baseline",
     "core_metrics_val/hr_at_1",
     "core_metrics_val/hr_at_5",
     "core_metrics_val/hr_at_10",
@@ -174,6 +177,7 @@ def _compute_core_metrics(batch, metrics):
         "latest_history_summary_reference_reward": "core_metrics_train/latest_history_summary_reference_reward_mean",
         "process_reward": "core_metrics_train/process_reward_mean",
         "sid_first_token_unique_count": "core_metrics_train/sid_diversity_mean",
+        "sid_diversity_reward": "core_metrics_train/sid_diversity_pass_rate",
         "prefix_1_match": "core_metrics_train/prefix_1_match_rate",
         "prefix_2_match": "core_metrics_train/prefix_2_match_rate",
         "exact_match": "core_metrics_train/exact_match_rate",
@@ -445,7 +449,7 @@ def compute_advantage(
                 token_level_rewards=diversity_scores.unsqueeze(-1),
                 response_mask=reasoning_mask,
                 index=data.non_tensor_batch["uid"],
-                norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
+                norm_adv_by_std_in_grpo=False,
             )
             advantages = advantages + diversity_weight * diversity_advantages
 
@@ -523,6 +527,7 @@ class RayPPOTrainer:
         self.config = config
         self.reward_fn = reward_fn
         self.val_reward_fn = val_reward_fn
+        self.sid_diversity_baseline_threshold = None
 
         sid_sample_size = self.config.actor_rollout_ref.rollout.get("sid_constrained_sample_size", None)
         if sid_sample_size is not None:
@@ -530,6 +535,13 @@ class RayPPOTrainer:
                 raise ValueError("sid_constrained_sample_size must be positive")
             if sid_sample_size > 1 and self.config.algorithm.get("sid_diversity_reward_weight", 0.0) <= 0:
                 raise ValueError("Best-of-N SID sampling requires a positive sid_diversity_reward_weight")
+            if sid_sample_size > 1 and (
+                self.val_reward_fn is None
+                or not self.config.trainer.get("val_before_train", True)
+            ):
+                raise ValueError(
+                    "Best-of-N diversity reward requires step-0 validation to calibrate its baseline"
+                )
             if self.config.actor_rollout_ref.actor.strategy not in {"fsdp", "fsdp2"}:
                 raise ValueError("Constrained SID sampling currently requires an FSDP actor")
             if self.config.actor_rollout_ref.actor.entropy_coeff != 0:
@@ -566,6 +578,97 @@ class RayPPOTrainer:
             self.kl_ctrl_in_reward = core_algos.get_kl_controller(self.config.algorithm.kl_ctrl)
 
         self._create_dataloader(train_dataset, val_dataset, collate_fn, train_sampler)
+
+    def _diversity_reward_enabled(self) -> bool:
+        sample_size = self.config.actor_rollout_ref.rollout.get("sid_constrained_sample_size", None)
+        weight = float(self.config.algorithm.get("sid_diversity_reward_weight", 0.0))
+        return sample_size is not None and sample_size > 1 and weight > 0
+
+    def _diversity_baseline_path(self) -> str:
+        return os.path.abspath(
+            os.path.join(
+                self.config.trainer.default_local_dir,
+                "sid_diversity_baseline.json",
+            )
+        )
+
+    def _load_diversity_baseline(self) -> None:
+        if not self._diversity_reward_enabled():
+            return
+        if self.global_steps == 0:
+            return
+        baseline_path = self._diversity_baseline_path()
+        if not os.path.exists(baseline_path):
+            raise RuntimeError(
+                "Diversity reward resume requires the frozen step-0 baseline file: "
+                f"{baseline_path}"
+            )
+        with open(baseline_path, encoding="utf-8") as baseline_file:
+            payload = json.load(baseline_file)
+        threshold = float(payload["sid_diversity_baseline_threshold"])
+        sample_size = int(self.config.actor_rollout_ref.rollout.sid_constrained_sample_size)
+        if not math.isfinite(threshold) or not 0 < threshold <= sample_size:
+            raise ValueError(f"Invalid persisted SID diversity baseline: {threshold}")
+        self.sid_diversity_baseline_threshold = threshold
+        print(f"Loaded frozen SID diversity baseline {threshold:.6f} from {baseline_path}")
+
+    def _initialize_diversity_baseline(self, validation_metrics: dict) -> None:
+        if not self._diversity_reward_enabled():
+            return
+        if self.sid_diversity_baseline_threshold is not None:
+            return
+        if self.global_steps > 0:
+            raise RuntimeError(
+                "Cannot resume diversity-reward training without the frozen step-0 baseline file"
+            )
+
+        metric_key = "core_metrics_val/sid_diversity_mean"
+        if metric_key not in validation_metrics:
+            raise KeyError(f"Initial validation did not produce {metric_key}")
+        threshold = float(validation_metrics[metric_key])
+        sample_size = int(self.config.actor_rollout_ref.rollout.sid_constrained_sample_size)
+        if not math.isfinite(threshold) or not 0 < threshold <= sample_size:
+            raise ValueError(
+                f"Initial SID diversity baseline must be in (0, {sample_size}], got {threshold}"
+            )
+
+        self.sid_diversity_baseline_threshold = threshold
+        baseline_path = self._diversity_baseline_path()
+        os.makedirs(os.path.dirname(baseline_path), exist_ok=True)
+        temporary_path = f"{baseline_path}.tmp"
+        with open(temporary_path, "w", encoding="utf-8") as baseline_file:
+            json.dump(
+                {
+                    "sid_diversity_baseline_threshold": threshold,
+                    "source_metric": metric_key,
+                    "source_global_step": self.global_steps,
+                },
+                baseline_file,
+                indent=2,
+            )
+            baseline_file.write("\n")
+        os.replace(temporary_path, baseline_path)
+        print(f"Frozen step-0 SID diversity baseline at {threshold:.6f} in {baseline_path}")
+
+    def _apply_binary_diversity_reward(self, batch: DataProto) -> None:
+        if "sid_first_token_unique_count" not in batch.non_tensor_batch:
+            return
+        if self.sid_diversity_baseline_threshold is None:
+            raise RuntimeError("SID diversity baseline must be initialized before training rollout")
+        counts = np.asarray(
+            batch.non_tensor_batch["sid_first_token_unique_count"],
+            dtype=int,
+        )
+        if counts.shape != (len(batch),):
+            raise ValueError("SID diversity counts must provide one scalar per trajectory")
+        rewards = binary_diversity_rewards(
+            counts.tolist(),
+            baseline_threshold=self.sid_diversity_baseline_threshold,
+        )
+        batch.non_tensor_batch["sid_diversity_reward"] = np.asarray(
+            rewards,
+            dtype=np.float32,
+        )
 
     def _create_dataloader(self, train_dataset, val_dataset, collate_fn, train_sampler: Optional[Sampler]):
         """
@@ -1260,12 +1363,18 @@ class RayPPOTrainer:
 
         # load checkpoint before doing anything
         self._load_checkpoint()
+        self._load_diversity_baseline()
 
         # perform validation before training
         # currently, we only support validation using the reward_function.
         if self.val_reward_fn is not None and self.config.trainer.get("val_before_train", True):
             val_metrics = self._validate()
             assert val_metrics, f"{val_metrics=}"
+            self._initialize_diversity_baseline(val_metrics)
+            if self.sid_diversity_baseline_threshold is not None:
+                val_metrics["core_metrics_val/sid_diversity_baseline"] = (
+                    self.sid_diversity_baseline_threshold
+                )
             pprint(f"Initial validation metrics: {val_metrics}")
             _log_metrics(
                 logger=logger,
@@ -1366,6 +1475,7 @@ class RayPPOTrainer:
                     # TODO: Decouple the DP balancing and mini-batching.
                     if self.config.trainer.balance_batch:
                         self._balance_batch(batch, metrics=metrics)
+                    self._apply_binary_diversity_reward(batch)
                     if "sid_token_mask" in batch.batch:
                         batch_size = len(batch.batch)
                         prompt_uids = batch.non_tensor_batch.get("uid", [])

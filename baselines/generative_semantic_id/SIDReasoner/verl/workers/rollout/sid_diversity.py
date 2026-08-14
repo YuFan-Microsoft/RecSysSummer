@@ -7,7 +7,6 @@ import re
 class SidCandidateSelection:
     selected_index: int
     first_token_unique_count: int
-    diversity_reward: float
     exact_match_count: int
 
 
@@ -48,7 +47,6 @@ def select_sid_candidate(
         raise ValueError("Sampled and target SIDs must have the same depth")
     if any(not math.isfinite(score) for score in cumulative_logprobs):
         raise ValueError("SID cumulative log probabilities must be finite")
-
     exact_match_indices = [
         index for index, candidate in enumerate(candidates) if candidate == target_sid
     ]
@@ -60,6 +58,5 @@ def select_sid_candidate(
     return SidCandidateSelection(
         selected_index=selected_index,
         first_token_unique_count=first_token_unique_count,
-        diversity_reward=first_token_unique_count / len(candidates),
         exact_match_count=len(exact_match_indices),
     )

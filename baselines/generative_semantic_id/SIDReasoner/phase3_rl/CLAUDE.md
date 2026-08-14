@@ -56,8 +56,20 @@ passes the custom rule-based reward directly into GRPO advantage estimation.
 ### Constrained sampling with process and diversity rewards
 
 Training samples ten catalog-valid three-token SIDs per reasoning. First-level
-diversity is the number of unique first SID tokens divided by ten, matching the
-offline diversity metric's count/rate convention. If the target SID appears, the
+diversity is the number of unique first SID tokens. Before the first training
+rollout, the trainer evaluates the initial checkpoint on the configured test set
+and freezes that run's `core_metrics_val/sid_diversity_mean` as `D0`:
+
+```text
+diversity_reward = 1 if unique_first_sid_count >= D0 else 0
+```
+
+Because each trajectory's count is integral, this is equivalent to comparing it
+with `ceil(D0)`, without manually rounding the stored baseline. The baseline is
+written to `sid_diversity_baseline.json` in the run checkpoint directory and is
+reloaded on resume; a resumed run never recalibrates from an intermediate
+checkpoint. Reaching the floor gives the full reward; increasing diversity beyond
+the floor gives no additional reward. If the target SID appears, the
 highest-cumulative-log-probability exact match becomes the single response SID;
 otherwise the first sampled SID is retained. The primary reward is therefore a
 best-of-ten exact match. Process supervision follows the same two stages used to
@@ -96,7 +108,9 @@ meaningful: the reward path has history SIDs but no trustworthy item metadata or
 semantic judge. Those properties are taught by the reviewed Phase-2 V4 traces;
 the online process reward enforces their observable schema and grounding proxies.
 
-SID, process, and diversity advantages are normalized separately. Best-of-ten
+SID and process advantages use their existing normalization. The binary diversity
+advantage is centered within each prompt group but is not divided by its standard
+deviation, preventing rare pass/fail differences from being amplified. Best-of-ten
 selection uses the target and is not an on-policy SID action, so all three
 advantages train reasoning tokens only; the selected SID and terminal separator
 are excluded from `response_mask`. Process and diversity advantages are each
@@ -110,8 +124,9 @@ to separate rollout overhead from backward cost.
 Thinking format is logged as one strict `format_reward` metric; history-summary
 grounding, future-interests grounding, history-reference coverage, first-token
 diversity mean count, and combined process metrics remain separate. The W&B
-diversity mean is on the 1-10 count scale used by offline evaluation; the
-normalized count divided by ten is used internally as the GRPO reward.
+diversity mean is on the 1-10 count scale used by offline evaluation;
+`sid_diversity_baseline` records the frozen step-0 value and
+`sid_diversity_pass_rate` reports the fraction meeting that binary floor.
 Validation reports the same `sid_diversity_mean` count over its constrained
 top-10 beam, so train-sample and validation-beam diversity share one scale.
 

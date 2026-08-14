@@ -32,7 +32,6 @@ class SidDiversitySelectionTest(unittest.TestCase):
         )
 
         self.assertEqual(selection.first_token_unique_count, 3)
-        self.assertEqual(selection.diversity_reward, 0.75)
 
     def test_exact_match_is_selected(self):
         selection = select_sid_candidate(

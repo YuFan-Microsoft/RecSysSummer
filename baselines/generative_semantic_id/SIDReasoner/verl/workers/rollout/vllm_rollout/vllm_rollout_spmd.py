@@ -822,7 +822,6 @@ class vLLMRollout(BaseRollout):
                 sid_allowed_token_ids = np.empty(batch_size, dtype=object)
                 sid_beam_predictions = np.empty(batch_size, dtype=object)
                 sid_first_token_unique_count = np.empty(batch_size, dtype=np.int64)
-                sid_diversity_reward = np.empty(batch_size, dtype=np.float32)
                 selected_sids = []
                 reward_models = non_tensor_batch.get("reward_model")
                 if reward_models is None or len(reward_models) != batch_size:
@@ -862,14 +861,12 @@ class vLLMRollout(BaseRollout):
                         dtype=object,
                     )
                     sid_first_token_unique_count[prompt_index] = selection.first_token_unique_count
-                    sid_diversity_reward[prompt_index] = selection.diversity_reward
 
                 non_tensor_batch["sid_beam_predictions"] = sid_beam_predictions
                 if self.sid_constrained_sample_size == 1:
                     non_tensor_batch["sid_allowed_token_ids"] = sid_allowed_token_ids
 
                 non_tensor_batch["sid_first_token_unique_count"] = sid_first_token_unique_count
-                non_tensor_batch["sid_diversity_reward"] = sid_diversity_reward
                 response = [
                     reasoning_ids + sid_ids + [primary_eos_token_id]
                     for reasoning_ids, sid_ids in zip(response_reasonings, selected_sids, strict=True)
