@@ -19,7 +19,6 @@ from __future__ import annotations
 import argparse
 import ast
 from collections import Counter
-import importlib.util
 import json
 from pathlib import Path
 import re
@@ -44,22 +43,155 @@ SECTION_PATTERNS = {
     for tag in ("history_summary", "future_interests")
 }
 
-PROCESS_REWARD_PATH = (
-    Path(__file__).parents[1]
-    / "verl"
-    / "utils"
-    / "reward_score"
-    / "sid_reasoning_format.py"
-)
-PROCESS_REWARD_SPEC = importlib.util.spec_from_file_location(
-    "sid_reasoning_format",
-    PROCESS_REWARD_PATH,
-)
-if PROCESS_REWARD_SPEC is None or PROCESS_REWARD_SPEC.loader is None:
-    raise RuntimeError(f"Unable to load process reward definition from {PROCESS_REWARD_PATH}")
-PROCESS_REWARD_MODULE = importlib.util.module_from_spec(PROCESS_REWARD_SPEC)
-PROCESS_REWARD_SPEC.loader.exec_module(PROCESS_REWARD_MODULE)
-calculate_process_rewards = PROCESS_REWARD_MODULE.calculate_process_rewards
+
+def _normalize_history_sids(history_sids: Any) -> set[str]:
+    if history_sids is None:
+        return set()
+    if isinstance(history_sids, str):
+        return set(SID_RE.findall(history_sids))
+
+    normalized = set()
+    for value in history_sids:
+        matches = SID_RE.findall(str(value))
+        if matches:
+            normalized.add(matches[0])
+    return normalized
+
+
+def _nonempty_lines(block: str) -> list[str]:
+    return [line.strip() for line in block.splitlines() if line.strip()]
+
+
+def _citation_set(line_match: re.Match[str]) -> set[str]:
+    return set(SID_RE.findall(line_match.group("citations")))
+
+
+def _grounding_fraction(
+    line_matches: list[re.Match[str] | None],
+    history_sid_set: set[str],
+) -> float:
+    if not line_matches:
+        return 0.0
+    grounded_count = sum(
+        line_match is not None and _citation_set(line_match) <= history_sid_set
+        for line_match in line_matches
+    )
+    return grounded_count / len(line_matches)
+
+
+def _history_reference_coverage(
+    line_matches: list[re.Match[str] | None],
+    history_sid_set: set[str],
+) -> float:
+    if not history_sid_set:
+        return 0.0
+    referenced_sids = set().union(
+        *(
+            _citation_set(line_match)
+            for line_match in line_matches
+            if line_match is not None
+        )
+    )
+    return len(referenced_sids & history_sid_set) / len(history_sid_set)
+
+
+def _latest_history_sid(history_sids: Any) -> str | None:
+    if history_sids is None:
+        return None
+    if isinstance(history_sids, str):
+        matches = SID_RE.findall(history_sids)
+        return matches[-1] if matches else None
+
+    latest_sid = None
+    for value in history_sids:
+        matches = SID_RE.findall(str(value))
+        if matches:
+            latest_sid = matches[0]
+    return latest_sid
+
+
+def calculate_process_rewards(
+    solution_str: str,
+    history_sids: Any,
+) -> dict[str, float]:
+    """Apply the current strict V4 format and grounding hard gate."""
+    zero_scores = {
+        "history_summary_grounding_reward": 0.0,
+        "future_interests_grounding_reward": 0.0,
+        "format_reward": 0.0,
+        "history_reference_coverage": 0.0,
+        "latest_history_summary_reference_reward": 0.0,
+        "process_reward": 0.0,
+    }
+    if not isinstance(solution_str, str) or solution_str.count("</think>") != 1:
+        return zero_scores
+
+    reasoning, _ = solution_str.split("</think>", maxsplit=1)
+    sections = {}
+    positions = []
+    remainder = reasoning.strip()
+    for tag, pattern in SECTION_PATTERNS.items():
+        matches = list(pattern.finditer(reasoning))
+        if len(matches) != 1:
+            return zero_scores
+        match = matches[0]
+        sections[tag] = match.group(1).strip()
+        positions.append((tag, match.start()))
+        remainder = pattern.sub("", remainder, count=1)
+
+    actual_order = [tag for tag, _ in sorted(positions, key=lambda item: item[1])]
+    if actual_order != ["history_summary", "future_interests"]:
+        return zero_scores
+    if remainder.removeprefix("<think>").strip():
+        return zero_scores
+
+    summary_lines = _nonempty_lines(sections["history_summary"])
+    future_lines = _nonempty_lines(sections["future_interests"])
+    parsed_summary = [SUMMARY_LINE_RE.fullmatch(line) for line in summary_lines]
+    parsed_future = [FUTURE_LINE_RE.fullmatch(line) for line in future_lines]
+    modes = {
+        line_match.group("mode").casefold()
+        for line_match in parsed_future
+        if line_match is not None
+    }
+    format_reward = float(
+        1 <= len(summary_lines) <= 3
+        and 2 <= len(future_lines) <= 4
+        and all(line_match is not None for line_match in parsed_summary)
+        and all(line_match is not None for line_match in parsed_future)
+        and modes == {"exploit", "explore"}
+    )
+
+    history_sid_set = _normalize_history_sids(history_sids)
+    history_grounding = _grounding_fraction(parsed_summary, history_sid_set)
+    future_grounding = _grounding_fraction(parsed_future, history_sid_set)
+    history_coverage = _history_reference_coverage(
+        parsed_summary + parsed_future,
+        history_sid_set,
+    )
+    latest_sid = _latest_history_sid(history_sids)
+    summary_citations = set().union(
+        *(
+            _citation_set(line_match)
+            for line_match in parsed_summary
+            if line_match is not None
+        )
+    )
+    latest_reference = float(latest_sid is not None and latest_sid in summary_citations)
+    process_reward = float(
+        format_reward == 1.0
+        and history_grounding == 1.0
+        and future_grounding == 1.0
+        and latest_reference == 1.0
+    )
+    return {
+        "history_summary_grounding_reward": history_grounding,
+        "future_interests_grounding_reward": future_grounding,
+        "format_reward": format_reward,
+        "history_reference_coverage": history_coverage,
+        "latest_history_summary_reference_reward": latest_reference,
+        "process_reward": process_reward,
+    }
 
 FIELD_ALIASES = {
     "history_sids": (
