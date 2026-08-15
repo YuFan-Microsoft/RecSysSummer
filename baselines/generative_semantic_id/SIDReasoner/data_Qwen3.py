@@ -1,9 +1,31 @@
+import ast
+
 import pandas as pd
 from torch.utils.data import Dataset
 import random
 from tqdm import tqdm
 
 import hf_data
+
+
+def _parse_list_field(value):
+    if isinstance(value, list):
+        return list(value)
+    if isinstance(value, tuple):
+        return list(value)
+    if isinstance(value, str):
+        parsed = ast.literal_eval(value)
+        if isinstance(parsed, (list, tuple)):
+            return list(parsed)
+    raise ValueError(f"Expected a list-valued dataset field, got {value!r}")
+
+
+def _source_index(row):
+    for key in ("source_index", "Unnamed: 0"):
+        value = row.get(key)
+        if value is not None and not pd.isna(value):
+            return int(value)
+    return int(row.name)
 
 
 def mask_assistant_response_only(
@@ -318,9 +340,14 @@ class SidNextItemEvalDataset(Dataset):
         target_item_sid = row["item_sid"]
         last_history_item_sid = row['history_item_sid'][-1] if row['history_item_sid'] else None
         return {"input": # f"The user has interacted with items {history} in chronological order. Can you predict the next possible item that the user may expect?",
-                f"Can you predict the next possible item the user may expect, given the following chronological interaction history: {history}",
-                "output": target_item + '\n',
-                "dedup": target_item_sid == last_history_item_sid}
+            f"Can you predict the next possible item the user may expect, given the following chronological interaction history: {history}",
+            "output": target_item + '\n',
+            "source_index": _source_index(row),
+            "user_id": row.get("user_id"),
+            "history_sids": list(row['history_item_sid']),
+            "history_title_list": _parse_list_field(row.get("history_item_title")),
+            "item_title": row.get("item_title"),
+            "dedup": target_item_sid == last_history_item_sid}
     
     
     def pre(self, idx):
@@ -1381,7 +1408,12 @@ class ReasoningEvalDataset(Dataset):
         
         return {
             "history_str": history_str,
+            "source_index": _source_index(row),
+            "user_id": row.get("user_id"),
+            "history_sids": history_item_sid,
+            "history_title_list": _parse_list_field(row.get("history_item_title")),
             "target_title": target_title,
+            "item_title": row.get("item_title"),
             "output": target_sid,
             "dedup": is_duplicate,
         }
