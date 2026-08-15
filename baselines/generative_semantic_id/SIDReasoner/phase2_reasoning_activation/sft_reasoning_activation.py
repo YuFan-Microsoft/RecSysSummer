@@ -412,6 +412,14 @@ def main():
                 for cutoff in (5, 10):
                     pretrain_metrics[f"{prefix}/hr_at_{cutoff}"] = metrics["hr"][str(cutoff)]
                     pretrain_metrics[f"{prefix}/ndcg_at_{cutoff}"] = metrics["ndcg"][str(cutoff)]
+                for group, group_metrics in metrics["groups"].items():
+                    pretrain_metrics[f"{prefix}/{group}_rows"] = group_metrics["rows"]
+                    for cutoff in (5, 10):
+                        group_hr = group_metrics["hr"][str(cutoff)]
+                        group_ndcg = group_metrics["ndcg"][str(cutoff)]
+                        if group_hr is not None:
+                            pretrain_metrics[f"{prefix}/{group}_hr_at_{cutoff}"] = group_hr
+                            pretrain_metrics[f"{prefix}/{group}_ndcg_at_{cutoff}"] = group_ndcg
             wandb.log(pretrain_metrics)
 
     category = CATEGORY_DICT.get(args.category, "items")

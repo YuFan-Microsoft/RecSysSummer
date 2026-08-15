@@ -4,8 +4,12 @@ _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)
 # import transformers
 # import torch
 import fire
+import json
 import math
 import numpy as np
+from pathlib import Path
+
+from evaluation.evaluate_phase2_checkpoint import calculate_metrics, write_results_jsonl
     
 from tqdm import tqdm
 def gao(path, item_path):
@@ -78,6 +82,33 @@ def gao(path, item_path):
         print(f"NDCG:\t{ALLNDCG / len(text) / (1.0 / math.log(2))}")
         print(f"HR\t{ALLHR / len(text)}")
         print(CC)
+
+        item_info_path = f"{item_path}.txt"
+        grouped_metrics = calculate_metrics(p, item_info_path)
+        for group, group_metrics in grouped_metrics["groups"].items():
+            if not group_metrics["rows"]:
+                print(f"{group}: rows=0")
+                continue
+            print(
+                f"{group}: rows={group_metrics['rows']} | "
+                f"HR@5={group_metrics['hr']['5']:.6f} "
+                f"HR@10={group_metrics['hr']['10']:.6f} | "
+                f"NDCG@5={group_metrics['ndcg']['5']:.6f} "
+                f"NDCG@10={group_metrics['ndcg']['10']:.6f}"
+            )
+
+        results_jsonl_path = Path(p).with_suffix(".jsonl")
+        result_count = write_results_jsonl(results_jsonl_path, test_data)
+        metrics_path = Path(p).with_name(f"{Path(p).stem}_metrics.json")
+        metrics_payload = {
+            **grouped_metrics,
+            "predictions": str(Path(p).resolve()),
+            "results_jsonl": str(results_jsonl_path.resolve()),
+        }
+        with metrics_path.open("w", encoding="utf-8") as handle:
+            json.dump(metrics_payload, handle, indent=2)
+        print(f"Wrote {result_count} evaluation rows to {results_jsonl_path}")
+        print(f"Wrote grouped metrics to {metrics_path}")
 
 if __name__=='__main__':
     fire.Fire(gao)

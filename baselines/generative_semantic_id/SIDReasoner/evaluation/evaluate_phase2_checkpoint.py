@@ -6,6 +6,7 @@ import json
 import math
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 
@@ -13,6 +14,7 @@ import sys
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent
 METRIC_CUTOFFS = (5, 10)
+SID_TOKEN_PATTERN = re.compile(r"<[^>]+>")
 
 
 def _normalize_item(value):
@@ -21,8 +23,93 @@ def _normalize_item(value):
     return str(value).strip(' \n"')
 
 
+def _sid_tokens(value):
+    return tuple(SID_TOKEN_PATTERN.findall(_normalize_item(value))[:3])
+
+
+def _averaged_metrics(hits, ndcg, denominator, empty_value):
+    return {
+        "hr": {
+            str(cutoff): hits[cutoff] / denominator if denominator else empty_value
+            for cutoff in METRIC_CUTOFFS
+        },
+        "ndcg": {
+            str(cutoff): ndcg[cutoff] / denominator if denominator else empty_value
+            for cutoff in METRIC_CUTOFFS
+        },
+    }
+
+
+def calculate_metrics_from_rows(test_data, known_sids):
+    """Calculate overall and novel/repeat HR/NDCG from prediction rows."""
+    max_beams = max((len(sample.get("predict", [])) for sample in test_data), default=0)
+    if max_beams < max(METRIC_CUTOFFS):
+        raise ValueError(f"predictions contain only {max_beams} beams; need at least 10")
+
+    hits = {cutoff: 0.0 for cutoff in METRIC_CUTOFFS}
+    ndcg = {cutoff: 0.0 for cutoff in METRIC_CUTOFFS}
+    group_counts = {group: 0 for group in ("novel", "repeat")}
+    group_hits = {
+        group: {cutoff: 0.0 for cutoff in METRIC_CUTOFFS}
+        for group in group_counts
+    }
+    group_ndcg = {
+        group: {cutoff: 0.0 for cutoff in METRIC_CUTOFFS}
+        for group in group_counts
+    }
+    unknown_predictions = 0
+
+    for row_index, sample in enumerate(test_data):
+        history_sids = sample.get("history_sids")
+        if not isinstance(history_sids, list):
+            raise ValueError(f"evaluation row {row_index} is missing list-valued history_sids")
+
+        predictions = [_normalize_item(value) for value in sample.get("predict", [])]
+        target = _normalize_item(sample.get("output", ""))
+        target_sid = _sid_tokens(target)
+        if len(target_sid) != 3:
+            raise ValueError(f"evaluation row {row_index} has invalid target SID: {target!r}")
+        normalized_history = {_sid_tokens(history_sid) for history_sid in history_sids}
+        group = "repeat" if target_sid in normalized_history else "novel"
+        group_counts[group] += 1
+
+        unknown_predictions += sum(prediction not in known_sids for prediction in predictions)
+        try:
+            rank = predictions.index(target)
+        except ValueError:
+            continue
+        for cutoff in METRIC_CUTOFFS:
+            if rank < cutoff:
+                gain = 1.0 / math.log2(rank + 2)
+                hits[cutoff] += 1.0
+                ndcg[cutoff] += gain
+                group_hits[group][cutoff] += 1.0
+                group_ndcg[group][cutoff] += gain
+
+    denominator = len(test_data)
+    overall = _averaged_metrics(hits, ndcg, denominator, empty_value=0.0)
+    groups = {}
+    for group, group_count in group_counts.items():
+        groups[group] = {
+            "rows": group_count,
+            **_averaged_metrics(
+                group_hits[group],
+                group_ndcg[group],
+                group_count,
+                empty_value=None,
+            ),
+        }
+    return {
+        "rows": denominator,
+        "num_beams": max_beams,
+        **overall,
+        "groups": groups,
+        "unknown_predictions": unknown_predictions,
+    }
+
+
 def calculate_metrics(path, item_path):
-    """Calculate Phase-2 HR/NDCG at 5 and 10 from merged predictions."""
+    """Calculate Phase-2 overall and novel/repeat HR/NDCG from merged predictions."""
     import hf_data
 
     known_sids = {
@@ -31,41 +118,48 @@ def calculate_metrics(path, item_path):
     }
     with open(path, "r", encoding="utf-8") as handle:
         test_data = json.load(handle)
+    return calculate_metrics_from_rows(test_data, known_sids)
 
-    max_beams = max((len(sample.get("predict", [])) for sample in test_data), default=0)
-    if max_beams < max(METRIC_CUTOFFS):
-        raise ValueError(f"predictions contain only {max_beams} beams; need at least 10")
-    hits = {cutoff: 0.0 for cutoff in METRIC_CUTOFFS}
-    ndcg = {cutoff: 0.0 for cutoff in METRIC_CUTOFFS}
-    unknown_predictions = 0
 
-    for sample in test_data:
-        predictions = [_normalize_item(value) for value in sample.get("predict", [])]
-        target = _normalize_item(sample.get("output", ""))
-        unknown_predictions += sum(prediction not in known_sids for prediction in predictions)
-        try:
-            rank = predictions.index(target)
-        except ValueError:
-            continue
-        for cutoff in METRIC_CUTOFFS:
-            if rank < cutoff:
-                hits[cutoff] += 1.0
-                ndcg[cutoff] += 1.0 / math.log2(rank + 2)
+def build_result_record(sample, fallback_source_index):
+    history_sids = sample.get("history_sids")
+    history_titles = sample.get("history_title_list")
+    if not isinstance(history_sids, list):
+        raise ValueError("evaluation result is missing list-valued history_sids")
+    if not isinstance(history_titles, list):
+        raise ValueError("evaluation result is missing list-valued history_title_list")
+    if len(history_sids) != len(history_titles):
+        raise ValueError(
+            "evaluation result has mismatched history SID/title lengths: "
+            f"{len(history_sids)} != {len(history_titles)}"
+        )
 
-    denominator = len(test_data)
+    source_index = sample.get("source_index", fallback_source_index)
     return {
-        "rows": denominator,
-        "num_beams": max_beams,
-        "hr": {
-            str(cutoff): hits[cutoff] / denominator if denominator else 0.0
-            for cutoff in METRIC_CUTOFFS
-        },
-        "ndcg": {
-            str(cutoff): ndcg[cutoff] / denominator if denominator else 0.0
-            for cutoff in METRIC_CUTOFFS
-        },
-        "unknown_predictions": unknown_predictions,
+        "source_index": int(source_index),
+        "user_id": sample.get("user_id"),
+        "history_sid_list": [str(value) for value in history_sids],
+        "history_title_list": [str(value) for value in history_titles],
+        "item_sid": _normalize_item(sample.get("output", "")),
+        "item_title": sample.get("item_title"),
+        "generated_reasoning_path": str(sample.get("cot") or ""),
+        "prediction_beam_10": [
+            _normalize_item(value)
+            for value in sample.get("predict", [])[:10]
+        ],
     }
+
+
+def write_results_jsonl(path, test_data):
+    records = [
+        build_result_record(sample, fallback_source_index=row_index)
+        for row_index, sample in enumerate(test_data)
+    ]
+    records.sort(key=lambda record: record["source_index"])
+    with open(path, "w", encoding="utf-8") as handle:
+        for record in records:
+            handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+    return len(records)
 
 
 def parse_args():
@@ -225,6 +319,10 @@ def run_mode(args, mode, output_root, paths):
     with open(merged_path, "w", encoding="utf-8") as handle:
         json.dump(merged, handle, indent=2)
 
+    results_jsonl_path = output_root / f"final_result_{mode}_{args.category}.jsonl"
+    result_count = write_results_jsonl(results_jsonl_path, merged)
+    print(f"Wrote {result_count} evaluation rows to {results_jsonl_path}", flush=True)
+
     full_metrics = calculate_metrics(str(merged_path), str(paths["info"]))
     metrics = {
         "rows": full_metrics["rows"],
@@ -234,8 +332,10 @@ def run_mode(args, mode, output_root, paths):
             str(cutoff): full_metrics["ndcg"][str(cutoff)]
             for cutoff in METRIC_CUTOFFS
         },
+        "groups": full_metrics["groups"],
         "unknown_predictions": full_metrics["unknown_predictions"],
         "predictions": str(merged_path),
+        "results_jsonl": str(results_jsonl_path),
     }
     print(
         f"[{args.stage}/{mode}] "
@@ -243,6 +343,17 @@ def run_mode(args, mode, output_root, paths):
         f"NDCG@5={metrics['ndcg']['5']:.6f} NDCG@10={metrics['ndcg']['10']:.6f}",
         flush=True,
     )
+    for group, group_metrics in metrics["groups"].items():
+        if not group_metrics["rows"]:
+            print(f"  {group}: rows=0", flush=True)
+            continue
+        print(
+            f"  {group}: rows={group_metrics['rows']} | "
+            f"HR@5={group_metrics['hr']['5']:.6f} HR@10={group_metrics['hr']['10']:.6f} | "
+            f"NDCG@5={group_metrics['ndcg']['5']:.6f} "
+            f"NDCG@10={group_metrics['ndcg']['10']:.6f}",
+            flush=True,
+        )
     return metrics
 
 
@@ -274,6 +385,14 @@ def upload_metrics_to_wandb(args, report):
         for cutoff in METRIC_CUTOFFS:
             logged_metrics[f"{prefix}/hr_at_{cutoff}"] = metrics["hr"][str(cutoff)]
             logged_metrics[f"{prefix}/ndcg_at_{cutoff}"] = metrics["ndcg"][str(cutoff)]
+        for group, group_metrics in metrics["groups"].items():
+            logged_metrics[f"{prefix}/{group}_rows"] = group_metrics["rows"]
+            for cutoff in METRIC_CUTOFFS:
+                group_hr = group_metrics["hr"][str(cutoff)]
+                group_ndcg = group_metrics["ndcg"][str(cutoff)]
+                if group_hr is not None:
+                    logged_metrics[f"{prefix}/{group}_hr_at_{cutoff}"] = group_hr
+                    logged_metrics[f"{prefix}/{group}_ndcg_at_{cutoff}"] = group_ndcg
     run.log(logged_metrics)
     run.finish()
     print(f"Uploaded {args.stage} recommendation metrics to W&B run {args.wandb_run_id}")
