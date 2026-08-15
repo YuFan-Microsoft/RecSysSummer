@@ -55,6 +55,7 @@ from verl.trainer.ppo.mismatch_helper import compute_rollout_importance_weights
 from verl.trainer.ppo.reward import compute_reward, compute_reward_async
 from verl.trainer.ppo.sid_group_metrics import compute_exact_match_count_buckets
 from verl.trainer.ppo.sid_eval_metrics import count_unique_first_sid_tokens
+from verl.trainer.ppo.sid_eval_slices import compute_novel_repeat_ranking_metrics
 from verl.trainer.ppo.utils import Role, WorkerType, need_critic, need_reference_policy, need_reward_model
 from verl.utils.checkpoint.checkpoint_manager import find_latest_ckpt_path, should_save_ckpt_esi
 from verl.utils.config import omega_conf_to_dataclass
@@ -106,6 +107,14 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_val/ndcg_at_1",
     "core_metrics_val/ndcg_at_5",
     "core_metrics_val/ndcg_at_10",
+    "core_metrics_val/novel_hr_at_5",
+    "core_metrics_val/novel_hr_at_10",
+    "core_metrics_val/novel_ndcg_at_5",
+    "core_metrics_val/novel_ndcg_at_10",
+    "core_metrics_val/repeat_hr_at_5",
+    "core_metrics_val/repeat_hr_at_10",
+    "core_metrics_val/repeat_ndcg_at_5",
+    "core_metrics_val/repeat_ndcg_at_10",
     "response_length/mean",
     "response_length/clip_ratio",
     "response/aborted_ratio",
@@ -770,6 +779,11 @@ class RayPPOTrainer:
             ground_truths = [
                 item.non_tensor_batch.get("reward_model", {}).get("ground_truth", None) for item in test_batch
             ]
+            history_sids = [
+                item.non_tensor_batch.get("extra_info", {}).get("history_sids") for item in test_batch
+            ]
+            if any(sample_history_sids is None for sample_history_sids in history_sids):
+                raise ValueError("Novel/repeat validation metrics require extra_info.history_sids")
             sample_gts.extend(ground_truths)
 
             test_gen_batch = self._get_gen_batch(test_batch)
@@ -809,6 +823,13 @@ class RayPPOTrainer:
             if sid_beam_predictions is None:
                 raise ValueError("Validation requires catalog-constrained SID beam predictions")
             sid_ranking_metrics = _compute_sid_ranking_metrics(sid_beam_predictions, ground_truths)
+            sid_ranking_metrics.update(
+                compute_novel_repeat_ranking_metrics(
+                    sid_beam_predictions,
+                    ground_truths,
+                    history_sids,
+                )
+            )
             for key, values in sid_ranking_metrics.items():
                 reward_extra_infos_dict[key].extend(values)
 
@@ -888,9 +909,17 @@ class RayPPOTrainer:
             "sid_eval_ndcg_at_3": "core_metrics_val/ndcg_at_3",
             "sid_eval_ndcg_at_5": "core_metrics_val/ndcg_at_5",
             "sid_eval_ndcg_at_10": "core_metrics_val/ndcg_at_10",
+            "sid_eval_novel_hr_at_5": "core_metrics_val/novel_hr_at_5",
+            "sid_eval_novel_hr_at_10": "core_metrics_val/novel_hr_at_10",
+            "sid_eval_novel_ndcg_at_5": "core_metrics_val/novel_ndcg_at_5",
+            "sid_eval_novel_ndcg_at_10": "core_metrics_val/novel_ndcg_at_10",
+            "sid_eval_repeat_hr_at_5": "core_metrics_val/repeat_hr_at_5",
+            "sid_eval_repeat_hr_at_10": "core_metrics_val/repeat_hr_at_10",
+            "sid_eval_repeat_ndcg_at_5": "core_metrics_val/repeat_ndcg_at_5",
+            "sid_eval_repeat_ndcg_at_10": "core_metrics_val/repeat_ndcg_at_10",
         }
         for reward_key, metric_key in validation_core_metrics.items():
-            if reward_key in reward_extra_infos_dict:
+            if reward_key in reward_extra_infos_dict and reward_extra_infos_dict[reward_key]:
                 metric_dict[metric_key] = float(np.mean(reward_extra_infos_dict[reward_key]))
         for data_source, var2metric2val in data_src2var2metric2val.items():
             core_var = "acc" if "acc" in var2metric2val else "reward"
