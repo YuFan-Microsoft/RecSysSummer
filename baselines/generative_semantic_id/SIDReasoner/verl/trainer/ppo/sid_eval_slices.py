@@ -7,6 +7,12 @@ from typing import Any
 
 _SID_TOKEN_PATTERN = re.compile(r"<[^>]+>")
 _SLICE_CUTOFFS = (5, 10)
+SLICE_METRIC_KEYS = tuple(
+    f"sid_eval_{slice_name}_{metric}_at_{cutoff}"
+    for slice_name in ("novel", "repeat")
+    for metric in ("hr", "ndcg")
+    for cutoff in _SLICE_CUTOFFS
+)
 
 
 def _sid_tokens(value: Any) -> tuple[str, ...]:
@@ -17,17 +23,12 @@ def compute_novel_repeat_ranking_metrics(
     beam_predictions: list[Any],
     ground_truths: list[Any],
     history_sids: list[Any],
-) -> dict[str, list[float]]:
+) -> dict[str, list[float | None]]:
     """Compute per-sample HR/NDCG@5,10 for novel and repeat targets."""
     if not (len(beam_predictions) == len(ground_truths) == len(history_sids)):
         raise ValueError("SID beams, ground truths, and histories must have the same length")
 
-    metrics = {
-        f"sid_eval_{slice_name}_{metric}_at_{cutoff}": []
-        for slice_name in ("novel", "repeat")
-        for metric in ("hr", "ndcg")
-        for cutoff in _SLICE_CUTOFFS
-    }
+    metrics: dict[str, list[float | None]] = {key: [] for key in SLICE_METRIC_KEYS}
     for beam, ground_truth, sample_history_sids in zip(
         beam_predictions,
         ground_truths,
@@ -47,11 +48,20 @@ def compute_novel_repeat_ranking_metrics(
             ),
             0,
         )
+        sample_metrics: dict[str, float | None] = {key: None for key in SLICE_METRIC_KEYS}
         for cutoff in _SLICE_CUTOFFS:
             hit = 0 < rank <= cutoff
-            metrics[f"sid_eval_{slice_name}_hr_at_{cutoff}"].append(float(hit))
-            metrics[f"sid_eval_{slice_name}_ndcg_at_{cutoff}"].append(
+            sample_metrics[f"sid_eval_{slice_name}_hr_at_{cutoff}"] = float(hit)
+            sample_metrics[f"sid_eval_{slice_name}_ndcg_at_{cutoff}"] = (
                 1.0 / math.log2(rank + 1) if hit else 0.0
             )
+        for key in SLICE_METRIC_KEYS:
+            metrics[key].append(sample_metrics[key])
 
     return metrics
+
+
+def mean_present_values(values: list[float | None]) -> float | None:
+    """Average defined slice values, returning None for an empty slice."""
+    present_values = [float(value) for value in values if value is not None]
+    return sum(present_values) / len(present_values) if present_values else None
