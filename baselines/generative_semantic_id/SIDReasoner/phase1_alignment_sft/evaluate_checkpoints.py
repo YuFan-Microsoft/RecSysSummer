@@ -3,7 +3,6 @@
 import argparse
 import csv
 import json
-import math
 import os
 from pathlib import Path
 import subprocess
@@ -16,6 +15,8 @@ EVALUATION_DIR = REPO_ROOT / "evaluation"
 METRIC_CUTOFFS = (5, 10)
 
 sys.path.insert(0, str(REPO_ROOT))
+
+from evaluation.evaluate_phase2_checkpoint import calculate_metrics, write_results_jsonl
 
 
 def parse_args():
@@ -132,55 +133,6 @@ def split_test_data(test_locator, shard_dir, cuda_list, num_samples):
     return active_gpus
 
 
-def _normalize_item(value):
-    if isinstance(value, list):
-        value = value[0] if value else ""
-    return str(value).strip(' \n"')
-
-
-def calculate_metrics(path, item_path):
-    import hf_data
-
-    known_sids = {
-        line.split("\t")[0].strip()
-        for line in hf_data.load_info_lines(item_path)
-    }
-    with open(path, "r", encoding="utf-8") as handle:
-        test_data = json.load(handle)
-
-    max_beams = max((len(sample.get("predict", [])) for sample in test_data), default=0)
-    if max_beams < max(METRIC_CUTOFFS):
-        raise ValueError(f"predictions contain only {max_beams} beams; need at least 10")
-    hits = {cutoff: 0.0 for cutoff in METRIC_CUTOFFS}
-    ndcg = {cutoff: 0.0 for cutoff in METRIC_CUTOFFS}
-
-    for sample in test_data:
-        predictions = [_normalize_item(value) for value in sample.get("predict", [])]
-        target = _normalize_item(sample.get("output", ""))
-        try:
-            rank = predictions.index(target)
-        except ValueError:
-            continue
-        for cutoff in METRIC_CUTOFFS:
-            if rank < cutoff:
-                hits[cutoff] += 1.0
-                ndcg[cutoff] += 1.0 / math.log2(rank + 2)
-
-    denominator = len(test_data)
-    return {
-        "rows": denominator,
-        "num_beams": max_beams,
-        "hr": {
-            str(cutoff): hits[cutoff] / denominator if denominator else 0.0
-            for cutoff in METRIC_CUTOFFS
-        },
-        "ndcg": {
-            str(cutoff): ndcg[cutoff] / denominator if denominator else 0.0
-            for cutoff in METRIC_CUTOFFS
-        },
-    }
-
-
 def evaluator_command(args, checkpoint, gpu, paths, shard_dir, result_dir):
     return [
         sys.executable,
@@ -235,8 +187,17 @@ def evaluate_checkpoint(args, epoch, checkpoint, paths, shard_dir, active_gpus, 
     with open(merged_path, "w", encoding="utf-8") as handle:
         json.dump(merged, handle, indent=2)
 
+    results_jsonl_path = result_dir / f"final_result_{args.category}.jsonl"
+    result_count = write_results_jsonl(results_jsonl_path, merged)
+    print(f"Wrote {result_count} evaluation rows to {results_jsonl_path}", flush=True)
+
     metrics = calculate_metrics(merged_path, paths["info"])
-    metrics.update({"epoch": epoch, "checkpoint": str(checkpoint), "predictions": str(merged_path)})
+    metrics.update({
+        "epoch": epoch,
+        "checkpoint": str(checkpoint),
+        "predictions": str(merged_path),
+        "results_jsonl": str(results_jsonl_path),
+    })
     print(
         f"[epoch {epoch}] HR@5={metrics['hr']['5']:.6f} "
         f"HR@10={metrics['hr']['10']:.6f} | "
@@ -244,6 +205,17 @@ def evaluate_checkpoint(args, epoch, checkpoint, paths, shard_dir, active_gpus, 
         f"NDCG@10={metrics['ndcg']['10']:.6f}",
         flush=True,
     )
+    for group, group_metrics in metrics["groups"].items():
+        if not group_metrics["rows"]:
+            print(f"  {group}: rows=0", flush=True)
+            continue
+        print(
+            f"  {group}: rows={group_metrics['rows']} | "
+            f"HR@5={group_metrics['hr']['5']:.6f} HR@10={group_metrics['hr']['10']:.6f} | "
+            f"NDCG@5={group_metrics['ndcg']['5']:.6f} "
+            f"NDCG@10={group_metrics['ndcg']['10']:.6f}",
+            flush=True,
+        )
     return metrics
 
 
@@ -272,6 +244,14 @@ def log_wandb(run, metrics):
     for cutoff in METRIC_CUTOFFS:
         payload[f"recsys_eval_nothinking/hr_at_{cutoff}"] = metrics["hr"][str(cutoff)]
         payload[f"recsys_eval_nothinking/ndcg_at_{cutoff}"] = metrics["ndcg"][str(cutoff)]
+    for group, group_metrics in metrics["groups"].items():
+        payload[f"recsys_eval_nothinking/{group}_rows"] = group_metrics["rows"]
+        for cutoff in METRIC_CUTOFFS:
+            group_hr = group_metrics["hr"][str(cutoff)]
+            group_ndcg = group_metrics["ndcg"][str(cutoff)]
+            if group_hr is not None:
+                payload[f"recsys_eval_nothinking/{group}_hr_at_{cutoff}"] = group_hr
+                payload[f"recsys_eval_nothinking/{group}_ndcg_at_{cutoff}"] = group_ndcg
     run.log(payload)
 
 
