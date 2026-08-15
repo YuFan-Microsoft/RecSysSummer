@@ -55,7 +55,11 @@ from verl.trainer.ppo.mismatch_helper import compute_rollout_importance_weights
 from verl.trainer.ppo.reward import compute_reward, compute_reward_async
 from verl.trainer.ppo.sid_group_metrics import compute_exact_match_count_buckets
 from verl.trainer.ppo.sid_eval_metrics import count_unique_first_sid_tokens
-from verl.trainer.ppo.sid_eval_slices import compute_novel_repeat_ranking_metrics
+from verl.trainer.ppo.sid_eval_slices import (
+    SLICE_METRIC_KEYS,
+    compute_novel_repeat_ranking_metrics,
+    mean_present_values,
+)
 from verl.trainer.ppo.utils import Role, WorkerType, need_critic, need_reference_policy, need_reward_model
 from verl.utils.checkpoint.checkpoint_manager import find_latest_ckpt_path, should_save_ckpt_esi
 from verl.utils.config import omega_conf_to_dataclass
@@ -885,7 +889,9 @@ class RayPPOTrainer:
             "process_reward",
         }
         validation_reward_info = {
-            key: values for key, values in reward_extra_infos_dict.items() if key not in process_reward_keys
+            key: values
+            for key, values in reward_extra_infos_dict.items()
+            if key not in process_reward_keys and key not in SLICE_METRIC_KEYS
         }
         data_src2var2metric2val = process_validation_metrics(data_sources, sample_uids, validation_reward_info)
         metric_dict = {}
@@ -920,7 +926,12 @@ class RayPPOTrainer:
         }
         for reward_key, metric_key in validation_core_metrics.items():
             if reward_key in reward_extra_infos_dict and reward_extra_infos_dict[reward_key]:
-                metric_dict[metric_key] = float(np.mean(reward_extra_infos_dict[reward_key]))
+                if reward_key in SLICE_METRIC_KEYS:
+                    metric_value = mean_present_values(reward_extra_infos_dict[reward_key])
+                    if metric_value is not None:
+                        metric_dict[metric_key] = metric_value
+                else:
+                    metric_dict[metric_key] = float(np.mean(reward_extra_infos_dict[reward_key]))
         for data_source, var2metric2val in data_src2var2metric2val.items():
             core_var = "acc" if "acc" in var2metric2val else "reward"
             for var_name, metric2val in var2metric2val.items():
