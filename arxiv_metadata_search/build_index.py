@@ -21,6 +21,7 @@ heavy embedding step several times faster.
 Examples::
 
     python build_index.py                       # build every configured domain
+    python build_index.py --incremental         # embed only unseen arXiv IDs
     python build_index.py --domain Physics      # build just one domain
     python build_index.py --domain Medicine --limit 500   # quick smoke test
     python build_index.py --gpus 2 3            # override the idle-GPU autodetect
@@ -30,13 +31,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import tempfile
 from pathlib import Path
 
 import numpy as np
 
-from common import iter_domain_papers, load_config
+from common import ArxivPaper, iter_domain_papers, load_config
 from download_data import domain_has_data, download
 from gpu_utils import describe_gpus, free_gpus
 
@@ -157,6 +159,7 @@ def build_domain(
     out_dir: Path,
     gpus: list[int],
     limit: int | None = None,
+    incremental: bool = False,
 ) -> int:
     """Embed one domain and write its shard. Returns the number of papers indexed."""
     print(f"\n[index] === domain: {domain} ===")
@@ -168,6 +171,27 @@ def build_domain(
     if not papers:
         print(f"[index] no papers found for {domain}; skipping.")
         return 0
+
+    emb_path = out_dir / "embeddings.npy"
+    meta_path = out_dir / "metadata.json"
+    if incremental:
+        if emb_path.exists() != meta_path.exists():
+            raise RuntimeError(
+                f"{domain}: incremental build requires both {emb_path.name} and "
+                f"{meta_path.name}, but only one exists. Rebuild this shard without "
+                "--incremental."
+            )
+        if emb_path.exists():
+            return append_new_papers(
+                cfg=cfg,
+                domain=domain,
+                papers=papers,
+                emb_path=emb_path,
+                meta_path=meta_path,
+                gpus=gpus,
+            )
+        print("[index] no existing shard; building it in full.")
+
     print(f"[index] found {len(papers)} papers; embedding title + abstract "
           f"across GPUs {gpus} ...")
 
@@ -175,8 +199,6 @@ def build_domain(
     embeddings = embed_texts_multi_gpu(texts, cfg["embedding_model_path"], cfg, gpus)
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    emb_path = out_dir / "embeddings.npy"
-    meta_path = out_dir / "metadata.json"
 
     np.save(emb_path, embeddings)
     metadata = [p.to_dict() for p in papers]
@@ -186,6 +208,127 @@ def build_domain(
     print(f"[index] saved embeddings -> {emb_path}  shape={embeddings.shape}")
     print(f"[index] saved metadata   -> {meta_path}  ({len(metadata)} papers)")
     return len(papers)
+
+
+def append_new_papers(
+    cfg: dict,
+    domain: str,
+    papers: list[ArxivPaper],
+    emb_path: Path,
+    meta_path: Path,
+    gpus: list[int],
+) -> int:
+    """Embed unseen arXiv IDs and append them to a validated existing shard."""
+    with open(meta_path, "r", encoding="utf-8") as f:
+        old_metadata = json.load(f)
+    if not isinstance(old_metadata, list):
+        raise RuntimeError(f"{domain}: {meta_path} must contain a JSON list")
+
+    old_embeddings = np.load(emb_path, mmap_mode="r")
+    if old_embeddings.ndim != 2:
+        raise RuntimeError(
+            f"{domain}: expected a 2-D embedding matrix, got shape {old_embeddings.shape}"
+        )
+    if old_embeddings.shape[0] != len(old_metadata):
+        raise RuntimeError(
+            f"{domain}: embeddings rows ({old_embeddings.shape[0]}) do not match "
+            f"metadata rows ({len(old_metadata)})"
+        )
+
+    old_ids: list[str] = []
+    for position, item in enumerate(old_metadata):
+        if not isinstance(item, dict):
+            raise RuntimeError(f"{domain}: metadata row {position} is not an object")
+        arxiv_id = str(item.get("arxiv_id") or "").strip()
+        if not arxiv_id:
+            raise RuntimeError(f"{domain}: metadata row {position} has no arxiv_id")
+        old_ids.append(arxiv_id)
+    if len(set(old_ids)) != len(old_ids):
+        raise RuntimeError(f"{domain}: existing metadata contains duplicate arxiv_id values")
+
+    seen_ids = set(old_ids)
+    new_papers: list[ArxivPaper] = []
+    for paper in papers:
+        arxiv_id = paper.arxiv_id.strip()
+        if not arxiv_id:
+            raise RuntimeError(f"{domain}: source paper has no arxiv_id: {paper.title!r}")
+        if arxiv_id not in seen_ids:
+            seen_ids.add(arxiv_id)
+            new_papers.append(paper)
+
+    if not new_papers:
+        print(f"[index] existing shard is current ({len(old_metadata)} papers).")
+        return 0
+
+    print(
+        f"[index] existing={len(old_metadata)}, new={len(new_papers)}; "
+        f"embedding only new papers across GPUs {gpus} ..."
+    )
+    new_embeddings = np.asarray(
+        embed_texts_multi_gpu(
+            [paper.index_text() for paper in new_papers],
+            cfg["embedding_model_path"],
+            cfg,
+            gpus,
+        ),
+        dtype=np.float32,
+    )
+    if new_embeddings.ndim != 2 or new_embeddings.shape[0] != len(new_papers):
+        raise RuntimeError(
+            f"{domain}: expected {len(new_papers)} new embedding rows, "
+            f"got shape {new_embeddings.shape}"
+        )
+    if new_embeddings.shape[1] != old_embeddings.shape[1]:
+        raise RuntimeError(
+            f"{domain}: new embedding dimension {new_embeddings.shape[1]} does not "
+            f"match existing dimension {old_embeddings.shape[1]}"
+        )
+
+    out_dir = emb_path.parent
+    out_dir.mkdir(parents=True, exist_ok=True)
+    emb_tmp = tempfile.NamedTemporaryFile(
+        prefix="embeddings.", suffix=".npy", dir=out_dir, delete=False
+    )
+    meta_tmp = tempfile.NamedTemporaryFile(
+        prefix="metadata.", suffix=".json", dir=out_dir, delete=False
+    )
+    emb_tmp_path = Path(emb_tmp.name)
+    meta_tmp_path = Path(meta_tmp.name)
+    emb_tmp.close()
+    meta_tmp.close()
+
+    try:
+        combined = np.lib.format.open_memmap(
+            emb_tmp_path,
+            mode="w+",
+            dtype=np.float32,
+            shape=(
+                old_embeddings.shape[0] + new_embeddings.shape[0],
+                old_embeddings.shape[1],
+            ),
+        )
+        chunk_size = 10_000
+        for start in range(0, old_embeddings.shape[0], chunk_size):
+            end = min(start + chunk_size, old_embeddings.shape[0])
+            combined[start:end] = old_embeddings[start:end]
+        combined[old_embeddings.shape[0]:] = new_embeddings
+        combined.flush()
+        del combined
+
+        metadata = old_metadata + [paper.to_dict() for paper in new_papers]
+        with open(meta_tmp_path, "w", encoding="utf-8") as f:
+            json.dump(metadata, f, ensure_ascii=False)
+
+        os.replace(emb_tmp_path, emb_path)
+        os.replace(meta_tmp_path, meta_path)
+    finally:
+        emb_tmp_path.unlink(missing_ok=True)
+        meta_tmp_path.unlink(missing_ok=True)
+
+    final_shape = (len(old_metadata) + len(new_papers), old_embeddings.shape[1])
+    print(f"[index] updated embeddings -> {emb_path}  shape={final_shape}")
+    print(f"[index] updated metadata   -> {meta_path}  ({final_shape[0]} papers)")
+    return len(new_papers)
 
 
 def _resolve_index_gpus(args, cfg: dict) -> list[int]:
@@ -246,6 +389,11 @@ def main() -> None:
         help="Only index the first N papers of each domain (for quick tests).",
     )
     parser.add_argument(
+        "--incremental",
+        action="store_true",
+        help="Append only arXiv IDs not already present in each existing shard.",
+    )
+    parser.add_argument(
         "--no-download",
         action="store_true",
         help="Do not auto-download missing data from Hugging Face; fail instead.",
@@ -292,16 +440,21 @@ def main() -> None:
             out_dir=index_dir / domain,
             gpus=gpus,
             limit=args.limit,
+            incremental=args.incremental,
         )
 
     if total == 0:
+        if args.incremental:
+            print("\n[index] done. Existing shards are already current.")
+            return
         raise SystemExit(
             f"[index] ERROR: indexed 0 papers. Checked data_dir = {data_dir.resolve()} "
             f"(exists={data_dir.exists()}). Make sure the corpus is downloaded there "
             f"(`python download_data.py`) and that hf_repo_id / data_dir are correct."
         )
 
-    print(f"\n[index] done. indexed {total} papers across {len(domains)} domain(s).")
+    action = "added" if args.incremental else "indexed"
+    print(f"\n[index] done. {action} {total} papers across {len(domains)} domain(s).")
 
 
 if __name__ == "__main__":

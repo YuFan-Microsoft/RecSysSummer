@@ -14,8 +14,8 @@ _arxiv_bulk.run.log
 _arxiv_fill*.log
 _harvest_state.json
 
-# paper_search_engine: transient gradio.live endpoint URL (rotates every ~72h)
-paper_search_engine/search_endpoint.txt
+# recsys_paper_search: transient gradio.live endpoint URL (rotates every ~72h)
+recsys_paper_search/search_endpoint.txt
 
 # Semantic Scholar API key (secret — never commit)
 .s2_api_key

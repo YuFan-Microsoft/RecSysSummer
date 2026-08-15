@@ -27,7 +27,7 @@ paper-reading-plan
 ### 2.1 Paper Finder
 
 - 当前示例 URL：`https://5a814d55d33d77ac88.gradio.live/`
-- 实现代码：`/Users/yufzhao/Desktop/RecSysSummer/paper_search_engine`
+- 实现代码：`/Users/yufzhao/Desktop/RecSysSummer/recsys_paper_search`
 - 输入：英文 research idea、top-K。
 - 数据：精选 Markdown 论文库。
 - 检索：Qwen embedding recall，再用 Qwen reranker 重排。
@@ -37,7 +37,7 @@ paper-reading-plan
 ### 2.2 arXiv Finder
 
 - 当前示例 URL：`https://290153a7edde7b4837.gradio.live/`
-- 实现代码：`/Users/yufzhao/Desktop/RecSysSummer/arxiv_search_engine`
+- 实现代码：`/Users/yufzhao/Desktop/RecSysSummer/arxiv_metadata_search`
 - 输入：英文 query、domain、years、sort、top-K。
 - 数据：2020-2026 arXiv title + abstract metadata。
 - 检索：选择 domain shard，按年份过滤，embedding recall，reranker 重排。

@@ -47,7 +47,7 @@ A curated map of where recent recommender-systems research is evaluated. Startin
 | **[`baselines/`](baselines/)** | reproduction-code homes for every Amazon-2023 baseline, grouped by method family |
 | **[`amazon_2023/`](amazon_2023/)** | Amazon-2023 dataset processing → Hugging Face |
 | **[`arxiv_download_tool/`](arxiv_download_tool/)** | collect papers — fetch venue metadata, match arXiv, download PDFs |
-| **[`paper_search_engine/`](paper_search_engine/)** | semantic search (Qwen3 embed + rerank) over the collected papers |
+| **[`recsys_paper_search/`](recsys_paper_search/)** | semantic search (Qwen3 embed + rerank) over the collected papers |
 
 ---
 

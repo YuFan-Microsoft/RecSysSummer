@@ -1,23 +1,28 @@
 #!/usr/bin/env python3
-"""CLI client for the **arXiv Search** service (``app.py``).
+"""CLI client for the **Paper Idea Search** service (``app.py``).
 
-Search 5 years of arXiv by title + abstract from the command line, with the same
-three filters the web UI offers: a single ``--domain``, an optional set of
-``--years``, and a ``--sort`` order (relevance or citations).
-
-This is a thin, dependency-free wrapper around the running Gradio app's HTTP API
--- it does not require any change to the app.
+Describe a research idea in free text and get back the most relevant papers,
+ranked by the running Gradio app (Qwen3-Embedding-8B recall -> Qwen3-Reranker-8B
+rerank). This is a thin, dependency-free wrapper around the app's existing HTTP
+API -- it does **not** require any change to the Gradio app.
 
 Endpoint URL resolution order (first hit wins):
   1. ``--url`` argument
-  2. ``ARXIV_SEARCH_URL`` environment variable
-  3. ``arxiv_search_endpoint.txt`` next to this file (first non-comment line)
+  2. ``PAPER_SEARCH_URL`` environment variable
+  3. ``search_endpoint.txt`` next to this file (first non-comment, non-empty line)
+
+The live URL is a Gradio ``*.gradio.live`` share link that rotates every few
+days -- update it by editing ``search_endpoint.txt`` (or exporting the env var).
+
+The app exposes ``do_search(query, top_k)``. Its full result objects live in a
+``gr.State`` (not sent over the API), so the API returns the ranked list of
+papers plus the fully-rendered text of the top hit -- which is exactly what an
+idea search needs.
 
 Usage:
-    python3 search_arxiv.py "diffusion models for video" --domain Computer_Science
-    python3 search_arxiv.py "black hole thermodynamics" --domain Physics \
-        --years 2024 2025 --sort citation -k 10
-    python3 search_arxiv.py "graph neural networks" --domain Computer_Science --json
+    python3 search_papers.py "generative retrieval with semantic IDs"
+    python3 search_papers.py "LLM-based CTR prediction" -k 10
+    python3 search_papers.py "cold-start sequential rec" --list-only --json
 """
 
 from __future__ import annotations
@@ -31,7 +36,7 @@ import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-ENDPOINT_FILE = HERE / "arxiv_search_endpoint.txt"
+ENDPOINT_FILE = HERE / "search_endpoint.txt"
 API_PREFIX = "/gradio_api"  # Gradio 5/6 default; 4.x uses "" (both tried below)
 TIMEOUT = 240
 
@@ -40,7 +45,7 @@ TIMEOUT = 240
 # Endpoint URL resolution
 # --------------------------------------------------------------------------
 def resolve_url(cli_url: str | None) -> str:
-    url = cli_url or os.environ.get("ARXIV_SEARCH_URL")
+    url = cli_url or os.environ.get("PAPER_SEARCH_URL")
     if not url and ENDPOINT_FILE.exists():
         for line in ENDPOINT_FILE.read_text(encoding="utf-8").splitlines():
             line = line.strip()
@@ -49,7 +54,7 @@ def resolve_url(cli_url: str | None) -> str:
                 break
     if not url:
         sys.exit(
-            "No endpoint URL. Pass --url, set ARXIV_SEARCH_URL, or put the "
+            "No endpoint URL. Pass --url, set PAPER_SEARCH_URL, or put the "
             f"gradio.live link in {ENDPOINT_FILE}"
         )
     if not url.startswith("http"):
@@ -117,15 +122,16 @@ def call_fn(base: str, api_name: str, data: list) -> list:
 
 
 # --------------------------------------------------------------------------
-# Search
+# Idea search
 # --------------------------------------------------------------------------
-def search(base, idea, domain, years, sort_by, top_k) -> dict:
-    """Run a search via ``do_search(query, domain, years, sort_by, top_k)``.
+def search(base: str, idea: str, top_k: int) -> dict:
+    """Run an idea search via ``do_search``.
 
-    The two ``gr.State`` outputs are null over the API, so we read the ranked
-    list from the radio update and the full text of the #1 paper from markdown.
+    do_search outputs = [state(None), state(None), radio_update, top_markdown];
+    the two ``gr.State`` slots are null over the API, so we read the ranked list
+    from the radio update and the full text of the #1 paper from the markdown.
     """
-    out = call_fn(base, "do_search", [idea, domain, years, sort_by, top_k])
+    out = call_fn(base, "do_search", [idea, top_k])
     choices, top_md = [], None
     for item in out:
         if isinstance(item, dict) and "choices" in item:
@@ -133,50 +139,28 @@ def search(base, idea, domain, years, sort_by, top_k) -> dict:
         elif isinstance(item, str):
             top_md = item
     results = [{"rank": idx + 1, "label": label} for label, idx in choices]
-    return {
-        "idea": idea,
-        "domain": domain,
-        "years": years,
-        "sort_by": sort_by,
-        "results": results,
-        "top_markdown": top_md,
-    }
+    return {"idea": idea, "results": results, "top_markdown": top_md}
 
 
 # --------------------------------------------------------------------------
-# CLI
+# Output
 # --------------------------------------------------------------------------
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Search arXiv by topic (title + abstract).")
-    ap.add_argument("idea", nargs="+", help="research topic / free-text query")
-    ap.add_argument(
-        "--domain",
-        default="Computer_Science",
-        help="single domain to search (e.g. Computer_Science, Physics, ...)",
-    )
-    ap.add_argument(
-        "--years",
-        nargs="*",
-        type=int,
-        default=[],
-        help="one or more years to keep, e.g. --years 2024 2025 (default: all)",
-    )
-    ap.add_argument(
-        "--sort",
-        choices=["relevance", "citation"],
-        default="relevance",
-        help="order results by relevance (default) or by citation count",
-    )
-    ap.add_argument("-k", "--top-k", type=int, default=15, help="number of papers")
+    ap = argparse.ArgumentParser(description="Search papers by research idea.")
+    ap.add_argument("idea", nargs="+", help="research idea / free-text query")
+    ap.add_argument("-k", "--top-k", type=int, default=15,
+                    help="number of papers (1-1000)")
     ap.add_argument("--url", default=None, help="override endpoint URL")
     ap.add_argument("--list-only", action="store_true",
                     help="hide the full text of the top paper")
     ap.add_argument("--json", action="store_true", help="emit raw JSON")
     args = ap.parse_args()
+    if not 1 <= args.top_k <= 1000:
+        ap.error("--top-k must be between 1 and 1000")
 
     base = resolve_url(args.url)
     idea = " ".join(args.idea)
-    res = search(base, idea, args.domain, args.years, args.sort, args.top_k)
+    res = search(base, idea, args.top_k)
     if args.list_only:
         res = {**res, "top_markdown": None}
 
@@ -184,10 +168,7 @@ def main() -> None:
         print(json.dumps(res, ensure_ascii=False, indent=2))
         return
 
-    print(
-        f"idea: {idea}\ndomain: {args.domain}  years: {args.years or 'all'}  "
-        f"sort: {args.sort}\nendpoint: {base}\n"
-    )
+    print(f"idea: {idea}\nendpoint: {base}\n")
     if not res["results"]:
         print("(no results)")
         return

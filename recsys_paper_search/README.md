@@ -57,7 +57,7 @@ Section names are matched case-insensitively and tolerate `-`/`–`/`—` separa
 ## Setup (remote 8×A100)
 
 ```bash
-cd paper_search_engine
+cd recsys_paper_search
 pip install -r requirements.txt
 ```
 

@@ -122,12 +122,22 @@ python build_index.py --domain Physics
 # build every domain in config.yaml
 python build_index.py
 
+# after refreshing the local metadata, embed only unseen arXiv IDs
+python download_data.py
+python build_index.py --incremental
+
 # override the idle-GPU autodetect for this run
 python build_index.py --domain Physics --gpus 2 3 4 5 6 7
 ```
 
 Each domain writes `index_dir/<Domain>/embeddings.npy` +
 `index_dir/<Domain>/metadata.json`.
+
+Incremental mode validates the existing embedding/metadata row alignment,
+keeps all existing rows in place, and appends only papers whose non-empty
+`arxiv_id` is not already indexed. It compares against the metadata currently
+under `data_dir`; run `download_data.py` first when the Hugging Face corpus has
+been refreshed.
 
 ## Search
 
