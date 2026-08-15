@@ -186,7 +186,14 @@ def fetch_batch(ids: list[str], api_key: str | None, tries: int = 6):
         try:
             req = urllib.request.Request(url, data=body, headers=headers, method="POST")
             with urllib.request.urlopen(req, timeout=90) as r:
-                return json.loads(r.read())
+                payload = json.loads(r.read())
+            if isinstance(payload, list) and len(payload) == len(ids):
+                return payload
+            actual = len(payload) if isinstance(payload, list) else type(payload).__name__
+            wait = min(60, 2 ** attempt * 2)
+            print(f"  malformed batch response (expected {len(ids)}, got {actual})"
+                  f" -> retry in {wait}s", flush=True)
+            time.sleep(wait)
         except urllib.error.HTTPError as e:
             if e.code in (429, 503):
                 wait = _retry_after(e.headers) or min(60, 2 ** attempt * 2)
