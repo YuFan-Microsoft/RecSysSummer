@@ -1,0 +1,10 @@
+aiohttp>=3.10
+datasets>=3.0
+fastapi>=0.115
+gradio>=4.44,<6
+huggingface-hub>=0.25,<1.0
+numpy>=1.26
+pydantic>=2.9
+torch>=2.1
+transformers>=4.51
+uvicorn>=0.30
