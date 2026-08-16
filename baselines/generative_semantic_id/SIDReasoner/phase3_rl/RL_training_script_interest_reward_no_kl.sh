@@ -3,7 +3,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-INTEREST_REWARD_ENDPOINT="${INTEREST_REWARD_ENDPOINT:-https://deef9335728f7918f0.gradio.live}"
+INTEREST_REWARD_ENDPOINT="${INTEREST_REWARD_ENDPOINT:-https://86c9a1ebd964c9e188.gradio.live/v1/rank/batch}"
 INTEREST_REWARD_TOP_K="${INTEREST_REWARD_TOP_K:-50}"
 INTEREST_REWARD_WEIGHT="${INTEREST_REWARD_WEIGHT:-0.1}"
 INTEREST_REWARD_REQUEST_BATCH_SIZE="${INTEREST_REWARD_REQUEST_BATCH_SIZE:-2048}"
@@ -14,7 +14,10 @@ if ! [[ "${INTEREST_REWARD_TOP_K}" =~ ^[0-9]+$ ]] \
     exit 2
 fi
 
-curl --fail --silent --show-error "${INTEREST_REWARD_ENDPOINT%/}/healthz" >/dev/null
+INTEREST_REWARD_BASE_URL="${INTEREST_REWARD_ENDPOINT%/}"
+INTEREST_REWARD_BASE_URL="${INTEREST_REWARD_BASE_URL%/v1/rank/batch}"
+INTEREST_REWARD_BASE_URL="${INTEREST_REWARD_BASE_URL%/v1/rank}"
+curl --fail --silent --show-error "${INTEREST_REWARD_BASE_URL}/healthz" >/dev/null
 
 export EXPERIMENT_NAME="${EXPERIMENT_NAME:-Video_Games_stage3_rl_interest_retrieval_k${INTEREST_REWARD_TOP_K}_no_kl_Qwen3-1.7B}"
 

@@ -30,6 +30,7 @@ module_spec = importlib.util.spec_from_file_location("interest_reward_test_modul
 MODULE = importlib.util.module_from_spec(module_spec)
 module_spec.loader.exec_module(MODULE)
 evaluate_interest_rewards = MODULE.evaluate_interest_rewards
+build_interest_validation_metrics = MODULE.build_interest_validation_metrics
 extract_target_sid = MODULE._extract_target_sid
 
 
@@ -130,6 +131,20 @@ class InterestRewardTest(unittest.TestCase):
         ):
             with self.subTest(value=value), self.assertRaises(ValueError):
                 extract_target_sid(value)
+
+    def test_validation_metrics_use_one_vote_per_history(self):
+        interest_results = {
+            "interest_hit_at_20": [1.0, 0.0, 1.0],
+            "interest_hit_at_50": [1.0, 1.0, 1.0],
+            "interest_hit_at_100": [1.0, 1.0, 1.0],
+        }
+        metrics = build_interest_validation_metrics(interest_results, [0.0, 1.0, 1.0])
+        self.assertEqual(metrics["interest_only_hit_at_20"], [1.0, 0.0, 0.0])
+        self.assertEqual(set(metrics), {
+            "interest_only_hit_at_20",
+            "interest_only_hit_at_50",
+            "interest_only_hit_at_100",
+        })
 
 
 if __name__ == "__main__":

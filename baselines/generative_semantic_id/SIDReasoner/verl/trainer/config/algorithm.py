@@ -19,7 +19,7 @@ from verl.base_config import BaseConfig
 
 __all__ = ["AlgoConfig", "FilterGroupsConfig", "InterestRewardConfig", "KLControlConfig"]
 
-DEFAULT_INTEREST_REWARD_ENDPOINT = "https://deef9335728f7918f0.gradio.live"
+DEFAULT_INTEREST_REWARD_ENDPOINT = "https://86c9a1ebd964c9e188.gradio.live/v1/rank/batch"
 
 
 @dataclass

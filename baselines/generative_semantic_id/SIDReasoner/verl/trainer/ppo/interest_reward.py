@@ -9,6 +9,7 @@ from verl.utils.reward_score.sid_reasoning_format import extract_future_interest
 
 _SID_PATTERN = re.compile(r"<a_\d+><b_\d+><c_\d+>")
 _MONITORED_CUTOFFS = (10, 20, 50, 100)
+_VALIDATION_CUTOFFS = (20, 50, 100)
 
 
 def _extract_target_sid(value: Any) -> str:
@@ -22,6 +23,11 @@ def _extract_target_sid(value: Any) -> str:
 def _chunked(values: list[Any], chunk_size: int):
     for start in range(0, len(values), chunk_size):
         yield values[start : start + chunk_size]
+
+
+def _best_rank(ranks: list[int]) -> float:
+    positive_ranks = [rank for rank in ranks if rank > 0]
+    return float(min(positive_ranks)) if positive_ranks else -1.0
 
 
 def evaluate_interest_rewards(
@@ -68,12 +74,7 @@ def evaluate_interest_rewards(
                 raise RuntimeError(f"rank endpoint returned invalid rank: {rank}")
             sample_interest_ranks[sample_index].append(rank)
 
-    block_ranks = [
-        float(min(rank for rank in ranks if rank > 0))
-        if any(rank > 0 for rank in ranks)
-        else -1.0
-        for ranks in sample_interest_ranks
-    ]
+    block_ranks = [_best_rank(ranks) for ranks in sample_interest_ranks]
     output: dict[str, list[float]] = {
         "interest_reward": [
             float(0 < rank <= reward_top_k) for rank in block_ranks
@@ -87,6 +88,23 @@ def evaluate_interest_rewards(
             float(0 < rank <= cutoff) for rank in block_ranks
         ]
     return output
+
+
+def build_interest_validation_metrics(
+    interest_results: dict[str, list[float]],
+    sid_hit_at_10: list[float],
+) -> dict[str, list[float]]:
+    sid_hits = [bool(value) for value in sid_hit_at_10]
+    metrics: dict[str, list[float]] = {}
+    for cutoff in _VALIDATION_CUTOFFS:
+        interest_hits = [bool(value) for value in interest_results[f"interest_hit_at_{cutoff}"]]
+        if len(interest_hits) != len(sid_hits):
+            raise ValueError("Interest and SID validation metrics must have the same length")
+        metrics[f"interest_only_hit_at_{cutoff}"] = [
+            float(interest_hit and not sid_hit)
+            for interest_hit, sid_hit in zip(interest_hits, sid_hits)
+        ]
+    return metrics
 
 
 def decode_interest_reward_inputs(batch: Any, tokenizer: Any) -> tuple[list[str], list[str]]:

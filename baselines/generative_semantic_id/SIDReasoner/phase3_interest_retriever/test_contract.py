@@ -1,5 +1,9 @@
 import unittest
 
+from phase3_interest_retriever.client import (
+    AsyncInterestRetrieverClient,
+    InterestRetrieverClient,
+)
 from phase3_interest_retriever.schemas import (
     RankBatchResponse,
     RankRequest,
@@ -27,6 +31,12 @@ class RetrieverContractTest(unittest.TestCase):
     def test_rank_request_rejects_invalid_sid(self):
         with self.assertRaises(ValueError):
             RankRequest(target_sid="item-1", interest="games")
+
+    def test_clients_accept_full_rank_endpoints(self):
+        batch_endpoint = "https://example.test/v1/rank/batch/"
+        rank_endpoint = "https://example.test/v1/rank"
+        self.assertEqual(InterestRetrieverClient(batch_endpoint).base_url, "https://example.test")
+        self.assertEqual(AsyncInterestRetrieverClient(rank_endpoint).base_url, "https://example.test")
 
 
 if __name__ == "__main__":

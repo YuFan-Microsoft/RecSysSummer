@@ -112,7 +112,8 @@ bash phase3_rl/RL_training_script_interest_reward_no_kl.sh
 ```
 
 The default endpoint is hardcoded as
-`https://deef9335728f7918f0.gradio.live`. Set `INTEREST_REWARD_ENDPOINT` only to
+`https://86c9a1ebd964c9e188.gradio.live/v1/rank/batch`. Set
+`INTEREST_REWARD_ENDPOINT` only to
 override it intentionally.
 
 For every strict-format rollout, the trainer extracts pure text after each
@@ -134,6 +135,13 @@ The trainer logs hit rates and active-group rates at K=10/20/50/100 from the
 same Top-100 calls, plus selected-K all-zero/all-one rates, query count, strict
 format rate, and token-mask coverage. Endpoint errors are fatal after bounded
 retry; do not reinterpret service failures as reward zero.
+
+Periodic validation gives each user history one vote: a history is an interest
+hit when any generated interest retrieves its target SID. W&B logs overall
+history HR at K=20/50/100, format-valid rate, mean query count, and interest-only
+incremental coverage against constrained SID beam@10 at the same cutoffs.
+Derivable intersections/unions and exploit/explore or novel/repeat breakdowns
+are intentionally omitted.
 
 Malformed parser output is not a service failure: it generates no rank request,
 records block rank `-1`, and assigns raw interest reward `0` without stopping

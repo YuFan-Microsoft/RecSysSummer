@@ -109,7 +109,7 @@ bash phase3_interest_retriever/start_server.sh --no-share
 ```
 
 The public tunnel has no authentication. The current Phase-3 default is hardcoded
-to `https://deef9335728f7918f0.gradio.live`; override it with
+to `https://86c9a1ebd964c9e188.gradio.live/v1/rank/batch`; override it with
 `INTEREST_REWARD_ENDPOINT` only when intentionally switching deployments.
 
 The same process mounts a Gradio UI at `http://<host>:8092/gradio`. Its named
@@ -188,7 +188,7 @@ There is intentionally no space after `Query:`.
 ```python
 from phase3_interest_retriever.client import InterestRetrieverClient
 
-client = InterestRetrieverClient("https://deef9335728f7918f0.gradio.live")
+client = InterestRetrieverClient("https://86c9a1ebd964c9e188.gradio.live/v1/rank/batch")
 ranks = client.rank_batch([
   {"interest": "survival crafting games", "target_sid": "<a_1><b_2><c_3>"}
 ])

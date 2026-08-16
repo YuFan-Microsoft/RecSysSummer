@@ -9,9 +9,17 @@ from urllib import error, request
 import aiohttp
 
 
+def normalize_service_base_url(endpoint: str) -> str:
+    base_url = endpoint.rstrip("/")
+    for suffix in ("/v1/rank/batch", "/v1/rank"):
+        if base_url.endswith(suffix):
+            return base_url[: -len(suffix)]
+    return base_url
+
+
 class InterestRetrieverClient:
     def __init__(self, base_url: str, timeout: int = 60, max_attempts: int = 3):
-        self.base_url = base_url.rstrip("/")
+        self.base_url = normalize_service_base_url(base_url)
         self.timeout = timeout
         self.max_attempts = max_attempts
 
@@ -47,7 +55,7 @@ class InterestRetrieverClient:
 
 class AsyncInterestRetrieverClient:
     def __init__(self, base_url: str, timeout: int = 60, max_attempts: int = 3):
-        self.base_url = base_url.rstrip("/")
+        self.base_url = normalize_service_base_url(base_url)
         self.timeout = timeout
         self.max_attempts = max_attempts
         self._session: Optional[aiohttp.ClientSession] = None

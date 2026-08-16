@@ -54,6 +54,7 @@ from verl.trainer.ppo.metric_utils import (
 )
 from verl.trainer.ppo.mismatch_helper import compute_rollout_importance_weights
 from verl.trainer.ppo.interest_reward import (
+    build_interest_validation_metrics,
     decode_interest_reward_inputs,
     evaluate_interest_rewards,
 )
@@ -146,6 +147,14 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_val/45_latest_history_summary_reference_reward_mean",
     "core_metrics_val/46_process_reward_mean",
     "core_metrics_val/51_sid_diversity_mean",
+    "core_metrics_val/61_interest_history_hr_at_20",
+    "core_metrics_val/62_interest_history_hr_at_50",
+    "core_metrics_val/63_interest_history_hr_at_100",
+    "core_metrics_val/65_interest_format_valid_rate",
+    "core_metrics_val/66_interest_query_count_mean",
+    "core_metrics_val/81_interest_only_hr_at_20",
+    "core_metrics_val/82_interest_only_hr_at_50",
+    "core_metrics_val/83_interest_only_hr_at_100",
     "response_length/mean",
     "response_length/clip_ratio",
     "response/aborted_ratio",
@@ -941,6 +950,26 @@ class RayPPOTrainer:
             for key, values in sid_ranking_metrics.items():
                 reward_extra_infos_dict[key].extend(values)
 
+            interest_config = self.config.algorithm.get("interest_reward", {})
+            if interest_config.get("enable", False):
+                interest_metrics = evaluate_interest_rewards(
+                    solutions=output_texts,
+                    target_sids=ground_truths,
+                    endpoint=str(interest_config.endpoint),
+                    reward_top_k=int(interest_config.reward_top_k),
+                    request_batch_size=int(interest_config.get("request_batch_size", 2048)),
+                    timeout=int(interest_config.get("timeout", 600)),
+                    max_attempts=int(interest_config.get("max_attempts", 3)),
+                )
+                interest_metrics.update(
+                    build_interest_validation_metrics(
+                        interest_metrics,
+                        sid_ranking_metrics["sid_eval_hr_at_10"],
+                    )
+                )
+                for key, values in interest_metrics.items():
+                    reward_extra_infos_dict[key].extend(values)
+
             test_batch = test_batch.union(test_output_gen_batch)
             test_batch.meta_info["validate"] = True
 
@@ -1027,6 +1056,14 @@ class RayPPOTrainer:
             "sid_eval_repeat_hr_at_10": "core_metrics_val/32_repeat_hr_at_10",
             "sid_eval_repeat_ndcg_at_5": "core_metrics_val/33_repeat_ndcg_at_5",
             "sid_eval_repeat_ndcg_at_10": "core_metrics_val/34_repeat_ndcg_at_10",
+            "interest_hit_at_20": "core_metrics_val/61_interest_history_hr_at_20",
+            "interest_hit_at_50": "core_metrics_val/62_interest_history_hr_at_50",
+            "interest_hit_at_100": "core_metrics_val/63_interest_history_hr_at_100",
+            "interest_format_valid": "core_metrics_val/65_interest_format_valid_rate",
+            "interest_query_count": "core_metrics_val/66_interest_query_count_mean",
+            "interest_only_hit_at_20": "core_metrics_val/81_interest_only_hr_at_20",
+            "interest_only_hit_at_50": "core_metrics_val/82_interest_only_hr_at_50",
+            "interest_only_hit_at_100": "core_metrics_val/83_interest_only_hr_at_100",
         }
         for reward_key, metric_key in validation_core_metrics.items():
             if reward_key in reward_extra_infos_dict and reward_extra_infos_dict[reward_key]:
