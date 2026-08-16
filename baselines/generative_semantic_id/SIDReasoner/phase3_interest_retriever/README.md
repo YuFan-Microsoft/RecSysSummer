@@ -9,9 +9,10 @@ similarity, and returns a binary multiple-instance reward:
 reward = 1 if any interest retrieves the target SID in its Top-K, else 0
 ```
 
-A missed interest is not penalized individually. This leaves room for valid
-exploration interests when the interaction log exposes only one target item.
-The service embeds interest strings exactly as supplied by the caller.
+The endpoint reports ranks only; it does not assign positive or negative RL
+credit. The trainer gives the whole interest block a positive reward when any
+interest covers the target and zero otherwise. Signed GRPO then increases
+covering blocks and decreases non-covering blocks within mixed rollout groups.
 
 ## Data and index
 
@@ -21,8 +22,13 @@ The builder defaults to:
 - Revision: `a5eb07115444b128ab7add812e4cee87517a5c41`
 - Config/split: `Video_Games_catalog/train`
 - Catalog size at that revision: 3,858 items
-- Index text: `title`, `brand`, `description`, and `detailed_description`
+- Index text: `title`, `brand`, and `detailed_description`, in that order
 - Embedding model: `/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-0.6B`
+- Document max length / batch per GPU: 1,024 / 32
+- Query max length / batch: 512 / 128
+- Dtype: FP16
+- Attention: Transformers default (no FlashAttention 2)
+- Padding / pooling / normalization: left / last token / L2
 
 `sid_interleaved_narrative` is intentionally excluded from the first index so
 the reward measures retrieval from product metadata rather than generated
@@ -45,14 +51,24 @@ matrices in catalog order only after every worker succeeds. To select another
 set of cards, pass exactly eight distinct IDs, for example
 `--gpus 2,3,4,5,6,7,8,9`.
 
-Each GPU uses `--batch-size 128` by default, for a maximum aggregate inference
-batch of 1,024 documents across eight workers. Reduce `--batch-size` only if the
-512-token embedding batches exceed available GPU memory.
+Each GPU has `--batch-size 32`, document `--max-length 1024`, and a 32,768-token
+padding budget. Workers sort their shard by token length, encode, then restore
+catalog order before shard merge. Documents are exactly:
+
+```text
+Title: {title}
+Brand: {brand}
+Details: {detailed_description}
+```
+
+Empty fields are omitted. Document text contains no `description`, SID, item ID,
+`sid_interleaved_narrative`, `Document:` prefix, or instruction.
 
 The output directory contains `embeddings.npy`, `metadata.json`, and a
 `manifest.json` that pins the data/model provenance and query instruction.
-The manifest also records `build_world_size=8`, `build_gpu_ids`, and
-`build_batch_size_per_gpu=128`.
+The manifest also records `build_world_size=8`, `build_gpu_ids`,
+`build_batch_size_per_gpu=32`, `document_max_length=1024`,
+`query_max_length=512`, FP16, default attention, and the token budget.
 Use `--limit 100` for a quick build smoke test.
 
 The catalog has 3,858 item rows and 3,827 unique SIDs at the pinned revision.
@@ -68,12 +84,37 @@ bash phase3_interest_retriever/start_server.sh
 
 Defaults are `0.0.0.0:8092`, GPU `cuda:0`, and the index directory
 `phase3_interest_retriever/indexes/Video_Games`. Override these with
-`INTEREST_RETRIEVER_PORT`, `INTEREST_RETRIEVER_DEVICE`, or
-`INTEREST_INDEX_DIR`.
+`INTEREST_RETRIEVER_PORT`, `INTEREST_RETRIEVER_GPU`, or `INTEREST_INDEX_DIR`.
+Unlike the eight-GPU index builder, the online endpoint uses exactly one GPU.
+`start_server.sh` defaults to physical GPU 0 by setting `CUDA_VISIBLE_DEVICES=0`
+and loads the model on its isolated `cuda:0`. To use physical GPU 7 instead:
+
+```bash
+INTEREST_RETRIEVER_GPU=7 bash phase3_interest_retriever/start_server.sh
+```
+
+Public sharing is enabled by default. After the local UI is ready, the launcher
+creates a `gradio.live` tunnel for the entire FastAPI port and prints:
+
+```text
+Public Gradio UI: https://<share>.gradio.live/gradio
+Public rank API: https://<share>.gradio.live/v1/rank
+Public batch rank API: https://<share>.gradio.live/v1/rank/batch
+```
+
+Disable public exposure with:
+
+```bash
+bash phase3_interest_retriever/start_server.sh --no-share
+```
+
+The public tunnel has no authentication. The current Phase-3 default is hardcoded
+to `https://deef9335728f7918f0.gradio.live`; override it with
+`INTEREST_REWARD_ENDPOINT` only when intentionally switching deployments.
 
 The same process mounts a Gradio UI at `http://<host>:8092/gradio`. Its named
-Gradio API endpoint is `retrieve_interests`. Disable the UI with
-`--disable-gradio` when only the stable REST API is needed.
+Gradio API endpoint is `rank_interest`. Disable the UI with
+`--disable-gradio --no-share` when only the private REST API is needed.
 
 ### Gradio input and output
 
@@ -82,23 +123,29 @@ Inputs:
 | Name | Type | Contract |
 | --- | --- | --- |
 | `target_sid` | string | One catalog SID matching `<a_N><b_N><c_N>` |
-| `interests_text` | string | 1–8 non-empty lines; each complete line is embedded unchanged |
-| `top_k` | integer | Retrieval cutoff from 1 to 100 in the UI |
+| `interest_text` | string | Exactly one pure-text interest, normally the text after `=>` |
 
 Outputs:
 
 | Name | Type | Contents |
 | --- | --- | --- |
-| `response_json` | object | `any_hit`, binary `reward`, latency, and complete per-interest results |
-| `result_table` | table | One row per retrieved item with interest index, hit/rank, item ID, SID, title, and cosine score |
+| `rank` | integer | 1-based Top-100 target rank, or `-1` when not retrieved |
 
-The Gradio endpoint is for manual inspection. Trainer integration should call
-the stable `POST /v1/retrieve` or `POST /v1/retrieve/batch` JSON endpoints.
+No item titles, scores, Top-K details, JSON result object, or reward are returned.
+Trainer integration calls compact `POST /v1/rank/batch` for real batching.
 
-Programmatic Gradio clients call `api_name="/retrieve_interests"` and receive a
-two-element output: the complete response object followed by the flattened
-result table. The three positional inputs are `target_sid`, `interests_text`,
-and `top_k`, in that order.
+Programmatic Gradio call:
+
+```python
+from gradio_client import Client
+
+client = Client("https://<share>.gradio.live/")
+rank = client.predict(
+  target_sid="<a_1><b_2><c_3>",
+  interest_text="cooperative survival crafting games",
+  api_name="/rank_interest",
+)
+```
 
 Health check:
 
@@ -106,34 +153,45 @@ Health check:
 curl http://localhost:8092/healthz
 ```
 
-Retrieve and compute the block reward:
+### Training rank API
 
-```bash
-curl -X POST http://localhost:8092/v1/retrieve \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "request_id": "rollout-7",
-    "target_sid": "<a_1><b_2><c_3>",
-    "interests": [
-      "- [exploit] <a_7><b_8><c_9> => survival crafting games",
-      "- [explore] <a_4><b_5><c_6> => console accessories"
-    ],
-    "top_k": 20
-  }'
+The rank service always searches Top-100. A 1-based rank means the target SID
+was retrieved; `-1` means it was absent from Top-100. A target SID absent from
+the catalog is an HTTP error, not a miss.
+
+```text
+POST /v1/rank
+{"interest": "survival crafting games", "target_sid": "<a_1><b_2><c_3>"}
+-> {"rank": 37}
 ```
 
-The response includes the Top-K items and target rank for every interest, plus
-the block-level fields `any_hit` and `reward`. `POST /v1/retrieve/batch` accepts
-`{"requests": [...]}` for trainer-side batching.
+The true batch endpoint deduplicates equal interest strings, embeds all unique
+queries in one service call, searches Top-100 once, and preserves request order:
+
+```text
+POST /v1/rank/batch
+{"requests": [{"interest": "...", "target_sid": "<a_1><b_2><c_3>"}]}
+-> {"ranks": [37]}
+```
+
+The trainer extracts only the text after the first `=>`. Query strings are:
+
+```text
+Instruct: Given a future shopping interest, retrieve Video Games products matching the described genre, gameplay, platform, franchise, or accessory intent.
+Query:cooperative survival crafting games
+```
+
+There is intentionally no space after `Query:`.
 
 ## Python client
 
 ```python
 from phase3_interest_retriever.client import InterestRetrieverClient
 
-client = InterestRetrieverClient("http://retriever-host:8092")
-response = client.retrieve(payload)
-interest_reward = response["reward"]
+client = InterestRetrieverClient("https://deef9335728f7918f0.gradio.live")
+ranks = client.rank_batch([
+  {"interest": "survival crafting games", "target_sid": "<a_1><b_2><c_3>"}
+])
 ```
 
 An `AsyncInterestRetrieverClient` with the same methods is available for the RL

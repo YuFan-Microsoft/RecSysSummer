@@ -99,6 +99,49 @@ SID action. Thinking format is logged as one strict `format_reward` metric;
 history-summary grounding, future-interests grounding, history-reference
 coverage, and combined process metrics remain separate.
 
+### Retrieval-grounded interest reward
+
+Use [`RL_training_script_interest_reward_no_kl.sh`](RL_training_script_interest_reward_no_kl.sh)
+for the treatment run. It health-checks the external single-GPU retriever before
+delegating to the baseline No-KL launcher. Defaults are `K=50` and weight `0.1`:
+
+```bash
+INTEREST_REWARD_TOP_K=50 \
+INTEREST_REWARD_WEIGHT=0.1 \
+bash phase3_rl/RL_training_script_interest_reward_no_kl.sh
+```
+
+The default endpoint is hardcoded as
+`https://deef9335728f7918f0.gradio.live`. Set `INTEREST_REWARD_ENDPOINT` only to
+override it intentionally.
+
+For every strict-format rollout, the trainer extracts pure text after each
+future-interest `=>`, sends `interest + target_sid` pairs through
+`POST /v1/rank/batch`, and receives 1-based Top-100 ranks (`-1` for a miss). The
+best positive rank in the rollout becomes a binary reward under the configured
+K. Malformed traces skip retrieval and receive zero.
+
+Interest reward uses standard signed GRPO normalization within each 16-rollout
+prompt group. Its weighted advantage is applied only to
+`future_interest_token_mask`, never to history-summary or final SID tokens. Keep
+the SID and process advantages independent:
+
+```text
+A = A_sid + 0.1 * A_process + interest_weight * A_interest
+```
+
+The trainer logs hit rates and active-group rates at K=10/20/50/100 from the
+same Top-100 calls, plus selected-K all-zero/all-one rates, query count, strict
+format rate, and token-mask coverage. Endpoint errors are fatal after bounded
+retry; do not reinterpret service failures as reward zero.
+
+Malformed parser output is not a service failure: it generates no rank request,
+records block rank `-1`, and assigns raw interest reward `0` without stopping
+training. Its future-interest mask is excluded from the auxiliary advantage, so
+it receives neither a positive nor negative interest-token update. An
+empty/unlocatable interest token mask also zeros that sample's interest score
+instead of raising.
+
 W&B uses a strict allowlist rather than forwarding every VERL metric. The
 dashboard keeps recommendation outcomes (HR/NDCG at 1, 5, and 10), all process
 gate diagnostics, retry-attempt metrics when retry sampling is enabled, final

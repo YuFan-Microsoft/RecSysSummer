@@ -17,7 +17,9 @@ from typing import Any, Optional
 
 from verl.base_config import BaseConfig
 
-__all__ = ["AlgoConfig", "FilterGroupsConfig", "KLControlConfig"]
+__all__ = ["AlgoConfig", "FilterGroupsConfig", "InterestRewardConfig", "KLControlConfig"]
+
+DEFAULT_INTEREST_REWARD_ENDPOINT = "https://deef9335728f7918f0.gradio.live"
 
 
 @dataclass
@@ -57,6 +59,19 @@ class FilterGroupsConfig(BaseConfig):
 
 
 @dataclass
+class InterestRewardConfig(BaseConfig):
+    """Retrieval-grounded future-interest reward configuration."""
+
+    enable: bool = False
+    endpoint: str = DEFAULT_INTEREST_REWARD_ENDPOINT
+    reward_top_k: int = 50
+    weight: float = 0.1
+    request_batch_size: int = 2048
+    timeout: int = 600
+    max_attempts: int = 3
+
+
+@dataclass
 class AlgoConfig(BaseConfig):
     """Configuration for the algorithm.
 
@@ -93,6 +108,7 @@ class AlgoConfig(BaseConfig):
     use_pf_ppo: bool = False
     pf_ppo: dict[str, Any] = field(default_factory=dict)
     filter_groups: Optional[FilterGroupsConfig] = None
+    interest_reward: InterestRewardConfig = field(default_factory=InterestRewardConfig)
     # Rollout Importance Sampling (replaces legacy tis_imp_ratio_cap)
     # Controls computation of IS weights and mismatch metrics
     rollout_is_threshold: Optional[float] = None  # null = disabled, float = enabled

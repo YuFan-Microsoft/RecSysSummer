@@ -15,11 +15,17 @@ class InterestRetrieverClient:
         self.timeout = timeout
         self.max_attempts = max_attempts
 
-    def retrieve(self, payload: dict[str, Any]) -> dict[str, Any]:
-        return self._post("/v1/retrieve", payload)
+    def rank(self, interest: str, target_sid: str) -> int:
+        return int(
+            self._post(
+                "/v1/rank",
+                {"interest": interest, "target_sid": target_sid},
+            )["rank"]
+        )
 
-    def retrieve_batch(self, payloads: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        return self._post("/v1/retrieve/batch", {"requests": payloads})["responses"]
+    def rank_batch(self, payloads: list[dict[str, str]]) -> list[int]:
+        response = self._post("/v1/rank/batch", {"requests": payloads})
+        return [int(rank) for rank in response["ranks"]]
 
     def _post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
@@ -65,12 +71,16 @@ class AsyncInterestRetrieverClient:
             )
         return self._session
 
-    async def retrieve(self, payload: dict[str, Any]) -> dict[str, Any]:
-        return await self._post("/v1/retrieve", payload)
+    async def rank(self, interest: str, target_sid: str) -> int:
+        response = await self._post(
+            "/v1/rank",
+            {"interest": interest, "target_sid": target_sid},
+        )
+        return int(response["rank"])
 
-    async def retrieve_batch(self, payloads: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        response = await self._post("/v1/retrieve/batch", {"requests": payloads})
-        return response["responses"]
+    async def rank_batch(self, payloads: list[dict[str, str]]) -> list[int]:
+        response = await self._post("/v1/rank/batch", {"requests": payloads})
+        return [int(rank) for rank in response["ranks"]]
 
     async def _post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
         session = await self._get_session()

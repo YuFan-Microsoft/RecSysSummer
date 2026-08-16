@@ -1,6 +1,43 @@
 import torch
 
-from verl.trainer.ppo.sid_constrained import apply_constrained_sid_log_probs
+from verl.trainer.ppo.sid_constrained import (
+    apply_constrained_sid_log_probs,
+    build_unique_tagged_span_mask,
+)
+
+
+def test_tagged_span_mask_includes_unique_opening_content_and_closing_tags():
+    mask = build_unique_tagged_span_mask(
+        token_ids=[9, 1, 2, 5, 6, 3, 4, 8],
+        opening_tag_ids=[1, 2],
+        closing_tag_ids=[3, 4],
+        output_length=10,
+    )
+    assert torch.equal(
+        mask,
+        torch.tensor([0, 1, 1, 1, 1, 1, 1, 0, 0, 0], dtype=torch.bool),
+    )
+
+
+def test_tagged_span_mask_is_zero_when_tags_are_missing_or_ambiguous():
+    missing = build_unique_tagged_span_mask([1, 2, 5], [1, 2], [3, 4], 5)
+    repeated = build_unique_tagged_span_mask(
+        [1, 2, 5, 3, 4, 1, 2, 6, 3, 4],
+        [1, 2],
+        [3, 4],
+        10,
+    )
+    assert not missing.any()
+    assert not repeated.any()
+
+
+def test_tagged_span_mask_rejects_short_output_length():
+    try:
+        build_unique_tagged_span_mask([1, 2, 3], [1], [3], 2)
+    except ValueError as error:
+        assert "cover all token IDs" in str(error)
+    else:
+        raise AssertionError("Expected short output_length to fail")
 
 
 def test_constrained_log_prob_normalizes_only_over_allowed_tokens_and_backpropagates():

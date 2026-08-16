@@ -121,6 +121,43 @@ def _latest_history_summary_reference_reward(
     return float(latest_sid in summary_citations)
 
 
+def extract_future_interest_texts(solution_str: str) -> list[str]:
+    """Return pure interest text only when the complete V4 format is valid."""
+    if not isinstance(solution_str, str) or solution_str.count("</think>") != 1:
+        return []
+    reasoning, _ = solution_str.split("</think>", maxsplit=1)
+    if any(reasoning.count(tag) != 1 for tag in _REQUIRED_TAGS):
+        return []
+    match = _OUTER_PATTERN.fullmatch(reasoning)
+    if match is None:
+        return []
+
+    summary_lines = _nonempty_lines(match.group("history_summary"))
+    future_interest_lines = _nonempty_lines(match.group("future_interests"))
+    parsed_summary = [_SUMMARY_LINE_PATTERN.fullmatch(line) for line in summary_lines]
+    parsed_future_interests = [
+        _FUTURE_INTEREST_LINE_PATTERN.fullmatch(line) for line in future_interest_lines
+    ]
+    if not (1 <= len(summary_lines) <= 3 and 2 <= len(future_interest_lines) <= 4):
+        return []
+    if not all(line_match is not None for line_match in parsed_summary):
+        return []
+    if not all(line_match is not None for line_match in parsed_future_interests):
+        return []
+    labels = {
+        line_match.group("label").casefold()
+        for line_match in parsed_future_interests
+        if line_match is not None
+    }
+    if labels != {"exploit", "explore"}:
+        return []
+    return [
+        line_match.group("text")
+        for line_match in parsed_future_interests
+        if line_match is not None
+    ]
+
+
 def calculate_process_rewards(solution_str: str, history_sids: Any) -> dict[str, float]:
     """Score strict V4 format and the grounding of its two reasoning stages."""
     zero_scores = {

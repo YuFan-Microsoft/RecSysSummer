@@ -593,6 +593,12 @@ class vLLMRollout(BaseRollout):
             self.sid_validation_beam_size = _sid_validation_beam_size
             self.num_sid_tokens = _sid_length
             self.end_think_marker = self.tokenizer.encode("</think>", add_special_tokens=False)
+            self.future_interests_open_marker = self.tokenizer.encode(
+                "<future_interests>", add_special_tokens=False
+            )
+            self.future_interests_close_marker = self.tokenizer.encode(
+                "</future_interests>", add_special_tokens=False
+            )
             if self.truncate_marker[: len(self.end_think_marker)] != self.end_think_marker:
                 raise ValueError("The </think> separator does not extend the tokenizer's </think> marker")
             sid_sequences = hf_data.load_sid_indices(sid_category).values()
@@ -854,12 +860,21 @@ class vLLMRollout(BaseRollout):
                 idx.device
             )
             if use_constrained_sid_sampling:
+                from verl.trainer.ppo.sid_constrained import build_unique_tagged_span_mask
+
                 reasoning_token_mask = torch.zeros_like(response, dtype=attention_mask.dtype)
                 sid_token_mask = torch.zeros_like(response, dtype=attention_mask.dtype)
+                future_interest_token_mask = torch.zeros_like(response, dtype=attention_mask.dtype)
                 for index, (reasoning_ids, sampled_length) in enumerate(
                     zip(response_reasonings, sampled_reasoning_lengths, strict=True)
                 ):
                     reasoning_token_mask[index, :sampled_length] = 1
+                    future_interest_token_mask[index] = build_unique_tagged_span_mask(
+                        token_ids=reasoning_ids[:sampled_length],
+                        opening_tag_ids=self.future_interests_open_marker,
+                        closing_tag_ids=self.future_interests_close_marker,
+                        output_length=response.shape[1],
+                    ).to(device=response.device, dtype=attention_mask.dtype)
                     sid_start = len(reasoning_ids)
                     sid_token_mask[index, sid_start : sid_start + self.num_sid_tokens] = 1
                 # Joint GRPO trains sampled reasoning and SID actions; normalized separators and EOS stay masked.
@@ -907,6 +922,7 @@ class vLLMRollout(BaseRollout):
         if use_constrained_sid_sampling:
             batch["response_mask"] = response_mask
             batch["sid_token_mask"] = sid_token_mask
+            batch["future_interest_token_mask"] = future_interest_token_mask
         elif use_constrained_beam_search:
             batch["response_mask"] = response_mask
         if self.config.calculate_log_probs:

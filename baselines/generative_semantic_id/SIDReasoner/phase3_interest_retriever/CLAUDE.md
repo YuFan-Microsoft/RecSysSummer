@@ -7,16 +7,17 @@ connect this service to Phase-3 RL until the offline recall evaluation succeeds.
 ## 1. What this service does
 
 For each rollout, the model generates one `<future_interests>` block containing
-multiple exploit/explore interest lines. The endpoint embeds every complete line,
-retrieves catalog items, and returns the multiple-instance binary reward:
+multiple exploit/explore interest lines. The trainer extracts text after the
+first `=>`; the independent endpoint embeds that text and returns target ranks:
 
 ```text
 interest_reward = 1 if any interest retrieves the target SID in Top-K else 0
 ```
 
-An interest that misses the observed target is not penalized individually. This
-is intentional because an explore interest may be valid even when the interaction
-log contains only one held-out target.
+The endpoint itself assigns no RL credit; it returns only target ranks. The
+trainer aggregates all interests in one rollout into a block reward. Under
+signed GRPO, a non-covering block receives negative relative advantage when its
+16-rollout group also contains covering blocks.
 
 ## 2. Fixed experiment inputs
 
@@ -41,12 +42,12 @@ rows sharing the target SID.
 1. Use the same model for document and query embeddings. The builder records the
    model path and query instruction in `manifest.json`; the server must load that
    manifest rather than silently selecting another model.
-2. Embed the complete generated interest line, including `[exploit]/[explore]`,
-   citation SIDs, `=>`, and natural language. This is the current experiment
-   definition. Do not strip the line before retrieval.
-3. Build document embeddings from `title`, `brand`, `description`, and
-   `detailed_description`. Do not add `sid_interleaved_narrative`; it is generated
-   text containing SID tokens and would couple the reward index to training prose.
+2. Query only the text after the first `=>`. Use the exact Video Games
+  instruction recorded in the manifest and no space after `Query:`.
+3. Build documents in fixed `Title`, `Brand`, `Details` order from `title`,
+  `brand`, and `detailed_description`. Omit empty fields. Never include raw
+  `description`, SID, item ID, `sid_interleaved_narrative`, a `Document:` prefix,
+  or any instruction.
 4. Never write a limited smoke index into the full index directory. Always use
    `indexes/Video_Games_smoke` for `--limit` runs.
 5. Treat malformed or truncated reasoning as a miss in the primary recall. Do
@@ -98,8 +99,10 @@ python3 -m phase3_interest_retriever.build_index \
 
 The builder always requires exactly eight distinct GPU IDs, including for the
 smoke run. It spawns one isolated process per card and merges shards in catalog
-order. Each worker uses batch size 128 by default, giving a maximum aggregate
-batch of 1,024 documents. Do not launch multiple builders on the same cards.
+order. Each worker sorts documents by token length and caps padded tokens at
+32,768 per actual batch. The validated defaults are FP16, document max length
+1,024, and batch size 32 per GPU. Do not launch multiple builders on the same
+cards.
 
 Inspect the smoke manifest:
 
@@ -109,7 +112,9 @@ python3 -c "import json; print(json.load(open('phase3_interest_retriever/indexes
 
 Expected properties include `item_count=100`, the local embedding model path,
 `normalized=true`, `search=exact_cosine`, and
-`build_batch_size_per_gpu=128`.
+`build_batch_size_per_gpu=32`, `document_max_length=1024`,
+`query_max_length=512`, `dtype=float16`, and
+`max_batch_tokens_per_gpu=32768`.
 
 ### Step 4 — Start and probe the smoke endpoint
 
@@ -139,17 +144,29 @@ python3 -m phase3_interest_retriever.build_index \
 Validate the resulting manifest before starting the endpoint:
 
 ```bash
-python3 -c "import json; m=json.load(open('phase3_interest_retriever/indexes/Video_Games/manifest.json')); assert m['item_count']==3858; assert m['unique_sid_count']==3827; assert m['build_world_size']==8; assert len(m['build_gpu_ids'])==8; assert m['build_batch_size_per_gpu']==128; print(m)"
+python3 -c "import json; m=json.load(open('phase3_interest_retriever/indexes/Video_Games/manifest.json')); assert m['item_count']==3858; assert m['unique_sid_count']==3827; assert m['build_world_size']==8; assert len(m['build_gpu_ids'])==8; assert m['build_batch_size_per_gpu']==32; assert m['document_max_length']==1024; assert m['query_max_length']==512; assert m['dtype']=='float16'; assert m['attention_backend']=='transformers_default'; print(m)"
 ```
 
 Do not reuse a smoke manifest or embeddings file for the full evaluation.
 
 ### Step 6 — Start the full endpoint
 
+The endpoint is deliberately single-GPU even though index construction uses
+eight GPUs. `start_server.sh` isolates one physical card with
+`CUDA_VISIBLE_DEVICES=${INTEREST_RETRIEVER_GPU:-0}` and loads the query encoder
+on the worker-visible `cuda:0`. Do not start eight endpoint replicas unless a
+separate serving-scale experiment explicitly requires them.
+
 For an interactive run:
 
 ```bash
 bash phase3_interest_retriever/start_server.sh
+```
+
+To select a different physical card:
+
+```bash
+INTEREST_RETRIEVER_GPU=7 bash phase3_interest_retriever/start_server.sh
 ```
 
 For a long-lived remote run, keep the process alive across SSH disconnects:
@@ -236,23 +253,30 @@ curl --fail http://localhost:8092/healthz
 curl --fail http://localhost:8092/gradio/
 ```
 
+Sharing is enabled by default. Wait for startup logs containing all three URLs:
+
+```text
+Public Gradio UI: https://<share>.gradio.live/gradio
+Public rank API: https://<share>.gradio.live/v1/rank
+Public batch rank API: https://<share>.gradio.live/v1/rank/batch
+```
+
+Use `--no-share` only when public exposure is intentionally disabled. Use the
+private host URL for high-volume RL calls even while the public UI remains
+available.
+
 Open `http://<server-host>:8092/gradio` for manual inspection. The named Gradio
-API endpoint is `retrieve_interests`.
+API endpoint is `rank_interest`.
 
 ### Gradio input contract
 
 1. `target_sid` — one catalog SID in `<a_N><b_N><c_N>` form.
-2. `interests_text` — 1–8 non-empty lines, one complete generated interest per
-   line. Preserve `[exploit]/[explore]`, citation SIDs, `=>`, and natural language.
-3. `top_k` — integer retrieval cutoff from 1 through 100.
+2. `interest_text` — exactly one pure-text interest after the first `=>`.
 
 ### Gradio output contract
 
-1. `response_json` — the complete retrieval response: request/target IDs,
-   `any_hit`, binary `reward`, latency, and every interest's target rank and
-   retrieved items.
-2. `result_table` — flattened inspection rows containing interest index/text,
-   target hit/rank, retrieval rank, item ID, SID, title, and cosine score.
+One integer `rank`: 1–100 when the target SID appears in Top-100, otherwise `-1`.
+The Gradio endpoint returns no item details, similarity scores, or reward.
 
 Programmatic Gradio call:
 
@@ -260,72 +284,42 @@ Programmatic Gradio call:
 from gradio_client import Client
 
 client = Client("http://localhost:8092/gradio")
-response_json, result_table = client.predict(
-    "<a_1><b_2><c_3>",
-    "- [exploit] <a_7><b_8><c_9> => survival crafting games\n"
-    "- [explore] <a_4><b_5><c_6> => console accessories",
-    20,
-    api_name="/retrieve_interests",
+rank = client.predict(
+    target_sid="<a_1><b_2><c_3>",
+    interest_text="survival crafting games",
+    api_name="/rank_interest",
 )
 ```
 
-`response_json` has this logical shape:
+The Gradio UI/API is for manual testing and demonstration. RL workers call the
+compact `/v1/rank/batch` REST contract rather than depending on Gradio routes or
+returning complete Top-100 items.
 
-```json
-{
-  "request_id": "gradio-<uuid>",
-  "target_sid": "<a_1><b_2><c_3>",
-  "any_hit": true,
-  "reward": 1.0,
-  "results": [
-    {
-      "interest": "complete original interest line",
-      "target_hit": true,
-      "target_rank": 7,
-      "items": [
-        {
-          "item_id": 42,
-          "sid": "<a_1><b_2><c_3>",
-          "title": "Retrieved item title",
-          "score": 0.81,
-          "rank": 7
-        }
-      ]
-    }
-  ],
-  "latency_ms": 31
-}
-```
+The public tunnel has no authentication. Share its URL only with trusted users
+or place the service behind an authenticated reverse proxy.
 
-`result_table` columns are ordered as:
+## 7. RL integration
 
-```text
-interest_index, interest, target_hit, target_rank,
-rank, item_id, sid, title, score
-```
+The constrained-sampling trainer extracts pure text after `=>`, sends one
+`interest + target_sid` pair per interest to `/v1/rank/batch`, takes the best
+positive rank in each rollout, and thresholds it with configurable `reward_top_k`.
+Interest reward is normalized separately with signed GRPO and applied only to
+the generated `<future_interests>` token mask. SID and process advantages remain
+separate.
 
-The Gradio UI/API is for manual testing and demonstration. Future RL workers
-must call the stable `/v1/retrieve` or `/v1/retrieve/batch` REST contract rather
-than depending on Gradio's generated routes.
-
-The endpoint has no authentication. Expose port 8092 only on a trusted network
-or place it behind an authenticated reverse proxy.
-
-## 7. Future RL integration
-
-Once the full evaluation is understood, connect the endpoint to the constrained-
-sampling reward path. Keep SID exact-match reward separate. The first RL version
-should use only the binary any-interest Hit@K reward for the complete
-`<future_interests>` block; do not add per-line penalties, diversity shaping, or
-rank weighting in the same experiment.
-
-After integration, add tests proving that:
+The integration tests must prove that:
 
 - one hitting interest gives block reward 1;
-- other missing/exploration interests are not penalized;
+- a mixed group gives positive advantage to covering blocks and negative
+  advantage to non-covering blocks;
 - all misses give block reward 0;
 - malformed format gates retrieval reward to 0;
 - endpoint failures do not silently become positive rewards.
+
+On the first GPU pilot step, require
+`interest_token_mask_nonempty_rate == interest_format_valid_rate` (up to any
+known tokenizer edge cases). A lower mask rate means tag tokenization did not
+match the generated IDs and training must stop for investigation.
 
 ## 8. Common failures
 

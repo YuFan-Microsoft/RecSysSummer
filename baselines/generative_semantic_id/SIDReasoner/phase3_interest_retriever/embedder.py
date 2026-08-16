@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Optional
 
 
 DEFAULT_MODEL = "/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-0.6B"
 DEFAULT_QUERY_INSTRUCTION = (
-    "Given a future shopping interest, retrieve products that satisfy the interest."
+    "Given a future shopping interest, retrieve Video Games products matching the described "
+    "genre, gameplay, platform, franchise, or accessory intent."
 )
+DEFAULT_DOCUMENT_MAX_LENGTH = 1024
+DEFAULT_QUERY_MAX_LENGTH = 512
 
 
 class Qwen3Embedder:
@@ -16,8 +19,8 @@ class Qwen3Embedder:
         self,
         model_name_or_path: str = DEFAULT_MODEL,
         device: str = "cuda:0",
-        dtype: str = "bfloat16",
-        max_length: int = 512,
+        dtype: str = "float16",
+        max_length: int = DEFAULT_QUERY_MAX_LENGTH,
         use_flash_attention: bool = False,
     ) -> None:
         import torch
@@ -55,14 +58,58 @@ class Qwen3Embedder:
             sequence_lengths,
         ]
 
-    def encode(self, texts: list[str], batch_size: int = 32) -> Any:
+    def _batch_indices(
+        self,
+        texts: list[str],
+        batch_size: int,
+        max_batch_tokens: Optional[int],
+    ) -> list[list[int]]:
+        if max_batch_tokens is None:
+            return [
+                list(range(start, min(start + batch_size, len(texts))))
+                for start in range(0, len(texts), batch_size)
+            ]
+
+        tokenized = self.tokenizer(
+            texts,
+            padding=False,
+            truncation=True,
+            max_length=self.max_length,
+            return_length=True,
+        )
+        lengths = [int(length) for length in tokenized["length"]]
+        sorted_indices = sorted(range(len(texts)), key=lengths.__getitem__)
+        batches: list[list[int]] = []
+        current: list[int] = []
+        for index in sorted_indices:
+            next_size = len(current) + 1
+            padded_tokens = next_size * lengths[index]
+            if current and (next_size > batch_size or padded_tokens > max_batch_tokens):
+                batches.append(current)
+                current = []
+            current.append(index)
+        if current:
+            batches.append(current)
+        return batches
+
+    def encode(
+        self,
+        texts: list[str],
+        batch_size: int = 32,
+        max_batch_tokens: Optional[int] = None,
+    ) -> Any:
         if not texts:
             raise ValueError("texts must not be empty")
+        if batch_size < 1:
+            raise ValueError("batch_size must be positive")
+        if max_batch_tokens is not None and max_batch_tokens < 1:
+            raise ValueError("max_batch_tokens must be positive")
         outputs = []
+        output_indices = []
         with self._torch.no_grad():
-            for start in range(0, len(texts), batch_size):
+            for indices in self._batch_indices(texts, batch_size, max_batch_tokens):
                 inputs = self.tokenizer(
-                    texts[start : start + batch_size],
+                    [texts[index] for index in indices],
                     padding=True,
                     truncation=True,
                     max_length=self.max_length,
@@ -75,13 +122,26 @@ class Qwen3Embedder:
                 )
                 embeddings = self._torch.nn.functional.normalize(embeddings, p=2, dim=1)
                 outputs.append(embeddings.float().cpu().numpy())
+                output_indices.extend(indices)
 
         import numpy as np
 
-        return np.concatenate(outputs, axis=0)
+        concatenated = np.concatenate(outputs, axis=0)
+        restored = np.empty_like(concatenated)
+        restored[np.asarray(output_indices)] = concatenated
+        return restored
 
-    def encode_documents(self, documents: list[str], batch_size: int = 32) -> Any:
-        return self.encode(documents, batch_size=batch_size)
+    def encode_documents(
+        self,
+        documents: list[str],
+        batch_size: int = 32,
+        max_batch_tokens: Optional[int] = None,
+    ) -> Any:
+        return self.encode(
+            documents,
+            batch_size=batch_size,
+            max_batch_tokens=max_batch_tokens,
+        )
 
     def encode_queries(
         self,

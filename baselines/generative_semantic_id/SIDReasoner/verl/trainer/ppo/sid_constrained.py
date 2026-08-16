@@ -3,6 +3,39 @@ from __future__ import annotations
 import torch
 
 
+def build_unique_tagged_span_mask(
+    token_ids: list[int],
+    opening_tag_ids: list[int],
+    closing_tag_ids: list[int],
+    output_length: int,
+) -> torch.Tensor:
+    """Mask one uniquely delimited token span, including both tags."""
+    if not opening_tag_ids or not closing_tag_ids:
+        raise ValueError("tag token sequences must not be empty")
+    if output_length < len(token_ids):
+        raise ValueError("output_length must cover all token IDs")
+
+    def find_starts(pattern: list[int]) -> list[int]:
+        width = len(pattern)
+        return [
+            start
+            for start in range(len(token_ids) - width + 1)
+            if token_ids[start : start + width] == pattern
+        ]
+
+    mask = torch.zeros(output_length, dtype=torch.bool)
+    opening_starts = find_starts(opening_tag_ids)
+    closing_starts = find_starts(closing_tag_ids)
+    if len(opening_starts) != 1 or len(closing_starts) != 1:
+        return mask
+    opening_start = opening_starts[0]
+    closing_end = closing_starts[0] + len(closing_tag_ids)
+    if closing_starts[0] < opening_start + len(opening_tag_ids):
+        return mask
+    mask[opening_start:closing_end] = True
+    return mask
+
+
 def apply_constrained_sid_log_probs(
     log_probs: torch.Tensor,
     logits: torch.Tensor,

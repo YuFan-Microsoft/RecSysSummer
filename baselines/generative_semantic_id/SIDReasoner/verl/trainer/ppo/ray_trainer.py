@@ -24,6 +24,7 @@ import os
 import re
 import uuid
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pprint import pprint
@@ -52,6 +53,10 @@ from verl.trainer.ppo.metric_utils import (
     process_validation_metrics,
 )
 from verl.trainer.ppo.mismatch_helper import compute_rollout_importance_weights
+from verl.trainer.ppo.interest_reward import (
+    decode_interest_reward_inputs,
+    evaluate_interest_rewards,
+)
 from verl.trainer.ppo.reward import compute_reward, compute_reward_async
 from verl.trainer.ppo.sid_group_metrics import compute_exact_match_count_buckets
 from verl.trainer.ppo.sid_eval_metrics import count_unique_first_sid_tokens
@@ -72,8 +77,23 @@ from verl.utils.torch_functional import masked_mean
 from verl.utils.tracking import ValidationGenerationsLogger
 
 
+_INTEREST_REWARD_EXECUTOR = ThreadPoolExecutor(
+    max_workers=1,
+    thread_name_prefix="interest-reward",
+)
+
+
 _WANDB_METRIC_ORDER = (
     "core_metrics_train/sid_match_reward_mean",
+    "core_metrics_train/interest_reward_mean",
+    "core_metrics_train/interest_block_rank_mean",
+    "core_metrics_train/interest_hit_at_10",
+    "core_metrics_train/interest_hit_at_20",
+    "core_metrics_train/interest_hit_at_50",
+    "core_metrics_train/interest_hit_at_100",
+    "core_metrics_train/interest_query_count_mean",
+    "core_metrics_train/interest_format_valid_rate",
+    "core_metrics_train/interest_token_mask_nonempty_rate",
     "core_metrics_train/format_reward_mean",
     "core_metrics_train/history_summary_grounding_reward_mean",
     "core_metrics_train/future_interests_grounding_reward_mean",
@@ -81,6 +101,13 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_train/latest_history_summary_reference_reward_mean",
     "core_metrics_train/process_reward_mean",
     "core_metrics_train/sid_match_active_group_rate",
+    "core_metrics_train/interest_active_group_rate",
+    "core_metrics_train/interest_active_group_rate_at_10",
+    "core_metrics_train/interest_active_group_rate_at_20",
+    "core_metrics_train/interest_active_group_rate_at_50",
+    "core_metrics_train/interest_active_group_rate_at_100",
+    "core_metrics_train/interest_all_zero_group_rate",
+    "core_metrics_train/interest_all_one_group_rate",
     "core_metrics_train/sid_match_all_wrong_group_rate",
     "core_metrics_train/sid_match_all_wrong_group_count",
     "core_metrics_train/sid_match_one_correct_group_count",
@@ -179,8 +206,21 @@ def _log_metrics(logger, data, step, configured_backends, wandb_exclude_prefixes
 def _compute_core_metrics(batch, metrics):
     core_metrics = {}
 
+    if "future_interest_token_mask" in batch.batch:
+        nonempty_masks = batch.batch["future_interest_token_mask"].bool().any(dim=-1)
+        core_metrics["core_metrics_train/interest_token_mask_nonempty_rate"] = float(
+            nonempty_masks.float().mean().item()
+        )
+
     reward_extra_metrics = {
         "sid_match_reward": "core_metrics_train/sid_match_reward_mean",
+        "interest_reward": "core_metrics_train/interest_reward_mean",
+        "interest_hit_at_10": "core_metrics_train/interest_hit_at_10",
+        "interest_hit_at_20": "core_metrics_train/interest_hit_at_20",
+        "interest_hit_at_50": "core_metrics_train/interest_hit_at_50",
+        "interest_hit_at_100": "core_metrics_train/interest_hit_at_100",
+        "interest_query_count": "core_metrics_train/interest_query_count_mean",
+        "interest_format_valid": "core_metrics_train/interest_format_valid_rate",
         "format_reward": "core_metrics_train/format_reward_mean",
         "history_summary_grounding_reward": "core_metrics_train/history_summary_grounding_reward_mean",
         "future_interests_grounding_reward": "core_metrics_train/future_interests_grounding_reward_mean",
@@ -194,9 +234,20 @@ def _compute_core_metrics(batch, metrics):
     for batch_key, metric_key in reward_extra_metrics.items():
         if batch_key in batch.non_tensor_batch:
             core_metrics[metric_key] = float(np.asarray(batch.non_tensor_batch[batch_key], dtype=float).mean())
+    if "interest_block_rank" in batch.non_tensor_batch:
+        ranks = np.asarray(batch.non_tensor_batch["interest_block_rank"], dtype=float)
+        positive_ranks = ranks[ranks > 0]
+        core_metrics["core_metrics_train/interest_block_rank_mean"] = (
+            float(positive_ranks.mean()) if positive_ranks.size else -1.0
+        )
 
     active_group_metrics = {
         "sid_match_reward": "core_metrics_train/sid_match_active_group_rate",
+        "interest_reward": "core_metrics_train/interest_active_group_rate",
+        "interest_hit_at_10": "core_metrics_train/interest_active_group_rate_at_10",
+        "interest_hit_at_20": "core_metrics_train/interest_active_group_rate_at_20",
+        "interest_hit_at_50": "core_metrics_train/interest_active_group_rate_at_50",
+        "interest_hit_at_100": "core_metrics_train/interest_active_group_rate_at_100",
         "process_reward": "core_metrics_train/process_active_group_rate",
     }
     if "uid" in batch.non_tensor_batch:
@@ -234,6 +285,14 @@ def _compute_core_metrics(batch, metrics):
                     )
                 )
                 core_metrics["core_metrics_train/sid_match_all_correct_group_rate"] = float(
+                    np.mean([min(rewards) == 1.0 for rewards in group_rewards])
+                )
+            elif batch_key == "interest_reward":
+                group_rewards = list(grouped_rewards.values())
+                core_metrics["core_metrics_train/interest_all_zero_group_rate"] = float(
+                    np.mean([max(rewards) == 0.0 for rewards in group_rewards])
+                )
+                core_metrics["core_metrics_train/interest_all_one_group_rate"] = float(
                     np.mean([min(rewards) == 1.0 for rewards in group_rewards])
                 )
 
@@ -452,6 +511,51 @@ def compute_advantage(
                 norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
             )
             advantages = sid_advantages + PROCESS_ADVANTAGE_WEIGHT * process_advantages
+
+        interest_config = config.get("interest_reward", {})
+        if interest_config.get("enable", False):
+            if "interest_reward" not in data.non_tensor_batch:
+                raise ValueError("Enabled interest reward is missing from the rollout batch")
+            if "interest_format_valid" not in data.non_tensor_batch:
+                raise ValueError("Enabled interest reward is missing format-valid metadata")
+            if "future_interest_token_mask" not in data.batch:
+                raise ValueError("Enabled interest reward requires future_interest_token_mask")
+            interest_mask = data.batch["future_interest_token_mask"].bool()
+            interest_format_valid = torch.as_tensor(
+                np.asarray(data.non_tensor_batch["interest_format_valid"], dtype=float),
+                dtype=torch.bool,
+                device=interest_mask.device,
+            )
+            if interest_format_valid.shape != (len(data),):
+                raise ValueError("Interest format validity must provide one scalar per trajectory")
+            interest_mask = interest_mask & interest_format_valid.unsqueeze(-1)
+            response_mask = grpo_calculation_mask.bool()
+            if torch.any(interest_mask & ~response_mask):
+                raise ValueError("Future-interest token mask must be a subset of response mask")
+            interest_scores = torch.as_tensor(
+                np.asarray(data.non_tensor_batch["interest_reward"], dtype=float),
+                dtype=data.batch["token_level_rewards"].dtype,
+                device=data.batch["token_level_rewards"].device,
+            )
+            if interest_scores.shape != (len(data),):
+                raise ValueError("Interest rewards must provide one scalar per trajectory")
+            # Malformed or unlocatable interest spans carry no interest signal.
+            # Keep training: rank=-1/raw reward=0 is the parser fallback contract.
+            interest_scores = torch.where(
+                interest_mask.any(dim=-1),
+                interest_scores,
+                torch.zeros_like(interest_scores),
+            )
+            interest_advantages, _ = core_algos.compute_grpo_outcome_advantage(
+                token_level_rewards=interest_scores.unsqueeze(-1),
+                response_mask=interest_mask.to(grpo_calculation_mask.dtype),
+                index=data.non_tensor_batch["uid"],
+                norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
+            )
+            interest_weight = float(interest_config.get("weight", 0.1))
+            if interest_weight < 0:
+                raise ValueError("Interest reward weight must be nonnegative")
+            advantages = advantages + interest_weight * interest_advantages
 
         data.batch["advantages"] = advantages
         data.batch["returns"] = advantages
@@ -1403,6 +1507,29 @@ class RayPPOTrainer:
                     batch.meta_info["global_token_num"] = torch.sum(batch.batch["attention_mask"], dim=-1).tolist()
 
                     with marked_timer("reward", timing_raw, color="yellow"):
+                        interest_reward_future = None
+                        interest_config = self.config.algorithm.get("interest_reward", {})
+                        if interest_config.get("enable", False):
+                            if not interest_config.get("endpoint"):
+                                raise ValueError(
+                                    "Enabled interest reward requires a nonempty endpoint"
+                                )
+                            interest_solutions, interest_target_sids = decode_interest_reward_inputs(
+                                batch,
+                                self.tokenizer,
+                            )
+                            interest_reward_future = _INTEREST_REWARD_EXECUTOR.submit(
+                                evaluate_interest_rewards,
+                                solutions=interest_solutions,
+                                target_sids=interest_target_sids,
+                                endpoint=str(interest_config.endpoint),
+                                reward_top_k=int(interest_config.reward_top_k),
+                                request_batch_size=int(
+                                    interest_config.get("request_batch_size", 2048)
+                                ),
+                                timeout=int(interest_config.get("timeout", 600)),
+                                max_attempts=int(interest_config.get("max_attempts", 3)),
+                            )
                         # compute reward model score
                         if self.use_rm and "rm_scores" not in batch.batch.keys():
                             reward_tensor = self.rm_wg.compute_rm_score(batch)
@@ -1451,6 +1578,13 @@ class RayPPOTrainer:
                         reward_extra_infos_dict: dict[str, list]
                         if self.config.reward_model.launch_reward_fn_async:
                             reward_tensor, reward_extra_infos_dict = ray.get(future_reward)
+                        interest_reward_infos = (
+                            interest_reward_future.result()
+                            if interest_reward_future is not None
+                            else {}
+                        )
+                        if interest_reward_infos:
+                            reward_extra_infos_dict.update(interest_reward_infos)
                         batch.batch["token_level_scores"] = reward_tensor
 
                         if reward_extra_infos_dict:

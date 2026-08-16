@@ -12,6 +12,7 @@ MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
 calculate_process_rewards = MODULE.calculate_process_rewards
 extract_history_sids_from_question = MODULE.extract_history_sids_from_question
+extract_future_interest_texts = MODULE.extract_future_interest_texts
 
 
 def load_reward_module(domain):
@@ -67,6 +68,28 @@ MULTI_SID_HISTORY = [
 
 
 class ProcessRewardTest(unittest.TestCase):
+    def test_extract_future_interest_texts_removes_labels_citations_and_format(self):
+        interests = extract_future_interest_texts(VALID_REASONING)
+        self.assertEqual(len(interests), 2)
+        self.assertTrue(all(not interest.startswith("-") for interest in interests))
+        self.assertTrue(all("[exploit]" not in interest for interest in interests))
+        self.assertTrue(all("[explore]" not in interest for interest in interests))
+
+    def test_extract_future_interest_texts_rejects_malformed_trace(self):
+        malformed = VALID_REASONING.replace("</future_interests>", "", 1)
+        self.assertEqual(extract_future_interest_texts(malformed), [])
+
+    def test_extract_future_interest_texts_splits_only_the_first_arrow(self):
+        response = VALID_REASONING.replace(
+            "The user may continue with urban action games from the same series.",
+            "cooperative games => with survival crafting",
+            1,
+        )
+        self.assertEqual(
+            extract_future_interest_texts(response)[0],
+            "cooperative games => with survival crafting",
+        )
+
     def test_v4_multi_sid_trace_receives_full_reward(self):
         self.assertEqual(
             calculate_process_rewards(MULTI_SID_REASONING, MULTI_SID_HISTORY),

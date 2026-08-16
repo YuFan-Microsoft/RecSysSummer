@@ -2,17 +2,22 @@ import unittest
 
 from phase3_interest_retriever.build_index import (
     DEFAULT_BUILD_BATCH_SIZE,
+    DEFAULT_MAX_BATCH_TOKENS,
     INDEX_TEXT_FIELDS,
     item_index_text,
     parse_gpu_ids,
     partition_ranges,
 )
-from phase3_interest_retriever.embedder import DEFAULT_MODEL
+from phase3_interest_retriever.embedder import DEFAULT_DOCUMENT_MAX_LENGTH, DEFAULT_MODEL
 
 
 class BuildIndexTest(unittest.TestCase):
-    def test_default_build_batch_size_is_128_per_gpu(self):
-        self.assertEqual(DEFAULT_BUILD_BATCH_SIZE, 128)
+    def test_default_build_batch_size_is_32_per_gpu(self):
+        self.assertEqual(DEFAULT_BUILD_BATCH_SIZE, 32)
+
+    def test_validated_document_defaults(self):
+        self.assertEqual(DEFAULT_DOCUMENT_MAX_LENGTH, 1024)
+        self.assertEqual(DEFAULT_MAX_BATCH_TOKENS, 32768)
 
     def test_default_model_uses_local_checkpoint(self):
         self.assertEqual(
@@ -30,12 +35,30 @@ class BuildIndexTest(unittest.TestCase):
             "sid_interleaved_narrative": "Do not index this generated text.",
         }
         text = item_index_text(item)
-        self.assertIn("Title: Wireless Controller", text)
-        self.assertIn("Brand: Example Brand", text)
-        self.assertIn("Description: Rechargeable game controller.", text)
-        self.assertIn("Details: Designed for local multiplayer gaming.", text)
+        self.assertEqual(
+            text,
+            "Title: Wireless Controller\n"
+            "Brand: Example Brand\n"
+            "Details: Designed for local multiplayer gaming.",
+        )
+        self.assertNotIn("Description:", text)
+        self.assertNotIn("Rechargeable game controller.", text)
         self.assertNotIn("generated text", text)
+        self.assertNotIn("description", INDEX_TEXT_FIELDS)
         self.assertNotIn("sid_interleaved_narrative", INDEX_TEXT_FIELDS)
+
+    def test_document_omits_empty_fields_without_blank_placeholders(self):
+        self.assertEqual(
+            item_index_text(
+                {
+                    "sid": "<a_1><b_2><c_3>",
+                    "title": "Example Game",
+                    "brand": "",
+                    "detailed_description": None,
+                }
+            ),
+            "Title: Example Game",
+        )
 
     def test_document_requires_at_least_one_nonempty_field(self):
         with self.assertRaises(ValueError):

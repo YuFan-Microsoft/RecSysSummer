@@ -61,18 +61,17 @@ def iter_jsonl(path: str | Path, limit: Optional[int] = None) -> Iterable[dict[s
 
 
 def target_rank_for_label(
-    response: dict[str, Any],
+    ranks: list[int],
     interests: list[dict[str, str]],
     label: Optional[str] = None,
 ) -> Optional[int]:
-    ranks = []
-    for interest, result in zip(interests, response["results"]):
+    matching_ranks = []
+    for interest, rank in zip(interests, ranks):
         if label is not None and interest["label"] != label:
             continue
-        rank = result.get("target_rank")
-        if rank is not None:
-            ranks.append(int(rank))
-    return min(ranks) if ranks else None
+        if rank > 0:
+            matching_ranks.append(int(rank))
+    return min(matching_ranks) if matching_ranks else None
 
 
 def summarize(records: list[dict[str, Any]], top_ks: tuple[int, ...]) -> dict[str, Any]:
@@ -151,23 +150,15 @@ def evaluate(args: argparse.Namespace) -> tuple[dict[str, Any], list[dict[str, A
             details.append(detail)
             continue
 
-        request_id = f"row-{row_index}-source-{row.get('source_index', 'unknown')}"
-        payload = {
-            "request_id": request_id,
-            "target_sid": detail["target_sid"],
-            "interests": [interest["query"] for interest in interests],
-            "top_k": max(top_ks),
-        }
         detail.update(
             {
                 "status": "pending",
-                "request_id": request_id,
                 "interest_count": len(interests),
                 "interests": interests,
             }
         )
         details.append(detail)
-        pending.append((detail, payload, interests))
+        pending.append((detail, interests))
 
     client = InterestRetrieverClient(
         args.endpoint,
@@ -175,27 +166,41 @@ def evaluate(args: argparse.Namespace) -> tuple[dict[str, Any], list[dict[str, A
         max_attempts=args.max_attempts,
     )
     for batch in _batched(pending, args.batch_size):
-        payloads = [payload for _, payload, _ in batch]
+        payloads = [
+            {"interest": interest["text"], "target_sid": detail["target_sid"]}
+            for detail, interests in batch
+            for interest in interests
+        ]
         try:
-            responses = client.retrieve_batch(payloads)
-            responses_by_id = {response["request_id"]: response for response in responses}
-            if len(responses_by_id) != len(payloads):
-                raise RuntimeError("batch response contains missing or duplicate request IDs")
-            for detail, payload, interests in batch:
-                response = responses_by_id[payload["request_id"]]
-                if len(response["results"]) != len(interests):
-                    raise RuntimeError("response interest count does not match the request")
+            ranks = client.rank_batch(payloads)
+            if len(ranks) != len(payloads):
+                raise RuntimeError("rank response count does not match the request")
+            cursor = 0
+            for detail, interests in batch:
+                interest_ranks = ranks[cursor : cursor + len(interests)]
+                cursor += len(interests)
                 detail.update(
                     {
                         "status": "ok",
-                        "all_target_rank": target_rank_for_label(response, interests),
-                        "exploit_target_rank": target_rank_for_label(response, interests, "exploit"),
-                        "explore_target_rank": target_rank_for_label(response, interests, "explore"),
-                        "retrieval_results": response["results"],
+                        "all_target_rank": target_rank_for_label(interest_ranks, interests),
+                        "exploit_target_rank": target_rank_for_label(
+                            interest_ranks, interests, "exploit"
+                        ),
+                        "explore_target_rank": target_rank_for_label(
+                            interest_ranks, interests, "explore"
+                        ),
+                        "interest_ranks": [
+                            {
+                                "label": interest["label"],
+                                "interest": interest["text"],
+                                "rank": rank,
+                            }
+                            for interest, rank in zip(interests, interest_ranks)
+                        ],
                     }
                 )
         except (KeyError, RuntimeError, ValueError) as error:
-            for detail, _, _ in batch:
+            for detail, _ in batch:
                 detail.update({"status": "request_error", "error": str(error)})
 
     summary = summarize(details, top_ks)
@@ -207,7 +212,7 @@ def evaluate(args: argparse.Namespace) -> tuple[dict[str, Any], list[dict[str, A
             "revision": args.revision,
             "endpoint": args.endpoint,
             "top_ks": list(top_ks),
-            "query_mode": "full_interest_line",
+            "query_mode": "pure_interest_text",
         }
     )
     if args.output:

@@ -33,15 +33,10 @@ class EvaluateCheckpointInterestsTest(unittest.TestCase):
 
     def test_target_rank_can_be_scoped_by_label(self):
         interests = extract_interest_lines(REASONING)
-        response = {
-            "results": [
-                {"target_hit": False, "target_rank": None},
-                {"target_hit": True, "target_rank": 7},
-            ]
-        }
-        self.assertEqual(target_rank_for_label(response, interests), 7)
-        self.assertIsNone(target_rank_for_label(response, interests, "exploit"))
-        self.assertEqual(target_rank_for_label(response, interests, "explore"), 7)
+        ranks = [-1, 7]
+        self.assertEqual(target_rank_for_label(ranks, interests), 7)
+        self.assertIsNone(target_rank_for_label(ranks, interests, "exploit"))
+        self.assertEqual(target_rank_for_label(ranks, interests, "explore"), 7)
 
     def test_summary_computes_any_interest_recall(self):
         records = [
