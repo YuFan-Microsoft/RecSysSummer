@@ -98,7 +98,8 @@ python3 -m phase3_interest_retriever.build_index \
 
 The builder always requires exactly eight distinct GPU IDs, including for the
 smoke run. It spawns one isolated process per card and merges shards in catalog
-order. Do not launch multiple builders on the same cards.
+order. Each worker uses batch size 128 by default, giving a maximum aggregate
+batch of 1,024 documents. Do not launch multiple builders on the same cards.
 
 Inspect the smoke manifest:
 
@@ -107,7 +108,8 @@ python3 -c "import json; print(json.load(open('phase3_interest_retriever/indexes
 ```
 
 Expected properties include `item_count=100`, the local embedding model path,
-`normalized=true`, and `search=exact_cosine`.
+`normalized=true`, `search=exact_cosine`, and
+`build_batch_size_per_gpu=128`.
 
 ### Step 4 — Start and probe the smoke endpoint
 
@@ -137,7 +139,7 @@ python3 -m phase3_interest_retriever.build_index \
 Validate the resulting manifest before starting the endpoint:
 
 ```bash
-python3 -c "import json; m=json.load(open('phase3_interest_retriever/indexes/Video_Games/manifest.json')); assert m['item_count']==3858; assert m['unique_sid_count']==3827; assert m['build_world_size']==8; assert len(m['build_gpu_ids'])==8; print(m)"
+python3 -c "import json; m=json.load(open('phase3_interest_retriever/indexes/Video_Games/manifest.json')); assert m['item_count']==3858; assert m['unique_sid_count']==3827; assert m['build_world_size']==8; assert len(m['build_gpu_ids'])==8; assert m['build_batch_size_per_gpu']==128; print(m)"
 ```
 
 Do not reuse a smoke manifest or embeddings file for the full evaluation.

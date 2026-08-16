@@ -1,6 +1,7 @@
 import unittest
 
 from phase3_interest_retriever.build_index import (
+    DEFAULT_BUILD_BATCH_SIZE,
     INDEX_TEXT_FIELDS,
     item_index_text,
     parse_gpu_ids,
@@ -10,6 +11,9 @@ from phase3_interest_retriever.embedder import DEFAULT_MODEL
 
 
 class BuildIndexTest(unittest.TestCase):
+    def test_default_build_batch_size_is_128_per_gpu(self):
+        self.assertEqual(DEFAULT_BUILD_BATCH_SIZE, 128)
+
     def test_default_model_uses_local_checkpoint(self):
         self.assertEqual(
             DEFAULT_MODEL,

@@ -45,9 +45,14 @@ matrices in catalog order only after every worker succeeds. To select another
 set of cards, pass exactly eight distinct IDs, for example
 `--gpus 2,3,4,5,6,7,8,9`.
 
+Each GPU uses `--batch-size 128` by default, for a maximum aggregate inference
+batch of 1,024 documents across eight workers. Reduce `--batch-size` only if the
+512-token embedding batches exceed available GPU memory.
+
 The output directory contains `embeddings.npy`, `metadata.json`, and a
 `manifest.json` that pins the data/model provenance and query instruction.
-The manifest also records `build_world_size=8` and `build_gpu_ids`.
+The manifest also records `build_world_size=8`, `build_gpu_ids`, and
+`build_batch_size_per_gpu=128`.
 Use `--limit 100` for a quick build smoke test.
 
 The catalog has 3,858 item rows and 3,827 unique SIDs at the pinned revision.

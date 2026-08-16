@@ -21,6 +21,7 @@ DEFAULT_DATASET_REVISION = "a5eb07115444b128ab7add812e4cee87517a5c41"
 DEFAULT_CATEGORY = "Video_Games"
 INDEX_TEXT_FIELDS = ("title", "brand", "description", "detailed_description")
 DEFAULT_GPU_IDS = tuple(str(index) for index in range(8))
+DEFAULT_BUILD_BATCH_SIZE = 128
 
 
 def _clean_text(value: Any) -> str:
@@ -249,6 +250,7 @@ def build_index(args: argparse.Namespace) -> None:
         "search": "exact_cosine",
         "build_world_size": 8,
         "build_gpu_ids": gpu_ids,
+        "build_batch_size_per_gpu": args.batch_size,
     }
     with (output_dir / "manifest.json").open("w", encoding="utf-8") as file:
         json.dump(manifest, file, ensure_ascii=False, indent=2)
@@ -266,7 +268,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--gpus", default=",".join(DEFAULT_GPU_IDS))
     parser.add_argument("--dtype", choices=("float32", "float16", "bfloat16"), default="bfloat16")
     parser.add_argument("--max-length", type=int, default=512)
-    parser.add_argument("--batch-size", type=int, default=32)
+    parser.add_argument("--batch-size", type=int, default=DEFAULT_BUILD_BATCH_SIZE)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--use-flash-attention", action="store_true")
     args = parser.parse_args()
