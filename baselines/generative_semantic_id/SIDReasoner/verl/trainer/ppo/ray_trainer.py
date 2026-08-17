@@ -95,6 +95,8 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_train/interest_query_count_mean",
     "core_metrics_train/interest_format_valid_rate",
     "core_metrics_train/interest_token_mask_nonempty_rate",
+    "core_metrics_train/interest_advantage_abs_mean",
+    "core_metrics_train/interest_advantage_nonzero_token_rate",
     "core_metrics_train/format_reward_mean",
     "core_metrics_train/history_summary_grounding_reward_mean",
     "core_metrics_train/future_interests_grounding_reward_mean",
@@ -214,6 +216,13 @@ def _log_metrics(logger, data, step, configured_backends, wandb_exclude_prefixes
 
 def _compute_core_metrics(batch, metrics):
     core_metrics = {}
+
+    for key in (
+        "interest_advantage_abs_mean",
+        "interest_advantage_nonzero_token_rate",
+    ):
+        if key in batch.meta_info:
+            core_metrics[f"core_metrics_train/{key}"] = float(batch.meta_info[key])
 
     if "future_interest_token_mask" in batch.batch:
         nonempty_masks = batch.batch["future_interest_token_mask"].bool().any(dim=-1)
@@ -529,15 +538,21 @@ def compute_advantage(
                 raise ValueError("Enabled interest reward is missing format-valid metadata")
             if "future_interest_token_mask" not in data.batch:
                 raise ValueError("Enabled interest reward requires future_interest_token_mask")
-            interest_mask = data.batch["future_interest_token_mask"].bool()
+            raw_interest_mask = data.batch["future_interest_token_mask"].bool()
             interest_format_valid = torch.as_tensor(
                 np.asarray(data.non_tensor_batch["interest_format_valid"], dtype=float),
                 dtype=torch.bool,
-                device=interest_mask.device,
+                device=raw_interest_mask.device,
             )
             if interest_format_valid.shape != (len(data),):
                 raise ValueError("Interest format validity must provide one scalar per trajectory")
-            interest_mask = interest_mask & interest_format_valid.unsqueeze(-1)
+            valid_without_mask = interest_format_valid & ~raw_interest_mask.any(dim=-1)
+            if torch.any(valid_without_mask):
+                missing_count = int(valid_without_mask.sum().item())
+                raise ValueError(
+                    f"{missing_count} valid future-interest blocks have empty token masks"
+                )
+            interest_mask = raw_interest_mask & interest_format_valid.unsqueeze(-1)
             response_mask = grpo_calculation_mask.bool()
             if torch.any(interest_mask & ~response_mask):
                 raise ValueError("Future-interest token mask must be a subset of response mask")
@@ -548,8 +563,8 @@ def compute_advantage(
             )
             if interest_scores.shape != (len(data),):
                 raise ValueError("Interest rewards must provide one scalar per trajectory")
-            # Malformed or unlocatable interest spans carry no interest signal.
-            # Keep training: rank=-1/raw reward=0 is the parser fallback contract.
+            # Malformed interest spans carry no interest signal; valid spans must
+            # have survived the token-mask consistency check above.
             interest_scores = torch.where(
                 interest_mask.any(dim=-1),
                 interest_scores,
@@ -561,6 +576,17 @@ def compute_advantage(
                 index=data.non_tensor_batch["uid"],
                 norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
             )
+            masked_interest_advantages = interest_advantages[interest_mask]
+            if masked_interest_advantages.numel() == 0:
+                data.meta_info["interest_advantage_abs_mean"] = 0.0
+                data.meta_info["interest_advantage_nonzero_token_rate"] = 0.0
+            else:
+                data.meta_info["interest_advantage_abs_mean"] = float(
+                    masked_interest_advantages.abs().mean().item()
+                )
+                data.meta_info["interest_advantage_nonzero_token_rate"] = float(
+                    (masked_interest_advantages.abs() > 1e-12).float().mean().item()
+                )
             interest_weight = float(interest_config.get("weight", 0.1))
             if interest_weight < 0:
                 raise ValueError("Interest reward weight must be nonnegative")

@@ -84,7 +84,7 @@ algorithm:
     _target_: verl.trainer.config.InterestRewardConfig
 
     enable: False
-    endpoint: https://86c9a1ebd964c9e188.gradio.live/v1/rank/batch
+    endpoint: https://bf5e9cbea14925c5fa.gradio.live/v1/rank/batch
     reward_top_k: 50
     weight: 0.1
     request_batch_size: 2048

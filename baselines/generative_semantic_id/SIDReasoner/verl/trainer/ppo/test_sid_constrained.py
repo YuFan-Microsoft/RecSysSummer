@@ -6,38 +6,105 @@ from verl.trainer.ppo.sid_constrained import (
 )
 
 
-def test_tagged_span_mask_includes_unique_opening_content_and_closing_tags():
+class OffsetTokenizer:
+    def __init__(self, chunks, token_strings=None):
+        self.chunks = chunks
+        self.token_ids = list(range(100, 100 + len(chunks)))
+        self.token_strings = token_strings or chunks
+
+    def decode(self, token_ids, **_kwargs):
+        indices = [self.token_ids.index(token_id) for token_id in token_ids]
+        return "".join(self.chunks[index] for index in indices)
+
+    def convert_ids_to_tokens(self, token_ids, **_kwargs):
+        indices = [self.token_ids.index(token_id) for token_id in token_ids]
+        return [self.token_strings[index] for index in indices]
+
+    def __call__(self, *_args, **_kwargs):
+        raise AssertionError("Generated token IDs must never be re-encoded")
+
+
+def test_tagged_span_mask_uses_original_ids_at_contextual_token_boundaries():
+    tokenizer = OffsetTokenizer(
+        [
+            "prefix\n<",
+            "future_interests",
+            ">\n",
+            "interest text",
+            "\n</",
+            "future_interests",
+            ">",
+            "\n</think>",
+        ],
+        ["prefixĊ<", "future_interests", ">Ċ", "interest", "Ċ</", "future_interests", ">", "Ċ</think>"],
+    )
     mask = build_unique_tagged_span_mask(
-        token_ids=[9, 1, 2, 5, 6, 3, 4, 8],
-        opening_tag_ids=[1, 2],
-        closing_tag_ids=[3, 4],
+        tokenizer=tokenizer,
+        token_ids=tokenizer.token_ids,
+        opening_tag="<future_interests>",
+        closing_tag="</future_interests>",
         output_length=10,
     )
     assert torch.equal(
         mask,
-        torch.tensor([0, 1, 1, 1, 1, 1, 1, 0, 0, 0], dtype=torch.bool),
+        torch.tensor([1, 1, 1, 1, 1, 1, 1, 0, 0, 0], dtype=torch.bool),
     )
 
 
 def test_tagged_span_mask_is_zero_when_tags_are_missing_or_ambiguous():
-    missing = build_unique_tagged_span_mask([1, 2, 5], [1, 2], [3, 4], 5)
+    missing_tokenizer = OffsetTokenizer(["prefix", " without tags"])
+    missing = build_unique_tagged_span_mask(
+        missing_tokenizer,
+        missing_tokenizer.token_ids,
+        "<future_interests>",
+        "</future_interests>",
+        5,
+    )
+    repeated_tokenizer = OffsetTokenizer(
+        [
+            "<future_interests>x</future_interests>",
+            "<future_interests>y</future_interests>",
+        ]
+    )
     repeated = build_unique_tagged_span_mask(
-        [1, 2, 5, 3, 4, 1, 2, 6, 3, 4],
-        [1, 2],
-        [3, 4],
-        10,
+        repeated_tokenizer,
+        repeated_tokenizer.token_ids,
+        "<future_interests>",
+        "</future_interests>",
+        2,
     )
     assert not missing.any()
     assert not repeated.any()
 
 
 def test_tagged_span_mask_rejects_short_output_length():
+    tokenizer = OffsetTokenizer(["<future_interests>x</future_interests>"])
     try:
-        build_unique_tagged_span_mask([1, 2, 3], [1], [3], 2)
+        build_unique_tagged_span_mask(
+            tokenizer,
+            tokenizer.token_ids,
+            "<future_interests>",
+            "</future_interests>",
+            0,
+        )
     except ValueError as error:
         assert "cover all token IDs" in str(error)
     else:
         raise AssertionError("Expected short output_length to fail")
+
+
+def test_tagged_span_mask_accepts_noncanonical_generated_token_ids_without_reencoding():
+    tokenizer = OffsetTokenizer(
+        ["<future_interests>", "he", "l", "lo", "</future_interests>"],
+    )
+    mask = build_unique_tagged_span_mask(
+        tokenizer,
+        tokenizer.token_ids,
+        "<future_interests>",
+        "</future_interests>",
+        5,
+    )
+    assert mask.all()
 
 
 def test_constrained_log_prob_normalizes_only_over_allowed_tokens_and_backpropagates():

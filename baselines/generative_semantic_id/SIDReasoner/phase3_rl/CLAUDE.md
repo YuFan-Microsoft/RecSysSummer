@@ -112,7 +112,7 @@ bash phase3_rl/RL_training_script_interest_reward_no_kl.sh
 ```
 
 The default endpoint is hardcoded as
-`https://86c9a1ebd964c9e188.gradio.live/v1/rank/batch`. Set
+`https://bf5e9cbea14925c5fa.gradio.live/v1/rank/batch`. Set
 `INTEREST_REWARD_ENDPOINT` only to
 override it intentionally.
 
