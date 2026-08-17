@@ -64,6 +64,18 @@ class FakeClient:
         return [self.rank_by_interest[payload["interest"]] for payload in payloads]
 
 
+class FailingSecondBatchClient(FakeClient):
+    def rank_batch(self, payloads):
+        if len(self.__class__.calls) == 1:
+            raise RuntimeError("HTTP 404")
+        return super().rank_batch(payloads)
+
+
+class WrongLengthClient(FakeClient):
+    def rank_batch(self, payloads):
+        return []
+
+
 class InterestRewardTest(unittest.TestCase):
     def setUp(self):
         FakeClient.calls = []
@@ -121,6 +133,47 @@ class InterestRewardTest(unittest.TestCase):
         self.assertEqual(len(FakeClient.calls), 2)
         self.assertEqual(result["interest_block_rank"], [7.0, 30.0])
         self.assertEqual(result["interest_reward"], [1.0, 0.0])
+
+    def test_failed_request_chunk_disables_interest_reward_for_whole_batch(self):
+        with self.assertWarnsRegex(RuntimeWarning, "HTTP 404"):
+            result = evaluate_interest_rewards(
+                solutions=[
+                    reasoning("target at seven", "miss"),
+                    reasoning("target at thirty", "miss"),
+                ],
+                target_sids=["<a_9><b_9><c_9>", "<a_8><b_8><c_8>"],
+                endpoint="http://retriever",
+                reward_top_k=50,
+                request_batch_size=2,
+                client_factory=FailingSecondBatchClient,
+            )
+        self.assertEqual(result["interest_block_rank"], [-1.0, -1.0])
+        self.assertEqual(result["interest_reward"], [0.0, 0.0])
+        self.assertEqual(result["interest_request_failed"], [1.0, 1.0])
+
+    def test_wrong_length_response_disables_interest_reward(self):
+        with self.assertWarnsRegex(RuntimeWarning, "wrong number of results"):
+            result = evaluate_interest_rewards(
+                solutions=[reasoning("target at seven", "miss")],
+                target_sids=["<a_9><b_9><c_9>"],
+                endpoint="http://retriever",
+                reward_top_k=50,
+                client_factory=WrongLengthClient,
+            )
+        self.assertEqual(result["interest_reward"], [0.0])
+        self.assertEqual(result["interest_request_failed"], [1.0])
+
+    def test_failed_request_chunk_can_remain_strict(self):
+        with self.assertRaisesRegex(RuntimeError, "HTTP 404"):
+            evaluate_interest_rewards(
+                solutions=[reasoning("target at seven", "miss")],
+                target_sids=["<a_9><b_9><c_9>"],
+                endpoint="http://retriever",
+                reward_top_k=50,
+                request_batch_size=1,
+                fail_open=False,
+                client_factory=FailingSecondBatchClient,
+            )
 
     def test_target_sid_must_be_one_exact_sid(self):
         self.assertEqual(extract_target_sid(" <a_1><b_2><c_3> "), "<a_1><b_2><c_3>")

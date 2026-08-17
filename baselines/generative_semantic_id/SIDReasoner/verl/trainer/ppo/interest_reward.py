@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import warnings
 from typing import Any, Callable, Optional
 
 from phase3_interest_retriever.client import InterestRetrieverClient
@@ -20,11 +21,6 @@ def _extract_target_sid(value: Any) -> str:
     return match.group(0)
 
 
-def _chunked(values: list[Any], chunk_size: int):
-    for start in range(0, len(values), chunk_size):
-        yield values[start : start + chunk_size]
-
-
 def _best_rank(ranks: list[int]) -> float:
     positive_ranks = [rank for rank in ranks if rank > 0]
     return float(min(positive_ranks)) if positive_ranks else -1.0
@@ -38,6 +34,7 @@ def evaluate_interest_rewards(
     request_batch_size: int = 2048,
     timeout: int = 600,
     max_attempts: int = 3,
+    fail_open: bool = True,
     client_factory: Optional[Callable[..., Any]] = None,
 ) -> dict[str, list[float]]:
     if len(solutions) != len(target_sids):
@@ -50,6 +47,7 @@ def evaluate_interest_rewards(
     sample_interest_ranks: list[list[int]] = [[] for _ in solutions]
     requests: list[dict[str, str]] = []
     request_sample_indices: list[int] = []
+    request_failed = [0.0 for _ in solutions]
     interest_counts = []
     format_valid = []
     for sample_index, (solution, target_sid) in enumerate(zip(solutions, target_sids)):
@@ -64,14 +62,37 @@ def evaluate_interest_rewards(
         factory = client_factory or InterestRetrieverClient
         client = factory(endpoint, timeout=timeout, max_attempts=max_attempts)
         all_ranks: list[int] = []
-        for request_batch in _chunked(requests, request_batch_size):
-            all_ranks.extend(client.rank_batch(request_batch))
-        if len(all_ranks) != len(requests):
-            raise RuntimeError("rank endpoint returned the wrong number of results")
+        retrieval_failed = False
+        for start in range(0, len(requests), request_batch_size):
+            request_batch = requests[start : start + request_batch_size]
+            try:
+                raw_batch_ranks = client.rank_batch(request_batch)
+                if len(raw_batch_ranks) != len(request_batch):
+                    raise RuntimeError("rank endpoint returned the wrong number of results")
+                batch_ranks = [int(rank) for rank in raw_batch_ranks]
+                invalid_ranks = [
+                    rank for rank in batch_ranks if rank < -1 or rank > 100 or rank == 0
+                ]
+                if invalid_ranks:
+                    raise RuntimeError(
+                        f"rank endpoint returned invalid rank: {invalid_ranks[0]}"
+                    )
+            except (RuntimeError, KeyError, TypeError, ValueError) as error:
+                if not fail_open:
+                    raise
+                warnings.warn(
+                    "Interest retriever unavailable; disabling interest reward for the "
+                    f"current rollout batch after a {len(request_batch)}-query chunk failed: {error}",
+                    RuntimeWarning,
+                    stacklevel=2,
+                )
+                retrieval_failed = True
+                batch_ranks = [-1] * len(request_batch)
+            all_ranks.extend(batch_ranks)
+        if retrieval_failed:
+            all_ranks = [-1] * len(requests)
+            request_failed = [1.0 for _ in solutions]
         for sample_index, rank in zip(request_sample_indices, all_ranks):
-            rank = int(rank)
-            if rank < -1 or rank > 100 or rank == 0:
-                raise RuntimeError(f"rank endpoint returned invalid rank: {rank}")
             sample_interest_ranks[sample_index].append(rank)
 
     block_ranks = [_best_rank(ranks) for ranks in sample_interest_ranks]
@@ -82,6 +103,7 @@ def evaluate_interest_rewards(
         "interest_block_rank": block_ranks,
         "interest_query_count": interest_counts,
         "interest_format_valid": format_valid,
+        "interest_request_failed": request_failed,
     }
     for cutoff in _MONITORED_CUTOFFS:
         output[f"interest_hit_at_{cutoff}"] = [
@@ -141,4 +163,5 @@ def compute_batch_interest_rewards(
         request_batch_size=int(config.get("request_batch_size", 2048)),
         timeout=int(config.get("timeout", 600)),
         max_attempts=int(config.get("max_attempts", 3)),
+        fail_open=bool(config.get("fail_open", True)),
     )

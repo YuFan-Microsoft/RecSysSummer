@@ -94,6 +94,7 @@ _WANDB_METRIC_ORDER = (
     "core_metrics_train/interest_hit_at_100",
     "core_metrics_train/interest_query_count_mean",
     "core_metrics_train/interest_format_valid_rate",
+    "core_metrics_train/interest_request_failed_rate",
     "core_metrics_train/interest_token_mask_nonempty_rate",
     "core_metrics_train/interest_advantage_abs_mean",
     "core_metrics_train/interest_advantage_nonzero_token_rate",
@@ -239,6 +240,7 @@ def _compute_core_metrics(batch, metrics):
         "interest_hit_at_100": "core_metrics_train/interest_hit_at_100",
         "interest_query_count": "core_metrics_train/interest_query_count_mean",
         "interest_format_valid": "core_metrics_train/interest_format_valid_rate",
+        "interest_request_failed": "core_metrics_train/interest_request_failed_rate",
         "format_reward": "core_metrics_train/format_reward_mean",
         "history_summary_grounding_reward": "core_metrics_train/history_summary_grounding_reward_mean",
         "future_interests_grounding_reward": "core_metrics_train/future_interests_grounding_reward_mean",
@@ -986,6 +988,7 @@ class RayPPOTrainer:
                     request_batch_size=int(interest_config.get("request_batch_size", 2048)),
                     timeout=int(interest_config.get("timeout", 600)),
                     max_attempts=int(interest_config.get("max_attempts", 3)),
+                    fail_open=bool(interest_config.get("fail_open", True)),
                 )
                 interest_metrics.update(
                     build_interest_validation_metrics(
@@ -1592,6 +1595,7 @@ class RayPPOTrainer:
                                 ),
                                 timeout=int(interest_config.get("timeout", 600)),
                                 max_attempts=int(interest_config.get("max_attempts", 3)),
+                                fail_open=bool(interest_config.get("fail_open", True)),
                             )
                         # compute reward model score
                         if self.use_rm and "rm_scores" not in batch.batch.keys():

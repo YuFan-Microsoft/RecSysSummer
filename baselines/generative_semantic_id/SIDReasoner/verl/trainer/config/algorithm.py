@@ -69,6 +69,7 @@ class InterestRewardConfig(BaseConfig):
     request_batch_size: int = 2048
     timeout: int = 600
     max_attempts: int = 3
+    fail_open: bool = True
 
 
 @dataclass
