@@ -4,10 +4,7 @@ from typing import Any, Optional
 
 
 DEFAULT_MODEL = "/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-0.6B"
-DEFAULT_QUERY_INSTRUCTION = (
-    "Given a future shopping interest, retrieve Video Games products matching the described "
-    "genre, gameplay, platform, franchise, or accessory intent."
-)
+DEFAULT_QUERY_INSTRUCTION = "Retrieve relevant Video Games products."
 DEFAULT_DOCUMENT_MAX_LENGTH = 1024
 DEFAULT_QUERY_MAX_LENGTH = 512
 
@@ -149,5 +146,5 @@ class Qwen3Embedder:
         instruction: str = DEFAULT_QUERY_INSTRUCTION,
         batch_size: int = 32,
     ) -> Any:
-        prompts = [f"Instruct: {instruction}\nQuery:{query}" for query in queries]
+        prompts = [f"Instruct: {instruction}\nQuery: {query}" for query in queries]
         return self.encode(prompts, batch_size=batch_size)

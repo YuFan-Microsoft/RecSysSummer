@@ -25,13 +25,14 @@ class BuildIndexTest(unittest.TestCase):
             "/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-0.6B",
         )
 
-    def test_document_uses_catalog_metadata_but_not_generated_narrative(self):
+    def test_document_uses_title_brand_and_retrieval_summary(self):
         item = {
             "sid": "<a_1><b_2><c_3>",
             "title": "Wireless Controller",
             "brand": "Example Brand",
             "description": "Rechargeable game controller.",
-            "detailed_description": "Designed for local multiplayer gaming.",
+            "detailed_description": "Do not index the legacy generated description.",
+            "retrieval_summary": "A wireless controller for local multiplayer gaming.",
             "sid_interleaved_narrative": "Do not index this generated text.",
         }
         text = item_index_text(item)
@@ -39,12 +40,14 @@ class BuildIndexTest(unittest.TestCase):
             text,
             "Title: Wireless Controller\n"
             "Brand: Example Brand\n"
-            "Details: Designed for local multiplayer gaming.",
+            "Summary: A wireless controller for local multiplayer gaming.",
         )
         self.assertNotIn("Description:", text)
         self.assertNotIn("Rechargeable game controller.", text)
+        self.assertNotIn("legacy generated description", text)
         self.assertNotIn("generated text", text)
         self.assertNotIn("description", INDEX_TEXT_FIELDS)
+        self.assertNotIn("detailed_description", INDEX_TEXT_FIELDS)
         self.assertNotIn("sid_interleaved_narrative", INDEX_TEXT_FIELDS)
 
     def test_document_omits_empty_fields_without_blank_placeholders(self):
@@ -54,15 +57,27 @@ class BuildIndexTest(unittest.TestCase):
                     "sid": "<a_1><b_2><c_3>",
                     "title": "Example Game",
                     "brand": "",
-                    "detailed_description": None,
+                    "retrieval_summary": "An example game summary.",
                 }
             ),
-            "Title: Example Game",
+            "Title: Example Game\nSummary: An example game summary.",
         )
 
-    def test_document_requires_at_least_one_nonempty_field(self):
-        with self.assertRaises(ValueError):
-            item_index_text({"sid": "<a_1><b_2><c_3>"})
+    def test_document_requires_title_and_summary(self):
+        with self.assertRaisesRegex(ValueError, "no title"):
+            item_index_text(
+                {
+                    "sid": "<a_1><b_2><c_3>",
+                    "retrieval_summary": "Summary without a title.",
+                }
+            )
+        with self.assertRaisesRegex(ValueError, "no retrieval_summary"):
+            item_index_text(
+                {
+                    "sid": "<a_1><b_2><c_3>",
+                    "title": "Title without a summary",
+                }
+            )
 
     def test_default_eight_gpu_ids_are_accepted(self):
         self.assertEqual(

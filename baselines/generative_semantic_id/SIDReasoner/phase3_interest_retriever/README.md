@@ -18,11 +18,11 @@ covering blocks and decreases non-covering blocks within mixed rollout groups.
 
 The builder defaults to:
 
-- Dataset: `yufan/recsys-genrec-dataset-refresh-gpt5.4-candidateV2`
-- Revision: `a5eb07115444b128ab7add812e4cee87517a5c41`
+- Dataset: `yufan/recsys-genrec-dataset-final`
+- Revision: `bf00c35c019262437b8694b51209c419567044c0`
 - Config/split: `Video_Games_catalog/train`
 - Catalog size at that revision: 3,858 items
-- Index text: `title`, `brand`, and `detailed_description`, in that order
+- Index text: `title`, optional `brand`, and `retrieval_summary`, in that order
 - Embedding model: `/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-0.6B`
 - Document max length / batch per GPU: 1,024 / 32
 - Query max length / batch: 512 / 128
@@ -30,9 +30,9 @@ The builder defaults to:
 - Attention: Transformers default (no FlashAttention 2)
 - Padding / pooling / normalization: left / last token / L2
 
-`sid_interleaved_narrative` is intentionally excluded from the first index so
-the reward measures retrieval from product metadata rather than generated
-training narratives.
+Raw `description`, `detailed_description`, and `sid_interleaved_narrative` are
+excluded from the embedding text. The pinned `retrieval_summary` is the
+interest-aligned product representation generated for this index.
 Pass `--model Qwen/Qwen3-Embedding-0.6B` to the builder when the local
 checkpoint is unavailable and a Hub download is preferred.
 
@@ -58,11 +58,12 @@ catalog order before shard merge. Documents are exactly:
 ```text
 Title: {title}
 Brand: {brand}
-Details: {detailed_description}
+Summary: {retrieval_summary}
 ```
 
-Empty fields are omitted. Document text contains no `description`, SID, item ID,
-`sid_interleaved_narrative`, `Document:` prefix, or instruction.
+The `Brand` line is omitted when `brand` is empty. `Title` and `Summary` are
+required. Document text contains no raw `description`, `detailed_description`,
+SID, item ID, `sid_interleaved_narrative`, `Document:` prefix, or instruction.
 
 The output directory contains `embeddings.npy`, `metadata.json`, and a
 `manifest.json` that pins the data/model provenance and query instruction.
@@ -177,11 +178,9 @@ POST /v1/rank/batch
 The trainer extracts only the text after the first `=>`. Query strings are:
 
 ```text
-Instruct: Given a future shopping interest, retrieve Video Games products matching the described genre, gameplay, platform, franchise, or accessory intent.
-Query:cooperative survival crafting games
+Instruct: Retrieve relevant Video Games products.
+Query: cooperative survival crafting games
 ```
-
-There is intentionally no space after `Query:`.
 
 ## Python client
 

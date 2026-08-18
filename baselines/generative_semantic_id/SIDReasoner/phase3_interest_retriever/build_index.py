@@ -22,10 +22,10 @@ from .embedder import (
 )
 
 
-DEFAULT_DATASET = "yufan/recsys-genrec-dataset-refresh-gpt5.4-candidateV2"
-DEFAULT_DATASET_REVISION = "a5eb07115444b128ab7add812e4cee87517a5c41"
+DEFAULT_DATASET = "yufan/recsys-genrec-dataset-final"
+DEFAULT_DATASET_REVISION = "bf00c35c019262437b8694b51209c419567044c0"
 DEFAULT_CATEGORY = "Video_Games"
-INDEX_TEXT_FIELDS = ("title", "brand", "detailed_description")
+INDEX_TEXT_FIELDS = ("title", "brand", "retrieval_summary")
 DEFAULT_GPU_IDS = tuple(str(index) for index in range(8))
 DEFAULT_BUILD_BATCH_SIZE = 32
 DEFAULT_MAX_BATCH_TOKENS = 32768
@@ -39,18 +39,17 @@ def _clean_text(value: Any) -> str:
 
 
 def item_index_text(item: dict[str, Any]) -> str:
-    sections = []
-    labels = {
-        "title": "Title",
-        "brand": "Brand",
-        "detailed_description": "Details",
-    }
-    for field in INDEX_TEXT_FIELDS:
-        text = _clean_text(item.get(field))
-        if text:
-            sections.append(f"{labels[field]}: {text}")
-    if not sections:
-        raise ValueError(f"catalog item has no indexable metadata: {item.get('sid')}")
+    title = _clean_text(item.get("title"))
+    summary = _clean_text(item.get("retrieval_summary"))
+    if not title:
+        raise ValueError(f"catalog item has no title: {item.get('sid')}")
+    if not summary:
+        raise ValueError(f"catalog item has no retrieval_summary: {item.get('sid')}")
+    sections = [f"Title: {title}"]
+    brand = _clean_text(item.get("brand"))
+    if brand:
+        sections.append(f"Brand: {brand}")
+    sections.append(f"Summary: {summary}")
     return "\n".join(sections)
 
 
@@ -72,7 +71,7 @@ def load_catalog(dataset: str, revision: str, category: str) -> list[dict[str, A
                 "sid": _clean_text(row["sid"]),
                 "title": _clean_text(row["title"]),
                 "brand": _clean_text(row["brand"]),
-                "detailed_description": _clean_text(row["detailed_description"]),
+                "retrieval_summary": _clean_text(row["retrieval_summary"]),
             }
         )
     return catalog

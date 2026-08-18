@@ -24,18 +24,17 @@ class EmbedderBatchingTest(unittest.TestCase):
         self.assertEqual(DEFAULT_DOCUMENT_MAX_LENGTH, 1024)
         self.assertEqual(DEFAULT_QUERY_MAX_LENGTH, 512)
 
-    def test_query_prompt_has_exact_instruction_and_no_space_after_query_colon(self):
+    def test_query_prompt_has_exact_instruction_and_space_after_query_colon(self):
         query = "cooperative survival crafting games"
         expected = (
-            "Instruct: Given a future shopping interest, retrieve Video Games products "
-            "matching the described genre, gameplay, platform, franchise, or accessory intent.\n"
-            "Query:cooperative survival crafting games"
+            "Instruct: Retrieve relevant Video Games products.\n"
+            "Query: cooperative survival crafting games"
         )
         self.assertEqual(
             Qwen3Embedder.__dict__["encode_queries"].__defaults__[0],
             DEFAULT_QUERY_INSTRUCTION,
         )
-        self.assertEqual(f"Instruct: {DEFAULT_QUERY_INSTRUCTION}\nQuery:{query}", expected)
+        self.assertEqual(f"Instruct: {DEFAULT_QUERY_INSTRUCTION}\nQuery: {query}", expected)
 
     def test_token_budget_groups_similar_lengths_and_preserves_indices(self):
         batches = self.embedder._batch_indices(

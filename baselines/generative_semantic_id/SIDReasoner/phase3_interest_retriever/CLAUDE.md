@@ -24,9 +24,9 @@ signed GRPO, a non-covering block receives negative relative advantage when its
 - Embedding model:
   `/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-0.6B`
 - Catalog dataset:
-  `yufan/recsys-genrec-dataset-refresh-gpt5.4-candidateV2`
+  `yufan/recsys-genrec-dataset-final`
 - Dataset revision:
-  `a5eb07115444b128ab7add812e4cee87517a5c41`
+  `bf00c35c019262437b8694b51209c419567044c0`
 - Config/split: `Video_Games_catalog/train`
 - Checkpoint analysis file:
   `yufan/rec_rl_checkpoints/results_analysis/yufan_diverisity_process.jsonl`
@@ -43,11 +43,11 @@ rows sharing the target SID.
    model path and query instruction in `manifest.json`; the server must load that
    manifest rather than silently selecting another model.
 2. Query only the text after the first `=>`. Use the exact Video Games
-  instruction recorded in the manifest and no space after `Query:`.
-3. Build documents in fixed `Title`, `Brand`, `Details` order from `title`,
-  `brand`, and `detailed_description`. Omit empty fields. Never include raw
-  `description`, SID, item ID, `sid_interleaved_narrative`, a `Document:` prefix,
-  or any instruction.
+  instruction recorded in the manifest and one space after `Query:`.
+3. Build documents in fixed `Title`, optional `Brand`, `Summary` order from
+  `title`, `brand`, and `retrieval_summary`. Omit the `Brand` line when empty.
+  Never include raw `description`, `detailed_description`, SID, item ID,
+  `sid_interleaved_narrative`, a `Document:` prefix, or any instruction.
 4. Never write a limited smoke index into the full index directory. Always use
    `indexes/Video_Games_smoke` for `--limit` runs.
 5. Treat malformed or truncated reasoning as a miss in the primary recall. Do
