@@ -2,6 +2,7 @@ import torch
 
 from verl.trainer.ppo.sid_constrained import (
     apply_constrained_sid_log_probs,
+    build_future_interest_line_masks,
     build_unique_tagged_span_mask,
 )
 
@@ -22,6 +23,43 @@ class OffsetTokenizer:
 
     def __call__(self, *_args, **_kwargs):
         raise AssertionError("Generated token IDs must never be re-encoded")
+
+
+class ByteLevelOffsetTokenizer(OffsetTokenizer):
+    all_special_ids = []
+
+    def convert_ids_to_tokens(self, token_ids, **_kwargs):
+        from transformers.models.gpt2.tokenization_gpt2 import bytes_to_unicode
+
+        byte_encoder = bytes_to_unicode()
+        indices = [self.token_ids.index(token_id) for token_id in token_ids]
+        return [
+            "".join(byte_encoder[byte] for byte in self.chunks[index].encode("utf-8"))
+            for index in indices
+        ]
+
+
+class RawByteLevelOffsetTokenizer:
+    def __init__(self, token_bytes):
+        from transformers.models.gpt2.tokenization_gpt2 import bytes_to_unicode
+
+        byte_encoder = bytes_to_unicode()
+        self.token_bytes = token_bytes
+        self.token_ids = list(range(100, 100 + len(token_bytes)))
+        self.token_strings = [
+            "".join(byte_encoder[byte] for byte in raw_bytes)
+            for raw_bytes in token_bytes
+        ]
+
+    def decode(self, token_ids, **_kwargs):
+        indices = [self.token_ids.index(token_id) for token_id in token_ids]
+        return b"".join(self.token_bytes[index] for index in indices).decode(
+            "utf-8", errors="replace"
+        )
+
+    def convert_ids_to_tokens(self, token_ids, **_kwargs):
+        indices = [self.token_ids.index(token_id) for token_id in token_ids]
+        return [self.token_strings[index] for index in indices]
 
 
 def test_tagged_span_mask_uses_original_ids_at_contextual_token_boundaries():
@@ -105,6 +143,93 @@ def test_tagged_span_mask_accepts_noncanonical_generated_token_ids_without_reenc
         5,
     )
     assert mask.all()
+
+
+def test_future_interest_line_masks_project_shared_byte_level_tokens():
+    first_line = "- [exploit] <a_1><b_2><c_3> => previous interest"
+    final_line = "- [explore] <a_4><b_5><c_6> => likelihood above 50%"
+    tokenizer = ByteLevelOffsetTokenizer(
+        [
+            "<think>\n<history_summary>\n- <a_1><b_2><c_3> => history\n"
+            "</history_summary>\n<future_interests>\n",
+            first_line + "\n-",
+            final_line[1:-1],
+            "%\n</future_interests>\n</think>",
+        ]
+    )
+
+    masks = build_future_interest_line_masks(
+        tokenizer=tokenizer,
+        token_ids=tokenizer.token_ids,
+        output_length=4,
+        max_lines=4,
+    )
+
+    assert torch.nonzero(masks[0], as_tuple=False).flatten().tolist() == [1]
+    assert torch.nonzero(masks[1], as_tuple=False).flatten().tolist() == [1, 2, 3]
+
+
+def test_future_interest_line_masks_map_isolated_invalid_utf8_byte():
+    prefix = (
+        "<think>\n<history_summary>\n- <a_1><b_2><c_3> => history\n"
+        "</history_summary>\n<future_interests>\n"
+        "- [exploit] <a_1><b_2><c_3> => interest with "
+    ).encode("utf-8")
+    suffix = (
+        " marker\n- [explore] <a_1><b_2><c_3> => second interest\n"
+        "</future_interests>\n</think>"
+    ).encode("utf-8")
+    tokenizer = RawByteLevelOffsetTokenizer([prefix, b"\xb3", suffix])
+
+    masks = build_future_interest_line_masks(
+        tokenizer=tokenizer,
+        token_ids=tokenizer.token_ids,
+        output_length=3,
+        max_lines=4,
+    )
+
+    assert "\ufffd" in tokenizer.decode(tokenizer.token_ids)
+    assert torch.nonzero(masks[0], as_tuple=False).flatten().tolist() == [0, 1, 2]
+    assert torch.nonzero(masks[1], as_tuple=False).flatten().tolist() == [2]
+
+
+def test_future_interest_line_masks_skip_invalid_format():
+    tokenizer = ByteLevelOffsetTokenizer(
+        [
+            "<think>\n<future_interests>\nmalformed\n</future_interests>\n</think>"
+        ]
+    )
+
+    masks = build_future_interest_line_masks(
+        tokenizer=tokenizer,
+        token_ids=tokenizer.token_ids,
+        output_length=1,
+        max_lines=4,
+    )
+
+    assert not masks.any()
+
+
+def test_future_interest_line_masks_skip_lone_greater_than_fourth_line():
+    tokenizer = ByteLevelOffsetTokenizer(
+        [
+            "<think>\n<history_summary>\n- <a_1><b_2><c_3> => history\n"
+            "</history_summary>\n<future_interests>\n"
+            "- [exploit] <a_1><b_2><c_3> => first\n"
+            "- [explore] <a_1><b_2><c_3> => second\n"
+            "- [exploit] <a_1><b_2><c_3> => third\n"
+            ">\n</future_interests>\n</think>"
+        ]
+    )
+
+    masks = build_future_interest_line_masks(
+        tokenizer=tokenizer,
+        token_ids=tokenizer.token_ids,
+        output_length=1,
+        max_lines=4,
+    )
+
+    assert not masks.any()
 
 
 def test_constrained_log_prob_normalizes_only_over_allowed_tokens_and_backpropagates():

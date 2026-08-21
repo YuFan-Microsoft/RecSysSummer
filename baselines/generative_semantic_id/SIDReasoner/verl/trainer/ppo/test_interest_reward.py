@@ -4,6 +4,8 @@ import sys
 import types
 import unittest
 
+import numpy as np
+
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
@@ -31,6 +33,8 @@ MODULE = importlib.util.module_from_spec(module_spec)
 module_spec.loader.exec_module(MODULE)
 evaluate_interest_rewards = MODULE.evaluate_interest_rewards
 build_interest_validation_metrics = MODULE.build_interest_validation_metrics
+compute_interest_routing_weights = MODULE.compute_interest_routing_weights
+decode_interest_reward_inputs = MODULE.decode_interest_reward_inputs
 extract_target_sid = MODULE._extract_target_sid
 
 
@@ -90,6 +94,7 @@ class InterestRewardTest(unittest.TestCase):
         )
         self.assertEqual(result["interest_block_rank"], [30.0])
         self.assertEqual(result["interest_reward"], [1.0])
+        self.assertEqual(result["interest_hit_flags"], [[0.0, 1.0, 0.0, 0.0]])
         self.assertEqual(result["interest_hit_at_20"], [0.0])
         self.assertEqual(result["interest_hit_at_50"], [1.0])
 
@@ -116,6 +121,24 @@ class InterestRewardTest(unittest.TestCase):
         self.assertEqual(result["interest_format_valid"], [0.0])
         self.assertEqual(result["interest_block_rank"], [-1.0])
         self.assertEqual(result["interest_query_count"], [0.0])
+        self.assertEqual(result["interest_reward"], [0.0])
+
+    def test_lone_greater_than_interest_skips_endpoint_and_receives_zero(self):
+        malformed = reasoning("miss", "miss").replace(
+            "</future_interests>",
+            ">\n</future_interests>",
+            1,
+        )
+        result = evaluate_interest_rewards(
+            solutions=[malformed],
+            target_sids=["<a_9><b_9><c_9>"],
+            endpoint="http://retriever",
+            reward_top_k=50,
+            client_factory=FakeClient,
+        )
+        self.assertEqual(FakeClient.calls, [])
+        self.assertEqual(result["interest_format_valid"], [0.0])
+        self.assertEqual(result["interest_hit_flags"], [[0.0, 0.0, 0.0, 0.0]])
         self.assertEqual(result["interest_reward"], [0.0])
 
     def test_requests_are_chunked_without_reordering_results(self):
@@ -185,6 +208,44 @@ class InterestRewardTest(unittest.TestCase):
             with self.subTest(value=value), self.assertRaises(ValueError):
                 extract_target_sid(value)
 
+    def test_reward_decode_matches_mask_parser_decode_options(self):
+        class Item:
+            batch = {
+                "prompts": np.asarray([1, 2]),
+                "attention_mask": np.asarray([1, 1, 1, 1]),
+                "responses": np.asarray([3, 4]),
+            }
+            non_tensor_batch = {
+                "reward_model": {"ground_truth": "<a_1><b_2><c_3>"}
+            }
+
+        class Batch:
+            def __len__(self):
+                return 1
+
+            def __getitem__(self, index):
+                assert index == 0
+                return Item()
+
+        class Tokenizer:
+            kwargs = None
+
+            def decode(self, token_ids, **kwargs):
+                self.kwargs = kwargs
+                return reasoning("miss", "miss")
+
+        tokenizer = Tokenizer()
+        solutions, target_sids = decode_interest_reward_inputs(Batch(), tokenizer)
+        self.assertEqual(len(solutions), 1)
+        self.assertEqual(target_sids, ["<a_1><b_2><c_3>"])
+        self.assertEqual(
+            tokenizer.kwargs,
+            {
+                "skip_special_tokens": False,
+                "clean_up_tokenization_spaces": False,
+            },
+        )
+
     def test_validation_metrics_use_one_vote_per_history(self):
         interest_results = {
             "interest_hit_at_20": [1.0, 0.0, 1.0],
@@ -198,6 +259,62 @@ class InterestRewardTest(unittest.TestCase):
             "interest_only_hit_at_50",
             "interest_only_hit_at_100",
         })
+
+    def test_routing_weights_target_hits_and_split_multiple_hits(self):
+        weights = compute_interest_routing_weights(
+            interest_hit_flags=[
+                [0, 1, 0, 0],
+                [1, 0, 1, 0],
+            ],
+            valid_line_flags=[
+                [1, 1, 1, 1],
+                [1, 1, 1, 1],
+            ],
+        )
+        np.testing.assert_allclose(weights[0], [0.0, 1.0, 0.0, 0.0])
+        np.testing.assert_allclose(weights[1], [0.5, 0.0, 0.5, 0.0])
+        np.testing.assert_allclose(weights.sum(axis=-1), [1.0, 1.0])
+
+    def test_routing_weights_split_failed_rollout_across_valid_interests(self):
+        weights = compute_interest_routing_weights(
+            interest_hit_flags=[[0, 0, 0, 0]],
+            valid_line_flags=[[1, 1, 1, 0]],
+        )
+        np.testing.assert_allclose(weights[0], [1 / 3, 1 / 3, 1 / 3, 0.0])
+
+    def test_routing_weights_make_duplicate_hits_conserve_total_credit(self):
+        weights = compute_interest_routing_weights(
+            interest_hit_flags=[[1, 1, 1, 1]],
+            valid_line_flags=[[1, 1, 1, 1]],
+        )
+        np.testing.assert_allclose(weights[0], [0.25, 0.25, 0.25, 0.25])
+        self.assertAlmostEqual(float(weights.sum()), 1.0)
+
+    def test_routing_applies_after_rollout_level_grpo_without_renormalizing(self):
+        rollout_advantages = np.asarray([1.5, -0.5, -0.5, -0.5])
+        weights = compute_interest_routing_weights(
+            interest_hit_flags=[
+                [0, 1, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+            ],
+            valid_line_flags=np.ones((4, 4), dtype=bool),
+        )
+        routed = rollout_advantages[:, None] * weights
+        np.testing.assert_allclose(routed[0], [0.0, 1.5, 0.0, 0.0])
+        np.testing.assert_allclose(
+            routed[1:],
+            np.full((3, 4), -0.125),
+        )
+        np.testing.assert_allclose(routed.sum(axis=-1), rollout_advantages)
+
+    def test_routing_weights_reject_hits_without_line_masks(self):
+        with self.assertRaisesRegex(ValueError, "missing interest line masks"):
+            compute_interest_routing_weights(
+                interest_hit_flags=[[0, 1, 0, 0]],
+                valid_line_flags=[[1, 0, 1, 0]],
+            )
 
 
 if __name__ == "__main__":

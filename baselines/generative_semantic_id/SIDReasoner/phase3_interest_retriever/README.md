@@ -1,9 +1,10 @@
 # Phase-3 Interest Retriever
 
 This directory contains the standalone retrieval endpoint for the constrained-
-sampling interest-reward experiment. It embeds each generated interest with a
-local `Qwen3-Embedding-0.6B` checkpoint, retrieves catalog products by exact cosine
-similarity, and returns a binary multiple-instance reward:
+sampling interest-reward experiment. It supports `Video_Games`,
+`Office_Products`, and `Industrial_and_Scientific`, embeds each generated
+interest with a local `Qwen3-Embedding-0.6B` checkpoint, retrieves catalog
+products by exact cosine similarity, and returns a binary multiple-instance reward:
 
 ```text
 reward = 1 if any interest retrieves the target SID in its Top-K, else 0
@@ -22,7 +23,7 @@ The builder defaults to:
 - Revision: `bf00c35c019262437b8694b51209c419567044c0`
 - Config/split: `Video_Games_catalog/train`
 - Catalog size at that revision: 3,858 items
-- Index text: `title`, optional `brand`, and `retrieval_summary`, in that order
+- Index text: domain-specific fields described below
 - Embedding model: `/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-0.6B`
 - Document max length / batch per GPU: 1,024 / 32
 - Query max length / batch: 512 / 128
@@ -30,9 +31,12 @@ The builder defaults to:
 - Attention: Transformers default (no FlashAttention 2)
 - Padding / pooling / normalization: left / last token / L2
 
-Raw `description`, `detailed_description`, and `sid_interleaved_narrative` are
-excluded from the embedding text. The pinned `retrieval_summary` is the
-interest-aligned product representation generated for this index.
+For `Video_Games`, raw `description`, `detailed_description`, and
+`sid_interleaved_narrative` are excluded from the embedding text. Its pinned
+`retrieval_summary` is the interest-aligned product representation generated
+for this index. The pinned Office and Industrial catalogs do not contain
+`retrieval_summary`; they use `detailed_description`, falling back to
+`description` when necessary.
 Pass `--model Qwen/Qwen3-Embedding-0.6B` to the builder when the local
 checkpoint is unavailable and a Hub download is preferred.
 
@@ -42,6 +46,25 @@ Install dependencies and build the index from the `SIDReasoner` root:
 pip install -r phase3_interest_retriever/requirements.txt
 python3 -m phase3_interest_retriever.build_index
 ```
+
+Select another domain with `--domain`. The dataset repo and revision remain the
+same; the selected domain controls the `<domain>_catalog` config, canonical query
+instruction, and default output directory:
+
+```bash
+python3 -m phase3_interest_retriever.build_index --domain Office_Products
+python3 -m phase3_interest_retriever.build_index --domain Industrial_and_Scientific
+```
+
+| Domain | Hugging Face config/split | Query instruction | Default index directory |
+| --- | --- | --- | --- |
+| `Video_Games` | `Video_Games_catalog/train` | `Retrieve relevant Video Games products.` | `indexes/Video_Games` |
+| `Office_Products` | `Office_Products_catalog/train` | `Retrieve relevant Office products.` | `indexes/Office_Products` |
+| `Industrial_and_Scientific` | `Industrial_and_Scientific_catalog/train` | `Retrieve relevant Industrial and Scientific products.` | `indexes/Industrial_and_Scientific` |
+
+`--category` remains available as an alias for `--domain`. An explicit
+`--output-dir` or `--query-instruction` overrides the domain-derived default,
+although serving requires the canonical instruction recorded above.
 
 Index construction uses exactly eight GPUs concurrently by default:
 `--gpus 0,1,2,3,4,5,6,7`. The catalog is split into eight contiguous shards;
@@ -53,7 +76,7 @@ set of cards, pass exactly eight distinct IDs, for example
 
 Each GPU has `--batch-size 32`, document `--max-length 1024`, and a 32,768-token
 padding budget. Workers sort their shard by token length, encode, then restore
-catalog order before shard merge. Documents are exactly:
+catalog order before shard merge. `Video_Games` documents are exactly:
 
 ```text
 Title: {title}
@@ -61,9 +84,18 @@ Brand: {brand}
 Summary: {retrieval_summary}
 ```
 
-The `Brand` line is omitted when `brand` is empty. `Title` and `Summary` are
-required. Document text contains no raw `description`, `detailed_description`,
-SID, item ID, `sid_interleaved_narrative`, `Document:` prefix, or instruction.
+Office and Industrial documents use:
+
+```text
+Title: {title}
+Brand: {brand}
+Description: {detailed_description or description}
+```
+
+The `Brand` line is omitted when `brand` is empty. `Title` and the selected
+description are required. Document text contains no SID, item ID,
+`sid_interleaved_narrative`, `Document:` prefix, or instruction. The manifest's
+`index_text_fields` records the selected domain's field priority.
 
 The output directory contains `embeddings.npy`, `metadata.json`, and a
 `manifest.json` that pins the data/model provenance and query instruction.
@@ -83,9 +115,17 @@ the SID rather than a unique catalog row.
 bash phase3_interest_retriever/start_server.sh
 ```
 
+Start a different domain after building its index:
+
+```bash
+bash phase3_interest_retriever/start_server.sh --domain Office_Products
+bash phase3_interest_retriever/start_server.sh --domain Industrial_and_Scientific
+```
+
 Defaults are `0.0.0.0:8092`, GPU `cuda:0`, and the index directory
-`phase3_interest_retriever/indexes/Video_Games`. Override these with
-`INTEREST_RETRIEVER_PORT`, `INTEREST_RETRIEVER_GPU`, or `INTEREST_INDEX_DIR`.
+`phase3_interest_retriever/indexes/<domain>`. Override these with
+`INTEREST_RETRIEVER_DOMAIN`, `INTEREST_RETRIEVER_PORT`,
+`INTEREST_RETRIEVER_GPU`, or `INTEREST_INDEX_DIR`.
 Unlike the eight-GPU index builder, the online endpoint uses exactly one GPU.
 `start_server.sh` defaults to physical GPU 0 by setting `CUDA_VISIBLE_DEVICES=0`
 and loads the model on its isolated `cuda:0`. To use physical GPU 7 instead:

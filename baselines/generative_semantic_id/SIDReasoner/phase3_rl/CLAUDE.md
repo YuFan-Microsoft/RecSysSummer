@@ -123,9 +123,13 @@ best positive rank in the rollout becomes a binary reward under the configured
 K. Malformed traces skip retrieval and receive zero.
 
 Interest reward uses standard signed GRPO normalization within each 16-rollout
-prompt group. Its weighted advantage is applied only to
-`future_interest_token_mask`, never to history-summary or final SID tokens. Keep
-the SID and process advantages independent:
+prompt group. After that single rollout-level normalization, the trainer routes
+each rollout's retrieval advantage across its interest lines without normalizing
+again. A successful rollout splits credit equally across its hit interests; an
+all-miss rollout splits its negative credit equally across all valid interests.
+The routed advantage is applied only to those interest-line token masks, never
+to history-summary or final SID tokens. Keep the SID and process advantages
+independent:
 
 ```text
 A = A_sid + 0.1 * A_process + interest_weight * A_interest
@@ -146,9 +150,13 @@ are intentionally omitted.
 Malformed parser output is not a service failure: it generates no rank request,
 records block rank `-1`, and assigns raw interest reward `0` without stopping
 training. Its future-interest mask is excluded from the auxiliary advantage, so
-it receives neither a positive nor negative interest-token update. An
-empty/unlocatable interest token mask also zeros that sample's interest score
-instead of raising.
+it receives neither a positive nor negative interest-token update. The same
+strict parser returns character spans for valid interest lines. Rollout projects
+those spans directly onto the original Qwen ByteLevel token bytes; invalid UTF-8
+bytes retain their original ranges while decoding to the same replacement
+characters as the tokenizer. The mapper does not search decoded line text or
+re-tokenize it, and its reconstructed text must exactly equal the tokenizer's
+tolerant decode output.
 
 W&B uses a strict allowlist rather than forwarding every VERL metric. The
 dashboard keeps recommendation outcomes (HR/NDCG at 1, 5, and 10), all process

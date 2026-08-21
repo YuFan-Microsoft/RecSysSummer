@@ -4,7 +4,9 @@ from phase3_interest_retriever.embedder import (
     DEFAULT_DOCUMENT_MAX_LENGTH,
     DEFAULT_QUERY_INSTRUCTION,
     DEFAULT_QUERY_MAX_LENGTH,
+    SUPPORTED_DOMAINS,
     Qwen3Embedder,
+    query_instruction_for_domain,
 )
 
 
@@ -35,6 +37,24 @@ class EmbedderBatchingTest(unittest.TestCase):
             DEFAULT_QUERY_INSTRUCTION,
         )
         self.assertEqual(f"Instruct: {DEFAULT_QUERY_INSTRUCTION}\nQuery: {query}", expected)
+
+    def test_each_supported_domain_has_a_canonical_query_instruction(self):
+        self.assertEqual(
+            SUPPORTED_DOMAINS,
+            ("Video_Games", "Office_Products", "Industrial_and_Scientific"),
+        )
+        self.assertEqual(
+            query_instruction_for_domain("Office_Products"),
+            "Retrieve relevant Office products.",
+        )
+        self.assertEqual(
+            query_instruction_for_domain("Industrial_and_Scientific"),
+            "Retrieve relevant Industrial and Scientific products.",
+        )
+
+    def test_unsupported_domain_has_no_fallback_instruction(self):
+        with self.assertRaisesRegex(ValueError, "unsupported retrieval domain"):
+            query_instruction_for_domain("Books")
 
     def test_token_budget_groups_similar_lengths_and_preserves_indices(self):
         batches = self.embedder._batch_indices(

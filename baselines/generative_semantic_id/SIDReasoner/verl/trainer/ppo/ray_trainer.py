@@ -55,6 +55,7 @@ from verl.trainer.ppo.metric_utils import (
 from verl.trainer.ppo.mismatch_helper import compute_rollout_importance_weights
 from verl.trainer.ppo.interest_reward import (
     build_interest_validation_metrics,
+    compute_interest_routing_weights,
     decode_interest_reward_inputs,
     evaluate_interest_rewards,
 )
@@ -540,6 +541,8 @@ def compute_advantage(
                 raise ValueError("Enabled interest reward is missing format-valid metadata")
             if "future_interest_token_mask" not in data.batch:
                 raise ValueError("Enabled interest reward requires future_interest_token_mask")
+            if "future_interest_token_masks" not in data.batch:
+                raise ValueError("Enabled interest reward requires per-interest token masks")
             raw_interest_mask = data.batch["future_interest_token_mask"].bool()
             interest_format_valid = torch.as_tensor(
                 np.asarray(data.non_tensor_batch["interest_format_valid"], dtype=float),
@@ -555,9 +558,23 @@ def compute_advantage(
                     f"{missing_count} valid future-interest blocks have empty token masks"
                 )
             interest_mask = raw_interest_mask & interest_format_valid.unsqueeze(-1)
+            interest_line_masks = data.batch["future_interest_token_masks"].bool()
+            interest_line_masks = interest_line_masks & interest_format_valid[:, None, None]
+            expected_interest_counts = torch.as_tensor(
+                np.asarray(data.non_tensor_batch["interest_query_count"], dtype=float),
+                dtype=torch.long,
+                device=interest_line_masks.device,
+            )
+            actual_interest_counts = interest_line_masks.any(dim=-1).sum(dim=-1)
+            if torch.any(actual_interest_counts != expected_interest_counts):
+                raise ValueError("Parsed interest counts do not match per-interest token masks")
             response_mask = grpo_calculation_mask.bool()
             if torch.any(interest_mask & ~response_mask):
                 raise ValueError("Future-interest token mask must be a subset of response mask")
+            if torch.any(interest_line_masks & ~interest_mask[:, None, :]):
+                raise ValueError("Per-interest token masks must be subsets of the interest block mask")
+            if "interest_hit_flags" not in data.non_tensor_batch:
+                raise ValueError("Enabled interest reward is missing per-interest hit flags")
             interest_scores = torch.as_tensor(
                 np.asarray(data.non_tensor_batch["interest_reward"], dtype=float),
                 dtype=data.batch["token_level_rewards"].dtype,
@@ -572,13 +589,27 @@ def compute_advantage(
                 interest_scores,
                 torch.zeros_like(interest_scores),
             )
-            interest_advantages, _ = core_algos.compute_grpo_outcome_advantage(
+            normalized_interest_advantages, _ = core_algos.compute_grpo_outcome_advantage(
                 token_level_rewards=interest_scores.unsqueeze(-1),
-                response_mask=interest_mask.to(grpo_calculation_mask.dtype),
+                response_mask=torch.ones_like(interest_scores).unsqueeze(-1),
                 index=data.non_tensor_batch["uid"],
                 norm_adv_by_std_in_grpo=norm_adv_by_std_in_grpo,
             )
-            masked_interest_advantages = interest_advantages[interest_mask]
+            line_weights = torch.as_tensor(
+                compute_interest_routing_weights(
+                    data.non_tensor_batch["interest_hit_flags"],
+                    interest_line_masks.any(dim=-1).cpu().numpy(),
+                ),
+                dtype=normalized_interest_advantages.dtype,
+                device=interest_line_masks.device,
+            )
+            interest_advantages = (
+                interest_line_masks.to(normalized_interest_advantages.dtype)
+                * line_weights.unsqueeze(-1)
+                * normalized_interest_advantages[:, None, :]
+            ).sum(dim=1)
+            routed_interest_mask = interest_line_masks.any(dim=1)
+            masked_interest_advantages = interest_advantages[routed_interest_mask]
             if masked_interest_advantages.numel() == 0:
                 data.meta_info["interest_advantage_abs_mean"] = 0.0
                 data.meta_info["interest_advantage_nonzero_token_rate"] = 0.0
@@ -996,6 +1027,7 @@ class RayPPOTrainer:
                         sid_ranking_metrics["sid_eval_hr_at_10"],
                     )
                 )
+                interest_metrics.pop("interest_hit_flags", None)
                 for key, values in interest_metrics.items():
                     reward_extra_infos_dict[key].extend(values)
 

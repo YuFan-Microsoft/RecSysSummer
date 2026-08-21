@@ -4,9 +4,23 @@ from typing import Any, Optional
 
 
 DEFAULT_MODEL = "/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-0.6B"
-DEFAULT_QUERY_INSTRUCTION = "Retrieve relevant Video Games products."
+DEFAULT_DOMAIN = "Video_Games"
+DOMAIN_QUERY_INSTRUCTIONS = {
+    "Video_Games": "Retrieve relevant Video Games products.",
+    "Office_Products": "Retrieve relevant Office products.",
+    "Industrial_and_Scientific": "Retrieve relevant Industrial and Scientific products.",
+}
+SUPPORTED_DOMAINS = tuple(DOMAIN_QUERY_INSTRUCTIONS)
+DEFAULT_QUERY_INSTRUCTION = DOMAIN_QUERY_INSTRUCTIONS[DEFAULT_DOMAIN]
 DEFAULT_DOCUMENT_MAX_LENGTH = 1024
 DEFAULT_QUERY_MAX_LENGTH = 512
+
+
+def query_instruction_for_domain(domain: str) -> str:
+    try:
+        return DOMAIN_QUERY_INSTRUCTIONS[domain]
+    except KeyError as error:
+        raise ValueError(f"unsupported retrieval domain: {domain}") from error
 
 
 class Qwen3Embedder:

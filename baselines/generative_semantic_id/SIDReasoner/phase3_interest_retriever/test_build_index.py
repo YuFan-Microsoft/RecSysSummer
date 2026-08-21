@@ -1,10 +1,13 @@
 import unittest
+from unittest.mock import patch
 
 from phase3_interest_retriever.build_index import (
     DEFAULT_BUILD_BATCH_SIZE,
     DEFAULT_MAX_BATCH_TOKENS,
     INDEX_TEXT_FIELDS,
+    index_text_fields_for_domain,
     item_index_text,
+    parse_args,
     parse_gpu_ids,
     partition_ranges,
 )
@@ -71,13 +74,39 @@ class BuildIndexTest(unittest.TestCase):
                     "retrieval_summary": "Summary without a title.",
                 }
             )
-        with self.assertRaisesRegex(ValueError, "no retrieval_summary"):
+        with self.assertRaisesRegex(ValueError, "no usable description"):
             item_index_text(
                 {
                     "sid": "<a_1><b_2><c_3>",
                     "title": "Title without a summary",
                 }
             )
+
+    def test_office_and_industrial_documents_use_available_description_fields(self):
+        item = {
+            "sid": "<a_1><b_2><c_3>",
+            "title": "Safety Labels",
+            "brand": "Example",
+            "detailed_description": "",
+            "description": "Durable workplace safety labels.",
+        }
+        self.assertEqual(
+            item_index_text(
+                item,
+                ("detailed_description", "description"),
+            ),
+            "Title: Safety Labels\n"
+            "Brand: Example\n"
+            "Description: Durable workplace safety labels.",
+        )
+        self.assertEqual(
+            index_text_fields_for_domain("Office_Products"),
+            ("title", "brand", "detailed_description", "description"),
+        )
+        self.assertEqual(
+            index_text_fields_for_domain("Industrial_and_Scientific"),
+            ("title", "brand", "detailed_description", "description"),
+        )
 
     def test_default_eight_gpu_ids_are_accepted(self):
         self.assertEqual(
@@ -100,6 +129,34 @@ class BuildIndexTest(unittest.TestCase):
     def test_partition_requires_one_item_per_gpu(self):
         with self.assertRaises(ValueError):
             partition_ranges(7)
+
+    def test_domain_selects_catalog_instruction_and_default_output(self):
+        with patch("sys.argv", ["build_index", "--domain", "Office_Products"]):
+            args = parse_args()
+        self.assertEqual(args.category, "Office_Products")
+        self.assertEqual(args.query_instruction, "Retrieve relevant Office products.")
+        self.assertEqual(
+            args.output_dir,
+            "phase3_interest_retriever/indexes/Office_Products",
+        )
+
+    def test_category_alias_and_explicit_overrides_remain_supported(self):
+        with patch(
+            "sys.argv",
+            [
+                "build_index",
+                "--category",
+                "Industrial_and_Scientific",
+                "--query-instruction",
+                "custom instruction",
+                "--output-dir",
+                "/tmp/custom-index",
+            ],
+        ):
+            args = parse_args()
+        self.assertEqual(args.category, "Industrial_and_Scientific")
+        self.assertEqual(args.query_instruction, "custom instruction")
+        self.assertEqual(args.output_dir, "/tmp/custom-index")
 
 
 if __name__ == "__main__":

@@ -10,7 +10,7 @@ import numpy as np
 from phase3_interest_retriever.index import InterestIndex
 from phase3_interest_retriever.schemas import RankRequest
 from phase3_interest_retriever.server import InterestRetrieverService, validate_query_runtime
-from phase3_interest_retriever.embedder import DEFAULT_QUERY_INSTRUCTION
+from phase3_interest_retriever.embedder import query_instruction_for_domain
 
 
 class FakeEmbedder:
@@ -154,6 +154,7 @@ class InterestRetrieverServiceTest(unittest.TestCase):
 
     def test_runtime_rejects_stale_instruction_and_accepts_validated_config(self):
         args = argparse.Namespace(
+            domain=None,
             dtype="float16",
             max_length=512,
             use_flash_attention=False,
@@ -167,8 +168,54 @@ class InterestRetrieverServiceTest(unittest.TestCase):
         )
         with self.assertRaises(ValueError):
             validate_query_runtime(self.service.index, args)
-        self.service.index.manifest["query_instruction"] = DEFAULT_QUERY_INSTRUCTION
+        self.service.index.manifest["query_instruction"] = query_instruction_for_domain(
+            "Video_Games"
+        )
         validate_query_runtime(self.service.index, args)
+
+    def test_runtime_validates_each_supported_domain(self):
+        args = argparse.Namespace(
+            domain=None,
+            dtype="float16",
+            max_length=512,
+            use_flash_attention=False,
+        )
+        self.service.index.manifest.update(
+            {
+                "dtype": "float16",
+                "query_max_length": 512,
+                "attention_backend": "transformers_default",
+            }
+        )
+        for domain in (
+            "Video_Games",
+            "Office_Products",
+            "Industrial_and_Scientific",
+        ):
+            with self.subTest(domain=domain):
+                self.service.index.manifest["category"] = domain
+                self.service.index.manifest["query_instruction"] = (
+                    query_instruction_for_domain(domain)
+                )
+                validate_query_runtime(self.service.index, args)
+
+    def test_runtime_rejects_requested_domain_mismatch(self):
+        args = argparse.Namespace(
+            domain="Office_Products",
+            dtype="float16",
+            max_length=512,
+            use_flash_attention=False,
+        )
+        self.service.index.manifest.update(
+            {
+                "query_instruction": query_instruction_for_domain("Video_Games"),
+                "dtype": "float16",
+                "query_max_length": 512,
+                "attention_backend": "transformers_default",
+            }
+        )
+        with self.assertRaisesRegex(ValueError, "does not match requested domain"):
+            validate_query_runtime(self.service.index, args)
 
 
 if __name__ == "__main__":

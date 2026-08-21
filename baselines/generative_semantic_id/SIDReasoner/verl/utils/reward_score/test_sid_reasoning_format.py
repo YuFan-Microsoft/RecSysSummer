@@ -12,6 +12,7 @@ MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
 calculate_process_rewards = MODULE.calculate_process_rewards
 extract_history_sids_from_question = MODULE.extract_history_sids_from_question
+extract_future_interest_line_spans = MODULE.extract_future_interest_line_spans
 extract_future_interest_texts = MODULE.extract_future_interest_texts
 
 
@@ -75,9 +76,28 @@ class ProcessRewardTest(unittest.TestCase):
         self.assertTrue(all("[exploit]" not in interest for interest in interests))
         self.assertTrue(all("[explore]" not in interest for interest in interests))
 
+    def test_future_interest_line_spans_slice_the_original_response(self):
+        spans = extract_future_interest_line_spans(VALID_REASONING)
+        self.assertEqual(len(spans), 2)
+        for text, start, end in spans:
+            line = VALID_REASONING[start:end]
+            self.assertTrue(line.startswith("- ["))
+            self.assertTrue(line.endswith(text))
+
     def test_extract_future_interest_texts_rejects_malformed_trace(self):
         malformed = VALID_REASONING.replace("</future_interests>", "", 1)
         self.assertEqual(extract_future_interest_texts(malformed), [])
+        self.assertEqual(extract_future_interest_line_spans(malformed), [])
+
+    def test_lone_greater_than_fourth_interest_invalidates_the_trace(self):
+        malformed = VALID_REASONING.replace(
+            "</future_interests>",
+            "- [exploit] <a_1><b_2><c_3> => another valid interest\n>\n"
+            "</future_interests>",
+            1,
+        )
+        self.assertEqual(extract_future_interest_texts(malformed), [])
+        self.assertEqual(extract_future_interest_line_spans(malformed), [])
 
     def test_extract_future_interest_texts_splits_only_the_first_arrow(self):
         response = VALID_REASONING.replace(

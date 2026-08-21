@@ -14,18 +14,25 @@ from typing import Any
 import numpy as np
 
 from .embedder import (
+    DEFAULT_DOMAIN,
     DEFAULT_DOCUMENT_MAX_LENGTH,
     DEFAULT_MODEL,
-    DEFAULT_QUERY_INSTRUCTION,
     DEFAULT_QUERY_MAX_LENGTH,
+    SUPPORTED_DOMAINS,
     Qwen3Embedder,
+    query_instruction_for_domain,
 )
 
 
 DEFAULT_DATASET = "yufan/recsys-genrec-dataset-final"
 DEFAULT_DATASET_REVISION = "bf00c35c019262437b8694b51209c419567044c0"
-DEFAULT_CATEGORY = "Video_Games"
+DEFAULT_CATEGORY = DEFAULT_DOMAIN
 INDEX_TEXT_FIELDS = ("title", "brand", "retrieval_summary")
+DOMAIN_DESCRIPTION_FIELDS = {
+    "Video_Games": ("retrieval_summary",),
+    "Office_Products": ("detailed_description", "description"),
+    "Industrial_and_Scientific": ("detailed_description", "description"),
+}
 DEFAULT_GPU_IDS = tuple(str(index) for index in range(8))
 DEFAULT_BUILD_BATCH_SIZE = 32
 DEFAULT_MAX_BATCH_TOKENS = 32768
@@ -38,18 +45,38 @@ def _clean_text(value: Any) -> str:
     return "" if text.casefold() in {"nan", "none"} else text
 
 
-def item_index_text(item: dict[str, Any]) -> str:
+def index_text_fields_for_domain(domain: str) -> tuple[str, ...]:
+    try:
+        return ("title", "brand", *DOMAIN_DESCRIPTION_FIELDS[domain])
+    except KeyError as error:
+        raise ValueError(f"unsupported retrieval domain: {domain}") from error
+
+
+def item_index_text(
+    item: dict[str, Any],
+    description_fields: tuple[str, ...] = ("retrieval_summary",),
+) -> str:
     title = _clean_text(item.get("title"))
-    summary = _clean_text(item.get("retrieval_summary"))
     if not title:
         raise ValueError(f"catalog item has no title: {item.get('sid')}")
-    if not summary:
-        raise ValueError(f"catalog item has no retrieval_summary: {item.get('sid')}")
+    description = ""
+    selected_description_field = ""
+    for field in description_fields:
+        description = _clean_text(item.get(field))
+        if description:
+            selected_description_field = field
+            break
+    if not description:
+        raise ValueError(
+            f"catalog item has no usable description in {description_fields}: "
+            f"{item.get('sid')}"
+        )
     sections = [f"Title: {title}"]
     brand = _clean_text(item.get("brand"))
     if brand:
         sections.append(f"Brand: {brand}")
-    sections.append(f"Summary: {summary}")
+    label = "Summary" if selected_description_field == "retrieval_summary" else "Description"
+    sections.append(f"{label}: {description}")
     return "\n".join(sections)
 
 
@@ -58,7 +85,8 @@ def load_catalog(dataset: str, revision: str, category: str) -> list[dict[str, A
 
     config = f"{category}_catalog"
     split = load_dataset(dataset, config, split="train", revision=revision)
-    required_fields = {"item_id", "sid", *INDEX_TEXT_FIELDS}
+    index_text_fields = index_text_fields_for_domain(category)
+    required_fields = {"item_id", "sid", *index_text_fields}
     missing_fields = required_fields - set(split.column_names)
     if missing_fields:
         raise ValueError(f"catalog is missing required fields: {sorted(missing_fields)}")
@@ -71,7 +99,11 @@ def load_catalog(dataset: str, revision: str, category: str) -> list[dict[str, A
                 "sid": _clean_text(row["sid"]),
                 "title": _clean_text(row["title"]),
                 "brand": _clean_text(row["brand"]),
-                "retrieval_summary": _clean_text(row["retrieval_summary"]),
+                **{
+                    field: _clean_text(row[field])
+                    for field in index_text_fields
+                    if field not in {"title", "brand"}
+                },
             }
         )
     return catalog
@@ -219,7 +251,8 @@ def build_index(args: argparse.Namespace) -> None:
     if any(not sid for sid in sids):
         raise ValueError("catalog contains an empty SID")
 
-    texts = [item_index_text(item) for item in catalog]
+    description_fields = DOMAIN_DESCRIPTION_FIELDS[args.category]
+    texts = [item_index_text(item, description_fields) for item in catalog]
     gpu_ids = parse_gpu_ids(args.gpus)
     print(
         f"Embedding {len(texts)} {args.category} items with {args.model} "
@@ -254,7 +287,7 @@ def build_index(args: argparse.Namespace) -> None:
         "category": args.category,
         "model_name_or_path": args.model,
         "query_instruction": args.query_instruction,
-        "index_text_fields": list(INDEX_TEXT_FIELDS),
+        "index_text_fields": list(index_text_fields_for_domain(args.category)),
         "item_count": len(catalog),
         "unique_sid_count": len(set(sids)),
         "embedding_dim": int(embeddings.shape[1]),
@@ -283,10 +316,25 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build the Phase-3 interest retrieval index.")
     parser.add_argument("--dataset", default=DEFAULT_DATASET)
     parser.add_argument("--dataset-revision", default=DEFAULT_DATASET_REVISION)
-    parser.add_argument("--category", default=DEFAULT_CATEGORY)
+    parser.add_argument(
+        "--domain",
+        "--category",
+        dest="category",
+        choices=SUPPORTED_DOMAINS,
+        default=DEFAULT_CATEGORY,
+        help="Catalog domain; --category is retained as a compatibility alias.",
+    )
     parser.add_argument("--model", default=DEFAULT_MODEL)
-    parser.add_argument("--query-instruction", default=DEFAULT_QUERY_INSTRUCTION)
-    parser.add_argument("--output-dir", default="phase3_interest_retriever/indexes/Video_Games")
+    parser.add_argument(
+        "--query-instruction",
+        default=None,
+        help="Override the canonical instruction for the selected domain.",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=None,
+        help="Defaults to phase3_interest_retriever/indexes/<domain>.",
+    )
     parser.add_argument("--gpus", default=",".join(DEFAULT_GPU_IDS))
     parser.add_argument("--dtype", choices=("float32", "float16", "bfloat16"), default="float16")
     parser.add_argument("--max-length", type=int, default=DEFAULT_DOCUMENT_MAX_LENGTH)
@@ -305,6 +353,10 @@ def parse_args() -> argparse.Namespace:
         parse_gpu_ids(args.gpus)
     except ValueError as error:
         parser.error(str(error))
+    if args.query_instruction is None:
+        args.query_instruction = query_instruction_for_domain(args.category)
+    if args.output_dir is None:
+        args.output_dir = f"phase3_interest_retriever/indexes/{args.category}"
     return args
 
 

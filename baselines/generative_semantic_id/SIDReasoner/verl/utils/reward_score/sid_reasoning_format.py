@@ -56,6 +56,19 @@ def _nonempty_lines(block: str) -> list[str]:
     return [line.strip() for line in block.splitlines() if line.strip()]
 
 
+def _nonempty_line_spans(text: str, start: int, end: int) -> list[tuple[str, int, int]]:
+    lines = []
+    for match in re.finditer(r"[^\r\n]+", text[start:end]):
+        raw_line = match.group(0)
+        line = raw_line.strip()
+        if not line:
+            continue
+        leading_space = len(raw_line) - len(raw_line.lstrip())
+        line_start = start + match.start() + leading_space
+        lines.append((line, line_start, line_start + len(line)))
+    return lines
+
+
 def _citation_sids(line_match: re.Match[str]) -> set[str]:
     return set(re.findall(_SID_PATTERN, line_match.group("citations")))
 
@@ -121,8 +134,8 @@ def _latest_history_summary_reference_reward(
     return float(latest_sid in summary_citations)
 
 
-def extract_future_interest_texts(solution_str: str) -> list[str]:
-    """Return pure interest text only when the complete V4 format is valid."""
+def extract_future_interest_line_spans(solution_str: str) -> list[tuple[str, int, int]]:
+    """Return interest text and line character spans for one valid V4 trace."""
     if not isinstance(solution_str, str) or solution_str.count("</think>") != 1:
         return []
     reasoning, _ = solution_str.split("</think>", maxsplit=1)
@@ -133,10 +146,14 @@ def extract_future_interest_texts(solution_str: str) -> list[str]:
         return []
 
     summary_lines = _nonempty_lines(match.group("history_summary"))
-    future_interest_lines = _nonempty_lines(match.group("future_interests"))
+    future_interest_lines = _nonempty_line_spans(
+        reasoning,
+        *match.span("future_interests"),
+    )
     parsed_summary = [_SUMMARY_LINE_PATTERN.fullmatch(line) for line in summary_lines]
     parsed_future_interests = [
-        _FUTURE_INTEREST_LINE_PATTERN.fullmatch(line) for line in future_interest_lines
+        _FUTURE_INTEREST_LINE_PATTERN.fullmatch(line)
+        for line, _, _ in future_interest_lines
     ]
     if not (1 <= len(summary_lines) <= 3 and 2 <= len(future_interest_lines) <= 4):
         return []
@@ -152,10 +169,18 @@ def extract_future_interest_texts(solution_str: str) -> list[str]:
     if labels != {"exploit", "explore"}:
         return []
     return [
-        line_match.group("text")
-        for line_match in parsed_future_interests
+        (line_match.group("text"), line_start, line_end)
+        for line_match, (_, line_start, line_end) in zip(
+            parsed_future_interests,
+            future_interest_lines,
+        )
         if line_match is not None
     ]
+
+
+def extract_future_interest_texts(solution_str: str) -> list[str]:
+    """Return pure interest text only when the complete V4 format is valid."""
+    return [text for text, _, _ in extract_future_interest_line_spans(solution_str)]
 
 
 def calculate_process_rewards(solution_str: str, history_sids: Any) -> dict[str, float]:

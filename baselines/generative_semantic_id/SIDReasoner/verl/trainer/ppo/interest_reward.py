@@ -4,6 +4,8 @@ import re
 import warnings
 from typing import Any, Callable, Optional
 
+import numpy as np
+
 from phase3_interest_retriever.client import InterestRetrieverClient
 from verl.utils.reward_score.sid_reasoning_format import extract_future_interest_texts
 
@@ -11,6 +13,7 @@ from verl.utils.reward_score.sid_reasoning_format import extract_future_interest
 _SID_PATTERN = re.compile(r"<a_\d+><b_\d+><c_\d+>")
 _MONITORED_CUTOFFS = (10, 20, 50, 100)
 _VALIDATION_CUTOFFS = (20, 50, 100)
+_MAX_INTERESTS = 4
 
 
 def _extract_target_sid(value: Any) -> str:
@@ -36,7 +39,7 @@ def evaluate_interest_rewards(
     max_attempts: int = 3,
     fail_open: bool = True,
     client_factory: Optional[Callable[..., Any]] = None,
-) -> dict[str, list[float]]:
+) -> dict[str, list[Any]]:
     if len(solutions) != len(target_sids):
         raise ValueError("solutions and target_sids must have the same length")
     if not 1 <= reward_top_k <= 100:
@@ -96,10 +99,16 @@ def evaluate_interest_rewards(
             sample_interest_ranks[sample_index].append(rank)
 
     block_ranks = [_best_rank(ranks) for ranks in sample_interest_ranks]
-    output: dict[str, list[float]] = {
+    interest_hit_flags = [
+        [float(0 < rank <= reward_top_k) for rank in ranks]
+        + [0.0] * (_MAX_INTERESTS - len(ranks))
+        for ranks in sample_interest_ranks
+    ]
+    output: dict[str, list[Any]] = {
         "interest_reward": [
             float(0 < rank <= reward_top_k) for rank in block_ranks
         ],
+        "interest_hit_flags": interest_hit_flags,
         "interest_block_rank": block_ranks,
         "interest_query_count": interest_counts,
         "interest_format_valid": format_valid,
@@ -110,6 +119,24 @@ def evaluate_interest_rewards(
             float(0 < rank <= cutoff) for rank in block_ranks
         ]
     return output
+
+
+def compute_interest_routing_weights(
+    interest_hit_flags: Any,
+    valid_line_flags: Any,
+) -> np.ndarray:
+    """Allocate one rollout-level retrieval advantage across its interest lines."""
+    hit_lines = np.asarray(interest_hit_flags, dtype=bool)
+    valid_lines = np.asarray(valid_line_flags, dtype=bool)
+    if hit_lines.ndim != 2 or valid_lines.shape != hit_lines.shape:
+        raise ValueError("Interest hit and valid-line flags must have matching 2D shapes")
+    if np.any(hit_lines & ~valid_lines):
+        raise ValueError("Interest hit flags reference missing interest line masks")
+
+    has_hits = hit_lines.any(axis=-1, keepdims=True)
+    hit_weights = hit_lines / np.maximum(hit_lines.sum(axis=-1, keepdims=True), 1)
+    failure_weights = valid_lines / np.maximum(valid_lines.sum(axis=-1, keepdims=True), 1)
+    return np.where(has_hits, hit_weights, failure_weights).astype(float)
 
 
 def build_interest_validation_metrics(
@@ -137,7 +164,13 @@ def decode_interest_reward_inputs(batch: Any, tokenizer: Any) -> tuple[list[str]
         prompt_length = item.batch["prompts"].shape[-1]
         valid_response_length = int(item.batch["attention_mask"][prompt_length:].sum())
         valid_response_ids = item.batch["responses"][:valid_response_length]
-        solutions.append(tokenizer.decode(valid_response_ids, skip_special_tokens=True))
+        solutions.append(
+            tokenizer.decode(
+                valid_response_ids,
+                skip_special_tokens=False,
+                clean_up_tokenization_spaces=False,
+            )
+        )
         try:
             target_sids.append(
                 _extract_target_sid(item.non_tensor_batch["reward_model"]["ground_truth"])

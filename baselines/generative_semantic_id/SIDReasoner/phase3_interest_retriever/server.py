@@ -12,9 +12,10 @@ from fastapi import FastAPI, HTTPException
 import uvicorn
 
 from .embedder import (
-    DEFAULT_QUERY_INSTRUCTION,
     DEFAULT_QUERY_MAX_LENGTH,
+    SUPPORTED_DOMAINS,
     Qwen3Embedder,
+    query_instruction_for_domain,
 )
 from .index import InterestIndex
 from .schemas import (
@@ -212,6 +213,12 @@ def create_serving_app(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Serve Qwen3 interest-to-item retrieval.")
     parser.add_argument("--index-dir", required=True)
+    parser.add_argument(
+        "--domain",
+        choices=SUPPORTED_DOMAINS,
+        default=None,
+        help="Optionally require the loaded index to match this domain.",
+    )
     parser.add_argument("--model", default=None, help="Override the model recorded in the index manifest.")
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", type=int, default=8092)
@@ -243,9 +250,17 @@ def parse_args() -> argparse.Namespace:
 
 
 def validate_query_runtime(index: InterestIndex, args: argparse.Namespace) -> None:
-    if index.query_instruction != DEFAULT_QUERY_INSTRUCTION:
+    category = str(index.manifest.get("category", ""))
+    requested_domain = getattr(args, "domain", None)
+    if requested_domain is not None and category != requested_domain:
         raise ValueError(
-            "index query instruction does not match the validated Video Games instruction; "
+            f"loaded index domain {category!r} does not match requested domain "
+            f"{requested_domain!r}"
+        )
+    expected_instruction = query_instruction_for_domain(category)
+    if index.query_instruction != expected_instruction:
+        raise ValueError(
+            f"index query instruction does not match the validated {category} instruction; "
             "rebuild the index"
         )
     expected_dtype = index.manifest.get("dtype")
