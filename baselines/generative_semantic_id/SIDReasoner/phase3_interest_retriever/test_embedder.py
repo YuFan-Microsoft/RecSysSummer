@@ -6,6 +6,7 @@ from phase3_interest_retriever.embedder import (
     DEFAULT_QUERY_MAX_LENGTH,
     SUPPORTED_DOMAINS,
     Qwen3Embedder,
+    is_canonical_embedding_model,
     query_instruction_for_domain,
 )
 
@@ -55,6 +56,15 @@ class EmbedderBatchingTest(unittest.TestCase):
     def test_unsupported_domain_has_no_fallback_instruction(self):
         with self.assertRaisesRegex(ValueError, "unsupported retrieval domain"):
             query_instruction_for_domain("Books")
+
+    def test_canonical_model_accepts_local_and_hub_4b_paths_only(self):
+        self.assertTrue(
+            is_canonical_embedding_model(
+                "/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-4B"
+            )
+        )
+        self.assertTrue(is_canonical_embedding_model("Qwen/Qwen3-Embedding-4B"))
+        self.assertFalse(is_canonical_embedding_model("Qwen/Qwen3-Embedding-0.6B"))
 
     def test_token_budget_groups_similar_lengths_and_preserves_indices(self):
         batches = self.embedder._batch_indices(

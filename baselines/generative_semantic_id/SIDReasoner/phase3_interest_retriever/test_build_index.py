@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from phase3_interest_retriever.build_index import (
     DEFAULT_BUILD_BATCH_SIZE,
+    DEFAULT_DATASET_REVISION,
     DEFAULT_MAX_BATCH_TOKENS,
     INDEX_TEXT_FIELDS,
     index_text_fields_for_domain,
@@ -25,7 +26,13 @@ class BuildIndexTest(unittest.TestCase):
     def test_default_model_uses_local_checkpoint(self):
         self.assertEqual(
             DEFAULT_MODEL,
-            "/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-0.6B",
+            "/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-4B",
+        )
+
+    def test_default_dataset_revision_contains_all_domain_summaries(self):
+        self.assertEqual(
+            DEFAULT_DATASET_REVISION,
+            "9fc6a3612d3531058d5c8a7c26c77d087ea28f09",
         )
 
     def test_document_uses_title_brand_and_retrieval_summary(self):
@@ -74,7 +81,7 @@ class BuildIndexTest(unittest.TestCase):
                     "retrieval_summary": "Summary without a title.",
                 }
             )
-        with self.assertRaisesRegex(ValueError, "no usable description"):
+        with self.assertRaisesRegex(ValueError, "no retrieval_summary"):
             item_index_text(
                 {
                     "sid": "<a_1><b_2><c_3>",
@@ -82,31 +89,37 @@ class BuildIndexTest(unittest.TestCase):
                 }
             )
 
-    def test_office_and_industrial_documents_use_available_description_fields(self):
+    def test_all_domains_use_retrieval_summary_without_description_fallback(self):
         item = {
             "sid": "<a_1><b_2><c_3>",
             "title": "Safety Labels",
             "brand": "Example",
-            "detailed_description": "",
+            "retrieval_summary": "Labels for workplace safety communication.",
+            "detailed_description": "Do not index this generated description.",
             "description": "Durable workplace safety labels.",
         }
         self.assertEqual(
-            item_index_text(
-                item,
-                ("detailed_description", "description"),
-            ),
+            item_index_text(item),
             "Title: Safety Labels\n"
             "Brand: Example\n"
-            "Description: Durable workplace safety labels.",
+            "Summary: Labels for workplace safety communication.",
         )
-        self.assertEqual(
-            index_text_fields_for_domain("Office_Products"),
-            ("title", "brand", "detailed_description", "description"),
-        )
-        self.assertEqual(
-            index_text_fields_for_domain("Industrial_and_Scientific"),
-            ("title", "brand", "detailed_description", "description"),
-        )
+        for domain in (
+            "Video_Games",
+            "Office_Products",
+            "Industrial_and_Scientific",
+        ):
+            with self.subTest(domain=domain):
+                self.assertEqual(index_text_fields_for_domain(domain), INDEX_TEXT_FIELDS)
+        with self.assertRaisesRegex(ValueError, "no retrieval_summary"):
+            item_index_text(
+                {
+                    "sid": "<a_1><b_2><c_3>",
+                    "title": "Safety Labels",
+                    "description": "Description must not be used as a fallback.",
+                    "detailed_description": "Neither should this field.",
+                }
+            )
 
     def test_default_eight_gpu_ids_are_accepted(self):
         self.assertEqual(
@@ -134,6 +147,7 @@ class BuildIndexTest(unittest.TestCase):
         with patch("sys.argv", ["build_index", "--domain", "Office_Products"]):
             args = parse_args()
         self.assertEqual(args.category, "Office_Products")
+        self.assertEqual(args.model, DEFAULT_MODEL)
         self.assertEqual(args.query_instruction, "Retrieve relevant Office products.")
         self.assertEqual(
             args.output_dir,

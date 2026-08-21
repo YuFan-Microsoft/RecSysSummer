@@ -43,7 +43,7 @@ class InterestRetrieverServiceTest(unittest.TestCase):
             json.dumps(
                 {
                     "category": "Video_Games",
-                    "model_name_or_path": "Qwen/Qwen3-Embedding-0.6B",
+                    "model_name_or_path": "Qwen/Qwen3-Embedding-4B",
                     "query_instruction": "retrieve products",
                     "item_count": 2,
                     "embedding_dim": 2,
@@ -215,6 +215,20 @@ class InterestRetrieverServiceTest(unittest.TestCase):
             }
         )
         with self.assertRaisesRegex(ValueError, "does not match requested domain"):
+            validate_query_runtime(self.service.index, args)
+
+    def test_runtime_rejects_historical_06b_index(self):
+        args = argparse.Namespace(
+            domain=None,
+            model=None,
+            dtype="float16",
+            max_length=512,
+            use_flash_attention=False,
+        )
+        self.service.index.manifest["model_name_or_path"] = (
+            "Qwen/Qwen3-Embedding-0.6B"
+        )
+        with self.assertRaisesRegex(ValueError, "rebuild the index"):
             validate_query_runtime(self.service.index, args)
 
 

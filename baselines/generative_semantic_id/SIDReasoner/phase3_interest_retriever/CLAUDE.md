@@ -22,12 +22,13 @@ signed GRPO, a non-covering block receives negative relative advantage when its
 ## 2. Fixed experiment inputs
 
 - Embedding model:
-  `/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-0.6B`
+  `/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-4B`
 - Catalog dataset:
   `yufan/recsys-genrec-dataset-final`
 - Dataset revision:
-  `bf00c35c019262437b8694b51209c419567044c0`
-- Config/split: `Video_Games_catalog/train`
+  `9fc6a3612d3531058d5c8a7c26c77d087ea28f09`
+- Supported config/splits: `Video_Games_catalog/train`,
+  `Office_Products_catalog/train`, and `Industrial_and_Scientific_catalog/train`
 - Checkpoint analysis file:
   `yufan/rec_rl_checkpoints/results_analysis/yufan_diverisity_process.jsonl`
 - Full index directory: `phase3_interest_retriever/indexes/Video_Games`
@@ -41,15 +42,16 @@ rows sharing the target SID.
 
 1. Use the same model for document and query embeddings. The builder records the
    model path and query instruction in `manifest.json`; the server must load that
-   manifest rather than silently selecting another model.
-2. Query only the text after the first `=>`. Use the exact Video Games
+  manifest rather than silently selecting another model. Only
+  `Qwen3-Embedding-4B` indexes are valid; rebuild historical 0.6B indexes.
+2. Query only the text after the first `=>`. Use the selected domain's exact
   instruction recorded in the manifest and one space after `Query:`.
 3. Build documents in fixed `Title`, optional `Brand`, `Summary` order from
   `title`, `brand`, and `retrieval_summary`. Omit the `Brand` line when empty.
   Never include raw `description`, `detailed_description`, SID, item ID,
   `sid_interleaved_narrative`, a `Document:` prefix, or any instruction.
 4. Never write a limited smoke index into the full index directory. Always use
-   `indexes/Video_Games_smoke` for `--limit` runs.
+  `indexes/<domain>_smoke` for `--limit` runs.
 5. Treat malformed or truncated reasoning as a miss in the primary recall. Do
    not recover partial interest blocks. `conditional_recall` may be used only as
    a diagnostic for successfully parsed and retrieved records.
@@ -66,7 +68,7 @@ CUDA GPUs. Verify the local checkpoint and GPU count before installing or
 launching anything:
 
 ```bash
-test -d /yufan/open_source_models/Embedding_Model/Qwen3-Embedding-0.6B
+test -d /yufan/open_source_models/Embedding_Model/Qwen3-Embedding-4B
 python3 -c "import torch, transformers; print(torch.__version__, transformers.__version__, torch.cuda.device_count()); assert torch.cuda.device_count() >= 8"
 ```
 

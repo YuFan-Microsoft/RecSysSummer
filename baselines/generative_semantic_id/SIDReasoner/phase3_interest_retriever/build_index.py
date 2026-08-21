@@ -20,19 +20,15 @@ from .embedder import (
     DEFAULT_QUERY_MAX_LENGTH,
     SUPPORTED_DOMAINS,
     Qwen3Embedder,
+    is_canonical_embedding_model,
     query_instruction_for_domain,
 )
 
 
 DEFAULT_DATASET = "yufan/recsys-genrec-dataset-final"
-DEFAULT_DATASET_REVISION = "bf00c35c019262437b8694b51209c419567044c0"
+DEFAULT_DATASET_REVISION = "9fc6a3612d3531058d5c8a7c26c77d087ea28f09"
 DEFAULT_CATEGORY = DEFAULT_DOMAIN
 INDEX_TEXT_FIELDS = ("title", "brand", "retrieval_summary")
-DOMAIN_DESCRIPTION_FIELDS = {
-    "Video_Games": ("retrieval_summary",),
-    "Office_Products": ("detailed_description", "description"),
-    "Industrial_and_Scientific": ("detailed_description", "description"),
-}
 DEFAULT_GPU_IDS = tuple(str(index) for index in range(8))
 DEFAULT_BUILD_BATCH_SIZE = 32
 DEFAULT_MAX_BATCH_TOKENS = 32768
@@ -46,37 +42,25 @@ def _clean_text(value: Any) -> str:
 
 
 def index_text_fields_for_domain(domain: str) -> tuple[str, ...]:
-    try:
-        return ("title", "brand", *DOMAIN_DESCRIPTION_FIELDS[domain])
-    except KeyError as error:
-        raise ValueError(f"unsupported retrieval domain: {domain}") from error
+    if domain not in SUPPORTED_DOMAINS:
+        raise ValueError(f"unsupported retrieval domain: {domain}")
+    return INDEX_TEXT_FIELDS
 
 
 def item_index_text(
     item: dict[str, Any],
-    description_fields: tuple[str, ...] = ("retrieval_summary",),
 ) -> str:
     title = _clean_text(item.get("title"))
+    retrieval_summary = _clean_text(item.get("retrieval_summary"))
     if not title:
         raise ValueError(f"catalog item has no title: {item.get('sid')}")
-    description = ""
-    selected_description_field = ""
-    for field in description_fields:
-        description = _clean_text(item.get(field))
-        if description:
-            selected_description_field = field
-            break
-    if not description:
-        raise ValueError(
-            f"catalog item has no usable description in {description_fields}: "
-            f"{item.get('sid')}"
-        )
+    if not retrieval_summary:
+        raise ValueError(f"catalog item has no retrieval_summary: {item.get('sid')}")
     sections = [f"Title: {title}"]
     brand = _clean_text(item.get("brand"))
     if brand:
         sections.append(f"Brand: {brand}")
-    label = "Summary" if selected_description_field == "retrieval_summary" else "Description"
-    sections.append(f"{label}: {description}")
+    sections.append(f"Summary: {retrieval_summary}")
     return "\n".join(sections)
 
 
@@ -251,8 +235,7 @@ def build_index(args: argparse.Namespace) -> None:
     if any(not sid for sid in sids):
         raise ValueError("catalog contains an empty SID")
 
-    description_fields = DOMAIN_DESCRIPTION_FIELDS[args.category]
-    texts = [item_index_text(item, description_fields) for item in catalog]
+    texts = [item_index_text(item) for item in catalog]
     gpu_ids = parse_gpu_ids(args.gpus)
     print(
         f"Embedding {len(texts)} {args.category} items with {args.model} "
@@ -349,6 +332,8 @@ def parse_args() -> argparse.Namespace:
         parser.error("--max-batch-tokens must be positive")
     if args.limit is not None and args.limit < 1:
         parser.error("--limit must be positive")
+    if not is_canonical_embedding_model(args.model):
+        parser.error("--model must use Qwen3-Embedding-4B")
     try:
         parse_gpu_ids(args.gpus)
     except ValueError as error:

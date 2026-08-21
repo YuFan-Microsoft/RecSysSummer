@@ -27,7 +27,7 @@ class InterestIndexTest(unittest.TestCase):
             json.dumps(
                 {
                     "category": "Video_Games",
-                    "model_name_or_path": "Qwen/Qwen3-Embedding-0.6B",
+                    "model_name_or_path": "Qwen/Qwen3-Embedding-4B",
                     "query_instruction": "retrieve products",
                     "item_count": 3,
                     "embedding_dim": 2,

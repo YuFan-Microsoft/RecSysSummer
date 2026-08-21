@@ -15,6 +15,7 @@ from .embedder import (
     DEFAULT_QUERY_MAX_LENGTH,
     SUPPORTED_DOMAINS,
     Qwen3Embedder,
+    is_canonical_embedding_model,
     query_instruction_for_domain,
 )
 from .index import InterestIndex
@@ -250,6 +251,13 @@ def parse_args() -> argparse.Namespace:
 
 
 def validate_query_runtime(index: InterestIndex, args: argparse.Namespace) -> None:
+    if not is_canonical_embedding_model(index.model_name_or_path):
+        raise ValueError(
+            "index was not built with Qwen3-Embedding-4B; rebuild the index"
+        )
+    model_override = getattr(args, "model", None)
+    if model_override is not None and not is_canonical_embedding_model(model_override):
+        raise ValueError("query model override must use Qwen3-Embedding-4B")
     category = str(index.manifest.get("category", ""))
     requested_domain = getattr(args, "domain", None)
     if requested_domain is not None and category != requested_domain:

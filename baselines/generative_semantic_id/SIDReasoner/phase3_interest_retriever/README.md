@@ -3,7 +3,7 @@
 This directory contains the standalone retrieval endpoint for the constrained-
 sampling interest-reward experiment. It supports `Video_Games`,
 `Office_Products`, and `Industrial_and_Scientific`, embeds each generated
-interest with a local `Qwen3-Embedding-0.6B` checkpoint, retrieves catalog
+interest with a local `Qwen3-Embedding-4B` checkpoint, retrieves catalog
 products by exact cosine similarity, and returns a binary multiple-instance reward:
 
 ```text
@@ -20,25 +20,24 @@ covering blocks and decreases non-covering blocks within mixed rollout groups.
 The builder defaults to:
 
 - Dataset: `yufan/recsys-genrec-dataset-final`
-- Revision: `bf00c35c019262437b8694b51209c419567044c0`
+- Revision: `9fc6a3612d3531058d5c8a7c26c77d087ea28f09`
 - Config/split: `Video_Games_catalog/train`
 - Catalog size at that revision: 3,858 items
-- Index text: domain-specific fields described below
-- Embedding model: `/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-0.6B`
+- Index text: `title`, optional `brand`, and `retrieval_summary`, in that order
+- Embedding model: `/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-4B`
 - Document max length / batch per GPU: 1,024 / 32
 - Query max length / batch: 512 / 128
 - Dtype: FP16
 - Attention: Transformers default (no FlashAttention 2)
 - Padding / pooling / normalization: left / last token / L2
 
-For `Video_Games`, raw `description`, `detailed_description`, and
-`sid_interleaved_narrative` are excluded from the embedding text. Its pinned
-`retrieval_summary` is the interest-aligned product representation generated
-for this index. The pinned Office and Industrial catalogs do not contain
-`retrieval_summary`; they use `detailed_description`, falling back to
-`description` when necessary.
-Pass `--model Qwen/Qwen3-Embedding-0.6B` to the builder when the local
+All three domains use their interest-aligned `retrieval_summary`. Raw
+`description`, `detailed_description`, and `sid_interleaved_narrative` are
+excluded from every domain's embedding text; there is no description fallback.
+Pass `--model Qwen/Qwen3-Embedding-4B` to the builder when the local
 checkpoint is unavailable and a Hub download is preferred.
+Indexes built with `Qwen3-Embedding-0.6B` are incompatible with this serving
+contract. Rebuild every domain index; the server rejects non-4B manifests.
 
 Install dependencies and build the index from the `SIDReasoner` root:
 
@@ -76,7 +75,7 @@ set of cards, pass exactly eight distinct IDs, for example
 
 Each GPU has `--batch-size 32`, document `--max-length 1024`, and a 32,768-token
 padding budget. Workers sort their shard by token length, encode, then restore
-catalog order before shard merge. `Video_Games` documents are exactly:
+catalog order before shard merge. Documents for all three domains are exactly:
 
 ```text
 Title: {title}
@@ -84,18 +83,11 @@ Brand: {brand}
 Summary: {retrieval_summary}
 ```
 
-Office and Industrial documents use:
-
-```text
-Title: {title}
-Brand: {brand}
-Description: {detailed_description or description}
-```
-
-The `Brand` line is omitted when `brand` is empty. `Title` and the selected
-description are required. Document text contains no SID, item ID,
-`sid_interleaved_narrative`, `Document:` prefix, or instruction. The manifest's
-`index_text_fields` records the selected domain's field priority.
+The `Brand` line is omitted when `brand` is empty. `Title` and
+`retrieval_summary` are required. Document text contains no raw `description`,
+`detailed_description`, SID, item ID, `sid_interleaved_narrative`, `Document:`
+prefix, or instruction. Every manifest records the same `index_text_fields`:
+`["title", "brand", "retrieval_summary"]`.
 
 The output directory contains `embeddings.npy`, `metadata.json`, and a
 `manifest.json` that pins the data/model provenance and query instruction.

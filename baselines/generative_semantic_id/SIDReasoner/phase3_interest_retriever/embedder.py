@@ -3,7 +3,8 @@ from __future__ import annotations
 from typing import Any, Optional
 
 
-DEFAULT_MODEL = "/yufan/open_source_models/Embedding_Model/Qwen3-Embedding-0.6B"
+CANONICAL_MODEL_NAME = "Qwen3-Embedding-4B"
+DEFAULT_MODEL = f"/yufan/open_source_models/Embedding_Model/{CANONICAL_MODEL_NAME}"
 DEFAULT_DOMAIN = "Video_Games"
 DOMAIN_QUERY_INSTRUCTIONS = {
     "Video_Games": "Retrieve relevant Video Games products.",
@@ -14,6 +15,10 @@ SUPPORTED_DOMAINS = tuple(DOMAIN_QUERY_INSTRUCTIONS)
 DEFAULT_QUERY_INSTRUCTION = DOMAIN_QUERY_INSTRUCTIONS[DEFAULT_DOMAIN]
 DEFAULT_DOCUMENT_MAX_LENGTH = 1024
 DEFAULT_QUERY_MAX_LENGTH = 512
+
+
+def is_canonical_embedding_model(model_name_or_path: str) -> bool:
+    return str(model_name_or_path).rstrip("/").rsplit("/", maxsplit=1)[-1] == CANONICAL_MODEL_NAME
 
 
 def query_instruction_for_domain(domain: str) -> str:
