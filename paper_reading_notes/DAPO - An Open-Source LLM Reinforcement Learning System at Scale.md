@@ -96,8 +96,8 @@ not a probability difference but the **importance-sampling ratio**
 ```math
 r_t(\theta)
 =
-\frac{\pi_\theta(o_t\mid q,o_{<t})}
-     {\pi_{\theta_{\mathrm{old}}}(o_t\mid q,o_{<t})}.
+\frac{\pi_\theta(o_t\mid q,o_{\lt t})}
+     {\pi_{\theta_{\mathrm{old}}}(o_t\mid q,o_{\lt t})}.
 ```
 
 PPO maximizes the clipped surrogate objective
