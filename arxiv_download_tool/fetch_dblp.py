@@ -60,7 +60,8 @@ def _get_json(url: str, tries: int = 8) -> dict:
             raise
         except Exception as e:  # transient network (reset/timeout) -> retry
             wait = 10 * (attempt + 1)
-            print(f"  DBLP net error ({type(e).__name__}) -> retry in {wait}s")
+            print(f"  DBLP net error ({type(e).__name__}: {e!r}) "
+                  f"-> retry in {wait}s", flush=True)
             time.sleep(wait)
     raise RuntimeError("DBLP page failed after retries: " + url)
 
@@ -71,7 +72,8 @@ def fetch_toc(bht_key: str, polite: float = 5.0) -> list:
     while True:
         params = {
             "q": f"toc:{bht_key}:",
-            "h": 1000,
+            # The DBLP API caps publication searches at 100 results per page.
+            "h": 100,
             "f": offset,
             "format": "json",
         }
@@ -83,6 +85,7 @@ def fetch_toc(bht_key: str, polite: float = 5.0) -> list:
         hits += batch
         total = int(result.get("hits", {}).get("@total", 0))
         offset += len(batch)
+        print(f"  DBLP page: {offset}/{total} records", flush=True)
         if not batch or offset >= total:
             break
         time.sleep(polite)  # be polite between pages
