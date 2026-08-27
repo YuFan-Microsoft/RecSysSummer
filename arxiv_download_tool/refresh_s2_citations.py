@@ -16,10 +16,12 @@ paper or a request fails.
 from __future__ import annotations
 
 import argparse
+import calendar
 import glob
 import json
 import os
 import random
+import shutil
 import sqlite3
 import stat
 import sys
@@ -89,6 +91,7 @@ def connect(db_path: str) -> sqlite3.Connection:
             status TEXT NOT NULL DEFAULT 'pending',
             citation_count INTEGER,
             influential_citation_count INTEGER,
+            published INTEGER NOT NULL DEFAULT 0,
             attempts INTEGER NOT NULL DEFAULT 0,
             fetched_at TEXT,
             last_error TEXT
@@ -114,6 +117,15 @@ def connect(db_path: str) -> sqlite3.Connection:
         );
         """
     )
+    paper_columns = {
+        row["name"] for row in conn.execute("PRAGMA table_info(papers)")
+    }
+    if "published" not in paper_columns:
+        with conn:
+            conn.execute(
+                "ALTER TABLE papers "
+                "ADD COLUMN published INTEGER NOT NULL DEFAULT 0"
+            )
     return conn
 
 
@@ -445,13 +457,20 @@ def run_fetch(args) -> int:
             )
 
         with conn:
+            error_count = conn.execute(
+                "SELECT COUNT(*) AS n FROM papers WHERE status = 'error'"
+            ).fetchone()["n"]
+            if error_count:
+                log(
+                    f"reviving {error_count:,} prior transient-error rows "
+                    f"for this supervisor pass"
+                )
             conn.execute(
                 """
                 UPDATE papers
-                SET status = 'pending', last_error = NULL
-                WHERE status = 'error' AND attempts < ?
-                """,
-                (args.max_attempts,),
+                SET status = 'pending', attempts = 0, last_error = NULL
+                WHERE status = 'error'
+                """
             )
 
         if args.initial_delay > 0:
@@ -514,15 +533,17 @@ def run_fetch(args) -> int:
                 args.split_request_budget,
             )
             fetched_at = utc_now()
-            abort_error = next(
+            abort_outcome = next(
                 (
-                    error_message
+                    (failure_kind, error_message)
                     for _, payload, error_message, failure_kind in outcomes
                     if payload is None
                     and failure_kind in ("abort", "rate_limited")
                 ),
                 None,
             )
+            abort_kind = abort_outcome[0] if abort_outcome else None
+            abort_error = abort_outcome[1] if abort_outcome else None
             with conn:
                 total_requests = int(get_meta(conn, "request_count", 0))
                 set_meta(conn, "request_count", total_requests + request_count)
@@ -611,6 +632,12 @@ def run_fetch(args) -> int:
                         )
 
             if abort_error:
+                if abort_kind == "rate_limited":
+                    log(
+                        "Semantic Scholar rate limited this request; "
+                        "checkpoint preserved without changing rows"
+                    )
+                    return 75
                 raise SystemExit(
                     f"Semantic Scholar request aborted without changing rows: "
                     f"{abort_error}"
@@ -778,16 +805,6 @@ def run_apply(args) -> int:
                 f"pending={counts['pending']:,}, errors={counts['error']:,}"
             )
 
-        eligible_rows = int(get_meta(conn, "eligible_rows", 0))
-        coverage = counts["done"] / eligible_rows if eligible_rows else 0.0
-        if not args.force and coverage < args.min_coverage:
-            raise SystemExit(
-                f"Refusing to apply: successful citation coverage "
-                f"{coverage:.2%} is below {args.min_coverage:.2%} "
-                f"(done={counts['done']:,}, eligible={eligible_rows:,}, "
-                f"not_found={counts['not_found']:,}, skipped={counts['skipped']:,})"
-            )
-
         if get_meta(conn, "apply_complete") == "1":
             if not os.path.exists(args.marker) and get_meta(
                 conn, "upload_complete"
@@ -798,6 +815,16 @@ def run_apply(args) -> int:
                 )
             log("citation updates are already applied")
             return 0
+
+        eligible_rows = int(get_meta(conn, "eligible_rows", 0))
+        coverage = counts["done"] / eligible_rows if eligible_rows else 0.0
+        if not args.force and coverage < args.min_coverage:
+            raise SystemExit(
+                f"Refusing to apply: successful citation coverage "
+                f"{coverage:.2%} is below {args.min_coverage:.2%} "
+                f"(done={counts['done']:,}, eligible={eligible_rows:,}, "
+                f"not_found={counts['not_found']:,}, skipped={counts['skipped']:,})"
+            )
 
         verify_unapplied_sources(conn, args.root)
         if not os.path.exists(args.marker):
@@ -837,6 +864,223 @@ def run_apply(args) -> int:
         conn.close()
 
 
+def write_partial_shard(
+    conn: sqlite3.Connection,
+    root: str,
+    temporary_root: str,
+    shard_row: sqlite3.Row,
+) -> tuple[str, int]:
+    relative = shard_row["path"]
+    source_path = os.path.join(root, relative)
+    target_path = os.path.join(temporary_root, relative)
+    os.makedirs(os.path.dirname(target_path), exist_ok=True)
+    updates = {
+        row["arxiv_id"]: (
+            row["citation_count"],
+            row["influential_citation_count"],
+            row["fetched_at"],
+        )
+        for row in conn.execute(
+            """
+            SELECT arxiv_id, citation_count,
+                   influential_citation_count, fetched_at
+            FROM papers
+            WHERE shard = ? AND status = 'done'
+            """,
+            (relative,),
+        )
+    }
+    rows = 0
+    matched = 0
+    source_before = os.stat(source_path)
+    with open(source_path, encoding="utf-8") as source, open(
+        target_path, "w", encoding="utf-8"
+    ) as target:
+        for line_number, line in enumerate(source, 1):
+            if not line.strip():
+                continue
+            rows += 1
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError as error:
+                raise RuntimeError(
+                    f"{relative}:{line_number}: invalid JSON: {error}"
+                ) from error
+            update = updates.get(record.get("arxiv_id"))
+            if update is not None:
+                citation_count, influential_count, fetched_at = update
+                if citation_count is not None:
+                    record["citationCount"] = citation_count
+                if influential_count is not None:
+                    record["influentialCitationCount"] = influential_count
+                record["citation_refreshed_at"] = fetched_at
+                matched += 1
+            target.write(json.dumps(record, ensure_ascii=False) + "\n")
+        target.flush()
+        os.fsync(target.fileno())
+
+    source_after = os.stat(source_path)
+    if (
+        source_after.st_size != source_before.st_size
+        or source_after.st_mtime_ns != source_before.st_mtime_ns
+    ):
+        raise RuntimeError(
+            f"{relative}: source changed while partial publish was prepared"
+        )
+    if matched != len(updates):
+        raise RuntimeError(
+            f"{relative}: partial publish matched "
+            f"{matched:,}/{len(updates):,} updates"
+        )
+    if (
+        rows != shard_row["row_count"]
+        or source_after.st_size != shard_row["source_size"]
+        or source_after.st_mtime_ns != shard_row["source_mtime_ns"]
+    ):
+        with conn:
+            conn.execute(
+                """
+                UPDATE shards
+                SET row_count = ?,
+                    source_size = ?,
+                    source_mtime_ns = ?
+                WHERE path = ?
+                """,
+                (
+                    rows,
+                    source_after.st_size,
+                    source_after.st_mtime_ns,
+                    relative,
+                ),
+            )
+        log(
+            f"rebased source snapshot for {relative}: "
+            f"{shard_row['row_count']:,} -> {rows:,} rows"
+        )
+    return target_path, matched
+
+
+def publish_partial(args) -> int:
+    if not os.path.exists(args.db):
+        log("no citation state yet; nothing to publish")
+        return 0
+    conn = connect(args.db)
+    temporary_root = os.path.join(args.root, ".citation_partial_publish")
+    try:
+        if get_meta(conn, "initialized") != "1":
+            log("citation state is not initialized; nothing to publish")
+            return 0
+        unpublished = conn.execute(
+            """
+            SELECT COUNT(*) AS n
+            FROM papers
+            WHERE status = 'done' AND published = 0
+            """
+        ).fetchone()["n"]
+        if not unpublished:
+            log("no unpublished citation checkpoint to send to Hugging Face")
+            return 0
+        if not args.force and unpublished < args.min_unpublished:
+            last_partial = get_meta(conn, "last_partial_at")
+            age_hours = float("inf")
+            if last_partial:
+                parsed = time.strptime(last_partial, "%Y-%m-%dT%H:%M:%SZ")
+                age_hours = (
+                    time.time() - calendar.timegm(parsed)
+                ) / 3600
+            if age_hours < args.max_age_hours:
+                log(
+                    f"deferring partial publish: {unpublished:,} unpublished "
+                    f"< {args.min_unpublished:,} and last publish was "
+                    f"{age_hours:.1f}h ago"
+                )
+                return 0
+
+        shard_rows = conn.execute(
+            """
+            SELECT s.*
+            FROM shards AS s
+            WHERE EXISTS (
+                SELECT 1
+                FROM papers AS p
+                WHERE p.shard = s.path
+                  AND p.status = 'done'
+                  AND p.published = 0
+            )
+            ORDER BY s.path
+            """
+        ).fetchall()
+        if os.path.exists(temporary_root):
+            shutil.rmtree(temporary_root)
+
+        operations = []
+        affected_shards = []
+        try:
+            from huggingface_hub import CommitOperationAdd, HfApi
+            from upload_metadata_hf import REPO_ID, resolve_token
+
+            for index, shard_row in enumerate(shard_rows, 1):
+                target_path, cumulative_updates = write_partial_shard(
+                    conn, args.root, temporary_root, shard_row
+                )
+                year, subject = shard_row["path"].split(os.sep)[:2]
+                path_in_repo = f"{subject}/{year}/metadata.jsonl"
+                operations.append(
+                    CommitOperationAdd(
+                        path_in_repo=path_in_repo,
+                        path_or_fileobj=target_path,
+                    )
+                )
+                affected_shards.append(shard_row["path"])
+                log(
+                    f"prepared partial shard {index}/{len(shard_rows)}: "
+                    f"{shard_row['path']} cumulative_updates={cumulative_updates:,}"
+                )
+
+            if args.dry_run:
+                log(
+                    f"partial publish dry-run: {unpublished:,} new papers "
+                    f"across {len(operations)} shards"
+                )
+                return 0
+
+            token = resolve_token()
+            done_count = status_counts(conn)["done"]
+            eligible_rows = int(get_meta(conn, "eligible_rows", 0))
+            info = HfApi(token=token).create_commit(
+                repo_id=REPO_ID,
+                repo_type="dataset",
+                operations=operations,
+                commit_message=(
+                    f"Partial citation refresh: +{unpublished:,} papers "
+                    f"({done_count:,}/{eligible_rows:,})"
+                ),
+            )
+            commit_url = str(getattr(info, "commit_url", info))
+            placeholders = ",".join("?" for _ in affected_shards)
+            with conn:
+                conn.execute(
+                    f"""
+                    UPDATE papers
+                    SET published = 1
+                    WHERE status = 'done'
+                      AND shard IN ({placeholders})
+                    """,
+                    affected_shards,
+                )
+                partial_count = int(get_meta(conn, "partial_upload_count", 0))
+                set_meta(conn, "partial_upload_count", partial_count + 1)
+                set_meta(conn, "last_partial_commit", commit_url)
+                set_meta(conn, "last_partial_at", utc_now())
+            log(f"partial Hugging Face commit complete: {commit_url}")
+            return 0
+        finally:
+            if os.path.exists(temporary_root):
+                shutil.rmtree(temporary_root)
+    finally:
+        conn.close()
+
+
 def print_status(args) -> int:
     if not os.path.exists(args.db):
         print(f"state_db={args.db} (missing)")
@@ -857,12 +1101,23 @@ def print_status(args) -> int:
             "applied_rows",
             "upload_complete",
             "uploaded_at",
+            "partial_upload_count",
+            "last_partial_commit",
+            "last_partial_at",
         ):
             value = get_meta(conn, key)
             if value is not None:
                 print(f"{key}={value}")
         for key in ("pending", "done", "not_found", "skipped", "error"):
             print(f"{key}={counts[key]}")
+        unpublished = conn.execute(
+            """
+            SELECT COUNT(*) AS n
+            FROM papers
+            WHERE status = 'done' AND published = 0
+            """
+        ).fetchone()["n"]
+        print(f"unpublished_done={unpublished}")
         return 0
     finally:
         conn.close()
@@ -874,6 +1129,9 @@ def mark_uploaded(args) -> int:
         if get_meta(conn, "apply_complete") != "1":
             raise SystemExit("Cannot mark upload complete before apply completion")
         with conn:
+            conn.execute(
+                "UPDATE papers SET published = 1 WHERE status = 'done'"
+            )
             set_meta(conn, "upload_complete", 1)
             set_meta(conn, "uploaded_at", utc_now())
         log("upload marked complete")
@@ -888,6 +1146,20 @@ def is_uploaded(args) -> int:
     conn = connect(args.db)
     try:
         return 0 if get_meta(conn, "upload_complete") == "1" else 1
+    finally:
+        conn.close()
+
+
+def is_active(args) -> int:
+    if not os.path.exists(args.db):
+        return 1
+    conn = connect(args.db)
+    try:
+        active = (
+            get_meta(conn, "initialized") == "1"
+            and get_meta(conn, "upload_complete") != "1"
+        )
+        return 0 if active else 1
     finally:
         conn.close()
 
@@ -928,8 +1200,14 @@ def parse_args():
     apply_parser.add_argument("--min-coverage", type=float, default=0.99)
     apply_parser.add_argument("--force", action="store_true")
     subparsers.add_parser("status")
+    partial_parser = subparsers.add_parser("publish-partial")
+    partial_parser.add_argument("--dry-run", action="store_true")
+    partial_parser.add_argument("--force", action="store_true")
+    partial_parser.add_argument("--min-unpublished", type=int, default=50000)
+    partial_parser.add_argument("--max-age-hours", type=float, default=12.0)
     subparsers.add_parser("mark-uploaded")
     subparsers.add_parser("is-uploaded")
+    subparsers.add_parser("is-active")
     return parser.parse_args()
 
 
@@ -951,10 +1229,14 @@ def main() -> int:
         return run_apply(args)
     if args.command == "status":
         return print_status(args)
+    if args.command == "publish-partial":
+        return publish_partial(args)
     if args.command == "mark-uploaded":
         return mark_uploaded(args)
     if args.command == "is-uploaded":
         return is_uploaded(args)
+    if args.command == "is-active":
+        return is_active(args)
     raise AssertionError(args.command)
 
 
