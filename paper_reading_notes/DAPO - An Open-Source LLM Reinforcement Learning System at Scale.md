@@ -199,3 +199,48 @@ the final objective carry an effective factor of $1/|o_i|$. The advantage
 tensor remains $0.5$ at every token, while the loss aggregation supplies the
 length normalization. DAPO's Token-Level Loss later replaces this per-sequence
 normalization with one normalization over all valid tokens in the batch.
+
+### GRPO
+
+GRPO removes PPO's learned value function and uses the responses sampled for
+the same input as a group-relative baseline. Their completed-response rewards
+are normalized within the group to obtain one advantage estimate per response.
+The policy is then optimized with the clipped surrogate objective
+
+```math
+J_{\mathrm{GRPO}}(\theta)
+=
+\mathbb{E}\left[
+\frac{1}{G}\sum_{i=1}^{G}\frac{1}{|o_i|}
+\sum_{t=1}^{|o_i|}
+\left(
+\min\left[
+r_{i,t}(\theta)\hat A_i,\,
+\mathrm{clip}\left(r_{i,t}(\theta),1-\epsilon,1+\epsilon\right)\hat A_i
+\right]
+-\beta D_{\mathrm{KL}}\left(\pi_\theta\middle\|\pi_{\mathrm{ref}}\right)
+\right)
+\right],
+```
+
+where
+
+```math
+r_{i,t}(\theta)
+=
+\frac{\pi_\theta(o_{i,t}\mid q,o_{i,\lt t})}
+     {\pi_{\theta_{\mathrm{old}}}(o_{i,t}\mid q,o_{i,\lt t})}.
+```
+
+This is a **policy-optimization objective**, not a reward function. The
+verifier or reward model first produces $R_i$; group normalization converts
+$R_i$ into $\hat A_i$; and the equation above turns those advantages into an
+objective for updating the policy. The paper writes $J$ as an objective to
+maximize, whereas implementations normally minimize the loss
+$L_{\mathrm{GRPO}}=-J_{\mathrm{GRPO}}$.
+
+The two comparison policies also serve different purposes.
+$\pi_{\theta_{\mathrm{old}}}$ is the rollout policy used in the importance
+ratio, while $\pi_{\mathrm{ref}}$ is a frozen reference policy used by the KL
+penalty to discourage excessive drift. As in PPO, clipping modifies the
+surrogate objective rather than hard-clamping the realized importance ratio.
