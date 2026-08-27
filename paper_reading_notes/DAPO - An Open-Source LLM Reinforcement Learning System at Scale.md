@@ -244,3 +244,52 @@ $\pi_{\theta_{\mathrm{old}}}$ is the rollout policy used in the importance
 ratio, while $\pi_{\mathrm{ref}}$ is a frozen reference policy used by the KL
 penalty to discourage excessive drift. As in PPO, clipping modifies the
 surrogate objective rather than hard-clamping the realized importance ratio.
+
+### Removing KL divergence
+
+The KL penalty in standard RLHF discourages the online policy from diverging
+too far from a frozen reference policy, usually the initial post-trained model.
+That makes sense when RL is intended to align behavior while preserving most of
+the starting model's distribution.
+
+DAPO adopts a different premise for long-CoT reasoning RL. Developing extended
+reasoning behaviors may require the policy distribution to move substantially
+away from the initial policy, so this divergence is partly the desired outcome
+rather than merely a failure mode. The authors therefore regard the KL
+constraint as unnecessary and remove the term
+$\beta D_{\mathrm{KL}}(\pi_\theta\|\pi_{\mathrm{ref}})$ from their objective.
+This is the paper's task-specific design choice, not a general claim that KL
+regularization is unnecessary for every form of RL training.
+
+### Rule-based verifiable rewards
+
+DAPO uses final-answer correctness as a rule-based outcome reward instead of a
+learned reward model. This is particularly suitable for mathematics and code,
+where an answer can often be checked by symbolic equivalence, compilation, or
+tests. A learned reward model is an imperfect proxy whose weaknesses may be
+exploited as RL optimization pressure increases; a deterministic verifier
+reduces that attack surface by tying reward more directly to task success.
+
+Verifiable rewards do not eliminate reward hacking, however. A model can still
+exploit a weak specification or verifier: for example, it might benefit from
+incomplete tests, leaked answers, mutable evaluation files, parser bugs, or
+side effects that make the checker report success without accomplishing the
+intended task. RLVR is therefore only as sound as the verifier and evaluation
+environment.
+
+This connects to agent training, but three concepts should remain distinct:
+
+1. **Reward hacking/specification gaming** obtains reward without satisfying
+   the intended goal.
+2. **Unauthorized tool use** invokes capabilities outside the intended policy,
+   but does not necessarily cross an isolation boundary.
+3. **Devbox or sandbox escape** crosses a security boundary from the isolated
+   environment into the host, control plane, network, credentials, or another
+   protected resource.
+
+A sandbox escape can also become reward hacking if the agent uses the escaped
+access to manipulate its evaluator or obtain answers, but escape is first a
+security-containment failure. Secure agent RL consequently requires controls
+outside the reward function: least-privilege tools, strong sandboxing, isolated
+and immutable evaluators, hidden tests, environment resets, network and secret
+isolation, and audited side effects.
