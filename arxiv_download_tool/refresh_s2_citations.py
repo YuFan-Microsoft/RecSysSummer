@@ -454,10 +454,7 @@ def run_fetch(args) -> int:
                 (args.max_attempts,),
             )
 
-        if (
-            args.initial_delay > 0
-            and int(get_meta(conn, "request_count", 0)) == 0
-        ):
+        if args.initial_delay > 0:
             log(
                 f"initial API cooldown: waiting {args.initial_delay:.0f}s "
                 f"before the first request"
@@ -538,7 +535,7 @@ def run_fetch(args) -> int:
                     set_meta(conn, "last_abort_at", fetched_at)
 
                 for outcome_rows, payload, error_message, failure_kind in outcomes:
-                    if failure_kind == "abort":
+                    if failure_kind in ("abort", "rate_limited"):
                         continue
                     if payload is None:
                         if failure_kind == "split" and len(outcome_rows) == 1:
