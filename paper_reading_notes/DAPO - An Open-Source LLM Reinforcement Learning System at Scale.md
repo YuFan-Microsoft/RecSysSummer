@@ -411,3 +411,50 @@ further shows that the same performance is reached in fewer policy-update
 steps, and the authors report a reduction in convergence time. This is an
 empirical system-specific result, not a guarantee that Dynamic Sampling always
 reduces wall-clock time.
+
+### Token-Level Policy Gradient Loss
+
+Original GRPO first averages token losses within each response and then
+averages responses:
+
+```math
+J_{\mathrm{sample}}
+=
+\frac{1}{G}\sum_{i=1}^{G}
+\frac{1}{T_i}\sum_{t=1}^{T_i}\ell_{i,t}.
+```
+
+This gives every response total weight $1/G$, regardless of its length. It does
+not necessarily make a long response's total gradient smaller than a short
+response's; rather, each token in response $i$ has weight $1/(G T_i)$.
+Consequently, an individual token in a long response contributes less than an
+individual token in a short response.
+
+DAPO flattens all valid response tokens and performs one global average:
+
+```math
+J_{\mathrm{token}}
+=
+\frac{1}{\sum_{i=1}^{G}T_i}
+\sum_{i=1}^{G}\sum_{t=1}^{T_i}\ell_{i,t}.
+```
+
+Now every token has the same weight $1/\sum_i T_i$, independent of the length
+of the response containing it. The corresponding tradeoff is that a response's
+total weight becomes proportional to its length: long responses have more
+influence on the update than short responses.
+
+For example, with responses of 100 and 1,000 tokens, sample-level reduction
+gives each response total weight $1/2$, so their per-token weights are $1/200$
+and $1/2000$. Token-level reduction gives every token weight $1/1100$, making
+the responses' total weights $100/1100$ and $1000/1100$.
+
+This change prevents useful or undesirable patterns in long responses from
+being diluted merely because they occur in a long sample. It does **not** solve
+within-sequence credit assignment, however. GRPO still copies one
+sequence-level advantage to every token, so the objective cannot identify a
+valuable reasoning span and a repetitive span inside the same rollout and
+assign them opposite advantage signs. It only ensures that each token's
+existing policy-gradient term receives equal length-independent aggregation
+weight. Figure 4 shows that this controls the otherwise unhealthy increase in
+generation entropy and response length.
