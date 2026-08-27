@@ -93,21 +93,21 @@ current policy and the rollout policy, then uses the token's advantage to decide
 whether its probability should increase or decrease. The relevant quantity is
 not a probability difference but the **importance-sampling ratio**
 
-$$
+```math
 r_t(\theta)
 =
 \frac{\pi_\theta(o_t\mid q,o_{<t})}
      {\pi_{\theta_{\mathrm{old}}}(o_t\mid q,o_{<t})}.
-$$
+```
 
 PPO maximizes the clipped surrogate objective
 
-$$
+```math
 \min\left(
 r_t\hat A_t,\;
-\operatorname{clip}(r_t,1-\epsilon,1+\epsilon)\hat A_t
+\mathrm{clip}(r_t,1-\epsilon,1+\epsilon)\hat A_t
 \right).
-$$
+```
 
 If $\hat A_t>0$, the sampled token was better than expected, so PPO encourages
 increasing its probability, but removes the incentive to increase its ratio
@@ -129,18 +129,18 @@ usually assigns a scalar reward $R(y)$ to the completed response, whereas the
 advantage measures how much better or worse a sampled action was than the
 expected outcome from its current prefix:
 
-$$
+```math
 A_t = Q(s_t,a_t)-V(s_t).
-$$
+```
 
 In PPO-based RLHF, the reward-model score is commonly placed at the end of the
 sequence, sometimes alongside token-level KL penalties. A learned critic
 estimates $V(s_t)$ for each prefix, and Generalized Advantage Estimation uses
 the temporal-difference residuals
 
-$$
+```math
 \delta_t=r_t+\gamma V(s_{t+1})-V(s_t)
-$$
+```
 
 to produce $\hat A_t$. Therefore, the final sequence reward contributes to the
 return of all preceding tokens, but it is not merely divided equally among
@@ -150,11 +150,11 @@ estimates differ.
 GRPO uses a simpler mechanism. It removes the critic and normalizes completed
 sequence rewards within the $G$ responses sampled for the same question:
 
-$$
+```math
 \hat A_i =
-\frac{R_i-\operatorname{mean}(\{R_j\}_{j=1}^{G})}
-     {\operatorname{std}(\{R_j\}_{j=1}^{G})}.
-$$
+\frac{R_i-\mathrm{mean}(\{R_j\}_{j=1}^{G})}
+     {\mathrm{std}(\{R_j\}_{j=1}^{G})}.
+```
 
 The resulting scalar is copied to every token in response $i$. Thus GRPO and
 DAPO do not solve fine-grained token credit assignment: all tokens in one
@@ -173,11 +173,11 @@ then copied to all of its tokens.
 More generally, if the fraction of correct responses is $p$, the population
 normalization gives
 
-$$
+```math
 A_{\mathrm{correct}}=\sqrt{\frac{1-p}{p}},
 \qquad
 A_{\mathrm{wrong}}=-\sqrt{\frac{p}{1-p}}.
-$$
+```
 
 Thus a rare correct response receives a particularly strong positive signal.
 If all 16 responses are correct or all are wrong, however, the standard
@@ -190,9 +190,9 @@ response has sequence-level advantage $A_i=0.5$, then GRPO sets
 $A_{i,t}=0.5$ for every token; it does not define
 $A_{i,t}=0.5/|o_i|$. However, original GRPO computes
 
-$$
+```math
 \frac{1}{|o_i|}\sum_t \ell_{i,t}(A_{i,t}),
-$$
+```
 
 so the outer sequence average makes each individual token's contribution to
 the final objective carry an effective factor of $1/|o_i|$. The advantage
