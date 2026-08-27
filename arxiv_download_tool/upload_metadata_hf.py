@@ -77,11 +77,9 @@ def render_table(mat):
     return "\n".join(lines), grand
 
 
-def update_readme(token, grand, end_month, dry):
+def update_readme(token, grand, end_month, table, dry):
     p = hf_hub_download(REPO_ID, "README.md", repo_type="dataset", force_download=True)
     t = open(p).read()
-    mat, _ = count_matrix()
-    table, _ = render_table(mat)
     # replace the table block: header row '| Field (`config`) |' .. up to the 'all' row line
     t2 = re.sub(r"\| Field \(`config`\) \|.*?\| \*\*all\*\* \|.*?\n", table + "\n", t, count=1, flags=re.S)
     t2 = re.sub(r"\*\*[\d,]+ arXiv papers\*\*", f"**{grand:,} arXiv papers**", t2)
@@ -102,9 +100,12 @@ def main():
     args = ap.parse_args()
 
     shards = glob.glob(os.path.join(LOCAL_ROOT, "*", "*", "metadata.jsonl"))
-    if args.newer and os.path.exists(args.newer):
+    if args.newer and not os.path.exists(args.newer):
+        raise SystemExit(f"--newer marker missing: {args.newer}")
+    if args.newer:
         cut = os.path.getmtime(args.newer)
         shards = [s for s in shards if os.path.getmtime(s) > cut]
+    mat, end_month = count_matrix()
     # dataset scope is 2020-2026: OAI 'last-modified' harvest can touch revised
     # pre-2020 papers (creating out-of-scope shards) — never upload those.
     def in_scope(s):
@@ -120,13 +121,13 @@ def main():
         year, subject = parts[-3], parts[-2]
         pir = f"{subject}/{year}/metadata.jsonl"          # transpose
         ops.append(CommitOperationAdd(path_in_repo=pir, path_or_fileobj=s))
-        print(f"  upload {year}/{subject} -> {pir}  ({sum(1 for _ in open(s)):,} rows)")
+        rows = mat.get(subject, {}).get(year, 0)
+        print(f"  upload {year}/{subject} -> {pir}  ({rows:,} rows)")
     print(f"changed shards to upload: {len(ops)}")
 
-    mat, end_month = count_matrix()
-    _, grand = render_table(mat)
+    table, grand = render_table(mat)
     token = resolve_token()
-    readme = update_readme(token, grand, end_month, args.dry_run)
+    readme = update_readme(token, grand, end_month, table, args.dry_run)
     ops.append(CommitOperationAdd(path_in_repo="README.md", path_or_fileobj=readme))
 
     if args.dry_run:
