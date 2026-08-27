@@ -83,3 +83,119 @@ training steps of the referenced DeepSeek result. The paper's main value is
 therefore not just its final score, but its account of the intervening failure
 modes and fixes, together with the released algorithm, training code, and
 dataset.
+
+## Preliminary
+
+### PPO
+
+My intuitive reading of PPO is that it evaluates each sampled token under the
+current policy and the rollout policy, then uses the token's advantage to decide
+whether its probability should increase or decrease. The relevant quantity is
+not a probability difference but the **importance-sampling ratio**
+
+$$
+r_t(\theta)
+=
+\frac{\pi_\theta(o_t\mid q,o_{<t})}
+     {\pi_{\theta_{\mathrm{old}}}(o_t\mid q,o_{<t})}.
+$$
+
+PPO maximizes the clipped surrogate objective
+
+$$
+\min\left(
+r_t\hat A_t,\;
+\operatorname{clip}(r_t,1-\epsilon,1+\epsilon)\hat A_t
+\right).
+$$
+
+If $\hat A_t>0$, the sampled token was better than expected, so PPO encourages
+increasing its probability, but removes the incentive to increase its ratio
+beyond $1+\epsilon$. If $\hat A_t<0$, PPO encourages decreasing that token's
+probability, but removes the incentive to reduce its ratio below
+$1-\epsilon$. This operates on the probability of the sampled token
+conditioned on its prefix, not on the policy distribution as one undifferentiated
+object.
+
+The clipping should also not be interpreted as a hard constraint that forces
+the new probability ratio to remain inside the interval. It clips the surrogate
+training objective, making excessively large policy changes unprofitable in
+that update; the realized ratio can still move outside the clipping range.
+
+#### Reward versus advantage in LLM training
+
+Advantage is not simply the output of the reward function. A reward model
+usually assigns a scalar reward $R(y)$ to the completed response, whereas the
+advantage measures how much better or worse a sampled action was than the
+expected outcome from its current prefix:
+
+$$
+A_t = Q(s_t,a_t)-V(s_t).
+$$
+
+In PPO-based RLHF, the reward-model score is commonly placed at the end of the
+sequence, sometimes alongside token-level KL penalties. A learned critic
+estimates $V(s_t)$ for each prefix, and Generalized Advantage Estimation uses
+the temporal-difference residuals
+
+$$
+\delta_t=r_t+\gamma V(s_{t+1})-V(s_t)
+$$
+
+to produce $\hat A_t$. Therefore, the final sequence reward contributes to the
+return of all preceding tokens, but it is not merely divided equally among
+them. Different prefixes can receive different advantages because their value
+estimates differ.
+
+GRPO uses a simpler mechanism. It removes the critic and normalizes completed
+sequence rewards within the $G$ responses sampled for the same question:
+
+$$
+\hat A_i =
+\frac{R_i-\operatorname{mean}(\{R_j\}_{j=1}^{G})}
+     {\operatorname{std}(\{R_j\}_{j=1}^{G})}.
+$$
+
+The resulting scalar is copied to every token in response $i$. Thus GRPO and
+DAPO do not solve fine-grained token credit assignment: all tokens in one
+response share the same outcome-based advantage, even though their PPO ratios
+are token-specific. DAPO's later token-level loss changes how these token losses
+are aggregated, not how a distinct advantage is inferred for each token.
+
+For a concrete RLVR example, suppose GRPO samples 16 responses for one input and
+the verifier returns 16 binary rewards. Normalizing those rewards within this
+group produces 16 **sequence-level group-relative advantage estimates**. If
+eight responses are correct and eight are wrong, the reward mean and population
+standard deviation are both $0.5$, so correct responses receive advantage
+$+1$ and incorrect responses receive $-1$. Each response's scalar advantage is
+then copied to all of its tokens.
+
+More generally, if the fraction of correct responses is $p$, the population
+normalization gives
+
+$$
+A_{\mathrm{correct}}=\sqrt{\frac{1-p}{p}},
+\qquad
+A_{\mathrm{wrong}}=-\sqrt{\frac{p}{1-p}}.
+$$
+
+Thus a rare correct response receives a particularly strong positive signal.
+If all 16 responses are correct or all are wrong, however, the standard
+deviation is zero and there is no within-group ranking signal. This degenerate
+case directly motivates DAPO's Dynamic Sampling, which keeps only groups
+containing both correct and incorrect responses.
+
+There are two different length scalings that should not be conflated. If a
+response has sequence-level advantage $A_i=0.5$, then GRPO sets
+$A_{i,t}=0.5$ for every token; it does not define
+$A_{i,t}=0.5/|o_i|$. However, original GRPO computes
+
+$$
+\frac{1}{|o_i|}\sum_t \ell_{i,t}(A_{i,t}),
+$$
+
+so the outer sequence average makes each individual token's contribution to
+the final objective carry an effective factor of $1/|o_i|$. The advantage
+tensor remains $0.5$ at every token, while the loss aggregation supplies the
+length normalization. DAPO's Token-Level Loss later replaces this per-sequence
+normalization with one normalization over all valid tokens in the batch.
