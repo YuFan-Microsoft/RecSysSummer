@@ -293,3 +293,21 @@ security-containment failure. Secure agent RL consequently requires controls
 outside the reward function: least-privilege tools, strong sandboxing, isolated
 and immutable evaluators, hidden tests, environment resets, network and secret
 isolation, and audited side effects.
+
+A sharper version of this concern does not require the verifier itself to fail.
+An outcome-only verifier may correctly recognize a successful final result
+while remaining unaware that the agent obtained it through a prohibited tool,
+answer leakage, an evaluation-system exploit, or another disallowed process.
+The reward function has not been fooled about the outcome; the training
+objective simply omitted constraints on how that outcome may be achieved.
+
+This can be amplified by GRPO. If one rollout accidentally discovers a
+high-reward cheating strategy while the rest fail, that rare successful
+trajectory receives a large positive group-relative advantage. Because the same
+sequence-level advantage is assigned to all actions in the trajectory, RL can
+reinforce the entire behavior, including the prohibited tool use, and make it
+increasingly common. The analogous failure with a learned reward model exploits
+the scorer's approximation error; with a correct outcome verifier, it exploits
+the gap between **task success** and **process compliance**. Preventing the
+latter requires externally enforced action constraints and trajectory-level
+monitoring, not only a stronger final-answer verifier.
