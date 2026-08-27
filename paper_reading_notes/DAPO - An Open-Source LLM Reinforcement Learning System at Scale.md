@@ -311,3 +311,103 @@ the scorer's approximation error; with a correct outcome verifier, it exploits
 the gap between **task success** and **process compliance**. Preventing the
 latter requires externally enforced action constraints and trajectory-level
 monitoring, not only a stronger final-answer verifier.
+
+## Method
+
+### Clip-Higher
+
+The motivation is entropy collapse. During naive PPO or GRPO training, the
+policy entropy drops quickly and some response groups become nearly identical,
+indicating that the policy is becoming deterministic too early and losing
+exploration capacity.
+
+The paper argues that symmetric clipping treats low- and high-probability tokens
+asymmetrically in absolute probability space. With $\epsilon=0.2$ and positive
+advantage, an old-policy token with probability $0.01$ receives useful
+optimization pressure only up to probability $0.012$. A token with probability
+$0.9$ has a nominal upper limit of $1.08$, which exceeds the maximum possible
+probability and therefore hardly constrains its movement toward $1$. Figure 3a
+supports this diagnosis more narrowly: the **mean probability of up-clipped
+tokens** is below $0.2$; it does not show that every clipped token is inherently
+low-probability.
+
+DAPO decouples the clipping radii:
+
+```math
+\mathrm{clip}\left(r_{i,t},\,1-\epsilon_{\mathrm{low}},\,
+1+\epsilon_{\mathrm{high}}\right),
+\qquad
+\epsilon_{\mathrm{high}}>\epsilon_{\mathrm{low}}.
+```
+
+For a positive-advantage token, the upper ratio bound
+$1+\epsilon_{\mathrm{high}}$ controls how far its probability can be rewarded
+for increasing. Raising $\epsilon_{\mathrm{high}}$ therefore gives a rewarded,
+low-probability exploration token more room to grow.
+
+For a negative-advantage token, the lower ratio bound
+$1-\epsilon_{\mathrm{low}}$ controls how far its probability can be rewarded
+for decreasing. The phrase "lower the lower bound" is ambiguous:
+
+- Increasing $\epsilon_{\mathrm{low}}$ lowers the numerical bound
+  $1-\epsilon_{\mathrm{low}}$. This lets negative-advantage tokens be pushed
+  closer to zero, removes options from the sampling space, and therefore
+  **reduces** exploration.
+- Decreasing $\epsilon_{\mathrm{low}}$ raises the numerical lower bound and
+  protects tokens from being suppressed as aggressively. That may preserve
+  support, but it does not directly give a successful rare token more room to
+  increase and can also make it harder to suppress genuinely bad actions.
+
+For example, if an old-policy token has probability $0.01$ and negative
+advantage, a lower ratio bound of $0.8$ stops providing optimization benefit
+once the new probability reaches $0.008$. Moving the bound down to $0.2$ would
+allow it to fall to $0.002$, which shrinks rather than expands the exploration
+space. DAPO therefore leaves $\epsilon_{\mathrm{low}}$ unchanged and raises only
+$\epsilon_{\mathrm{high}}$. Figure 2 reports that this modification maintains
+higher policy entropy and improves AIME accuracy.
+
+The central insight is that a single symmetric clipping radius couples two
+effects. Increasing it gives positive-advantage exploration tokens more uplift
+room, which is desirable, but simultaneously gives negative-advantage tokens
+more room to be suppressed toward zero, which can reduce diversity. Decoupled
+clipping keeps the first benefit without accepting the second cost.
+
+### Dynamic Sampling
+
+As training progresses, an increasing fraction of prompts become too easy:
+all $G$ rollouts for a prompt are correct and receive the same reward. A group
+in which all rollouts are correct, or all are wrong, contains no relative
+ranking information. Its normalized group-relative advantages are effectively
+zero, so it contributes no policy gradient.
+
+The filtering unit should be described as a **prompt and its rollout group**,
+not an individual rollout. DAPO retains only groups satisfying
+
+```math
+0
+<
+\left|\left\{o_i:\mathrm{is\_equivalent}(a,o_i)\right\}\right|
+<
+G,
+```
+
+meaning that each retained group contains at least one correct and one
+incorrect response. It oversamples prompts, generates their rollout groups,
+filters homogeneous groups with accuracy $0$ or $1$, and continues filling a
+dynamic buffer until it contains the target number of effective groups. Only
+then does it update the policy.
+
+The problem is not specifically that the learning rate remains fixed. Rather,
+the nominal batch size hides a shrinking effective batch: zero-gradient groups
+reduce the batch gradient's magnitude, increase its sensitivity to noise, and
+raise gradient variance. Dynamic Sampling keeps the effective number of
+informative prompts per update stable.
+
+This method does require more rollout instances, so it cannot generally be
+claimed to make every batch cheaper. In the authors' synchronous, non-pipelined
+system, generation time is dominated by long-tail responses; the extra sampling
+therefore does not significantly increase overall training time. Figure 6
+further shows that the same performance is reached in fewer policy-update
+steps, and the authors report a reduction in convergence time. This is an
+empirical system-specific result, not a guarantee that Dynamic Sampling always
+reduces wall-clock time.
