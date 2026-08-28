@@ -14,6 +14,8 @@
 
 ---
 
+<!-- Reading progress: completed with the user. Covered the abstract, introduction, PPO/GRPO preliminaries, all four DAPO techniques, experimental setup, progressive ablations, and training-dynamics monitoring. Reflections are the user's, with technical corrections verified against the paper. -->
+
 ## Abstract
 
 The abstract draws an important distinction between inference-time scaling and
@@ -655,3 +657,30 @@ The paper's table lists both Overlong Filtering and Soft Overlong Punishment
 along the progressive path, but the maintained official recipe says the two
 overlap and that the best reproduced configuration generally uses soft shaping
 without enabling hard filtering.
+
+### Training dynamics and monitoring
+
+The paper emphasizes monitoring intermediate training dynamics rather than
+judging a run only by its final benchmark score. Large-scale RL is an
+interdependent systems problem in which small data, hyperparameter, or
+infrastructure changes can compound into unexpectedly different outcomes.
+Figure 7 tracks four main signals.
+
+| Signal | Healthy interpretation | Warning signs |
+|---|---|---|
+| Mean response length | Some growth creates room for longer and more complex reasoning. | Uncontrolled growth can indicate repetition or gibberish. Stagnation or temporary decline is not automatically failure, so length should be interpreted with validation accuracy. |
+| Training reward | A stable upward trend shows that the model can fit the training distribution under a reliable verifier. | Final training reward has little correlation with validation accuracy, revealing training-set overfitting. The paper reports weak correlation rather than requiring a specific visible divergence between two curves. |
+| Generation entropy | Maintains exploration; the authors find a slow upward trend helpful in their successful run. | Too low means a sharp distribution and exploration collapse; too high can mean over-exploration, gibberish, or repetitive output. |
+| Mean generation probability | Higher values indicate greater confidence in sampled tokens and usually accompany lower entropy. | Too high can accompany an overly deterministic policy; too low can accompany excessive entropy and unstable generation. |
+
+Generation entropy and mean generation probability move in broadly opposite
+directions, but they are not mathematical inverses. Entropy depends on the full
+vocabulary distribution,
+
+```math
+H(\pi)=-\sum_v \pi(v)\log\pi(v),
+```
+
+whereas mean generation probability summarizes the probabilities assigned to
+the tokens that were actually sampled. The same sampled-token mean probability
+can coexist with different distributions over the remaining vocabulary.
