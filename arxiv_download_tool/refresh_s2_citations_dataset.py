@@ -529,6 +529,20 @@ def upsert_counts(
         )
 
 
+def match_totals(conn: sqlite3.Connection) -> tuple[int, int]:
+    unique_matches = conn.execute(
+        "SELECT COUNT(*) AS n FROM counts"
+    ).fetchone()["n"]
+    matched_targets = conn.execute(
+        """
+        SELECT COUNT(*) AS n
+        FROM targets AS t
+        JOIN counts AS c ON c.corpus_id = t.corpus_id
+        """
+    ).fetchone()["n"]
+    return unique_matches, matched_targets
+
+
 def process_gzip(
     conn: sqlite3.Connection,
     gzip_path: str,
@@ -696,6 +710,7 @@ def run_fetch(args) -> int:
         release_id, info = load_dataset_info(args, api_key)
         urls = list(info.get("files") or [])
         register_dataset_files(conn, release_id, urls)
+        current_urls = urls_by_key(urls)
         target_ids = {
             row["corpus_id"]
             for row in conn.execute("SELECT DISTINCT corpus_id FROM targets")
@@ -719,16 +734,9 @@ def run_fetch(args) -> int:
             if args.limit_files and completed_this_run >= args.limit_files:
                 break
 
-            if args.dataset_info_file or completed_this_run == 0:
-                current_info = info
-            else:
-                _, current_info = load_dataset_info(args, api_key)
-            current_urls = urls_by_key(list(current_info.get("files") or []))
             url = current_urls.get(file_row["file_key"])
             if not url:
-                raise RuntimeError(
-                    f"fresh dataset metadata omitted {file_row['file_key']}"
-                )
+                raise RuntimeError(f"dataset metadata omitted {file_row['file_key']}")
 
             part_path, gzip_path = prepare_current_file(
                 args.work_dir, file_row["file_key"]
@@ -799,10 +807,20 @@ def run_fetch(args) -> int:
                 key_path = os.path.join(args.work_dir, "current.key")
                 if os.path.exists(key_path):
                     os.remove(key_path)
+                files_done = conn.execute(
+                    "SELECT COUNT(*) AS n FROM files WHERE status = 'done'"
+                ).fetchone()["n"]
+                file_count = int(get_meta(conn, "file_count"))
+                unique_matches, matched_targets = match_totals(conn)
+                completion = files_done / file_count if file_count else 0
                 log(
                     f"completed and deleted {file_row['file_key']}: "
                     f"records={records:,} matched_lines={matched_lines:,} "
-                    f"complete_metrics={metric_lines:,}"
+                    f"complete_metrics={metric_lines:,}; "
+                    f"cumulative_corpus_matches={unique_matches:,} "
+                    f"cumulative_target_rows={matched_targets:,}; "
+                    f"gzip_progress={files_done}/{file_count} "
+                    f"({completion:.2%})"
                 )
                 completed_this_run += 1
             except Exception as error:
@@ -837,16 +855,7 @@ def run_fetch(args) -> int:
             with conn:
                 set_meta(conn, "fetch_complete", 1)
                 set_meta(conn, "fetch_completed_at", utc_now())
-            unique_matches = conn.execute(
-                "SELECT COUNT(*) AS n FROM counts"
-            ).fetchone()["n"]
-            matched_targets = conn.execute(
-                """
-                SELECT COUNT(*) AS n
-                FROM targets AS t
-                JOIN counts AS c ON c.corpus_id = t.corpus_id
-                """
-            ).fetchone()["n"]
+            unique_matches, matched_targets = match_totals(conn)
             log(
                 f"dataset fetch complete: unique corpus matches="
                 f"{unique_matches:,}, local target rows matched="
