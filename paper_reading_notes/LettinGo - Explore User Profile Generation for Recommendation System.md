@@ -273,7 +273,7 @@ However, the claim that DPO preserves an unconstrained profile format is oversta
 Equation 3 is written as:
 
 $$
-\mathcal{L}_{\mathrm{paper}} = -\mathbb{E}_{(H_u,p_u^+,p_u^-)}\left[\log \sigma\left(f_{\mathrm{LLM}}(p_u^+ \mid H_u) - f_{\mathrm{LLM}}(p_u^- \mid H_u)\right)\right].
+\mathcal{L}_{\mathrm{paper}} = -\mathbb{E}_{(H_u,p_u^+,p_u^-)} [\log \sigma(f_{\mathrm{LLM}}(p_u^+ \mid H_u) - f_{\mathrm{LLM}}(p_u^- \mid H_u))].
 $$
 
 Read literally, this is a pairwise logistic or Bradley-Terry ranking loss over two model scores. It only asks the preferred profile to score above the dispreferred profile.
@@ -281,7 +281,7 @@ Read literally, this is a pairwise logistic or Bradley-Terry ranking loss over t
 Standard DPO instead compares how much the trainable policy's relative preference differs from that of a frozen reference policy:
 
 $$
-\mathcal{L}_{\mathrm{DPO}} = -\mathbb{E}\left[\log \sigma\left(\beta\left[\log \frac{\pi_\theta(p_u^+ \mid H_u)}{\pi_{\mathrm{ref}}(p_u^+ \mid H_u)} - \log \frac{\pi_\theta(p_u^- \mid H_u)}{\pi_{\mathrm{ref}}(p_u^- \mid H_u)}\right]\right)\right].
+\mathcal{L}_{\mathrm{DPO}} = -\mathbb{E}[\log \sigma(\beta[\log \frac{\pi_\theta(p_u^+ \mid H_u)}{\pi_{\mathrm{ref}}(p_u^+ \mid H_u)} - \log \frac{\pi_\theta(p_u^- \mid H_u)}{\pi_{\mathrm{ref}}(p_u^- \mid H_u)}])].
 $$
 
 The paper's equation omits both the frozen reference model and the scaling coefficient $\beta$. It also never defines whether $f_{\mathrm{LLM}}(p \mid H_u)$ means a probability, a sequence log-probability, a length-normalized score, or something else.
@@ -295,7 +295,7 @@ The clean conceptual summary remains the reader's version: use downstream weak s
 Section 3.3 adds almost no conceptual information. For each user, the pipeline repeatedly samples profiles from every profiler, evaluates each profile with the downstream predictor, and partitions the candidates into a positive set and a negative set. If both sets are non-empty, it retains every possible positive-negative combination:
 
 $$
-\mathcal{D}_u = \left\{(H_u, p_u^+, p_u^-, y_u) \mid p_u^+ \in \mathcal{P}_u^+, \; p_u^- \in \mathcal{P}_u^-\right\}.
+\mathcal{D}_u = \{(H_u, p_u^+, p_u^-, y_u) \mid p_u^+ \in \mathcal{P}_u^+, \; p_u^- \in \mathcal{P}_u^-\}.
 $$
 
 The ground-truth sentiment label $y_u$ is needed to decide whether the evaluator was correct, but it is not used directly in the DPO objective once the preferred and dispreferred profiles have been assigned.
@@ -305,7 +305,7 @@ The ground-truth sentiment label $y_u$ is needed to decide whether the evaluator
 If a user has $a$ positive profiles and $b$ negative profiles, that user contributes $ab$ training pairs. With $n=a+b$ candidates, the count is largest when the evaluator splits the candidates almost evenly:
 
 $$
-\max ab = \left\lfloor\frac{n^2}{4}\right\rfloor.
+\max ab = \lfloor \frac{n^2}{4} \rfloor.
 $$
 
 This gives at most 400 pairs if the intended candidate count is 40, but only 25 if the actual count is ten. The unresolved ten-versus-forty inconsistency therefore changes not only sampling cost but also the possible DPO dataset size by a factor of sixteen.
