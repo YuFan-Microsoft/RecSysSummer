@@ -1158,8 +1158,23 @@ def is_active(args) -> int:
         active = (
             get_meta(conn, "initialized") == "1"
             and get_meta(conn, "upload_complete") != "1"
+            and get_meta(conn, "abandoned") != "1"
         )
         return 0 if active else 1
+    finally:
+        conn.close()
+
+
+def abandon(args) -> int:
+    if not os.path.exists(args.db):
+        return 0
+    conn = connect(args.db)
+    try:
+        with conn:
+            set_meta(conn, "abandoned", 1)
+            set_meta(conn, "abandoned_at", utc_now())
+        log("Graph citation campaign marked abandoned")
+        return 0
     finally:
         conn.close()
 
@@ -1208,6 +1223,7 @@ def parse_args():
     subparsers.add_parser("mark-uploaded")
     subparsers.add_parser("is-uploaded")
     subparsers.add_parser("is-active")
+    subparsers.add_parser("abandon")
     return parser.parse_args()
 
 
@@ -1237,6 +1253,8 @@ def main() -> int:
         return is_uploaded(args)
     if args.command == "is-active":
         return is_active(args)
+    if args.command == "abandon":
+        return abandon(args)
     raise AssertionError(args.command)
 
 
