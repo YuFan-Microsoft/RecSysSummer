@@ -458,3 +458,200 @@ assign them opposite advantage signs. It only ensures that each token's
 existing policy-gradient term receives equal length-independent aggregation
 weight. Figure 4 shows that this controls the otherwise unhealthy increase in
 generation entropy and response length.
+
+#### Relation to Dr.GRPO
+
+DAPO's Token-Level Loss and Dr.GRPO share the diagnosis that the original
+$1/T_i$ response-length normalization creates an inverse-length weight for
+individual tokens. Both remove that per-response denominator, so tokens are no
+longer downweighted merely because they occur in a longer rollout.
+
+They differ in the remaining normalization. DAPO divides the token-loss sum by
+the **actual total number of sampled tokens**:
+
+```math
+J_{\mathrm{DAPO\ token}}
+=
+\frac{1}{\sum_i T_i}\sum_i\sum_t\ell_{i,t}.
+```
+
+Dr.GRPO instead divides by a **fixed constant** such as the maximum generation
+budget:
+
+```math
+J_{\mathrm{Dr.GRPO}}
+\propto
+\frac{1}{C}\sum_i\sum_t\ell_{i,t},
+\qquad C\ \text{is constant}.
+```
+
+For a fixed batch, these two length reductions have the same gradient direction
+and differ by a scalar. Across batches, however, DAPO's denominator changes
+with sampled response lengths, whereas Dr.GRPO keeps the scale independent of
+policy-generated lengths and presents this as an unbiased policy-gradient
+estimator.
+
+Dr.GRPO also removes a second normalization that DAPO retains. DAPO uses
+
+```math
+\hat A_i=\frac{R_i-\bar R}{s_R},
+```
+
+where $s_R$ is the within-question reward standard deviation. Dr.GRPO uses the
+centered reward
+
+```math
+\widetilde A_i=R_i-\bar R
+```
+
+without dividing by $s_R$, because that division gives different effective
+weights to questions with different reward variances and creates a
+question-difficulty bias. DAPO's Dynamic Sampling filters zero-signal groups
+whose accuracy is exactly $0$ or $1$, but it does not remove this standard
+deviation weighting among the retained mixed-reward groups.
+
+### Overlong Reward Shaping
+
+Long responses are truncated at a maximum generation length. If every truncated
+response is assigned an abrupt punitive outcome reward, a trajectory whose
+reasoning was otherwise sound may be treated as wholly wrong merely because it
+did not finish before the length limit. Since the same sequence-level advantage
+is applied throughout the rollout, this creates noisy and potentially
+confusing training signals.
+
+The paper first studies **Overlong Filtering** as an ablation. This operates at
+the individual rollout level: if 3 of 16 rollouts are truncated, their
+policy-gradient losses are masked, so those three rollouts do not update the
+actor. The method does not resample replacements for them. This is different
+from Dynamic Sampling, which repeatedly samples until it fills the batch with
+valid prompt-level groups.
+
+Filtering demonstrates that truncated rollouts are a major source of reward
+noise, but it discards their training signal and does not directly teach the
+model to stop earlier. DAPO therefore proposes **Soft Overlong Punishment**.
+With maximum length $L_{\max}$ and a penalty buffer of $L_{\mathrm{cache}}$,
+the added length reward is
+
+```math
+R_{\mathrm{length}}(y)
+=
+\begin{cases}
+0,
+& |y|\le L_{\max}-L_{\mathrm{cache}},\\
+\dfrac{(L_{\max}-L_{\mathrm{cache}})-|y|}
+      {L_{\mathrm{cache}}},
+& L_{\max}-L_{\mathrm{cache}}<|y|\le L_{\max},\\
+-1,
+& |y|>L_{\max}.
+\end{cases}
+```
+
+The penalty is zero for ordinary lengths and then decreases linearly from $0$
+to $-1$ over the final buffer before the hard limit. It is added to the
+rule-based correctness reward, providing a gradual signal to finish before
+truncation instead of an abrupt all-or-nothing punishment.
+
+Conceptually, the soft approach has two reward **components**, but the optimizer
+still receives one scalar reward per rollout:
+
+```math
+R_{\mathrm{total}}(y)
+=
+R_{\mathrm{correctness}}(y)
++
+R_{\mathrm{length}}(y).
+```
+
+The implementation literally adds the overlong penalty to the verifier reward;
+it does not require a second learned reward model. With correctness rewards
+$+1/-1$ and a length penalty in $[-1,0]$, an ordinary correct response receives
+$+1$, while a correct response at the hard length boundary can fall to $0$.
+An ordinary wrong response receives $-1$, while an equally wrong but overlong
+response can fall toward $-2$. Group-relative normalization is then applied to
+these total scalar rewards, allowing length to distinguish responses even when
+their correctness rewards are identical.
+
+Overlong Filtering is indeed simpler and more abrupt at implementation level:
+detect truncation and mask the corresponding actor loss. Soft shaping requires
+computing one additional deterministic length term, but preserves a graded
+training signal before the hard boundary.
+
+The maintained official DAPO recipe notes that Overlong Filtering overlaps with
+Overlong Reward Shaping and was disabled in most experiments, including the
+best-performing run; the released implementation focuses on the soft overlong
+penalty. The paper does not specify whether masked truncated rollouts should
+also be removed from group reward normalization, so the safe claim is only that
+their actor loss is masked.
+
+## Experiments
+
+### Training details
+
+The implementation uses `verl` with Qwen2.5-32B Base and naive GRPO as the
+baseline. AdamW has a constant learning rate of $1\times10^{-6}$ after a linear
+warm-up over 20 rollout steps. Each rollout step contains 512 prompts with 16
+responses per prompt, or 8,192 generated responses. The training mini-batch size
+is 512, giving 16 gradient updates per rollout step.
+
+Training uses DAPO-Math-17K. The authors transform targets into integers where
+necessary so that the rule-based verifier can parse answers reliably and add
+less reward noise.
+
+The length configuration has two nested thresholds rather than two independent
+maximum lengths. The expected response-length boundary is 16,384 tokens, and a
+4,096-token soft-punishment buffer extends from that point to the hard
+generation limit:
+
+```math
+L_{\mathrm{expected}}=16{,}384,\qquad
+L_{\mathrm{cache}}=4{,}096,\qquad
+L_{\max}=20{,}480.
+```
+
+The Clip-Higher radii are
+$\epsilon_{\mathrm{low}}=0.2$ and
+$\epsilon_{\mathrm{high}}=0.28$.
+
+One evaluation detail matters when interpreting the headline result. The authors
+repeat the AIME evaluation set 32 times and report `avg@32`, using temperature
+$1.0$ and top-$p=0.7$. The reported 50-point result is therefore an average
+sampling accuracy rather than a single greedy-decoding score.
+
+### Main result and progressive ablation
+
+Table 1 reports the following progressive recipe on AIME 2024 `avg@32`:
+
+| Configuration | Score | Marginal change in this sequence |
+|---|---:|---:|
+| Naive GRPO | 30 | - |
+| + Overlong Filtering | 36 | +6 |
+| + Clip-Higher | 38 | +2 |
+| + Soft Overlong Punishment | 41 | +3 |
+| + Token-Level Loss | 42 | +1 |
+| + Dynamic Sampling (DAPO) | 50 | +8 |
+
+Dynamic Sampling has the largest final marginal gain in this sequence. The
+table is a progressive recipe rather than a clean set of independent
+single-factor ablations, however, so it does not establish that Dynamic
+Sampling alone always contributes exactly eight points or is independently the
+most important component. The techniques can interact, and their measured
+increments depend on the order in which they are added.
+
+Several components improve stability through different mechanisms:
+
+- **Dynamic Sampling** keeps the number of informative prompt groups per update
+  stable, strengthening the batch gradient and reducing its noise sensitivity.
+- **Token-Level Loss** removes inverse-length token weighting. Its direct score
+  increment is only one point in Table 1, but the authors report more stable
+  training and healthier response-length growth; it controls pathological
+  length inflation rather than simply increasing or decreasing length.
+- **Overlong Filtering or Soft Overlong Punishment** reduces reward noise caused
+  by hard truncation. Filtering masks the noisy rollouts, while soft punishment
+  replaces the abrupt boundary with a graded length signal.
+- **Clip-Higher** maintains policy entropy and rollout diversity, preventing
+  premature entropy collapse.
+
+The paper's table lists both Overlong Filtering and Soft Overlong Punishment
+along the progressive path, but the maintained official recipe says the two
+overlap and that the best reproduced configuration generally uses soft shaping
+without enabling hard filtering.
